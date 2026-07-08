@@ -10,6 +10,7 @@ import { formatRelativeTime, formatDate } from "@/lib/utils";
 export default function StewardPage() {
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const pipelineCompanies = companies.filter((c) => c.portfolioStatus === "Pipeline");
+  const [view, setView] = useState<"cards" | "calendar">("cards");
 
   const completedCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Completed").length, 0);
   const plannedCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Planned").length, 0);
@@ -22,6 +23,15 @@ export default function StewardPage() {
     if (overdueB !== overdueA) return overdueB - overdueA;
     return b.engagement.filter(e => e.status === "Planned").length - a.engagement.filter(e => e.status === "Planned").length;
   });
+
+  // Calendar view: flatten all engagements (Planned + Overdue) from active AND pipeline companies
+  const calendarEngagements = [...activeCompanies, ...pipelineCompanies]
+    .flatMap((co) =>
+      co.engagement
+        .filter((e) => e.status === "Planned" || e.status === "Overdue")
+        .map((e) => ({ ...e, companyName: co.name, companySlug: co.slug, isPipeline: co.portfolioStatus === "Pipeline" }))
+    )
+    .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
 
   return (
     <div className="p-8">
@@ -45,15 +55,89 @@ export default function StewardPage() {
         </div>
       </PageHeader>
 
-      {/* Active Portfolio Engagement Cards — sorted by urgency */}
+      {/* View Toggle */}
+      <div className="flex items-center gap-1 bg-[#0d1526] border border-white/5 rounded-lg p-1 mb-6 w-fit">
+        {(["cards", "calendar"] as const).map((v) => (
+          <button
+            key={v}
+            onClick={() => setView(v)}
+            className={`text-xs px-3 py-1.5 rounded-md transition-colors font-medium capitalize ${
+              view === v
+                ? "bg-emerald-600/20 text-emerald-400 border border-emerald-500/30"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            {v === "cards" ? "Cards" : "Calendar"}
+          </button>
+        ))}
+      </div>
+
+      {/* Calendar View */}
+      {view === "calendar" && (
+        <div className="mb-8">
+          <div className="bg-[#0d1526] rounded-xl border border-white/5">
+            <div className="px-5 py-4 border-b border-white/5">
+              <h2 className="text-sm font-semibold text-white">Upcoming &amp; Overdue Engagements</h2>
+              <p className="text-xs text-slate-500 mt-0.5">{calendarEngagements.length} engagements across {activeCompanies.length + pipelineCompanies.length} companies</p>
+            </div>
+            {calendarEngagements.length === 0 ? (
+              <div className="text-xs text-slate-500 text-center py-8">No planned or overdue engagements</div>
+            ) : (
+              <div className="divide-y divide-white/5">
+                {calendarEngagements.map((e, i) => (
+                  <div key={`${e.companySlug}-${e.date}-${e.topic}-${i}`} className="flex items-center gap-4 px-5 py-3 hover:bg-white/[0.02] transition-colors">
+                    {/* Date Badge */}
+                    <div className="w-16 flex-shrink-0 text-center">
+                      <div className={`text-xs font-semibold px-2 py-1 rounded ${
+                        e.status === "Overdue"
+                          ? "bg-red-500/10 text-red-400 border border-red-500/20"
+                          : "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                      }`}>
+                        {formatDate(e.date)}
+                      </div>
+                    </div>
+                    {/* Company */}
+                    <div className="w-40 flex-shrink-0 flex items-center gap-1.5">
+                      <Link
+                        href={`/scout/${e.companySlug}`}
+                        className="text-xs font-medium text-emerald-400 hover:text-emerald-300 transition-colors truncate"
+                      >
+                        {e.companyName}
+                      </Link>
+                      {e.isPipeline && <span className="text-xs text-blue-400 flex-shrink-0">·Pipeline</span>}
+                    </div>
+                    {/* Topic */}
+                    <div className="flex-1 min-w-0">
+                      <span className="text-sm text-white">{e.topic}</span>
+                      <span className="text-xs text-slate-500 ml-2">{e.type}</span>
+                    </div>
+                    {/* Status */}
+                    <span className={`text-xs px-2 py-0.5 rounded border flex-shrink-0 ${
+                      e.status === "Overdue"
+                        ? "text-red-400 bg-red-500/10 border-red-500/20"
+                        : "text-blue-400 bg-blue-500/10 border-blue-500/20"
+                    }`}>
+                      {e.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Cards View — Active Portfolio */}
+      {view === "cards" && (
       <div className="space-y-4">
         {sortedActive.map((co) => (
           <PortfolioCard key={co.slug} company={co} />
         ))}
       </div>
+      )}
 
       {/* Pipeline: Pre-Investment Due Diligence */}
-      {pipelineCompanies.length > 0 && (
+      {pipelineCompanies.length > 0 && view === "cards" && (
         <div className="mt-8">
           <div className="flex items-center gap-3 mb-4">
             <h2 className="text-sm font-semibold text-white">Pipeline — Pre-Investment ESG Due Diligence</h2>

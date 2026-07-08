@@ -100,7 +100,7 @@ export function StatCard({
     red: "border-red-500/20 bg-red-500/5",
   };
   return (
-    <div className={`bg-[#0d1526] rounded-xl border p-4 ${colorStyles[color]}`}>
+    <div className={`bg-[#0d1526] rounded-xl border p-4 transition-all duration-200 ${colorStyles[color]}`}>
       <div className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-1">{label}</div>
       <div className="text-2xl font-bold text-white">{value}</div>
       {sub && <div className="text-xs text-slate-400 mt-0.5">{sub}</div>}

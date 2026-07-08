@@ -147,13 +147,32 @@ export default function ScoutPage() {
                   <div className="text-xs text-slate-500">
                     Megatrend: <span className="text-emerald-400">{co.temasekMegatrend}</span>
                   </div>
-                  <div className="text-xs text-slate-500">
-                    Green Revenue: <span className="text-slate-300">{co.greenRevenuePct}%</span>
+                  {/* Green Revenue bar */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-500">Green Rev:</span>
+                    <div className="w-20 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${
+                          co.greenRevenuePct >= 30 ? "bg-emerald-500" : co.greenRevenuePct >= 10 ? "bg-amber-500" : "bg-red-500"
+                        }`}
+                        style={{ width: `${Math.min(co.greenRevenuePct, 100)}%` }}
+                      />
+                    </div>
+                    <span className={`text-xs font-medium ${
+                      co.greenRevenuePct >= 30 ? "text-emerald-400" : co.greenRevenuePct >= 10 ? "text-amber-400" : "text-red-400"
+                    }`}>{co.greenRevenuePct}%</span>
                   </div>
                   <div className="text-xs text-slate-500">
                     Carbon Intensity: <span className="text-slate-300">{co.carbonIntensity} tCO₂e/$M</span>
                   </div>
                 </div>
+                {co.sdgAlignment.length > 0 && (
+                  <div className="flex items-center gap-1.5 mt-2.5">
+                    {co.sdgAlignment.map(({ sdg, label }) => (
+                      <SDGBadge key={sdg} sdg={sdg} label={label} />
+                    ))}
+                  </div>
+                )}
               </div>
               <div className="flex items-center gap-6 ml-6 flex-shrink-0">
                 <ESGScoreSet e={co.esgScore.environmental} s={co.esgScore.social} g={co.esgScore.governance} />
@@ -197,6 +216,27 @@ function ESGScoreSet({ e, s, g }: { e: number; s: number; g: number }) {
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function SDGBadge({ sdg, label }: { sdg: number; label: string }) {
+  const sdgColors: Record<number, string> = {
+    2: "bg-[#DDA63A]",
+    3: "bg-[#4C9F38]",
+    7: "bg-[#FCC30B]",
+    8: "bg-[#A21942]",
+    9: "bg-[#FD6925]",
+    10: "bg-[#DD1367]",
+    13: "bg-[#3F7E44]",
+    14: "bg-[#0A97D9]",
+    15: "bg-[#56C02B]",
+  };
+  const bg = sdgColors[sdg] ?? "bg-slate-600";
+  return (
+    <div className={`flex items-center gap-1 ${bg} rounded px-1.5 py-0.5`} title={`SDG ${sdg}: ${label}`}>
+      <span className="text-white text-[10px] font-bold leading-none">{sdg}</span>
+      <span className="text-white text-[9px] leading-none opacity-90">{label}</span>
     </div>
   );
 }

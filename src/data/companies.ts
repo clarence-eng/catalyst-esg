@@ -50,6 +50,20 @@ export interface EngagementRecord {
   notes: string;
 }
 
+export interface SDGTag {
+  sdg: number;
+  label: string;
+}
+
+export interface BoardComposition {
+  boardSize: number;
+  independentPct: number;
+  womenPct: number;
+  ceoChairSplit: boolean;
+  auditCommittee: boolean;
+  esgCommittee: boolean;
+}
+
 export interface Company {
   slug: string;
   name: string;
@@ -77,6 +91,9 @@ export interface Company {
     conditions: string[];
     esgGating: string;
   };
+  sdgAlignment: SDGTag[];
+  netZeroCommitment: "SBTi Committed" | "SBTi Targets Set" | "Net Zero Pledged" | "None";
+  boardComposition: BoardComposition;
 }
 
 export const companies: Company[] = [
@@ -229,6 +246,19 @@ export const companies: Company[] = [
     carbonIntensity: 312,
     greenRevenuePct: 3,
     lastUpdated: "2026-05-14",
+    sdgAlignment: [
+      { sdg: 13, label: "Climate Action" },
+      { sdg: 14, label: "Life Below Water" },
+    ],
+    netZeroCommitment: "None",
+    boardComposition: {
+      boardSize: 9,
+      independentPct: 44,
+      womenPct: 22,
+      ceoChairSplit: true,
+      auditCommittee: true,
+      esgCommittee: false,
+    },
     historicalScores: [
       { period: "Q1 2024", e: 35, s: 55, g: 50 },
       { period: "Q2 2024", e: 33, s: 57, g: 52 },
@@ -397,6 +427,20 @@ export const companies: Company[] = [
     carbonIntensity: 18,
     greenRevenuePct: 12,
     lastUpdated: "2026-04-28",
+    sdgAlignment: [
+      { sdg: 8, label: "Decent Work" },
+      { sdg: 10, label: "Reduced Inequalities" },
+      { sdg: 13, label: "Climate Action" },
+    ],
+    netZeroCommitment: "SBTi Committed",
+    boardComposition: {
+      boardSize: 8,
+      independentPct: 50,
+      womenPct: 25,
+      ceoChairSplit: true,
+      auditCommittee: true,
+      esgCommittee: true,
+    },
     historicalScores: [
       { period: "Q1 2024", e: 48, s: 62, g: 65 },
       { period: "Q2 2024", e: 50, s: 63, g: 62 },
@@ -558,6 +602,19 @@ export const companies: Company[] = [
     carbonIntensity: 45,
     greenRevenuePct: 8,
     lastUpdated: "2026-03-20",
+    sdgAlignment: [
+      { sdg: 9, label: "Industry & Innovation" },
+      { sdg: 13, label: "Climate Action" },
+    ],
+    netZeroCommitment: "SBTi Targets Set",
+    boardComposition: {
+      boardSize: 7,
+      independentPct: 57,
+      womenPct: 29,
+      ceoChairSplit: true,
+      auditCommittee: true,
+      esgCommittee: true,
+    },
     historicalScores: [
       { period: "Q1 2024", e: 55, s: 68, g: 72 },
       { period: "Q2 2024", e: 57, s: 70, g: 74 },
@@ -732,6 +789,19 @@ export const companies: Company[] = [
     carbonIntensity: 185,
     greenRevenuePct: 34,
     lastUpdated: "2026-06-10",
+    sdgAlignment: [
+      { sdg: 2, label: "Zero Hunger" },
+      { sdg: 15, label: "Life on Land" },
+    ],
+    netZeroCommitment: "SBTi Committed",
+    boardComposition: {
+      boardSize: 8,
+      independentPct: 38,
+      womenPct: 13,
+      ceoChairSplit: false,
+      auditCommittee: true,
+      esgCommittee: false,
+    },
     historicalScores: [
       { period: "Q1 2024", e: 45, s: 56, g: 58 },
       { period: "Q2 2024", e: 40, s: 57, g: 61 },
@@ -895,6 +965,19 @@ export const companies: Company[] = [
     carbonIntensity: 890,
     greenRevenuePct: 18,
     lastUpdated: "2026-02-14",
+    sdgAlignment: [
+      { sdg: 7, label: "Clean Energy" },
+      { sdg: 8, label: "Decent Work" },
+    ],
+    netZeroCommitment: "None",
+    boardComposition: {
+      boardSize: 10,
+      independentPct: 40,
+      womenPct: 20,
+      ceoChairSplit: true,
+      auditCommittee: true,
+      esgCommittee: false,
+    },
     historicalScores: [
       { period: "Q1 2024", e: 25, s: 48, g: 44 },
       { period: "Q2 2024", e: 27, s: 50, g: 47 },
@@ -1039,6 +1122,19 @@ export const companies: Company[] = [
     carbonIntensity: 12,
     greenRevenuePct: 5,
     lastUpdated: "2026-04-08",
+    sdgAlignment: [
+      { sdg: 3, label: "Good Health" },
+      { sdg: 10, label: "Reduced Inequalities" },
+    ],
+    netZeroCommitment: "Net Zero Pledged",
+    boardComposition: {
+      boardSize: 5,
+      independentPct: 40,
+      womenPct: 20,
+      ceoChairSplit: false,
+      auditCommittee: false,
+      esgCommittee: false,
+    },
     historicalScores: [
       { period: "Q3 2025", e: 52, s: 68, g: 62 },
       { period: "Q4 2025", e: 54, s: 70, g: 64 },

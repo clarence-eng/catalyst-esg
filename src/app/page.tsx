@@ -6,6 +6,7 @@ import { PortfolioBrief } from "@/components/PortfolioBrief";
 import { PortfolioTrend } from "@/components/PortfolioTrend";
 import { PortfolioBubbleChart } from "@/components/PortfolioBubbleChart";
 import { AlertPanel } from "@/components/AlertPanel";
+import { RiskHeatmap } from "@/components/RiskHeatmap";
 import { ArrowRight, GitMerge } from "lucide-react";
 
 export default function OverviewPage() {
@@ -172,6 +173,7 @@ export default function OverviewPage() {
       </div>
 
       {/* Portfolio ESG Brief — below table */}
+      <RiskHeatmap />
       <PortfolioBrief portfolioSummary={portfolioSummary} companyNames={activeCompanies.map(c => c.name)} />
 
       {/* Megatrend Cards */}

@@ -2,21 +2,43 @@
 import { useState } from "react";
 import { frameworks, caseStudies } from "@/data/learn";
 import { PageHeader } from "@/components/ui-elements";
-import { ExternalLink, ChevronRight } from "lucide-react";
+import { ExternalLink, ChevronRight, Search } from "lucide-react";
 
 type FrameworkFilter = "All" | "Climate" | "Nature" | "Cross-cutting" | "Reporting" | "Social";
 
 export default function LearnPage() {
   const [frameworkFilter, setFrameworkFilter] = useState<FrameworkFilter>("All");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredFrameworks = frameworkFilter === "All"
-    ? frameworks
-    : frameworks.filter((f) => f.category === frameworkFilter);
+  const q = searchQuery.trim().toLowerCase();
+
+  const filteredFrameworks = frameworks.filter((f) => {
+    const matchesCategory = frameworkFilter === "All" || f.category === frameworkFilter;
+    if (!matchesCategory) return false;
+    if (!q) return true;
+    return (
+      f.name.toLowerCase().includes(q) ||
+      f.fullName.toLowerCase().includes(q) ||
+      f.description.toLowerCase().includes(q) ||
+      f.aseanContext.toLowerCase().includes(q)
+    );
+  });
+
+  const filteredCaseStudies = caseStudies.filter((cs) => {
+    if (!q) return true;
+    return (
+      cs.title.toLowerCase().includes(q) ||
+      cs.summary.toLowerCase().includes(q) ||
+      cs.lessonLearned.toLowerCase().includes(q)
+    );
+  });
 
   const highRelevance = filteredFrameworks.filter((f) => f.temasekRelevance === "High");
   const medRelevance = filteredFrameworks.filter((f) => f.temasekRelevance === "Medium");
+  // Deep Dives always show category-filtered high-relevance frameworks (search doesn't collapse them)
+  const deepDiveFrameworks = frameworks.filter((f) => f.temasekRelevance === "High" && (frameworkFilter === "All" || f.category === frameworkFilter));
 
-  const filterCategories: FrameworkFilter[] = ["All", "Climate", "Nature", "Reporting", "Cross-cutting"];
+  const filterCategories: FrameworkFilter[] = ["All", "Climate", "Nature", "Reporting", "Cross-cutting", "Social"];
 
   return (
     <div className="p-8">
@@ -24,6 +46,26 @@ export default function LearnPage() {
         title="Knowledge Repository"
         subtitle="ESG frameworks, guidelines, and case studies — Temasek's sustainability knowledge base for the Investment Group."
       />
+
+      {/* Search Bar */}
+      <div className="relative mb-6">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search frameworks and case studies..."
+          className="w-full bg-[#0d1526] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-slate-300 text-sm placeholder:text-slate-600 focus:outline-none focus:border-emerald-600/40 transition-colors"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery("")}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-500 hover:text-slate-300"
+          >
+            Clear
+          </button>
+        )}
+      </div>
 
       {/* Tabs — static, SSR-friendly */}
       <div className="grid grid-cols-2 gap-8">
@@ -52,7 +94,7 @@ export default function LearnPage() {
           </div>
 
           {filteredFrameworks.length === 0 && (
-            <p className="text-xs text-slate-500 py-4">No frameworks in this category.</p>
+            <p className="text-xs text-slate-500 py-4">No frameworks in this category or search.</p>
           )}
 
           {highRelevance.length > 0 && (
@@ -78,20 +120,23 @@ export default function LearnPage() {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-white">ESG Case Studies</h2>
-            <span className="text-xs text-slate-500">{caseStudies.length} case studies</span>
+            <span className="text-xs text-slate-500">{filteredCaseStudies.length} of {caseStudies.length}</span>
           </div>
+          {filteredCaseStudies.length === 0 && (
+            <p className="text-xs text-slate-500 py-4">No case studies match your search.</p>
+          )}
           <div className="space-y-3">
-            {caseStudies.map((cs) => <CaseStudyCard key={cs.id} study={cs} />)}
+            {filteredCaseStudies.map((cs) => <CaseStudyCard key={cs.id} study={cs} />)}
           </div>
         </div>
       </div>
 
       {/* Framework Detail Cards */}
-      {highRelevance.length > 0 && (
+      {deepDiveFrameworks.length > 0 && (
       <div className="mt-10">
         <h2 className="text-sm font-semibold text-white mb-4">Framework Deep Dives</h2>
         <div className="grid grid-cols-3 gap-4">
-          {highRelevance.map((f) => (
+          {deepDiveFrameworks.map((f) => (
             <FrameworkDetailCard key={f.id} framework={f} />
           ))}
         </div>
@@ -107,6 +152,7 @@ function FrameworkRow({ framework: f }: { framework: (typeof frameworks)[0] }) {
     Nature: "text-green-400",
     "Cross-cutting": "text-purple-400",
     Reporting: "text-amber-400",
+    Social: "text-blue-400",
   };
   const statusStyles: Record<string, string> = {
     Mandatory: "text-red-400 bg-red-500/10 border-red-500/20",
@@ -184,6 +230,7 @@ function FrameworkDetailCard({ framework: f }: { framework: (typeof frameworks)[
     Nature: "border-green-600/20 bg-green-600/5",
     "Cross-cutting": "border-purple-600/20 bg-purple-600/5",
     Reporting: "border-amber-500/20 bg-amber-500/5",
+    Social: "border-blue-600/20 bg-blue-600/5",
   };
 
   return (

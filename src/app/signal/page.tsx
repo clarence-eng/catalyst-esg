@@ -184,10 +184,19 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
           {r.urgency === "High" && <AlertCircle className="w-4 h-4 text-amber-400" />}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 flex-wrap mb-1.5">
+          <div className="flex items-start gap-3 flex-wrap mb-1.5">
             <span className="text-sm font-medium text-white">{r.title}</span>
             <span className={`text-xs px-2 py-0.5 rounded border ${statusColors[r.status] ?? "text-slate-400 bg-white/5 border-white/10"}`}>{r.status}</span>
             <span className={`text-xs font-medium ${categoryColors[r.category] ?? "text-slate-400"}`}>{r.category}</span>
+            {r.portfolioImpact && r.portfolioImpact.length > 0 && (
+              <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${
+                r.portfolioImpact.length <= 2
+                  ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
+                  : "text-red-400 bg-red-500/10 border-red-500/20"
+              }`}>
+                Affects {r.portfolioImpact.length} {r.portfolioImpact.length === 1 ? "company" : "companies"}
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-3 text-xs text-slate-500 mb-2">
             <span>{r.jurisdiction}</span>
