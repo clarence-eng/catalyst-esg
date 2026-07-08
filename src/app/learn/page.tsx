@@ -4,7 +4,7 @@ import { frameworks, caseStudies } from "@/data/learn";
 import { PageHeader } from "@/components/ui-elements";
 import { ExternalLink, ChevronRight } from "lucide-react";
 
-type FrameworkFilter = "All" | "Climate" | "Nature" | "Cross-cutting" | "Reporting";
+type FrameworkFilter = "All" | "Climate" | "Nature" | "Cross-cutting" | "Reporting" | "Social";
 
 export default function LearnPage() {
   const [frameworkFilter, setFrameworkFilter] = useState<FrameworkFilter>("All");
