@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/ui-elements";
 import { ArrowRight, AlertCircle } from "lucide-react";
 
 const companyNameMap = Object.fromEntries(companies.map((c) => [c.slug, c.name]));
+const activeSlugs = new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug));
 
 const allJurisdictions = ["All", ...new Set(regulatoryUpdates.map((r) => {
   const j = r.jurisdiction.split(" /")[0].trim();
@@ -54,7 +55,6 @@ export default function SignalPage() {
             "Near-term": "text-amber-400 bg-amber-500/10",
             "Long-term": "text-blue-400 bg-blue-500/10",
           };
-          const activeSlugs = new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug));
           const exposureSummary = t.portfolioExposure.filter((p) => p.exposure === "High" && activeSlugs.has(p.slug)).length;
 
           return (

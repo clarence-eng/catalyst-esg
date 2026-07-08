@@ -78,7 +78,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
                 const names = count > 0 ? companyNames.join(", ") : "Active Portfolio Companies";
                 const countLabel = count > 0 ? `${count}` : "";
                 const header = `CATALYST ESG INTELLIGENCE\n${quarter} Portfolio ESG Brief\nPrepared: ${date}\nPortfolio: ${countLabel ? countLabel + " " : ""}Active Companies (${names})\n${"─".repeat(60)}\n\n`;
-                navigator.clipboard.writeText(header + brief);
+                navigator.clipboard.writeText(header + brief).catch(() => {});
               }}
               className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
             >
@@ -93,7 +93,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
       ) : !loading && (
         <div className="text-xs text-slate-600 text-center py-6 border border-dashed border-white/5 rounded-lg">
           <div>Generate a Temasek-style quarterly ESG portfolio health summary</div>
-          <div className="text-slate-700 mt-1">Requires GEMINI_API_KEY in .env.local</div>
+          <div className="text-slate-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
         </div>
       )}
     </div>

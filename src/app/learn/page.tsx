@@ -134,6 +134,7 @@ function FrameworkRow({ framework: f }: { framework: (typeof frameworks)[0] }) {
         href={f.url}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label={`Open ${f.name} website`}
         className="text-slate-600 hover:text-slate-300 transition-colors flex-shrink-0"
       >
         <ExternalLink className="w-3.5 h-3.5" />

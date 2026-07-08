@@ -149,7 +149,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                 <AIOutput text={brief} />
                 <div className="mt-3 flex items-center">
                   <button
-                    onClick={() => navigator.clipboard.writeText(brief)}
+                    onClick={() => navigator.clipboard.writeText(brief).catch(() => {})}
                     className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
                   >
                     <Copy className="w-3 h-3" />
@@ -163,7 +163,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
             ) : !loading && (
               <div className="text-xs text-slate-600 text-center py-6 border border-dashed border-white/5 rounded-lg">
                 <div>Generate a Temasek Sustainability Group-style thematic investment brief using AI</div>
-                <div className="text-slate-700 mt-1">Requires GEMINI_API_KEY in .env.local</div>
+                <div className="text-slate-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
               </div>
             )}
           </div>

@@ -175,8 +175,8 @@ function OverviewTab({
         <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
           <h3 className="text-sm font-semibold text-white mb-4">Material ESG Issues</h3>
           <div className="space-y-3">
-            {co.materialIssues.map((issue, i) => (
-              <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/5">
+            {co.materialIssues.map((issue) => (
+              <div key={issue.issue} className="flex items-start gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/5">
                 <div className="flex-shrink-0 mt-0.5">
                   {issue.opportunity ? (
                     <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
@@ -206,8 +206,8 @@ function OverviewTab({
         <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
           <h3 className="text-sm font-semibold text-white mb-4">Value Uplift Opportunities</h3>
           <div className="space-y-3">
-            {co.valueUplift.map((v, i) => (
-              <div key={i} className="p-3 rounded-lg bg-emerald-600/5 border border-emerald-600/15">
+            {co.valueUplift.map((v) => (
+              <div key={v.area} className="p-3 rounded-lg bg-emerald-600/5 border border-emerald-600/15">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-sm font-medium text-white">{v.area}</span>
                   <span className={`text-xs px-2 py-0.5 rounded border ${
@@ -248,7 +248,7 @@ function OverviewTab({
               <AIOutput text={memo} />
               <div className="mt-3 flex items-center">
                 <button
-                  onClick={() => navigator.clipboard.writeText(memo)}
+                  onClick={() => navigator.clipboard.writeText(memo).catch(() => {})}
                   className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
                 >
                   <Copy className="w-3 h-3" />
@@ -262,7 +262,7 @@ function OverviewTab({
           ) : !memoLoading && (
             <div className="text-xs text-slate-600 text-center py-6 border border-dashed border-white/5 rounded-lg">
               <div>Generate a Temasek-style investment committee ESG assessment using AI</div>
-              <div className="text-slate-700 mt-1">Requires GEMINI_API_KEY in .env.local</div>
+              <div className="text-slate-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
             </div>
           )}
         </div>

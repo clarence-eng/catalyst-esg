@@ -137,7 +137,14 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
         : "border-white/5 hover:border-white/10"
     }`}>
       {/* Card Header — click anywhere to expand */}
-      <div className="p-5 cursor-pointer" onClick={() => setExpanded(!expanded)}>
+      <div
+        className="p-5 cursor-pointer"
+        role="button"
+        tabIndex={0}
+        aria-expanded={expanded}
+        onClick={() => setExpanded(!expanded)}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded(!expanded); } }}
+      >
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
@@ -262,7 +269,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
                 <AIOutput text={plan} />
                 <div className="mt-3 flex items-center">
                   <button
-                    onClick={() => navigator.clipboard.writeText(plan)}
+                    onClick={() => navigator.clipboard.writeText(plan).catch(() => {})}
                     className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
                   >
                     <Copy className="w-3 h-3" />
@@ -276,7 +283,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
             ) : !planLoading && (
               <div className="text-xs text-slate-600 text-center py-6 border border-dashed border-white/5 rounded-lg">
                 <div>Generate a Temasek-style 12-month ESG engagement action plan with quarterly milestones and KPIs</div>
-                <div className="text-slate-700 mt-1">Requires GEMINI_API_KEY in .env.local</div>
+                <div className="text-slate-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
               </div>
             )}
           </div>
