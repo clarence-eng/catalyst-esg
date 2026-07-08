@@ -78,7 +78,7 @@ export default function StewardPage() {
           <div className="bg-[#0d1526] rounded-xl border border-white/5">
             <div className="px-5 py-4 border-b border-white/5">
               <h2 className="text-sm font-semibold text-white">Upcoming &amp; Overdue Engagements</h2>
-              <p className="text-xs text-slate-500 mt-0.5">{calendarEngagements.length} engagements across {activeCompanies.length + pipelineCompanies.length} companies</p>
+              <p className="text-xs text-slate-500 mt-0.5">{calendarEngagements.length} engagements across {new Set(calendarEngagements.map(e => e.companySlug)).size} companies</p>
             </div>
             {calendarEngagements.length === 0 ? (
               <div className="text-xs text-slate-500 text-center py-8">No planned or overdue engagements</div>

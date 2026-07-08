@@ -696,7 +696,7 @@ export const companies: Company[] = [
         severity: "Critical",
         opportunity: false,
         detail:
-          "EU accounts for 22% of revenue. EUDR deadline passed December 2025 — third-party compliance verification still pending as of Q3 2026. EU export revenues (22% of total) at immediate risk if compliance cannot be demonstrated to European buyers. Verifier appointment overdue.",
+          "EU accounts for 22% of revenue. EUDR deadline passed December 2025 — third-party compliance audit underway (Bureau Veritas appointed May 2026). Full verification expected Q3 2026; EU export revenues (22% of total) remain at risk until audit completes.",
       },
       {
         category: "Social",
