@@ -191,7 +191,7 @@ export default function AboutPage() {
       </div>
 
       <div className="text-xs text-slate-600 border-t border-white/5 pt-4">
-        Built with Next.js 16, Tailwind CSS v4, and Gemini AI · July 2026
+        Built with Next.js 16, Tailwind CSS v4, and Gemini AI · 2026
       </div>
     </div>
   );

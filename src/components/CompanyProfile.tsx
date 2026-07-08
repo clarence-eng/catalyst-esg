@@ -138,10 +138,12 @@ export function CompanyProfile({ company: co }: { company: Company }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 border-b border-white/5 mb-6">
+      <div className="flex items-center gap-1 border-b border-white/5 mb-6" role="tablist" aria-label="Company ESG sections">
         {TABS.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
+            role="tab"
+            aria-selected={tab === id}
             onClick={() => setTab(id)}
             className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:outline-none rounded-sm ${
               tab === id
