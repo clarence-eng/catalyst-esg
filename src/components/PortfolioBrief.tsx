@@ -1,0 +1,101 @@
+"use client";
+import { useState } from "react";
+import { Loader2, BarChart3, Copy } from "lucide-react";
+import { AIOutput } from "@/components/AIOutput";
+import { formatRelativeTime } from "@/lib/utils";
+
+interface PortfolioBriefProps {
+  portfolioSummary: string;
+  companyNames?: string[];
+}
+
+export function PortfolioBrief({ portfolioSummary, companyNames = [] }: PortfolioBriefProps) {
+  const [brief, setBrief] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [generatedAt, setGeneratedAt] = useState<Date | null>(null);
+
+  async function generate() {
+    setLoading(true);
+    setError("");
+    setBrief("");
+    try {
+      const res = await fetch("/api/gemini", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "portfolio_brief",
+          context: { portfolioSummary },
+        }),
+      });
+      if (!res.ok) throw new Error(`Request failed: ${res.status} ${res.statusText}`);
+      let data: { error?: string; text?: string };
+      try { data = await res.json(); } catch { throw new Error(`Request failed: ${res.status} (unexpected response format)`); }
+      if (data.error) throw new Error(data.error);
+      if (!data.text) throw new Error("No content received from AI");
+      setBrief(data.text);
+      setGeneratedAt(new Date());
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Failed to generate brief");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5 mb-8">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <h2 className="text-sm font-semibold text-white">Portfolio ESG Brief</h2>
+          <p className="text-xs text-slate-500 mt-0.5">
+            AI-generated quarterly ESG health summary across all active portfolio companies
+          </p>
+        </div>
+        <button
+          onClick={generate}
+          disabled={loading}
+          className="flex items-center gap-2 text-sm bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+        >
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <BarChart3 className="w-4 h-4" />}
+          {loading ? "Generating..." : brief ? "Regenerate" : "Generate Brief"}
+        </button>
+      </div>
+      {error && (
+        <div className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-3">
+          {error}
+        </div>
+      )}
+      {brief ? (
+        <>
+          <AIOutput text={brief} />
+          <div className="flex items-center gap-4 mt-3">
+            <button
+              onClick={() => {
+                const date = new Date().toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" });
+                const now = new Date();
+                const quarter = `Q${Math.ceil((now.getMonth() + 1) / 3)} ${now.getFullYear()}`;
+                const count = companyNames.length;
+                const names = count > 0 ? companyNames.join(", ") : "Active Portfolio Companies";
+                const countLabel = count > 0 ? `${count}` : "";
+                const header = `CATALYST ESG INTELLIGENCE\n${quarter} Portfolio ESG Brief\nPrepared: ${date}\nPortfolio: ${countLabel ? countLabel + " " : ""}Active Companies (${names})\n${"─".repeat(60)}\n\n`;
+                navigator.clipboard.writeText(header + brief);
+              }}
+              className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+            >
+              <Copy className="w-3 h-3" />
+              Copy as document
+            </button>
+            {generatedAt && (
+              <span className="text-xs text-slate-600">Generated {formatRelativeTime(generatedAt)}</span>
+            )}
+          </div>
+        </>
+      ) : !loading && (
+        <div className="text-xs text-slate-600 text-center py-6 border border-dashed border-white/5 rounded-lg">
+          <div>Generate a Temasek-style quarterly ESG portfolio health summary</div>
+          <div className="text-slate-700 mt-1">Requires GEMINI_API_KEY in .env.local</div>
+        </div>
+      )}
+    </div>
+  );
+}

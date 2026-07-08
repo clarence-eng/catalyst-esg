@@ -1,0 +1,232 @@
+"use client";
+import { useState } from "react";
+import { frameworks, caseStudies } from "@/data/learn";
+import { PageHeader } from "@/components/ui-elements";
+import { ExternalLink, ChevronRight } from "lucide-react";
+
+type FrameworkFilter = "All" | "Climate" | "Nature" | "Cross-cutting" | "Reporting";
+
+export default function LearnPage() {
+  const [frameworkFilter, setFrameworkFilter] = useState<FrameworkFilter>("All");
+
+  const filteredFrameworks = frameworkFilter === "All"
+    ? frameworks
+    : frameworks.filter((f) => f.category === frameworkFilter);
+
+  const highRelevance = filteredFrameworks.filter((f) => f.temasekRelevance === "High");
+  const medRelevance = filteredFrameworks.filter((f) => f.temasekRelevance === "Medium");
+
+  const filterCategories: FrameworkFilter[] = ["All", "Climate", "Nature", "Reporting", "Cross-cutting"];
+
+  return (
+    <div className="p-8">
+      <PageHeader
+        title="Knowledge Repository"
+        subtitle="ESG frameworks, guidelines, and case studies — Temasek's sustainability knowledge base for the Investment Group."
+      />
+
+      {/* Tabs — static, SSR-friendly */}
+      <div className="grid grid-cols-2 gap-8">
+        {/* Left column: Frameworks */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-white">ESG Frameworks & Standards</h2>
+            <span className="text-xs text-slate-500">{filteredFrameworks.length} of {frameworks.length}</span>
+          </div>
+
+          {/* Filter pills */}
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {filterCategories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setFrameworkFilter(cat)}
+                className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                  frameworkFilter === cat
+                    ? "bg-emerald-600/20 text-emerald-400 border-emerald-500/30"
+                    : "text-slate-400 border-white/10 hover:text-slate-200 hover:border-white/20"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {filteredFrameworks.length === 0 && (
+            <p className="text-xs text-slate-500 py-4">No frameworks in this category.</p>
+          )}
+
+          {highRelevance.length > 0 && (
+          <div className="mb-2">
+            <div className="text-xs text-slate-500 uppercase tracking-wider font-medium pb-2">High Relevance to Temasek Portfolio</div>
+            <div className="space-y-2">
+              {highRelevance.map((f) => <FrameworkRow key={f.id} framework={f} />)}
+            </div>
+          </div>
+          )}
+
+          {medRelevance.length > 0 && (
+            <div className="mt-4">
+              <div className="text-xs text-slate-500 uppercase tracking-wider font-medium pb-2 pt-2">Reference</div>
+              <div className="space-y-2">
+                {medRelevance.map((f) => <FrameworkRow key={f.id} framework={f} />)}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Right column: Case Studies */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-white">ESG Case Studies</h2>
+            <span className="text-xs text-slate-500">{caseStudies.length} case studies</span>
+          </div>
+          <div className="space-y-3">
+            {caseStudies.map((cs) => <CaseStudyCard key={cs.id} study={cs} />)}
+          </div>
+        </div>
+      </div>
+
+      {/* Framework Detail Cards */}
+      {highRelevance.length > 0 && (
+      <div className="mt-10">
+        <h2 className="text-sm font-semibold text-white mb-4">Framework Deep Dives</h2>
+        <div className="grid grid-cols-3 gap-4">
+          {highRelevance.map((f) => (
+            <FrameworkDetailCard key={f.id} framework={f} />
+          ))}
+        </div>
+      </div>
+      )}
+    </div>
+  );
+}
+
+function FrameworkRow({ framework: f }: { framework: (typeof frameworks)[0] }) {
+  const categoryColors: Record<string, string> = {
+    Climate: "text-emerald-400",
+    Nature: "text-green-400",
+    "Cross-cutting": "text-purple-400",
+    Reporting: "text-amber-400",
+  };
+  const statusStyles: Record<string, string> = {
+    Mandatory: "text-red-400 bg-red-500/10 border-red-500/20",
+    Voluntary: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+    Emerging: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+  };
+
+  return (
+    <div className="flex items-center gap-3 p-3 bg-[#0d1526] rounded-lg border border-white/5 hover:border-white/10 transition-colors">
+      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-base font-bold ${categoryColors[f.category] ?? "text-slate-400"} bg-white/5`}>
+        {f.name.charAt(0)}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-0.5">
+          <span className="text-sm font-medium text-white truncate">{f.name}</span>
+          <span className={`text-xs px-1.5 py-0.5 rounded border flex-shrink-0 ${statusStyles[f.status] ?? "text-slate-400 bg-white/5 border-white/10"}`}>{f.status}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className={`text-xs font-medium ${categoryColors[f.category] ?? "text-slate-400"}`}>{f.category}</span>
+          <span className="text-xs text-slate-600">·</span>
+          <span className="text-xs text-slate-500 truncate">{f.fullName}</span>
+        </div>
+      </div>
+      <a
+        href={f.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-slate-600 hover:text-slate-300 transition-colors flex-shrink-0"
+      >
+        <ExternalLink className="w-3.5 h-3.5" />
+      </a>
+    </div>
+  );
+}
+
+function CaseStudyCard({ study: cs }: { study: (typeof caseStudies)[0] }) {
+  const themeColors: Record<string, string> = {
+    "Climate Transition": "text-emerald-400 bg-emerald-500/10",
+    "Nature & Biodiversity": "text-green-400 bg-green-500/10",
+    "Just Transition": "text-orange-400 bg-orange-500/10",
+    "Governance": "text-purple-400 bg-purple-500/10",
+    "Sustainable Finance": "text-blue-400 bg-blue-500/10",
+  };
+
+  return (
+    <div className="bg-[#0d1526] rounded-xl border border-white/5 p-4">
+      <div className="flex items-start justify-between mb-2">
+        <span className={`text-xs font-medium px-2 py-0.5 rounded ${themeColors[cs.theme] ?? "text-slate-400 bg-white/10"}`}>{cs.theme}</span>
+        <span className="text-xs text-slate-600">{cs.year}</span>
+      </div>
+      <h3 className="text-sm font-semibold text-white mb-1 leading-snug">{cs.title}</h3>
+      <div className="text-xs text-slate-500 mb-2">{cs.company} · {cs.sector} · {cs.region}</div>
+      <p className="text-xs text-slate-400 leading-relaxed mb-3 line-clamp-3">{cs.summary}</p>
+      <div className="bg-emerald-600/5 border border-emerald-600/15 rounded-lg p-2.5 mb-2">
+        <div className="text-xs text-emerald-400 font-medium mb-0.5">Key Outcome</div>
+        <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">{cs.outcome}</p>
+      </div>
+      <div className="bg-white/[0.02] border border-white/5 rounded-lg p-2.5">
+        <div className="text-xs text-slate-400 font-medium mb-0.5">Lesson Learned</div>
+        <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">{cs.lessonLearned}</p>
+      </div>
+      <div className="flex flex-wrap gap-1 mt-2">
+        {cs.frameworks.map((fw) => (
+          <span key={fw} className="text-xs text-slate-600 bg-white/5 border border-white/5 px-1.5 py-0.5 rounded">{fw}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FrameworkDetailCard({ framework: f }: { framework: (typeof frameworks)[0] }) {
+  const categoryColors: Record<string, string> = {
+    Climate: "border-emerald-600/20 bg-emerald-600/5",
+    Nature: "border-green-600/20 bg-green-600/5",
+    "Cross-cutting": "border-purple-600/20 bg-purple-600/5",
+    Reporting: "border-amber-500/20 bg-amber-500/5",
+  };
+
+  return (
+    <div className={`rounded-xl border p-5 ${categoryColors[f.category] ?? "border-white/10 bg-white/[0.02]"}`}>
+      <div className="flex items-start justify-between mb-3">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-base font-bold text-white">{f.name}</span>
+            <span className="text-xs text-slate-500">{f.adoptionYear}</span>
+          </div>
+          <p className="text-xs text-slate-400">{f.fullName}</p>
+        </div>
+        <a
+          href={f.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200 transition-colors flex-shrink-0"
+        >
+          <ExternalLink className="w-3.5 h-3.5" />
+        </a>
+      </div>
+      <p className="text-xs text-slate-300 leading-relaxed mb-3">{f.description}</p>
+
+      <div className="mb-3">
+        <div className="text-xs text-slate-500 font-medium mb-1.5">Key Requirements</div>
+        <ul className="space-y-1">
+          {f.keyRequirements.map((req) => (
+            <li key={req} className="flex items-start gap-2 text-xs text-slate-400">
+              <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0 text-slate-600" />
+              {req}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="mb-3 p-3 bg-white/[0.03] rounded-lg border border-white/5">
+        <div className="text-xs text-slate-400 font-medium mb-1">Investment Relevance</div>
+        <p className="text-xs text-slate-400 leading-relaxed">{f.investmentRelevance}</p>
+      </div>
+
+      <div className="p-3 bg-white/[0.02] rounded-lg border border-white/5">
+        <div className="text-xs text-slate-500 font-medium mb-1">ASEAN Context</div>
+        <p className="text-xs text-slate-500 leading-relaxed">{f.aseanContext}</p>
+      </div>
+    </div>
+  );
+}
