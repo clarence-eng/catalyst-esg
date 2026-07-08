@@ -107,6 +107,36 @@ export default function ScoutPage() {
                   )}
                   <RatingBadge rating={co.esgScore.rating} />
                   <MaturityBadge level={co.maturity} />
+                  {(() => {
+                    const scores = co.historicalScores;
+                    const last = scores[scores.length - 1];
+                    const prev = scores[scores.length - 2];
+                    if (last && prev) {
+                      const lastAvg = (last.e + last.s + last.g) / 3;
+                      const prevAvg = (prev.e + prev.s + prev.g) / 3;
+                      const delta = Math.round(lastAvg - prevAvg);
+                      if (delta > 0) {
+                        return (
+                          <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            ↑ +{delta}
+                          </span>
+                        );
+                      } else if (delta < 0) {
+                        return (
+                          <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20">
+                            ↓ {delta}
+                          </span>
+                        );
+                      } else {
+                        return (
+                          <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-slate-500/10 text-slate-400 border border-slate-500/20">
+                            → 0
+                          </span>
+                        );
+                      }
+                    }
+                    return null;
+                  })()}
                   <span className="text-xs text-slate-500 bg-white/5 px-2 py-0.5 rounded">{co.country}</span>
                 </div>
                 <p className="text-xs text-slate-400 mb-3 leading-relaxed max-w-3xl">{co.description}</p>

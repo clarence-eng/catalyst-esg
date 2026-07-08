@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { companies } from "@/data/companies";
 import { PageHeader } from "@/components/ui-elements";
-import { Search, Users, Radio, BookOpen, LayoutDashboard, Cpu, GitMerge, ChevronRight } from "lucide-react";
+import { Search, Users, Radio, BookOpen, LayoutDashboard, Cpu, GitMerge, ChevronRight, Target, ClipboardList, BarChart2, Upload } from "lucide-react";
 
 const companyWhy: Record<string, string> = {
   "seaport-logistics": "IMO CII, EU ETS, physical climate risk",
@@ -20,7 +20,7 @@ const modules = [
     color: "text-emerald-400",
     bg: "bg-emerald-600/10 border-emerald-600/20",
     description:
-      "Portfolio ESG health dashboard. 5-column KPI row (ESG Score, Transition Risk, Carbon Intensity, Overdue, Planned), portfolio E/S/G trajectory chart across 10 quarters, company table with Active/Pipeline distinction, and an AI-powered Portfolio ESG Brief generator.",
+      "Portfolio ESG health dashboard. Investment-weighted KPIs (ESG Score, Transition Risk, Carbon Intensity, Overdue, Planned), portfolio E/S/G trajectory chart, portfolio positioning bubble chart (ESG vs carbon intensity), needs-attention alert panel, company table with Active/Pipeline distinction and portfolio weights, and an AI-powered Portfolio ESG Brief generator.",
   },
   {
     href: "/scout",
@@ -91,15 +91,15 @@ export default function AboutPage() {
         <p className="text-xs text-slate-500 mb-3">Catalyst maps the end-to-end ESG investment workflow — from deal evaluation and risk assessment through post-investment engagement, thematic research, and portfolio reporting.</p>
         <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5 space-y-3">
           {[
-            { icon: "🎯", text: "ESG due diligence for new investment opportunities — risk management and value uplift lens" },
-            { icon: "📋", text: "Post-investment engagement monitoring with AI-generated quarterly ESG action plans" },
-            { icon: "📊", text: "Thematic ESG research across megatrends with AI-generated investment briefs" },
-            { icon: "📚", text: "ESG knowledge repository — frameworks, guidelines, and case studies for the Investment Group" },
-            { icon: "📤", text: "Portfolio-level ESG health summaries formatted for internal and external delivery" },
-            { icon: "🤖", text: "Practical AI integration across four distinct investment workflow use cases" },
-          ].map(({ icon, text }) => (
+            { icon: Target, text: "ESG due diligence for new investment opportunities — risk management and value uplift lens" },
+            { icon: ClipboardList, text: "Post-investment engagement monitoring with AI-generated quarterly ESG action plans" },
+            { icon: BarChart2, text: "Thematic ESG research across megatrends with AI-generated investment briefs" },
+            { icon: BookOpen, text: "ESG knowledge repository — frameworks, guidelines, and case studies for the Investment Group" },
+            { icon: Upload, text: "Portfolio-level ESG health summaries formatted for internal and external delivery" },
+            { icon: Cpu, text: "Practical AI integration across four distinct investment workflow use cases" },
+          ].map(({ icon: Icon, text }) => (
             <div key={text} className="flex items-start gap-3">
-              <span className="text-base flex-shrink-0">{icon}</span>
+              <Icon className="w-4 h-4 flex-shrink-0 text-emerald-400" />
               <p className="text-sm text-slate-300">{text}</p>
             </div>
           ))}

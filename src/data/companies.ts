@@ -67,10 +67,16 @@ export interface Company {
   materialIssues: MaterialIssue[];
   valueUplift: ValueUplift[];
   engagement: EngagementRecord[];
+  investmentValue: number; // SGD millions
   carbonIntensity: number; // tCO2e / $M revenue
   greenRevenuePct: number; // % of revenue from green activities
   lastUpdated: string;
   historicalScores: { period: string; e: number; s: number; g: number }[];
+  icRecommendation?: {
+    verdict: "Invest" | "Invest Conditional" | "Pass";
+    conditions: string[];
+    esgGating: string;
+  };
 }
 
 export const companies: Company[] = [
@@ -219,6 +225,7 @@ export const companies: Company[] = [
         notes: "Annual ESG review: IMO CII ratings for full fleet, methanol dual-fuel pilot vessel progress update, and Net Zero 2050 pathway publication review. Target: SBTi-aligned near-term target submission by year-end.",
       },
     ],
+    investmentValue: 450,
     carbonIntensity: 312,
     greenRevenuePct: 3,
     lastUpdated: "2026-05-14",
@@ -386,6 +393,7 @@ export const companies: Company[] = [
         notes: "Q1 2026 PCAF methodology adoption review overdue. PCAF pilot with top 50 corporate clients was targeted for Q4 2025 — completion status unconfirmed.",
       },
     ],
+    investmentValue: 620,
     carbonIntensity: 18,
     greenRevenuePct: 12,
     lastUpdated: "2026-04-28",
@@ -546,6 +554,7 @@ export const companies: Company[] = [
         notes: "Review published MAS FEAT-aligned AI Governance Policy (target Q2 2026). Assess Carbon Management SaaS product traction and pipeline against APAC ISSB S2 disclosure demand. Discuss I-REC procurement progress toward 100% RE target.",
       },
     ],
+    investmentValue: 285,
     carbonIntensity: 45,
     greenRevenuePct: 8,
     lastUpdated: "2026-03-20",
@@ -719,6 +728,7 @@ export const companies: Company[] = [
           "Compliance verifier (Bureau Veritas) appointed May 2026, audit scope agreed. Full geo-coordinates submitted for 94% of concessions; 6% of third-party supplier plots still outstanding. EU buyer Unilever has granted 90-day grace period. Audit completion target September 2026. Revenue at risk: est. S$52M if EU market access suspended.",
       },
     ],
+    investmentValue: 340,
     carbonIntensity: 185,
     greenRevenuePct: 34,
     lastUpdated: "2026-06-10",
@@ -881,6 +891,7 @@ export const companies: Company[] = [
         notes: "Review ETM application progress for 3 coal plants (1.4GW). ADB feasibility report expected Q3 2026. If feasibility positive, target ETM application Q4 2026. Discuss green bond pre-marketing strategy for 400MW Sumatra geothermal Phase 1.",
       },
     ],
+    investmentValue: 510,
     carbonIntensity: 890,
     greenRevenuePct: 18,
     lastUpdated: "2026-02-14",
@@ -1024,6 +1035,7 @@ export const companies: Company[] = [
           "Pre-close review of agreed ESG conditions: (1) appointment of independent audit committee chair, (2) PDPA cross-border data transfer policy updated, (3) AI bias testing scope expanded to include Indonesian patient cohort.",
       },
     ],
+    investmentValue: 95,
     carbonIntensity: 12,
     greenRevenuePct: 5,
     lastUpdated: "2026-04-08",
@@ -1033,6 +1045,15 @@ export const companies: Company[] = [
       { period: "Q1 2026", e: 56, s: 71, g: 66 },
       { period: "Q2 2026", e: 58, s: 72, g: 68 },
     ],
+    icRecommendation: {
+      verdict: "Invest Conditional",
+      conditions: [
+        "Independent audit committee chair appointed (pre-close condition)",
+        "AI bias testing expanded to Indonesia and Vietnam patient cohorts",
+        "PDPA cross-border data transfer policy updated and externally audited",
+      ],
+      esgGating: "No investment to close without independent confirmation of all three ESG conditions precedent. Re-evaluate in Q4 2026.",
+    },
   },
 ];
 

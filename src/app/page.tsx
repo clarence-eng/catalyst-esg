@@ -4,18 +4,22 @@ import { megatrends } from "@/data/megatrends";
 import { RatingBadge, MaturityBadge, PageHeader, StatCard } from "@/components/ui-elements";
 import { PortfolioBrief } from "@/components/PortfolioBrief";
 import { PortfolioTrend } from "@/components/PortfolioTrend";
+import { PortfolioBubbleChart } from "@/components/PortfolioBubbleChart";
+import { AlertPanel } from "@/components/AlertPanel";
 import { ArrowRight, GitMerge } from "lucide-react";
 
 export default function OverviewPage() {
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const pipelineCount = companies.filter((c) => c.portfolioStatus === "Pipeline").length;
 
-  const avgScore = activeCompanies.length
-    ? Math.round(activeCompanies.reduce((s, c) => s + c.esgScore.overall, 0) / activeCompanies.length)
+  const totalActive = activeCompanies.reduce((s, c) => s + c.investmentValue, 0);
+
+  const avgScore = totalActive > 0
+    ? Math.round(activeCompanies.reduce((s, c) => s + c.esgScore.overall * c.investmentValue, 0) / totalActive)
     : 0;
   const highRisk = activeCompanies.filter((c) => ["High", "Critical"].includes(c.climateRisk.transition)).length;
-  const avgCarbonIntensity = activeCompanies.length
-    ? Math.round(activeCompanies.reduce((s, c) => s + c.carbonIntensity, 0) / activeCompanies.length)
+  const avgCarbonIntensity = totalActive > 0
+    ? Math.round(activeCompanies.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalActive)
     : 0;
   const overdueCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Overdue").length, 0);
   const plannedCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Planned").length, 0);
@@ -48,6 +52,15 @@ export default function OverviewPage() {
     `Top issue: ${c.materialIssues[0] ? `${c.materialIssues[0].issue} (${c.materialIssues[0].severity})` : "None"}`
   )).join("\n");
 
+  const bubbleData = activeCompanies.map((c) => ({
+    name: c.name,
+    esgScore: c.esgScore.overall,
+    carbonIntensity: c.carbonIntensity,
+    investmentValue: c.investmentValue,
+    transitionRisk: c.climateRisk.transition,
+    slug: c.slug,
+  }));
+
   return (
     <div className="p-8">
       <PageHeader
@@ -56,7 +69,7 @@ export default function OverviewPage() {
       >
         <div className="flex items-center gap-2 text-xs text-slate-500 bg-white/5 rounded-lg px-3 py-2 border border-white/5">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          {activeCompanies.length} active
+          S${(totalActive / 1000).toFixed(1)}B active
           {pipelineCount > 0 && (
             <span className="flex items-center gap-1 text-blue-400 ml-1">
               · <GitMerge className="w-3 h-3" /> {pipelineCount} pipeline
@@ -74,8 +87,14 @@ export default function OverviewPage() {
         <StatCard label="Planned Engagements" value={plannedCount} sub="Upcoming" color="default" />
       </div>
 
+      {/* Needs Attention Alerts */}
+      <AlertPanel companies={companies} />
+
       {/* Portfolio ESG Trend */}
       <PortfolioTrend data={portfolioTrend} activeCount={activeCompanies.length} />
+
+      {/* Portfolio Positioning Bubble Chart */}
+      <PortfolioBubbleChart data={bubbleData} />
 
       {/* Portfolio Companies Table */}
       <div className="bg-[#0d1526] rounded-xl border border-white/5 mb-8">
@@ -96,6 +115,7 @@ export default function OverviewPage() {
                 <th className="text-left text-xs text-slate-500 font-medium px-4 py-3">S</th>
                 <th className="text-left text-xs text-slate-500 font-medium px-4 py-3">G</th>
                 <th className="text-left text-xs text-slate-500 font-medium px-4 py-3">Maturity</th>
+                <th className="text-left text-xs text-slate-500 font-medium px-4 py-3">Portfolio Weight</th>
                 <th className="text-left text-xs text-slate-500 font-medium px-4 py-3">Transition Risk</th>
                 <th className="text-right text-xs text-slate-500 font-medium px-6 py-3"></th>
               </tr>
@@ -130,6 +150,11 @@ export default function OverviewPage() {
                   </td>
                   <td className="px-4 py-4">
                     <MaturityBadge level={co.maturity} />
+                  </td>
+                  <td className="px-4 py-4">
+                    <span className="text-xs text-slate-400">
+                      {co.portfolioStatus === "Pipeline" ? "Pipeline" : totalActive > 0 ? `${Math.round(co.investmentValue / totalActive * 100)}%` : "—"}
+                    </span>
                   </td>
                   <td className="px-4 py-4">
                     <TransitionRiskDot level={co.climateRisk.transition} />

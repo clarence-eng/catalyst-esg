@@ -1,0 +1,97 @@
+import Link from "next/link";
+import { AlertCircle } from "lucide-react";
+import { type Company } from "@/data/companies";
+
+interface Alert {
+  message: string;
+  slug: string;
+  severity: 1 | 2 | 3; // 1 = highest
+}
+
+function generateAlerts(companies: Company[]): Alert[] {
+  const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
+  const alerts: Alert[] = [];
+
+  // 1. Overdue engagements
+  for (const co of activeCompanies) {
+    for (const eng of co.engagement) {
+      if (eng.status === "Overdue") {
+        alerts.push({
+          message: `${co.name}: Overdue engagement — "${eng.topic}"`,
+          slug: co.slug,
+          severity: 1,
+        });
+      }
+    }
+  }
+
+  // 2. Critical material issues
+  for (const co of activeCompanies) {
+    for (const issue of co.materialIssues) {
+      if (issue.severity === "Critical" && !issue.opportunity) {
+        alerts.push({
+          message: `${co.name}: Critical ESG issue — ${issue.issue}`,
+          slug: co.slug,
+          severity: 2,
+        });
+      }
+    }
+  }
+
+  // 3. Declining E score (last < second-to-last)
+  for (const co of activeCompanies) {
+    const scores = co.historicalScores;
+    if (scores.length >= 2) {
+      const last = scores[scores.length - 1];
+      const prev = scores[scores.length - 2];
+      if (last.e < prev.e) {
+        alerts.push({
+          message: `${co.name}: E score declining (${prev.e} → ${last.e} in ${last.period})`,
+          slug: co.slug,
+          severity: 3,
+        });
+      }
+    }
+  }
+
+  // Sort by severity (lowest number = highest severity first)
+  alerts.sort((a, b) => a.severity - b.severity);
+
+  // Limit to 5 most urgent alerts
+  return alerts.slice(0, 5);
+}
+
+export function AlertPanel({ companies }: { companies: Company[] }) {
+  const alerts = generateAlerts(companies);
+
+  if (alerts.length === 0) return null;
+
+  return (
+    <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 mb-6">
+      <div className="flex items-center gap-2 mb-3">
+        <AlertCircle className="w-4 h-4 text-amber-400" />
+        <h2 className="text-sm font-semibold text-white">Portfolio Alerts</h2>
+        <span className="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full font-medium">
+          {alerts.length}
+        </span>
+      </div>
+      <div className="space-y-2">
+        {alerts.map((alert, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-3 p-3 bg-[#0d1526] rounded-lg border border-white/5"
+          >
+            <AlertCircle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+            <span className="text-xs text-slate-300 flex-1">{alert.message}</span>
+            <Link
+              href={`/scout/${alert.slug}`}
+              className="text-xs text-emerald-400 hover:text-emerald-300"
+            >
+              View →
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

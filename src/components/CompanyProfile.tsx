@@ -172,6 +172,31 @@ function OverviewTab({
     <div className="grid grid-cols-3 gap-6">
       {/* Left: Material Issues */}
       <div className="col-span-2 space-y-4">
+        {co.icRecommendation && (
+          <div className={`rounded-xl border p-4 ${
+            co.icRecommendation.verdict === "Invest Conditional" 
+              ? "border-amber-500/30 bg-amber-500/5" 
+              : co.icRecommendation.verdict === "Invest" 
+              ? "border-emerald-500/30 bg-emerald-500/5"
+              : "border-red-500/30 bg-red-500/5"
+          }`}>
+            <div className="flex items-center gap-2 mb-2">
+              <span className={`text-sm font-bold ${co.icRecommendation.verdict === "Invest Conditional" ? "text-amber-400" : co.icRecommendation.verdict === "Invest" ? "text-emerald-400" : "text-red-400"}`}>
+                IC Recommendation: {co.icRecommendation.verdict}
+              </span>
+            </div>
+            {co.icRecommendation.conditions.length > 0 && (
+              <div className="space-y-1 mb-2">
+                {co.icRecommendation.conditions.map((c, i) => (
+                  <div key={i} className="flex items-start gap-2 text-xs text-slate-300">
+                    <span className="text-amber-400 mt-0.5">◦</span>{c}
+                  </div>
+                ))}
+              </div>
+            )}
+            <p className="text-xs text-slate-500 italic">{co.icRecommendation.esgGating}</p>
+          </div>
+        )}
         <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
           <h3 className="text-sm font-semibold text-white mb-4">Material ESG Issues</h3>
           <div className="space-y-3">
