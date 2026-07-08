@@ -303,8 +303,8 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
               {[...co.engagement].sort((a, b) => {
                 const order: Record<string, number> = { Overdue: 0, Planned: 1, Completed: 2 };
                 return (order[a.status] ?? 3) - (order[b.status] ?? 3);
-              }).map((e) => (
-                <div key={`${e.date}-${e.topic}`} className="flex items-start gap-3 p-3 bg-white/[0.02] rounded-lg border border-white/5">
+              }).map((e, i) => (
+                <div key={`${e.date}-${e.topic}-${i}`} className="flex items-start gap-3 p-3 bg-white/[0.02] rounded-lg border border-white/5">
                   <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
                     e.status === "Completed" ? "bg-emerald-500" :
                     e.status === "Planned" ? "bg-blue-500" : "bg-red-500"

@@ -93,7 +93,15 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
           </Scatter>
         </ScatterChart>
       </ResponsiveContainer>
-      <div className="text-xs text-slate-600 text-center mt-1">Ideal: bottom-right (high ESG, low carbon) · AsiaPower Energy (890 tCO₂e/$M) off-chart</div>
+      {(() => {
+        const offChart = data.filter(d => d.carbonIntensity > 400);
+        return (
+          <div className="text-xs text-slate-600 text-center mt-1">
+            Ideal: bottom-right (high ESG, low carbon)
+            {offChart.length > 0 && ` · ${offChart.map(d => `${d.name} (${d.carbonIntensity} tCO₂e/$M)`).join(", ")} off-chart`}
+          </div>
+        );
+      })()}
     </div>
   );
 }

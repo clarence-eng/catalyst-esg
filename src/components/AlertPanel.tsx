@@ -12,16 +12,19 @@ function generateAlerts(companies: Company[]): Alert[] {
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const alerts: Alert[] = [];
 
-  // 1. Overdue engagements
+  // 1. Overdue engagements (max 1 alert per company to prevent one company dominating)
   for (const co of activeCompanies) {
-    for (const eng of co.engagement) {
-      if (eng.status === "Overdue") {
-        alerts.push({
-          message: `${co.name}: Overdue engagement — "${eng.topic}"`,
-          slug: co.slug,
-          severity: 1,
-        });
-      }
+    const overdueEngs = co.engagement.filter(e => e.status === "Overdue");
+    if (overdueEngs.length > 0) {
+      const count = overdueEngs.length;
+      const topic = overdueEngs[0].topic;
+      alerts.push({
+        message: count > 1
+          ? `${co.name}: ${count} overdue engagements (oldest: "${topic}")`
+          : `${co.name}: Overdue engagement — "${topic}"`,
+        slug: co.slug,
+        severity: 1,
+      });
     }
   }
 

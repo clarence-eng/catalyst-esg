@@ -575,8 +575,8 @@ function SocialTab({ co }: { co: Company }) {
           <GovStatTile
             label="Women on Board"
             value={`${bc.womenPct}%`}
-            note={bc.womenPct >= 30 ? "Meets 30% gender diversity target" : `${bc.womenPct}% — below 30% target`}
-            status={bc.womenPct >= 30 ? "ok" : "warn"}
+            note={bc.womenPct >= 33 ? "Meets 33% gender diversity target (MSCI/EU standard)" : `${bc.womenPct}% — below 33% target`}
+            status={bc.womenPct >= 33 ? "ok" : "warn"}
           />
           <GovStatTile
             label="CEO/Chair Split"
@@ -631,10 +631,11 @@ function EngagementTab({ co }: { co: Company }) {
     .filter((e) => e.status === "Planned" || e.status === "Overdue")
     .sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0)[0];
 
-  const stewardshipStatus: "On Track" | "Attention Needed" | "Action Required" =
-    overdue === 0 ? "On Track" : overdue === 1 ? "Attention Needed" : "Action Required";
+  const stewardshipStatus: "Not Started" | "On Track" | "Attention Needed" | "Action Required" =
+    total === 0 ? "Not Started" : overdue === 0 ? "On Track" : overdue === 1 ? "Attention Needed" : "Action Required";
 
   const statusStyle = {
+    "Not Started": "text-slate-400 bg-white/5 border-white/10",
     "On Track": "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
     "Attention Needed": "text-amber-400 bg-amber-500/10 border-amber-500/20",
     "Action Required": "text-red-400 bg-red-500/10 border-red-500/20",

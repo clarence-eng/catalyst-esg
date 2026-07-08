@@ -236,7 +236,7 @@ function SDGBadge({ sdg, label }: { sdg: number; label: string }) {
   return (
     <div className={`flex items-center gap-1 ${bg} rounded px-1.5 py-0.5`} title={`SDG ${sdg}: ${label}`}>
       <span className="text-white text-[10px] font-bold leading-none">{sdg}</span>
-      <span className="text-white text-[9px] leading-none opacity-90">{label}</span>
+      <span className="text-white text-[9px] leading-none opacity-90 hidden sm:inline">{label}</span>
     </div>
   );
 }

@@ -22,7 +22,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
     .map((l) => l.trim());
 
   const elements: React.ReactNode[] = [];
-  let listBuffer: string[] = [];
+  let listBuffer: Array<{ text: string; num?: number }> = [];
   let listIsOrdered = false;
   let key = 0;
 
@@ -33,8 +33,8 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
           <ol key={key++} className="list-none space-y-1 my-2">
             {listBuffer.map((item, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                <span className="text-emerald-500 mt-0.5 flex-shrink-0 font-medium w-4 text-right">{i + 1}.</span>
-                <span dangerouslySetInnerHTML={{ __html: renderInline(item) }} />
+                <span className="text-emerald-500 mt-0.5 flex-shrink-0 font-medium w-4 text-right">{item.num ?? i + 1}.</span>
+                <span dangerouslySetInnerHTML={{ __html: renderInline(item.text) }} />
               </li>
             ))}
           </ol>
@@ -45,7 +45,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
             {listBuffer.map((item, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
                 <span className="text-emerald-500 mt-0.5 flex-shrink-0">·</span>
-                <span dangerouslySetInnerHTML={{ __html: renderInline(item) }} />
+                <span dangerouslySetInnerHTML={{ __html: renderInline(item.text) }} />
               </li>
             ))}
           </ul>
@@ -100,15 +100,16 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
     if (/^[-•*]\s+/.test(line)) {
       if (listIsOrdered && listBuffer.length > 0) flushList();
       listIsOrdered = false;
-      listBuffer.push(line.replace(/^[-•*]\s+/, ""));
+      listBuffer.push({ text: line.replace(/^[-•*]\s+/, "") });
       continue;
     }
 
-    // Numbered list items: "1." "2." etc
+    // Numbered list items: "1." "2." etc — preserve original number
     if (/^\d+\.\s+/.test(line)) {
       if (!listIsOrdered && listBuffer.length > 0) flushList();
       listIsOrdered = true;
-      listBuffer.push(line.replace(/^\d+\.\s+/, ""));
+      const numMatch = line.match(/^(\d+)\.\s+/);
+      listBuffer.push({ text: line.replace(/^\d+\.\s+/, ""), num: numMatch ? parseInt(numMatch[1]) : undefined });
       continue;
     }
 
