@@ -212,11 +212,13 @@ export default function OverviewPage() {
           );
         })}
       </div>
+      {megatrends.length > 3 && (
       <div className="mt-2 text-right">
         <Link href="/signal" className="text-xs text-slate-500 hover:text-slate-300 flex items-center gap-1 justify-end">
           and {megatrends.length - 3} more · View all {megatrends.length} signals <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
+      )}
     </div>
   );
 }

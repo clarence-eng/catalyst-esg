@@ -99,8 +99,8 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
           <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
             <h3 className="text-sm font-semibold text-white mb-4">Investment Implications</h3>
             <div className="space-y-3">
-              {t.investmentImplications.map((imp) => (
-                <div key={`${imp.type}-${imp.sector}`} className={`flex items-start gap-3 p-3 rounded-lg border ${
+              {t.investmentImplications.map((imp, i) => (
+                <div key={`${imp.type}-${imp.sector}-${i}`} className={`flex items-start gap-3 p-3 rounded-lg border ${
                   imp.type === "Risk"
                     ? "bg-red-500/5 border-red-500/15"
                     : "bg-emerald-500/5 border-emerald-500/15"

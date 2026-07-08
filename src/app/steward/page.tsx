@@ -222,7 +222,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
     }`}>
       {/* Card Header — click anywhere to expand */}
       <div
-        className="p-5 cursor-pointer"
+        className="p-5 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-inset rounded-t-xl"
         role="button"
         tabIndex={0}
         aria-expanded={expanded}

@@ -14,7 +14,9 @@ function generateAlerts(companies: Company[]): Alert[] {
 
   // 1. Overdue engagements (max 1 alert per company to prevent one company dominating)
   for (const co of activeCompanies) {
-    const overdueEngs = co.engagement.filter(e => e.status === "Overdue");
+    const overdueEngs = co.engagement
+      .filter(e => e.status === "Overdue")
+      .sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
     if (overdueEngs.length > 0) {
       const count = overdueEngs.length;
       const topic = overdueEngs[0].topic;

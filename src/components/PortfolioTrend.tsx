@@ -38,9 +38,9 @@ export function PortfolioTrend({ data, activeCount = 5 }: { data: TrendPoint[]; 
         </div>
         <div className="flex items-center gap-4">
           {[
-            { label: "E", value: latest.e, change: eChange, color: "text-emerald-400" },
-            { label: "S", value: latest.s, change: sChange, color: "text-blue-400" },
-            { label: "G", value: latest.g, change: gChange, color: "text-purple-400" },
+            { label: "E", value: Math.round(latest.e), change: eChange, color: "text-emerald-400" },
+            { label: "S", value: Math.round(latest.s), change: sChange, color: "text-blue-400" },
+            { label: "G", value: Math.round(latest.g), change: gChange, color: "text-purple-400" },
           ].map(({ label, value, change, color }) => (
             <div key={label} className="text-center">
               <div className={`text-lg font-bold ${color}`}>{value}</div>
