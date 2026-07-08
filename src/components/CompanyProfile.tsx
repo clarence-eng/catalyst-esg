@@ -533,7 +533,7 @@ function EngagementTab({ co }: { co: Company }) {
         <div className="space-y-4">
           {[...co.engagement].sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0).map((e) => (
             <div key={`${e.date}-${e.topic}`} className="relative pl-10">
-              <div className={`absolute left-3 top-1.5 w-2 h-2 rounded-full -translate-x-1/2 ${
+              <div className={`absolute left-4 top-1.5 w-2 h-2 rounded-full -translate-x-1/2 ${
                 e.status === "Completed" ? "bg-emerald-500" :
                 e.status === "Planned" ? "bg-blue-500" : "bg-red-500"
               }`} />

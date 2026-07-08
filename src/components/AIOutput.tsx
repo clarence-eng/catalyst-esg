@@ -81,18 +81,6 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       continue;
     }
 
-    // Numbered section headers: strictly "N. UPPERCASE-word:" pattern (e.g. "1. ESG Risk Summary:")
-    // Distinguish from numbered list items that happen to contain colons mid-sentence
-    if (/^\d+\.\s+[A-Z]/.test(line) && /:\s*$/.test(line)) {
-      flushList();
-      elements.push(
-        <div key={key++} className="text-sm font-semibold text-slate-200 mt-4 mb-1.5"
-          dangerouslySetInnerHTML={{ __html: renderInline(line) }}
-        />
-      );
-      continue;
-    }
-
     // Bullet items: - or • or * at start
     if (/^[-•*]\s+/.test(line)) {
       listBuffer.push(line.replace(/^[-•*]\s+/, ""));
