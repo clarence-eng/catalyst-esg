@@ -200,6 +200,7 @@ function FrameworkDetailCard({ framework: f }: { framework: (typeof frameworks)[
           href={f.url}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`Open ${f.name} website`}
           className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200 transition-colors flex-shrink-0"
         >
           <ExternalLink className="w-3.5 h-3.5" />
