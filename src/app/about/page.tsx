@@ -20,7 +20,7 @@ const modules = [
     color: "text-emerald-400",
     bg: "bg-emerald-600/10 border-emerald-600/20",
     description:
-      "Portfolio ESG health dashboard. Investment-weighted KPIs (ESG Score, Transition Risk, Carbon Intensity, Overdue, Planned), portfolio E/S/G trajectory chart, portfolio positioning bubble chart (ESG vs carbon intensity), needs-attention alert panel, company table with Active/Pipeline distinction and portfolio weights, and an AI-powered Portfolio ESG Brief generator.",
+      "Portfolio ESG health dashboard. Investment-weighted KPIs, E/S/G trajectory chart, portfolio positioning bubble chart (ESG vs carbon intensity), risk heatmap (physical/transition/nature/governance), needs-attention alert panel with overdue engagements and Critical issues, company table with Active/Pipeline distinction, portfolio weights, and an AI-powered Portfolio ESG Brief generator.",
   },
   {
     href: "/scout",
@@ -29,7 +29,7 @@ const modules = [
     color: "text-blue-400",
     bg: "bg-blue-600/10 border-blue-600/20",
     description:
-      "ESG due diligence for new and existing portfolio companies. Active/Pipeline filter, live company search, per-company risk profile (Physical Risk, Transition Risk, Nature Risk), ESG score bars, and full company profiles with tabbed analysis.",
+      "ESG due diligence for new and existing portfolio companies. Active/Pipeline filter, live search, ESG momentum badges (↑/→/↓), SDG alignment tags, green revenue bars, IC Recommendation panel for pipeline companies, and full company profiles with 5 tabbed views including governance scorecard, TNFD pillar status, engagement completion tracker, and net zero commitment badges.",
   },
   {
     href: "/steward",
@@ -38,7 +38,7 @@ const modules = [
     color: "text-purple-400",
     bg: "bg-purple-600/10 border-purple-600/20",
     description:
-      "Post-investment engagement tracking. Active companies sorted by urgency (overdue engagements first), expandable engagement history logs, and an AI-generated 12-month ESG Action Plan with quarterly milestones. Pipeline companies shown separately.",
+      "Post-investment engagement tracking. Cards view (urgency-sorted) and calendar view (chronological engagement timeline across all companies including pipeline). AI-generated 12-month ESG Action Plans with quarterly milestones. Pipeline companies shown separately.",
   },
   {
     href: "/signal",
@@ -56,7 +56,7 @@ const modules = [
     color: "text-teal-400",
     bg: "bg-teal-600/10 border-teal-600/20",
     description:
-      "ESG knowledge repository for the Investment Group. 10 ESG frameworks (TCFD, TNFD, ISSB S1/S2, SASB, SBTi, EUDR, MAS GFAP, GRI, JETP/ETM, PCAF) with investment relevance and ASEAN context. 6 ASEAN ESG case studies covering climate, nature, and just transition themes. Filterable by category.",
+      "ESG knowledge repository for the Investment Group. 10 ESG frameworks (TCFD, TNFD, ISSB S1/S2, SASB, SBTi, EUDR, MAS GFAP, GRI, JETP/ETM, PCAF) with investment relevance and ASEAN context, filterable by category. 6 ASEAN ESG case studies. Full-text search across frameworks and case studies simultaneously.",
   },
 ];
 

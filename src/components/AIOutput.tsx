@@ -72,7 +72,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       line.slice(2, -2).indexOf("**") === -1;
     if (isSingleBoldWrap || line.startsWith("### ")) {
       flushList();
-      const content = line.replace(/^\*\*|\*\*$/g, "").replace(/^###\s*/, "");
+      const content = line.replace(/^###\s*/, "").replace(/^\*\*|\*\*$/g, "");
       elements.push(
         <div key={key++} className="text-sm font-semibold text-white mt-4 mb-1.5">
           {content}
