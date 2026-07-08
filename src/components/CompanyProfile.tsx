@@ -38,8 +38,8 @@ export function CompanyProfile({ company: co }: { company: Company }) {
     { subject: "Environmental", score: co.esgScore.environmental },
     { subject: "Social", score: co.esgScore.social },
     { subject: "Governance", score: co.esgScore.governance },
-    { subject: "Climate Resilience", score: Math.max(0, 100 - (co.climateRisk.transition === "Critical" ? 80 : co.climateRisk.transition === "High" ? 60 : co.climateRisk.transition === "Medium" ? 40 : 20)) },
-    { subject: "Nature Resilience", score: Math.max(0, 100 - (co.natureRisk.overall === "Critical" ? 80 : co.natureRisk.overall === "High" ? 60 : co.natureRisk.overall === "Medium" ? 40 : 20)) },
+    { subject: "Climate Resilience", score: Math.max(0, 100 - (co.climateRisk.transition === "Critical" ? 100 : co.climateRisk.transition === "High" ? 70 : co.climateRisk.transition === "Medium" ? 40 : 0)) },
+    { subject: "Nature Resilience", score: Math.max(0, 100 - (co.natureRisk.overall === "Critical" ? 100 : co.natureRisk.overall === "High" ? 70 : co.natureRisk.overall === "Medium" ? 40 : 0)) },
   ], [co.esgScore.environmental, co.esgScore.social, co.esgScore.governance, co.climateRisk.transition, co.natureRisk.overall]);
 
   async function generateMemo() {
@@ -659,7 +659,12 @@ function EngagementTab({ co }: { co: Company }) {
           </div>
           {nextDue && (
             <div className="text-xs text-slate-500">
-              Next due: <span className="text-slate-300 font-medium">{formatDate(nextDue.date)}</span>
+              {nextDue.status === "Overdue" ? (
+                <span className="text-red-400 font-medium">Overdue: </span>
+              ) : (
+                <span>Next planned: </span>
+              )}
+              <span className="text-slate-300 font-medium">{formatDate(nextDue.date)}</span>
               <span className="ml-1 text-slate-600">({nextDue.topic})</span>
             </div>
           )}

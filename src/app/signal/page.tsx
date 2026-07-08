@@ -9,7 +9,6 @@ import { ArrowRight, AlertCircle } from "lucide-react";
 const companyNameMap = Object.fromEntries(companies.map((c) => [c.slug, c.name]));
 // Include all portfolio companies (Active + Pipeline) in exposure counts
 const portfolioSlugs = new Set(companies.map(c => c.slug));
-const activeSlugs = new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug));
 
 const allJurisdictions = ["All", ...new Set(regulatoryUpdates.map((r) => {
   const j = r.jurisdiction.split(" /")[0].trim();

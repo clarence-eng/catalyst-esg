@@ -69,7 +69,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
             dataKey="esgScore"
             type="number"
             name="ESG Score"
-            domain={[30, 85]}
+            domain={[20, 100]}
             tick={{ fill: "#64748b", fontSize: 10 }}
             tickLine={false}
             label={{ value: "ESG Score →", position: "insideBottomRight", offset: -4, fill: "#475569", fontSize: 10 }}

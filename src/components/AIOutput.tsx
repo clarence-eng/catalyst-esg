@@ -23,21 +23,36 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
 
   const elements: React.ReactNode[] = [];
   let listBuffer: string[] = [];
+  let listIsOrdered = false;
   let key = 0;
 
   function flushList() {
     if (listBuffer.length > 0) {
-      elements.push(
-        <ul key={key++} className="list-none space-y-1 my-2">
-          {listBuffer.map((item, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-              <span className="text-emerald-500 mt-0.5 flex-shrink-0">·</span>
-              <span dangerouslySetInnerHTML={{ __html: renderInline(item) }} />
-            </li>
-          ))}
-        </ul>
-      );
+      if (listIsOrdered) {
+        elements.push(
+          <ol key={key++} className="list-none space-y-1 my-2">
+            {listBuffer.map((item, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
+                <span className="text-emerald-500 mt-0.5 flex-shrink-0 font-medium w-4 text-right">{i + 1}.</span>
+                <span dangerouslySetInnerHTML={{ __html: renderInline(item) }} />
+              </li>
+            ))}
+          </ol>
+        );
+      } else {
+        elements.push(
+          <ul key={key++} className="list-none space-y-1 my-2">
+            {listBuffer.map((item, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
+                <span className="text-emerald-500 mt-0.5 flex-shrink-0">·</span>
+                <span dangerouslySetInnerHTML={{ __html: renderInline(item) }} />
+              </li>
+            ))}
+          </ul>
+        );
+      }
       listBuffer = [];
+      listIsOrdered = false;
     }
   }
 
@@ -83,12 +98,16 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
 
     // Bullet items: - or • or * at start
     if (/^[-•*]\s+/.test(line)) {
+      if (listIsOrdered && listBuffer.length > 0) flushList();
+      listIsOrdered = false;
       listBuffer.push(line.replace(/^[-•*]\s+/, ""));
       continue;
     }
 
     // Numbered list items: "1." "2." etc
     if (/^\d+\.\s+/.test(line)) {
+      if (!listIsOrdered && listBuffer.length > 0) flushList();
+      listIsOrdered = true;
       listBuffer.push(line.replace(/^\d+\.\s+/, ""));
       continue;
     }

@@ -38,7 +38,7 @@ export default function LearnPage() {
   // Deep Dives always show category-filtered high-relevance frameworks (search doesn't collapse them)
   const deepDiveFrameworks = frameworks.filter((f) => f.temasekRelevance === "High" && (frameworkFilter === "All" || f.category === frameworkFilter));
 
-  const filterCategories: FrameworkFilter[] = ["All", "Climate", "Nature", "Reporting", "Cross-cutting", "Social"];
+  const filterCategories: FrameworkFilter[] = ["All", "Climate", "Nature", "Reporting", "Cross-cutting"];
 
   return (
     <div className="p-8">

@@ -29,8 +29,8 @@ export default function OverviewPage() {
   const allPeriods = [...new Set(
     activeCompanies.flatMap((c) => c.historicalScores.map((s) => s.period))
   )].sort((a, b) => {
-    const [aq, ay] = (a.match(/Q(\d) (\d{4})/) || ["", "1", "2000"]).slice(1).map(Number);
-    const [bq, by] = (b.match(/Q(\d) (\d{4})/) || ["", "1", "2000"]).slice(1).map(Number);
+    const [aq, ay] = (a.match(/Q(\d) (\d{4})/) || ["", "0", "9999"]).slice(1).map(Number);
+    const [bq, by] = (b.match(/Q(\d) (\d{4})/) || ["", "0", "9999"]).slice(1).map(Number);
     return ay !== by ? ay - by : aq - bq;
   });
   const portfolioTrend = allPeriods.map((period) => {
