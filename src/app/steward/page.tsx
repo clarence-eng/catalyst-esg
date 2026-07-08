@@ -143,7 +143,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
         tabIndex={0}
         aria-expanded={expanded}
         onClick={() => setExpanded(!expanded)}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded(!expanded); } }}
+        onKeyDown={(e) => { if ((e.target as HTMLElement).closest('a,button')) return; if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded(!expanded); } }}
       >
         <div className="flex items-start justify-between">
           <div className="flex-1">
