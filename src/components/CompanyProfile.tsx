@@ -55,7 +55,13 @@ export function CompanyProfile({ company: co }: { company: Company }) {
     setMemoError("");
     setMemo("");
     try {
-      const topIssues = co.materialIssues.slice(0, 3).map((i) => `${i.issue} (${i.severity})`).join(", ");
+      const severityOrder: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+      const topIssues = [...co.materialIssues]
+        .filter((i) => !i.opportunity)
+        .sort((a, b) => (severityOrder[a.severity] ?? 4) - (severityOrder[b.severity] ?? 4))
+        .slice(0, 3)
+        .map((i) => `${i.issue} (${i.severity})`)
+        .join(", ");
       const topUplift = co.valueUplift.slice(0, 2).map((u) => u.area).join(", ");
       const res = await fetch("/api/gemini", {
         method: "POST",
