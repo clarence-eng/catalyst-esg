@@ -76,9 +76,9 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
                 const quarter = `Q${Math.ceil((now.getMonth() + 1) / 3)} ${now.getFullYear()}`;
                 const count = companyNames.length;
                 const names = count > 0 ? companyNames.join(", ") : "Active Portfolio Companies";
-                const countLabel = count > 0 ? `${count}` : "";
-                const header = `CATALYST ESG INTELLIGENCE\n${quarter} Portfolio ESG Brief\nPrepared: ${date}\nPortfolio: ${countLabel ? countLabel + " " : ""}Active Companies (${names})\n${"─".repeat(60)}\n\n`;
-                navigator.clipboard.writeText(header + brief).catch(() => {});
+                const countLabel = count > 0 ? `${count} ` : "";
+                const header = `CATALYST ESG INTELLIGENCE\n${quarter} Portfolio ESG Brief\nPrepared: ${date}\nPortfolio: ${countLabel}Active Companies (${names})\n${"─".repeat(60)}\n\n`;
+                navigator.clipboard?.writeText(header + brief).catch(() => {});
               }}
               className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
             >

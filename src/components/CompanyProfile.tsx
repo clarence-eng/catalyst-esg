@@ -138,7 +138,26 @@ export function CompanyProfile({ company: co }: { company: Company }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 border-b border-white/5 mb-6" role="tablist" aria-label="Company ESG sections">
+      <div
+        className="flex items-center gap-1 border-b border-white/5 mb-6"
+        role="tablist"
+        aria-label="Company ESG sections"
+        onKeyDown={(e) => {
+          const ids = TABS.map(t => t.id);
+          const currentIdx = ids.indexOf(tab);
+          if (e.key === "ArrowRight") {
+            e.preventDefault();
+            const next = ids[(currentIdx + 1) % ids.length];
+            setTab(next);
+            document.getElementById(`tab-${next}`)?.focus();
+          } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            const prev = ids[(currentIdx - 1 + ids.length) % ids.length];
+            setTab(prev);
+            document.getElementById(`tab-${prev}`)?.focus();
+          }
+        }}
+      >
         {TABS.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
@@ -146,6 +165,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
             id={`tab-${id}`}
             aria-selected={tab === id}
             aria-controls={`tabpanel-${id}`}
+            tabIndex={tab === id ? 0 : -1}
             onClick={() => setTab(id)}
             className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:outline-none rounded-sm ${
               tab === id
@@ -159,16 +179,22 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         ))}
       </div>
 
-      {/* Tab Content */}
-      {tab === "overview" && (
-        <div role="tabpanel" id="tabpanel-overview" aria-labelledby="tab-overview">
-          <OverviewTab co={co} radarData={radarData} memo={memo} memoLoading={memoLoading} memoError={memoError} onGenerate={generateMemo} memoGeneratedAt={memoGeneratedAt} />
-        </div>
-      )}
-      {tab === "climate" && <div role="tabpanel" id="tabpanel-climate" aria-labelledby="tab-climate"><ClimateTab co={co} /></div>}
-      {tab === "nature" && <div role="tabpanel" id="tabpanel-nature" aria-labelledby="tab-nature"><NatureTab co={co} /></div>}
-      {tab === "social" && <div role="tabpanel" id="tabpanel-social" aria-labelledby="tab-social"><SocialTab co={co} /></div>}
-      {tab === "engagement" && <div role="tabpanel" id="tabpanel-engagement" aria-labelledby="tab-engagement"><EngagementTab co={co} /></div>}
+      {/* Tab Content — all panels rendered, inactive ones hidden so aria-controls always resolves */}
+      <div role="tabpanel" id="tabpanel-overview" aria-labelledby="tab-overview" hidden={tab !== "overview"}>
+        {tab === "overview" && <OverviewTab co={co} radarData={radarData} memo={memo} memoLoading={memoLoading} memoError={memoError} onGenerate={generateMemo} memoGeneratedAt={memoGeneratedAt} />}
+      </div>
+      <div role="tabpanel" id="tabpanel-climate" aria-labelledby="tab-climate" hidden={tab !== "climate"}>
+        {tab === "climate" && <ClimateTab co={co} />}
+      </div>
+      <div role="tabpanel" id="tabpanel-nature" aria-labelledby="tab-nature" hidden={tab !== "nature"}>
+        {tab === "nature" && <NatureTab co={co} />}
+      </div>
+      <div role="tabpanel" id="tabpanel-social" aria-labelledby="tab-social" hidden={tab !== "social"}>
+        {tab === "social" && <SocialTab co={co} />}
+      </div>
+      <div role="tabpanel" id="tabpanel-engagement" aria-labelledby="tab-engagement" hidden={tab !== "engagement"}>
+        {tab === "engagement" && <EngagementTab co={co} />}
+      </div>
     </div>
   );
 }
@@ -289,7 +315,7 @@ function OverviewTab({
               <AIOutput text={memo} />
               <div className="mt-3 flex items-center">
                 <button
-                  onClick={() => navigator.clipboard.writeText(memo).catch(() => {})}
+                  onClick={() => navigator.clipboard?.writeText(memo).catch(() => {})}
                   className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
                 >
                   <Copy className="w-3 h-3" />
@@ -638,7 +664,10 @@ function EngagementTab({ co }: { co: Company }) {
     .sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0)[0];
 
   const stewardshipStatus: "Not Started" | "On Track" | "Attention Needed" | "Action Required" =
-    total === 0 ? "Not Started" : overdue === 0 ? "On Track" : overdue === 1 ? "Attention Needed" : "Action Required";
+    total === 0 ? "Not Started"
+    : overdue === 0 ? "On Track"
+    : overdue >= 2 || completed === 0 ? "Action Required"
+    : "Attention Needed";
 
   const statusStyle = {
     "Not Started": "text-slate-400 bg-white/5 border-white/10",

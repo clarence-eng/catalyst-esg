@@ -83,7 +83,7 @@ export function AlertPanel({ companies }: { companies: Company[] }) {
       <div className="space-y-2">
         {alerts.map((alert, i) => (
           <div
-            key={i}
+            key={`${alert.slug}-${alert.severity}-${i}`}
             className="flex items-center gap-3 p-3 bg-[#0d1526] rounded-lg border border-white/5"
           >
             <AlertCircle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />

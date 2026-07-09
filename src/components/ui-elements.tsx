@@ -55,7 +55,7 @@ export function ScoreRing({ score, size = 80, label }: { score: number; size?: n
 
   return (
     <div className="flex flex-col items-center gap-1">
-      <svg width={size} height={size} className="-rotate-90">
+      <svg width={size} height={size} className="-rotate-90" role="img" aria-label={label ? `${label} score: ${score} out of 100` : `Score: ${score} out of 100`}>
         <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={6} />
         <circle
           cx={size / 2}

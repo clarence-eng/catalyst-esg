@@ -149,7 +149,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                 <AIOutput text={brief} />
                 <div className="mt-3 flex items-center">
                   <button
-                    onClick={() => navigator.clipboard.writeText(brief).catch(() => {})}
+                    onClick={() => navigator.clipboard?.writeText(brief).catch(() => {})}
                     className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
                   >
                     <Copy className="w-3 h-3" />
