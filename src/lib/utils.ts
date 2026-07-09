@@ -15,6 +15,8 @@ export function formatDate(iso: string): string {
   const [y, m, d] = parts;
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const monthIdx = parseInt(m) - 1;
+  const day = parseInt(d);
   if (monthIdx < 0 || monthIdx > 11 || isNaN(monthIdx)) return iso;
-  return `${parseInt(d)} ${months[monthIdx]} ${y}`;
+  if (isNaN(day) || day < 1 || day > 31) return iso;
+  return `${day} ${months[monthIdx]} ${y}`;
 }

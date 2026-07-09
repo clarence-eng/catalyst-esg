@@ -97,7 +97,7 @@ export const megatrends: Megatrend[] = [
     slug: "just-transition",
     title: "Just Transition & Inclusive Growth",
     subtitle: "Social Equity in the Low-Carbon Economy",
-    temasekAlignment: "Sustainable Living",
+    temasekAlignment: "Inclusive Growth",
     urgency: "Near-term",
     color: "orange",
     summary:

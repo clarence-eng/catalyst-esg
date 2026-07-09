@@ -29,7 +29,6 @@ export default function LearnPage() {
     Climate: ["Climate Transition"],
     Nature: ["Nature & Biodiversity"],
     Social: ["Just Transition"],
-    Governance: ["Governance"],
     Reporting: ["Climate Transition", "Sustainable Finance"],
     "Cross-cutting": ["Climate Transition", "Nature & Biodiversity", "Just Transition", "Governance", "Sustainable Finance"],
   };
@@ -149,7 +148,7 @@ export default function LearnPage() {
       {deepDiveFrameworks.length > 0 && (
       <div className="mt-10">
         <h2 className="text-sm font-semibold text-white mb-4">Framework Deep Dives</h2>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           {deepDiveFrameworks.map((f) => (
             <FrameworkDetailCard key={f.id} framework={f} />
           ))}
