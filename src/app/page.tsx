@@ -9,6 +9,19 @@ import { AlertPanel } from "@/components/AlertPanel";
 import { RiskHeatmap } from "@/components/RiskHeatmap";
 import { ArrowRight, GitMerge } from "lucide-react";
 
+const overviewColorMap: Record<string, string> = {
+  emerald: "border-emerald-600/20 bg-emerald-600/5",
+  green: "border-green-600/20 bg-green-600/5",
+  orange: "border-orange-500/20 bg-orange-500/5",
+  blue: "border-blue-500/20 bg-blue-500/5",
+  purple: "border-purple-500/20 bg-purple-500/5",
+};
+const overviewUrgencyMap: Record<string, string> = {
+  Immediate: "text-red-400 bg-red-500/10",
+  "Near-term": "text-amber-400 bg-amber-500/10",
+  "Long-term": "text-blue-400 bg-blue-500/10",
+};
+
 export default function OverviewPage() {
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const pipelineCount = companies.filter((c) => c.portfolioStatus === "Pipeline").length;
@@ -185,25 +198,13 @@ export default function OverviewPage() {
       </div>
       <div className="grid grid-cols-3 gap-4">
         {megatrends.slice(0, 3).map((t) => {
-          const colorMap: Record<string, string> = {
-            emerald: "border-emerald-600/20 bg-emerald-600/5",
-            green: "border-green-600/20 bg-green-600/5",
-            orange: "border-orange-500/20 bg-orange-500/5",
-            blue: "border-blue-500/20 bg-blue-500/5",
-            purple: "border-purple-500/20 bg-purple-500/5",
-          };
-          const urgencyMap: Record<string, string> = {
-            Immediate: "text-red-400 bg-red-500/10",
-            "Near-term": "text-amber-400 bg-amber-500/10",
-            "Long-term": "text-blue-400 bg-blue-500/10",
-          };
           return (
             <Link
               key={t.slug}
               href={`/signal/${t.slug}`}
-              className={`bg-[#0d1526] rounded-xl border p-4 hover:opacity-90 transition-opacity ${colorMap[t.color] ?? "border-white/10 bg-white/5"}`}
+              className={`bg-[#0d1526] rounded-xl border p-4 hover:opacity-90 transition-opacity ${overviewColorMap[t.color] ?? "border-white/10 bg-white/5"}`}
             >
-              <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded mb-3 ${urgencyMap[t.urgency] ?? "text-slate-400 bg-white/10"}`}>
+              <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded mb-3 ${overviewUrgencyMap[t.urgency] ?? "text-slate-400 bg-white/10"}`}>
                 {t.urgency}
               </span>
               <div className="font-semibold text-white text-sm mb-1">{t.title}</div>

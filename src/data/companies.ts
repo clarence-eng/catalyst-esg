@@ -179,7 +179,7 @@ export const companies: Company[] = [
         severity: "Medium",
         opportunity: false,
         detail:
-          "4 of 9 board members classified as non-independent under SGX rules, below best practice.",
+          "5 of 9 board members classified as non-independent under SGX rules, below best practice.",
       },
       {
         category: "Environmental",
@@ -601,7 +601,7 @@ export const companies: Company[] = [
     investmentValue: 285,
     carbonIntensity: 45,
     greenRevenuePct: 8,
-    lastUpdated: "2026-03-20",
+    lastUpdated: "2026-06-20",
     sdgAlignment: [
       { sdg: 9, label: "Industry & Innovation" },
       { sdg: 13, label: "Climate Action" },
@@ -964,7 +964,7 @@ export const companies: Company[] = [
     investmentValue: 510,
     carbonIntensity: 890,
     greenRevenuePct: 18,
-    lastUpdated: "2026-02-14",
+    lastUpdated: "2026-06-10",
     sdgAlignment: [
       { sdg: 7, label: "Clean Energy" },
       { sdg: 8, label: "Decent Work" },

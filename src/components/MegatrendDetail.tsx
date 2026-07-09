@@ -6,24 +6,24 @@ import { Loader2, FileText, TrendingUp, AlertTriangle, Copy } from "lucide-react
 import { AIOutput } from "@/components/AIOutput";
 import { formatRelativeTime } from "@/lib/utils";
 
+const colorMap: Record<string, string> = {
+  emerald: "border-emerald-600/20 bg-emerald-600/5",
+  green: "border-green-600/20 bg-green-600/5",
+  orange: "border-orange-500/20 bg-orange-500/5",
+  blue: "border-blue-500/20 bg-blue-500/5",
+  purple: "border-purple-500/20 bg-purple-500/5",
+};
+const urgencyMap: Record<string, string> = {
+  Immediate: "text-red-400 bg-red-500/10",
+  "Near-term": "text-amber-400 bg-amber-500/10",
+  "Long-term": "text-blue-400 bg-blue-500/10",
+};
+
 export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
   const [brief, setBrief] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [briefGeneratedAt, setBriefGeneratedAt] = useState<Date | null>(null);
-
-  const colorMap: Record<string, string> = {
-    emerald: "border-emerald-600/20 bg-emerald-600/5",
-    green: "border-green-600/20 bg-green-600/5",
-    orange: "border-orange-500/20 bg-orange-500/5",
-    blue: "border-blue-500/20 bg-blue-500/5",
-    purple: "border-purple-500/20 bg-purple-500/5",
-  };
-  const urgencyMap: Record<string, string> = {
-    Immediate: "text-red-400 bg-red-500/10",
-    "Near-term": "text-amber-400 bg-amber-500/10",
-    "Long-term": "text-blue-400 bg-blue-500/10",
-  };
 
   async function generateBrief() {
     setLoading(true);

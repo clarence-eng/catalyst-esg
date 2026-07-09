@@ -16,6 +16,19 @@ const allJurisdictions = ["All", ...new Set(regulatoryUpdates.map((r) => {
 }))];
 const allCategories = ["All", ...new Set(regulatoryUpdates.map((r) => r.category))];
 
+const megatrendColorMap: Record<string, string> = {
+  emerald: "border-emerald-600/20 hover:border-emerald-500/40",
+  green: "border-green-600/20 hover:border-green-500/40",
+  orange: "border-orange-500/20 hover:border-orange-400/40",
+  blue: "border-blue-500/20 hover:border-blue-400/40",
+  purple: "border-purple-500/20 hover:border-purple-400/40",
+};
+const megatrendUrgencyMap: Record<string, string> = {
+  Immediate: "text-red-400 bg-red-500/10",
+  "Near-term": "text-amber-400 bg-amber-500/10",
+  "Long-term": "text-blue-400 bg-blue-500/10",
+};
+
 export default function SignalPage() {
   const [jurisdictionFilter, setJurisdictionFilter] = useState("All");
   const [categoryFilter, setCategoryFilter] = useState("All");
@@ -44,28 +57,16 @@ export default function SignalPage() {
       <h2 className="text-sm font-semibold text-white mb-4">ESG Megatrends</h2>
       <div className="grid grid-cols-3 gap-4 mb-10">
         {megatrends.map((t) => {
-          const colorMap: Record<string, string> = {
-            emerald: "border-emerald-600/20 hover:border-emerald-500/40",
-            green: "border-green-600/20 hover:border-green-500/40",
-            orange: "border-orange-500/20 hover:border-orange-400/40",
-            blue: "border-blue-500/20 hover:border-blue-400/40",
-            purple: "border-purple-500/20 hover:border-purple-400/40",
-          };
-          const urgencyMap: Record<string, string> = {
-            Immediate: "text-red-400 bg-red-500/10",
-            "Near-term": "text-amber-400 bg-amber-500/10",
-            "Long-term": "text-blue-400 bg-blue-500/10",
-          };
           const exposureSummary = t.portfolioExposure.filter((p) => p.exposure === "High" && portfolioSlugs.has(p.slug)).length;
 
           return (
             <Link
               key={t.slug}
               href={`/signal/${t.slug}`}
-              className={`bg-[#0d1526] rounded-xl border p-5 hover:bg-white/[0.02] transition-all group ${colorMap[t.color] ?? "border-white/10"}`}
+              className={`bg-[#0d1526] rounded-xl border p-5 hover:bg-white/[0.02] transition-all group ${megatrendColorMap[t.color] ?? "border-white/10"}`}
             >
               <div className="flex items-start justify-between mb-3">
-                <span className={`text-xs font-medium px-2 py-0.5 rounded ${urgencyMap[t.urgency] ?? "text-slate-400 bg-white/10"}`}>
+                <span className={`text-xs font-medium px-2 py-0.5 rounded ${megatrendUrgencyMap[t.urgency] ?? "text-slate-400 bg-white/10"}`}>
                   {t.urgency}
                 </span>
                 <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors" />

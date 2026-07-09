@@ -61,11 +61,15 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
           </div>
         ))}
         <span className="text-xs text-slate-600 ml-2">Transition Risk</span>
-        {data.filter(d => d.carbonIntensity > 400).map(d => (
-          <span key={d.slug} className="ml-auto text-xs text-red-400/80 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded flex-shrink-0">
-            ↑ {d.name} ({d.carbonIntensity} tCO₂e/$M) — off chart Y
-          </span>
-        ))}
+        {data.filter(d => d.carbonIntensity > 400).length > 0 && (
+          <div className="ml-auto flex items-center gap-2 flex-shrink-0">
+            {data.filter(d => d.carbonIntensity > 400).map(d => (
+              <span key={d.slug} className="text-xs text-red-400/80 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded">
+                ↑ {d.name} ({d.carbonIntensity} tCO₂e/$M) — off chart Y
+              </span>
+            ))}
+          </div>
+        )}
       </div>
       <ResponsiveContainer width="100%" height={240} aria-label="Portfolio positioning chart — ESG Score vs Carbon Intensity">
         <ScatterChart margin={{ top: 8, right: 24, bottom: 16, left: 8 }}>
