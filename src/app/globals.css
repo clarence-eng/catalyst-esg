@@ -45,12 +45,12 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 
   /* Override Tailwind's red palette with Temasek brand red family
-     so all red-* classes use colors harmonious with #C41E3A */
-  --color-red-300: #e8707f;
-  --color-red-400: #d63551;
-  --color-red-500: #c41e3a;
-  --color-red-600: #a81733;
-  --color-red-700: #8c0f2b;
+     #BA0C2F = Temasek's deep crimson red */
+  --color-red-300: #dd6678;
+  --color-red-400: #cc2244;
+  --color-red-500: #ba0c2f;
+  --color-red-600: #9a0827;
+  --color-red-700: #7e0620;
 }
 
 :root {
@@ -60,9 +60,9 @@
   --card-foreground: oklch(0.93 0.01 240);
   --popover: oklch(0.16 0.02 255);
   --popover-foreground: oklch(0.93 0.01 240);
-  /* Temasek brand red #C41E3A */
-  --temasek-red: #C41E3A;
-  --primary: oklch(0.43 0.22 25);
+  /* Temasek brand red #BA0C2F */
+  --temasek-red: #BA0C2F;
+  --primary: oklch(0.38 0.19 24);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.22 0.02 255);
   --secondary-foreground: oklch(0.93 0.01 240);
