@@ -75,6 +75,7 @@ Country/Region: ${sanitize(ctx.country)}, ${sanitize(ctx.region)}
 ESG Rating: ${sanitize(ctx.rating)} (Overall score: ${sanitize(ctx.overallScore)}/100, E: ${sanitize(ctx.eScore)}, S: ${sanitize(ctx.sScore)}, G: ${sanitize(ctx.gScore)})
 ESG Maturity: ${sanitize(ctx.maturity)}
 Climate Risk: Physical ${sanitize(ctx.physicalRisk)}, Transition ${sanitize(ctx.transitionRisk)} | Pathway: ${sanitize(ctx.pathway)}
+Transition Risk Context: ${sanitize(ctx.transitionContext, 400)}
 Nature Risk: ${sanitize(ctx.natureRisk)}
 Top Material Issues: ${sanitize(ctx.topIssues, 500)}
 Key Value Uplift: ${sanitize(ctx.topUplift, 300)}

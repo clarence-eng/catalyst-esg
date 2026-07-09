@@ -21,6 +21,13 @@ import { Loader2, FileText, CheckCircle, AlertCircle, TrendingUp, Shield, Leaf, 
 
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
+const TNFD_PILLAR_DESCS: Record<string, string> = {
+  "Governance": "Board oversight of nature-related risks and opportunities",
+  "Strategy": "Actual and potential nature-related impacts on business strategy",
+  "Risk & Impact Mgmt": "LEAP assessment: Locate, Evaluate, Assess, Prepare",
+  "Metrics & Targets": "Nature-related KPIs and targets aligned to GBF",
+};
+
 const TABS = [
   { id: "overview", label: "Overview", icon: TrendingUp },
   { id: "climate", label: "Climate", icon: Shield },
@@ -82,6 +89,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
             maturity: co.maturity,
             physicalRisk: co.climateRisk.physical,
             transitionRisk: co.climateRisk.transition,
+            transitionContext: co.climateRisk.transitionDetails.slice(0, 2).join("; "),
             pathway: co.climateRisk.pathwayAlignment,
             natureRisk: co.natureRisk.overall,
             topIssues,
@@ -542,12 +550,6 @@ function NatureTab({ co }: { co: Company }) {
             { pillar: "Risk & Impact Mgmt", status: co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const },
             { pillar: "Metrics & Targets", status: co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const },
           ]).map(({ pillar, status }) => {
-            const pillarDescs: Record<string, string> = {
-              "Governance": "Board oversight of nature-related risks and opportunities",
-              "Strategy": "Actual and potential nature-related impacts on business strategy",
-              "Risk & Impact Mgmt": "LEAP assessment: Locate, Evaluate, Assess, Prepare",
-              "Metrics & Targets": "Nature-related KPIs and targets aligned to GBF",
-            };
             const statusStyle = status === "Adopted"
               ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
               : status === "Partial"
@@ -559,7 +561,7 @@ function NatureTab({ co }: { co: Company }) {
                 <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${dotColor}`} />
                 <div>
                   <div className="text-sm font-medium text-white">{pillar}</div>
-                  <div className="text-xs text-slate-500">{pillarDescs[pillar] ?? ""}</div>
+                  <div className="text-xs text-slate-500">{TNFD_PILLAR_DESCS[pillar] ?? ""}</div>
                 </div>
                 <span className={`ml-auto text-xs px-2 py-0.5 rounded border flex-shrink-0 ${statusStyle}`}>{status}</span>
               </div>
@@ -722,8 +724,8 @@ function EngagementTab({ co }: { co: Company }) {
             </div>
             <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
               <div
-                className={`h-full rounded-full transition-all ${completionPct >= 75 ? "bg-emerald-500" : completionPct >= 40 ? "bg-amber-500" : "bg-red-500"}`}
-                style={{ width: `${completionPct}%` }}
+                className={`h-full rounded-full transition-all ${completionPct === 0 ? "bg-slate-600" : completionPct >= 75 ? "bg-emerald-500" : completionPct >= 40 ? "bg-amber-500" : "bg-red-500"}`}
+                style={{ width: `${completionPct === 0 ? 0 : completionPct}%` }}
               />
             </div>
           </div>

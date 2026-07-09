@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import type { ReactNode } from "react";
 
 interface AIOutputProps {
   text: string;
@@ -21,7 +21,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
     .split("\n")
     .map((l) => l.trim());
 
-  const elements: React.ReactNode[] = [];
+  const elements: ReactNode[] = [];
   let listBuffer: Array<{ text: string; num?: number }> = [];
   let listIsOrdered = false;
   let key = 0;
