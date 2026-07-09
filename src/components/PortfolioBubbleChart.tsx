@@ -40,7 +40,7 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
       <div className="text-gray-600">ESG Score: <span className="text-gray-900">{d.esgScore}</span></div>
       <div className="text-gray-600">Carbon Intensity: <span className="text-gray-900">{d.carbonIntensity} tCO₂e/$M</span></div>
       <div className="text-gray-600">Investment: <span className="text-gray-900">S${d.investmentValue}M</span></div>
-      <div className="text-gray-600">Transition Risk: <span style={{ color: riskColor[d.transitionRisk] ?? "#94a3b8" }}>{d.transitionRisk}</span></div>
+      <div className="text-gray-600">Transition Risk: <span style={{ color: riskColor[d.transitionRisk] ?? "#6b7280" }}>{d.transitionRisk}</span></div>
     </div>
   );
 }
@@ -74,7 +74,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
       <div role="img" aria-label="Portfolio positioning chart — ESG Score vs Carbon Intensity">
       <ResponsiveContainer width="100%" height={240}>
         <ScatterChart margin={{ top: 8, right: 24, bottom: 16, left: 8 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
           <XAxis
             dataKey="esgScore"
             type="number"

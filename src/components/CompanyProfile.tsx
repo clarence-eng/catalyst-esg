@@ -378,7 +378,7 @@ function OverviewTab({
           <div role="img" aria-label={`ESG profile radar for ${co.name}: Environmental ${co.esgScore.environmental}, Social ${co.esgScore.social}, Governance ${co.esgScore.governance}, Climate Resilience ${radarData[3]?.score ?? 0} (${co.climateRisk.pathwayAlignment}), Nature Resilience ${radarData[4]?.score ?? 0}`}>
           <ResponsiveContainer width="100%" height={240}>
             <RadarChart data={radarData}>
-              <PolarGrid stroke="rgba(255,255,255,0.06)" />
+              <PolarGrid stroke="rgba(0,0,0,0.08)" />
               <PolarAngleAxis dataKey="subject" tick={{ fill: "#64748b", fontSize: 10 }} />
               <Radar name="ESG" dataKey="score" stroke="#10b981" fill="#10b981" fillOpacity={0.15} strokeWidth={2} />
             </RadarChart>
@@ -392,12 +392,12 @@ function OverviewTab({
           <div role="img" aria-label={`Historical E/S/G score trend for ${co.name}`}>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={co.historicalScores}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
               <XAxis dataKey="period" tick={{ fill: "#64748b", fontSize: 9 }} interval="preserveStartEnd" />
               <YAxis domain={[0, 100]} tick={{ fill: "#64748b", fontSize: 9 }} width={25} />
               <Tooltip
-                contentStyle={{ background: "#0d1526", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: 11 }}
-                labelStyle={{ color: "#94a3b8" }}
+                contentStyle={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "8px", fontSize: 11 }}
+                labelStyle={{ color: "#6b7280" }}
               />
               <Line type="monotone" dataKey="e" stroke="#10b981" strokeWidth={2} dot={{ r: 2, fill: "#10b981", strokeWidth: 0 }} name="E" />
               <Line type="monotone" dataKey="s" stroke="#3b82f6" strokeWidth={2} dot={{ r: 2, fill: "#3b82f6", strokeWidth: 0 }} name="S" />

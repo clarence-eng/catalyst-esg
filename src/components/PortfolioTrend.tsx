@@ -56,7 +56,7 @@ export function PortfolioTrend({ data, activeCount = 5 }: { data: TrendPoint[]; 
       <div role="img" aria-label={`Portfolio ESG trend from ${data[0].period} to ${data[data.length - 1].period}`}>
       <ResponsiveContainer width="100%" height={140}>
         <LineChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
           <XAxis
             dataKey="period"
             tick={{ fill: "#64748b", fontSize: 9 }}
@@ -71,12 +71,12 @@ export function PortfolioTrend({ data, activeCount = 5 }: { data: TrendPoint[]; 
           />
           <Tooltip
             contentStyle={{
-              background: "#0d1526",
-              border: "1px solid rgba(255,255,255,0.1)",
+              background: "#ffffff",
+              border: "1px solid rgba(0,0,0,0.08)",
               borderRadius: "8px",
               fontSize: 11,
             }}
-            labelStyle={{ color: "#94a3b8" }}
+            labelStyle={{ color: "#6b7280" }}
           />
           <Line type="monotone" dataKey="e" stroke="#10b981" strokeWidth={2} dot={{ r: 2, fill: "#10b981", strokeWidth: 0 }} name="Env" />
           <Line type="monotone" dataKey="s" stroke="#3b82f6" strokeWidth={2} dot={{ r: 2, fill: "#3b82f6", strokeWidth: 0 }} name="Social" />

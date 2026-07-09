@@ -56,7 +56,7 @@ export function ScoreRing({ score, size = 80, label }: { score: number; size?: n
   return (
     <div className="flex flex-col items-center gap-1">
       <svg width={size} height={size} className="-rotate-90" role="img" aria-label={label ? `${label} score: ${score} out of 100` : `Score: ${score} out of 100`}>
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={6} />
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="rgba(0,0,0,0.10)" strokeWidth={6} />
         {score > 0 && (
         <circle
           cx={size / 2}
@@ -75,7 +75,7 @@ export function ScoreRing({ score, size = 80, label }: { score: number; size?: n
           y={size / 2}
           dominantBaseline="middle"
           textAnchor="middle"
-          style={{ transform: `rotate(90deg)`, transformOrigin: `${size / 2}px ${size / 2}px`, fill: "white", fontSize: size > 60 ? "16px" : "12px", fontWeight: "700" }}
+          style={{ transform: `rotate(90deg)`, transformOrigin: `${size / 2}px ${size / 2}px`, fill: "#1f2937", fontSize: size > 60 ? "16px" : "12px", fontWeight: "700" }}
         >
           {score}
         </text>
