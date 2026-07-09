@@ -413,7 +413,7 @@ export const companies: Company[] = [
         type: "Meeting",
         topic: "TNFD Assessment Scoping",
         status: "Overdue",
-        notes: "Introduce TNFD pilot framework for forest-risk commodity sectors.",
+        notes: "Meeting not completed — agenda was to scope TNFD LEAP pilot for forest-risk commodity lending. Follow-up required to establish timeline and assign ESG team lead before Q4 2025 reporting cycle.",
       },
       {
         date: "2026-03-15",
@@ -595,7 +595,7 @@ export const companies: Company[] = [
         type: "Meeting",
         topic: "Sustainability Analytics Product Roadmap",
         status: "Overdue",
-        notes: "Explore carbon management SaaS opportunity for APAC enterprise segment.",
+        notes: "Meeting missed — product team scheduling conflict. Agenda was to review carbon management SaaS roadmap for APAC enterprise, including competitive positioning vs Watershed and Persefoni. Rescheduled to Q1 2026 but not completed.",
       },
       {
         date: "2026-08-20",

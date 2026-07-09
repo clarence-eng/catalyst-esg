@@ -14,6 +14,15 @@ function sanitize(value: unknown, maxLen = 200): string {
     .replace(/[\r\n]+/g, " ");
 }
 
+function sanitizeBlock(value: unknown, maxLen = 5000): string {
+  if (value === null || value === undefined) return "";
+  return String(value)
+    .slice(0, maxLen)
+    .replace(/[<>]/g, "")
+    .replace(/\r\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n");
+}
+
 function validateContext(type: GenerationType, ctx: Record<string, unknown>): boolean {
   if (type === "deal_memo") {
     return ["name", "sector", "country", "rating", "maturity"].every((k) => typeof ctx[k] === "string");
@@ -117,7 +126,7 @@ Write in the voice of Temasek's Sustainability Group — sophisticated, Asia-awa
 Write a concise Portfolio ESG Health Summary for the most recent quarter.
 
 Portfolio Summary:
-${sanitize(ctx.portfolioSummary, 5000)}
+${sanitizeBlock(ctx.portfolioSummary, 5000)}
 
 Write exactly 3 paragraphs:
 1. Portfolio ESG Performance: Aggregate ESG trajectory, top improvers, and companies requiring attention. Reference specific score movements and drivers.
