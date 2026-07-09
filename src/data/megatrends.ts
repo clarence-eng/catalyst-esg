@@ -164,7 +164,7 @@ export const megatrends: Megatrend[] = [
     title: "Longer Lifespans",
     subtitle: "Ageing Populations & Health Equity in Asia",
     temasekAlignment: "Longer Lifespans",
-    urgency: "Near-term",
+    urgency: "Long-term",
     color: "purple",
     summary:
       "Asia's rapidly ageing population is creating structural demand for healthcare, eldercare, and preventive wellness. By 2050, one in four Asians will be over 60. This demographic megatrend drives investment opportunity in health systems, digital health, and longevity-linked sectors — while creating material ESG risks for companies dependent on young, low-cost labour and for pension-exposed financial institutions.",

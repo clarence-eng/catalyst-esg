@@ -126,7 +126,7 @@ export const frameworks: FrameworkCard[] = [
     status: "Voluntary",
     adoptionYear: "2015",
     description:
-      "SBTi enables companies to set emissions reduction targets aligned with climate science — specifically the 1.5°C pathway. Targets must cover Scope 1, 2, and material Scope 3. The SBTi for Financial Institutions (SBTi FI) provides equivalent methodology for financial institutions' financed emissions.",
+      "SBTi enables companies to set emissions reduction targets aligned with climate science — specifically the 1.5°C pathway. Targets must cover Scope 1, 2, and material Scope 3. The SBTi for Financial Institutions (SBTi for FIs) provides equivalent methodology for financial institutions' financed emissions.",
     investmentRelevance:
       "SBTi targets are increasingly required by institutional investors and MNC buyers as a condition for supply chain qualification. Companies without SBTi face procurement risk. For portfolio companies, SBTi adoption signals strategic alignment and unlocks ESG-linked financing.",
     keyRequirements: [
