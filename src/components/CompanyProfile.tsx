@@ -278,22 +278,31 @@ type TaxonomyTier = "Tier 1" | "Tier 2" | "Not classified";
 
 function getASEANTaxonomy(co: Company): { activity: string; tier: TaxonomyTier; pct: number }[] {
   const sector = co.sector.toLowerCase();
-  if (sector.includes("electric util")) return [
-    { activity: "Renewable/Geothermal Generation", tier: "Tier 1", pct: co.greenRevenuePct },
-    { activity: "Coal/Gas Generation", tier: "Not classified", pct: 100 - co.greenRevenuePct },
-  ].filter(a => a.pct > 0) as { activity: string; tier: TaxonomyTier; pct: number }[];
+  if (sector.includes("electric util")) {
+    const all: { activity: string; tier: TaxonomyTier; pct: number }[] = [
+      { activity: "Renewable/Geothermal Generation", tier: "Tier 1", pct: co.greenRevenuePct },
+      { activity: "Coal/Gas Generation", tier: "Not classified", pct: 100 - co.greenRevenuePct },
+    ];
+    return all.filter(a => a.pct > 0);
+  }
   if (sector.includes("marine") || sector.includes("transport")) return [
     { activity: `Shipping (transition via ${co.netZeroCommitment !== "None" ? "SBTi pathway" : "IMO CII"})`, tier: "Tier 2", pct: 100 },
   ];
-  if (sector.includes("agriculture")) return [
-    { activity: "Certified Sustainable Agri (RSPO/EUDR-compliant)", tier: "Tier 1", pct: co.greenRevenuePct },
-    { activity: "Conventional Agriculture", tier: "Tier 2", pct: 100 - co.greenRevenuePct },
-  ].filter(a => a.pct > 0) as { activity: string; tier: TaxonomyTier; pct: number }[];
-  if (sector.includes("bank") || sector.includes("finance")) return [
-    { activity: "Green/Transition Finance Products", tier: "Tier 1", pct: co.greenRevenuePct },
-    { activity: "General Corporate Lending", tier: "Tier 2", pct: 60 - co.greenRevenuePct > 0 ? 60 - co.greenRevenuePct : 0 },
-    { activity: "Carbon-intensive Sector Lending", tier: "Not classified", pct: 40 },
-  ].filter(a => a.pct > 0) as { activity: string; tier: TaxonomyTier; pct: number }[];
+  if (sector.includes("agriculture")) {
+    const all: { activity: string; tier: TaxonomyTier; pct: number }[] = [
+      { activity: "Certified Sustainable Agri (RSPO/EUDR-compliant)", tier: "Tier 1", pct: co.greenRevenuePct },
+      { activity: "Conventional Agriculture", tier: "Tier 2", pct: 100 - co.greenRevenuePct },
+    ];
+    return all.filter(a => a.pct > 0);
+  }
+  if (sector.includes("bank") || sector.includes("finance")) {
+    const all: { activity: string; tier: TaxonomyTier; pct: number }[] = [
+      { activity: "Green/Transition Finance Products", tier: "Tier 1", pct: co.greenRevenuePct },
+      { activity: "General Corporate Lending", tier: "Tier 2", pct: 60 - co.greenRevenuePct > 0 ? 60 - co.greenRevenuePct : 0 },
+      { activity: "Carbon-intensive Sector Lending", tier: "Not classified", pct: 40 },
+    ];
+    return all.filter(a => a.pct > 0);
+  }
   if (sector.includes("technology") || sector.includes("digital")) return [
     { activity: "Cloud/Digital Infrastructure", tier: (co.greenRevenuePct > 20 ? "Tier 1" : "Tier 2") as TaxonomyTier, pct: 100 },
   ];
@@ -550,7 +559,7 @@ function OverviewTab({
             },
             {
               label: "TNFD assessment consistent with nature risk level",
-              concern: co.natureRisk.overall === "Critical" && !co.natureRisk.tnfdAligned && !co.natureRisk.tnfdPillars?.some(p => p.status !== "Gap"),
+              concern: co.natureRisk.overall === "Critical" && !co.natureRisk.tnfdAligned && !co.natureRisk.tnfdPillars?.some(p => p.status === "Adopted"),
               note: co.natureRisk.overall === "Critical" ? "Critical nature risk without TNFD assessment initiated" : null,
             },
             {
@@ -773,7 +782,7 @@ function ClimateTab({ co }: { co: Company }) {
     { item: "Climate scenario analysis (≥2 scenarios)", status: co.climateRisk.transitionDetails.length >= 2 ? "✓" : "Partial", pass: co.climateRisk.transitionDetails.length >= 2 },
     { item: "Physical risk quantification", status: co.climateRisk.physicalDetails.length > 0 ? "✓" : "✗", pass: co.climateRisk.physicalDetails.length > 0 },
     { item: "Scope 1+2 emissions disclosed", status: co.carbonIntensity > 0 ? "✓" : "✗", pass: co.carbonIntensity > 0 },
-    { item: "Scope 3 assessment / financed emissions", status: co.materialIssues.some(i => i.issue.toLowerCase().includes("emission")) ? "Partial" : "✗", pass: false },
+    { item: "Scope 3 assessment / financed emissions", status: co.materialIssues.some(i => i.issue.toLowerCase().includes("emission") || i.issue.toLowerCase().includes("financed")) ? "Partial" : "✗", pass: co.sector.toLowerCase().includes("bank") && co.materialIssues.some(i => i.issue.toLowerCase().includes("emission")) },
     { item: "Climate-related targets set", status: co.netZeroCommitment !== "None" ? "✓" : "✗", pass: co.netZeroCommitment !== "None" },
     { item: "SBTi-validated or equivalent pathway", status: co.netZeroCommitment === "SBTi Targets Set" ? "✓" : co.netZeroCommitment === "SBTi Committed" ? "In Progress" : "✗", pass: co.netZeroCommitment === "SBTi Targets Set" },
   ];

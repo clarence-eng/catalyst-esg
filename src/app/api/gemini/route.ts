@@ -37,7 +37,7 @@ function validateContext(type: GenerationType, ctx: Record<string, unknown>): bo
     return typeof ctx.portfolioSummary === "string" && ctx.portfolioSummary.trim().length > 0;
   }
   if (type === "engagement_questions") {
-    return ["name", "sector", "maturity"].every((k) => typeof ctx[k] === "string");
+    return ["name", "sector", "maturity", "country"].every((k) => typeof ctx[k] === "string");
   }
   return false;
 }

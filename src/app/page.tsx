@@ -318,7 +318,7 @@ function ParisPathwayWidget({ companies }: { companies: { pathwayAlignment: stri
                   <div className="flex-1 min-w-0">
                     <span className={`text-xs font-semibold ${tier.textColor}`}>{tier.label}</span>
                     <span className="text-xs text-gray-500 ml-2">{pct.toFixed(1)}% AUM</span>
-                    <span className="text-xs text-gray-400 ml-2">— {tier.companies.map(c => c.name).join(", ")}</span>
+                    <span className="text-xs text-gray-600 ml-2">— {tier.companies.map(c => c.name).join(", ")}</span>
                   </div>
                 </div>
               );
