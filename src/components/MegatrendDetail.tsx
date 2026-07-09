@@ -132,6 +132,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
               <button
                 onClick={generateBrief}
                 disabled={loading}
+                aria-busy={loading}
                 className="flex items-center gap-2 text-sm bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
@@ -139,7 +140,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
               </button>
             </div>
             {error && (
-              <div className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-3">
+              <div role="alert" className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-3">
                 {error}
               </div>
             )}
@@ -147,23 +148,29 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
               <>
                 {loading && <div className="text-xs text-slate-500 text-center py-2 mb-2">Regenerating…</div>}
                 <AIOutput text={brief} />
-                <div className="mt-3 flex items-center">
-                  <button
-                    onClick={() => navigator.clipboard?.writeText(brief).catch(() => {})}
-                    className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
-                  >
-                    <Copy className="w-3 h-3" />
-                    Copy to clipboard
-                  </button>
-                  <span className="text-xs text-slate-600 ml-auto">
-                    {briefGeneratedAt ? `Generated ${formatRelativeTime(briefGeneratedAt)}` : ""}
-                  </span>
-                </div>
               </>
-            ) : !loading && (
+            ) : loading ? (
+              <div className="text-xs text-slate-500 text-center py-6 border border-dashed border-white/5 rounded-lg animate-pulse">
+                Generating brief…
+              </div>
+            ) : (
               <div className="text-xs text-slate-600 text-center py-6 border border-dashed border-white/5 rounded-lg">
                 <div>Generate a Temasek Sustainability Group-style thematic investment brief using AI</div>
                 <div className="text-slate-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
+              </div>
+            )}
+            {brief && (
+              <div className="mt-3 flex items-center">
+                <button
+                  onClick={() => navigator.clipboard?.writeText(brief).catch(() => {})}
+                  className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+                >
+                  <Copy className="w-3 h-3" />
+                  Copy to clipboard
+                </button>
+                <span className="text-xs text-slate-600 ml-auto">
+                  {briefGeneratedAt ? `Generated ${formatRelativeTime(briefGeneratedAt)}` : ""}
+                </span>
               </div>
             )}
           </div>

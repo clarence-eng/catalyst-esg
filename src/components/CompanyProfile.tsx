@@ -311,6 +311,7 @@ function OverviewTab({
             <button
               onClick={onGenerate}
               disabled={memoLoading}
+              aria-busy={memoLoading}
               className="flex items-center gap-2 text-sm bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
             >
               {memoLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
@@ -318,7 +319,7 @@ function OverviewTab({
             </button>
           </div>
           {memoError && (
-            <div className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-3">
+            <div role="alert" className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-3">
               {memoError}
             </div>
           )}
@@ -339,7 +340,11 @@ function OverviewTab({
                 </span>
               </div>
             </>
-          ) : !memoLoading && (
+          ) : memoLoading ? (
+            <div className="text-xs text-slate-500 text-center py-6 border border-dashed border-white/5 rounded-lg animate-pulse">
+              Generating assessment…
+            </div>
+          ) : (
             <div className="text-xs text-slate-600 text-center py-6 border border-dashed border-white/5 rounded-lg">
               <div>Generate a Temasek-style investment committee ESG assessment using AI</div>
               <div className="text-slate-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>

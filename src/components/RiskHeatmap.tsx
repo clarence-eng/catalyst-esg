@@ -53,7 +53,7 @@ export function RiskHeatmap() {
         <p className="text-xs text-slate-500 mt-0.5">Material risk exposure across active portfolio companies</p>
       </div>
       <div className="p-5 overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full" aria-label="Risk matrix — material risk exposure across active portfolio companies">
           <thead>
             <tr>
               <th scope="col" className="text-left text-xs text-slate-500 font-medium pb-3 pr-4 w-40">Company</th>

@@ -120,6 +120,7 @@ export const megatrends: Megatrend[] = [
       { slug: "nusantara-bank", name: "Nusantara Bank", exposure: "Medium" },
       { slug: "greenharvest-agri", name: "GreenHarvest Agri", exposure: "High" },
       { slug: "seaport-logistics", name: "SeaPort Logistics", exposure: "Medium" },
+      { slug: "medilink-health", name: "MediLink Health", exposure: "Medium" },
       { slug: "cloudmesh-technologies", name: "CloudMesh Technologies", exposure: "Low" },
     ],
   },
