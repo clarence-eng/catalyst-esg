@@ -39,7 +39,10 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
             subtitle: t.subtitle,
             temasekAlignment: t.temasekAlignment,
             frameworks: t.frameworks.join(", "),
-            portfolioExposure: t.portfolioExposure.map((p) => `${p.name} (${p.exposure})`).join(", "),
+            portfolioExposure: t.portfolioExposure
+              .filter((p) => p.exposure === "High" || p.exposure === "Medium")
+              .map((p) => `${p.name} (${p.exposure} exposure)`)
+              .join(", "),
           },
         }),
       });

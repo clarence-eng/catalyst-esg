@@ -333,7 +333,7 @@ export const caseStudies: CaseStudy[] = [
       "Full PCAF Scope 3 Cat 15 disclosure for 80% of corporate book. Identified 4 sectors with >70% of financed emissions. Set 2030 sector-level intensity targets for power and steel. Unlocked IFC co-lending partnership conditional on PCAF adoption.",
     lessonLearned:
       "PCAF adoption changes the entire risk lens for a bank's corporate book. High financed emissions concentration in 2–3 sectors creates both credit risk (stranded assets) and commercial opportunity (transition finance products). Start with top 50 clients for maximum insight at manageable data complexity.",
-    frameworks: ["PCAF", "GHG Protocol", "TCFD", "ISSB S2", "SBTi FI"],
+    frameworks: ["PCAF", "GHG Protocol", "TCFD", "ISSB S2", "SBTi"],
     year: "2025",
   },
   {

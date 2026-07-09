@@ -57,6 +57,7 @@ export const megatrends: Megatrend[] = [
       { slug: "nusantara-bank", name: "Nusantara Bank", exposure: "Medium" },
       { slug: "greenharvest-agri", name: "GreenHarvest Agri", exposure: "Medium" },
       { slug: "cloudmesh-technologies", name: "CloudMesh Technologies", exposure: "Low" },
+      { slug: "medilink-health", name: "MediLink Health", exposure: "Low" },
     ],
   },
   {
@@ -89,6 +90,7 @@ export const megatrends: Megatrend[] = [
       { slug: "asiapower-energy", name: "AsiaPower Energy", exposure: "Medium" },
       { slug: "seaport-logistics", name: "SeaPort Logistics", exposure: "Low" },
       { slug: "cloudmesh-technologies", name: "CloudMesh Technologies", exposure: "Low" },
+      { slug: "medilink-health", name: "MediLink Health", exposure: "Low" },
     ],
   },
   {
@@ -266,7 +268,7 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
       "Creates consistent, comparable ESG data for all portfolio companies globally. Investment-grade ESG analysis increasingly requires ISSB-aligned data.",
     relevantSectors: ["All sectors"],
     urgency: "Medium",
-    portfolioImpact: ["seaport-logistics", "nusantara-bank", "cloudmesh-technologies", "greenharvest-agri", "asiapower-energy"],
+    portfolioImpact: ["seaport-logistics", "nusantara-bank", "cloudmesh-technologies", "greenharvest-agri", "asiapower-energy", "medilink-health"],
   },
   {
     id: "tnfd-adoption",

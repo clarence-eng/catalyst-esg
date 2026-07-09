@@ -303,7 +303,7 @@ export const companies: Company[] = [
         "Indonesia coal phase-out under JETP creates credit risk for mining and power sector clients",
         "OJK (Indonesia FSA) mandatory climate risk disclosure requirements effective 2025",
       ],
-      pathwayAlignment: "1.5°C",
+      pathwayAlignment: "2°C",
     },
     natureRisk: {
       overall: "High",
@@ -505,7 +505,7 @@ export const companies: Company[] = [
         "Water Usage Effectiveness (WUE) metric not publicly disclosed",
       ],
       tnfdPillars: [
-        { pillar: "Governance", status: "Adopted" },
+        { pillar: "Governance", status: "Partial" },
         { pillar: "Strategy", status: "Partial" },
         { pillar: "Risk & Impact Mgmt", status: "Gap" },
         { pillar: "Metrics & Targets", status: "Gap" },
@@ -737,6 +737,14 @@ export const companies: Company[] = [
         detail:
           "No-deforestation, No-peat, No-exploitation (NDPE) policy compliance relies on internal monitoring with no external independent audit. RSPO P&C 2018 requires third-party verification; absence creates credibility risk with European buyers and DFI co-investors. Gap also affects eligibility for sustainability-linked financing structures.",
       },
+      {
+        category: "Governance",
+        issue: "Board Independence & Leadership Structure",
+        severity: "Medium",
+        opportunity: false,
+        detail:
+          "Board independence at 38% (3 of 8 directors) is the lowest across the active portfolio and below the 50% best-practice threshold. Combined CEO-Chair role adds concentration risk. Given two Critical ESG issues involving European buyer compliance, strong board oversight is essential. Pre-condition for any DFI co-investment typically includes ≥50% independent directors.",
+      },
     ],
     valueUplift: [
       {
@@ -921,6 +929,14 @@ export const companies: Company[] = [
         opportunity: true,
         detail:
           "800MW geothermal pipeline in Sumatra is world-class resource. Indonesia holds 40% of global geothermal potential. Geothermal is anchor asset for credible transition.",
+      },
+      {
+        category: "Governance",
+        issue: "ESG Oversight Gap",
+        severity: "Medium",
+        opportunity: false,
+        detail:
+          "No board-level ESG committee despite holding Critical transition risk and two Critical material issues. Board-level ESG oversight is standard practice for energy transition companies and is required by most DFI co-investors including ADB and IFC. Required for credible JETP ETM application and green bond issuance.",
       },
     ],
     valueUplift: [
