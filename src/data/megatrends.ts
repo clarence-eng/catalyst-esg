@@ -104,7 +104,7 @@ export const megatrends: Megatrend[] = [
       { label: "Coal workers globally requiring reskilling", value: "10+ million", source: "ILO Just Transition Guidelines" },
       { label: "ASEAN social spending gap vs. OECD", value: "12% of GDP", source: "ADB Social Protection Outlook" },
       { label: "JETP social safeguards allocation (Indonesia)", value: "$400 million", source: "Indonesia JETP Secretariat" },
-      { label: "Companies with Just Transition plans (S&P 500)", value: "18%", source: "ShareAction 2024" },
+      { label: "Companies with Just Transition plans (S&P 500)", value: "18%", source: "Sustainalytics 2024" },
       { label: "Living wage gap in ASEAN manufacturing", value: "32-58% below living wage", source: "Wage Indicator Foundation 2024" },
     ],
     investmentImplications: [

@@ -232,7 +232,7 @@ export const companies: Company[] = [
         type: "Meeting",
         topic: "ESG Action Plan Progress Review",
         status: "Overdue",
-        notes: "Q3 review of fleet CII ratings and methanol pilot update.",
+        notes: "Q3 CII ratings review and methanol pilot update. Note: CEO commitment from March 2025 to publish Net Zero pathway by Q3 2025 was not met — pathway publication now deferred to 2026 alongside SBTi near-term target submission.",
       },
       {
         date: "2026-09-10",
@@ -303,7 +303,7 @@ export const companies: Company[] = [
         "Indonesia coal phase-out under JETP creates credit risk for mining and power sector clients",
         "OJK (Indonesia FSA) mandatory climate risk disclosure requirements effective 2025",
       ],
-      pathwayAlignment: "1.5°C",
+      pathwayAlignment: "2°C",
     },
     natureRisk: {
       overall: "High",
@@ -439,7 +439,7 @@ export const companies: Company[] = [
       { sdg: 10, label: "Reduced Inequalities" },
       { sdg: 13, label: "Climate Action" },
     ],
-    netZeroCommitment: "SBTi Committed",
+    netZeroCommitment: "Net Zero Pledged",
     boardComposition: {
       boardSize: 8,
       independentPct: 50,
@@ -1018,10 +1018,10 @@ export const companies: Company[] = [
     portfolioStatus: "Pipeline",
     temasekMegatrend: "Longer Lifespans",
     esgScore: {
-      overall: 66,
+      overall: 62,
       environmental: 58,
       social: 72,
-      governance: 68,
+      governance: 56,
       rating: "A",
     },
     maturity: "Developing",
@@ -1151,10 +1151,10 @@ export const companies: Company[] = [
       esgCommittee: false,
     },
     historicalScores: [
-      { period: "Q3 2025", e: 52, s: 68, g: 62 },
-      { period: "Q4 2025", e: 54, s: 70, g: 64 },
-      { period: "Q1 2026", e: 56, s: 71, g: 66 },
-      { period: "Q2 2026", e: 58, s: 72, g: 68 },
+      { period: "Q3 2025", e: 52, s: 68, g: 52 },
+      { period: "Q4 2025", e: 54, s: 70, g: 54 },
+      { period: "Q1 2026", e: 56, s: 71, g: 55 },
+      { period: "Q2 2026", e: 58, s: 72, g: 56 },
     ],
     icRecommendation: {
       verdict: "Invest Conditional",

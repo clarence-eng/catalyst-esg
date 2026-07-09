@@ -33,10 +33,10 @@ export const frameworks: FrameworkCard[] = [
     name: "TCFD",
     fullName: "Task Force on Climate-related Financial Disclosures",
     category: "Climate",
-    status: "Mandatory",
+    status: "Voluntary",
     adoptionYear: "2017",
     description:
-      "The TCFD framework provides a structure for companies to disclose climate-related risks and opportunities across four pillars: Governance, Strategy, Risk Management, and Metrics & Targets. It was formally incorporated into ISSB S2 in 2023.",
+      "The TCFD framework — developed by the FSB Task Force — provides a structure for companies to disclose climate-related risks and opportunities across four pillars: Governance, Strategy, Risk Management, and Metrics & Targets. TCFD was formally disbanded in October 2023 as its architecture was absorbed into the mandatory ISSB S2 standard.",
     investmentRelevance:
       "TCFD disclosure is now mandatory for SGX-listed companies under ISSB S2 (from FY2025). It provides the primary lens for assessing whether portfolio companies are managing climate risk systematically and quantifying potential financial impacts.",
     keyRequirements: [
@@ -146,7 +146,7 @@ export const frameworks: FrameworkCard[] = [
     fullName: "EU Deforestation Regulation",
     category: "Nature",
     status: "Mandatory",
-    adoptionYear: "2025",
+    adoptionYear: "2023",
     description:
       "EUDR prohibits placing key commodities (palm oil, soy, cattle, wood, cocoa, coffee, rubber, and derived products) on the EU market if produced on land deforested after December 2020. Requires geo-coordinates and due diligence statements from operators. Effective December 2025 (delayed from December 2024).",
     investmentRelevance:
