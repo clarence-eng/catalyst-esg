@@ -35,8 +35,8 @@ const modules = [
     href: "/steward",
     icon: Users,
     name: "Steward",
-    color: "text-violet-400",
-    bg: "bg-violet-600/10 border-violet-600/20",
+    color: "text-indigo-400",
+    bg: "bg-indigo-600/10 border-indigo-600/20",
     description:
       "Post-investment portfolio engagement tracking. Cards view (urgency-sorted by overdue count) and calendar view (chronological engagement timeline across all companies including pipeline under evaluation). AI-generated 12-month ESG Action Plans with quarterly milestones. Pipeline companies shown separately.",
   },

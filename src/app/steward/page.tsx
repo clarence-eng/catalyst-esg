@@ -63,6 +63,7 @@ export default function StewardPage() {
           <button
             key={v}
             onClick={() => setView(v)}
+            aria-pressed={view === v}
             className={`text-xs px-3 py-1.5 rounded-md transition-colors font-medium capitalize ${
               view === v
                 ? "bg-[#4B2580]/20 text-purple-400 border border-purple-500/30"

@@ -58,6 +58,7 @@ export default function ScoutPage() {
             <button
               key={s}
               onClick={() => setStatusFilter(s)}
+              aria-pressed={statusFilter === s}
               className={`text-xs px-3 py-1.5 rounded-md transition-colors font-medium ${
                 statusFilter === s
                   ? s === "Pipeline"

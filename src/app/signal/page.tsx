@@ -113,6 +113,7 @@ export default function SignalPage() {
             <button
               key={j}
               onClick={() => setJurisdictionFilter(j)}
+              aria-pressed={jurisdictionFilter === j}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 jurisdictionFilter === j
                   ? "bg-[#4B2580]/20 text-purple-400 border-purple-500/30"
@@ -129,6 +130,7 @@ export default function SignalPage() {
             <button
               key={c}
               onClick={() => setCategoryFilter(c)}
+              aria-pressed={categoryFilter === c}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 categoryFilter === c
                   ? "bg-[#4B2580]/20 text-purple-400 border-purple-500/30"

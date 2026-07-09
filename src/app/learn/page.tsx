@@ -95,6 +95,7 @@ export default function LearnPage() {
               <button
                 key={cat}
                 onClick={() => setFrameworkFilter(cat)}
+                aria-pressed={frameworkFilter === cat}
                 className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                   frameworkFilter === cat
                     ? "bg-[#4B2580]/20 text-purple-400 border-purple-500/30"

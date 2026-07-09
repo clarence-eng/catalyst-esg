@@ -13,7 +13,7 @@ const navItems = [
 
 // Temasek brand color — deep purple from the official TEMASEK wordmark logo
 const TEMASEK_PURPLE = "#4B2580";
-const TEMASEK_PURPLE_LIGHT = "#7B52A0";
+const TEMASEK_PURPLE_ACTIVE = "#B39DDB";
 
 export function Navigation() {
   const pathname = usePathname();
@@ -63,7 +63,7 @@ export function Navigation() {
                 className="w-4 h-4 flex-shrink-0"
                 style={
                   active
-                    ? { color: TEMASEK_PURPLE_LIGHT }
+                    ? { color: TEMASEK_PURPLE_ACTIVE }
                     : { color: "rgb(100 116 139)" }
                 }
               />
@@ -72,7 +72,7 @@ export function Navigation() {
                   className="text-sm font-medium leading-none"
                   style={
                     active
-                      ? { color: TEMASEK_PURPLE_LIGHT }
+                      ? { color: TEMASEK_PURPLE_ACTIVE }
                       : { color: "rgb(148 163 184)" }
                   }
                 >
@@ -89,8 +89,9 @@ export function Navigation() {
       <div className="p-4 border-t border-white/5">
         <Link
           href="/about"
+          aria-current={pathname === "/about" ? "page" : undefined}
           className="flex items-center gap-2 text-xs mb-2 transition-colors text-slate-600 hover:text-slate-400"
-          style={pathname === "/about" ? { color: TEMASEK_PURPLE_LIGHT } : undefined}
+          style={pathname === "/about" ? { color: TEMASEK_PURPLE_ACTIVE } : undefined}
         >
           <Info className="w-3 h-3" />
           About this demo
