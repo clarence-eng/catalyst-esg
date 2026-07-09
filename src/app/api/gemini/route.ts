@@ -48,11 +48,16 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const body = await req.json();
-    const type = body?.type;
-    const context = body?.context;
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json({ error: "Invalid request body — expected JSON" }, { status: 400 });
+    }
+    const type = (body as Record<string, unknown>)?.type;
+    const context = (body as Record<string, unknown>)?.context;
 
-    if (!ALLOWED_TYPES.includes(type)) {
+    if (!ALLOWED_TYPES.includes(type as GenerationType)) {
       return NextResponse.json({ error: "Unknown generation type" }, { status: 400 });
     }
     if (!context || typeof context !== "object") {

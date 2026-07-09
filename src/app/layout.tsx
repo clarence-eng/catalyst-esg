@@ -6,9 +6,9 @@ import { Navigation } from "@/components/Navigation";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Catalyst — ESG Investment Intelligence",
+  title: "Catalyst by Temasek — ESG Investment Intelligence",
   description:
-    "ESG due diligence, portfolio engagement, and megatrend intelligence for institutional investors.",
+    "Temasek ESG Investment Intelligence platform — ESG due diligence, portfolio engagement, climate risk, and megatrend analysis for institutional investors.",
 };
 
 export default function RootLayout({
