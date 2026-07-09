@@ -61,6 +61,7 @@ export default function LearnPage() {
         {searchQuery && (
           <button
             onClick={() => setSearchQuery("")}
+            aria-label="Clear search"
             className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-500 hover:text-slate-300"
           >
             Clear
