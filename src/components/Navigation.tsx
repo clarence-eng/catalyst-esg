@@ -13,15 +13,14 @@ const navItems = [
 
 // Temasek brand color — deep purple from the official TEMASEK wordmark logo
 const TEMASEK_PURPLE = "#4B2580";
-const TEMASEK_PURPLE_ACTIVE = "#B39DDB";
 
 export function Navigation() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-64 bg-[#0d1526] border-r border-white/5 flex flex-col z-50">
+    <aside className="fixed left-0 top-0 h-full w-64 bg-[#F9F8FA] border-r border-gray-200 flex flex-col z-50">
       {/* Brand */}
-      <div className="p-5 border-b border-white/5">
+      <div className="p-5 border-b border-gray-200">
         <div className="flex flex-col gap-1">
           {/* TEMASEK wordmark — serif bold purple, matching the actual logo */}
           <div
@@ -37,8 +36,8 @@ export function Navigation() {
           </div>
           {/* Product name and descriptor */}
           <div className="flex items-center gap-2 mt-1">
-            <div className="text-xs font-semibold text-white">Catalyst</div>
-            <div className="text-[9px] text-slate-500 font-medium uppercase tracking-wider">ESG Intelligence</div>
+            <div className="text-xs font-semibold text-gray-800">Catalyst</div>
+            <div className="text-[9px] text-gray-400 font-medium uppercase tracking-wider">ESG Intelligence</div>
           </div>
         </div>
       </div>
@@ -55,16 +54,16 @@ export function Navigation() {
               aria-current={active ? "page" : undefined}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
                 active
-                  ? "bg-[#4B2580]/20 border border-[#4B2580]/30"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                  ? "bg-[#4B2580]/10 border border-[#4B2580]/20"
+                  : "hover:bg-gray-100"
               }`}
             >
               <Icon
                 className="w-4 h-4 flex-shrink-0"
                 style={
                   active
-                    ? { color: TEMASEK_PURPLE_ACTIVE }
-                    : { color: "rgb(100 116 139)" }
+                    ? { color: TEMASEK_PURPLE }
+                    : { color: "rgb(107 114 128)" }
                 }
               />
               <div>
@@ -72,13 +71,13 @@ export function Navigation() {
                   className="text-sm font-medium leading-none"
                   style={
                     active
-                      ? { color: TEMASEK_PURPLE_ACTIVE }
-                      : { color: "rgb(148 163 184)" }
+                      ? { color: TEMASEK_PURPLE }
+                      : { color: "rgb(55 65 81)" }
                   }
                 >
                   {label}
                 </div>
-                <div className="text-xs text-slate-600 mt-0.5">{desc}</div>
+                <div className="text-xs text-gray-400 mt-0.5">{desc}</div>
               </div>
             </Link>
           );
@@ -86,17 +85,17 @@ export function Navigation() {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-white/5">
+      <div className="p-4 border-t border-gray-200">
         <Link
           href="/about"
           aria-current={pathname === "/about" ? "page" : undefined}
-          className="flex items-center gap-2 text-xs mb-2 transition-colors text-slate-600 hover:text-slate-400"
-          style={pathname === "/about" ? { color: TEMASEK_PURPLE_ACTIVE } : undefined}
+          className="flex items-center gap-2 text-xs mb-2 transition-colors text-gray-400 hover:text-gray-600"
+          style={pathname === "/about" ? { color: TEMASEK_PURPLE } : undefined}
         >
           <Info className="w-3 h-3" />
           About this demo
         </Link>
-        <div className="text-xs text-slate-600 leading-relaxed">
+        <div className="text-xs text-gray-400 leading-relaxed">
           Temasek ESG Investment Intelligence
         </div>
       </div>
