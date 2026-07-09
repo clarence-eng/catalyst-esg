@@ -303,7 +303,7 @@ export const companies: Company[] = [
         "Indonesia coal phase-out under JETP creates credit risk for mining and power sector clients",
         "OJK (Indonesia FSA) mandatory climate risk disclosure requirements effective 2025",
       ],
-      pathwayAlignment: "2°C",
+      pathwayAlignment: "1.5°C",
     },
     natureRisk: {
       overall: "High",
@@ -388,7 +388,7 @@ export const companies: Company[] = [
         area: "Digital Health Embedded Finance",
         potential: "High",
         description:
-          "Cross-portfolio opportunity with MediLink Health (Pipeline): offer embedded microinsurance and health savings products to MediLink's 40M+ ASEAN patient base. Aligns with OJK financial inclusion mandate and Temasek's Longer Lifespans and Digitisation megatrend thesis.",
+          "Cross-portfolio opportunity with MediLink Health (Pipeline): offer embedded microinsurance and health savings products to MediLink's 40M+ ASEAN patient base. Aligns with OJK financial inclusion mandate and Temasek's Longer Lifespans and AI & Digital Ethics megatrend thesis.",
       },
     ],
     engagement: [
@@ -678,7 +678,7 @@ export const companies: Company[] = [
       details: [
         "Operations adjacent to Maliau Basin Conservation Area (Sabah's 'Lost World'); buffer zone management is critical",
         "High Conservation Value (HCV) assessments completed for 80% of landbank, 20% pending",
-        "TNFD pilot assessment initiated Q1 2025 — one of first agribusiness companies in ASEAN to do so",
+        "TNFD LEAP assessment completed Q3 2025 — one of first agribusiness companies in ASEAN to complete TNFD LEAP. Results published in 2025 sustainability report",
         "Water abstraction from shared catchments requires multi-stakeholder basin management approach",
       ],
       tnfdPillars: [
@@ -999,6 +999,7 @@ export const companies: Company[] = [
     sdgAlignment: [
       { sdg: 7, label: "Clean Energy" },
       { sdg: 8, label: "Decent Work" },
+      { sdg: 13, label: "Climate Action" },
     ],
     netZeroCommitment: "None",
     boardComposition: {
