@@ -80,7 +80,7 @@ export function ScoreRing({ score, size = 80, label }: { score: number; size?: n
           {score}
         </text>
       </svg>
-      {label && <span className="text-xs text-slate-500">{label}</span>}
+      {label && <span className="text-xs text-gray-500">{label}</span>}
     </div>
   );
 }
@@ -97,16 +97,16 @@ export function StatCard({
   color?: "default" | "green" | "amber" | "red";
 }) {
   const colorStyles = {
-    default: "border-white/5",
+    default: "border-gray-200",
     green: "border-emerald-600/20 bg-emerald-600/5",
     amber: "border-amber-500/20 bg-amber-500/5",
     red: "border-red-500/20 bg-red-500/5",
   };
   return (
-    <div className={`bg-[#0d1526] rounded-xl border p-4 transition-all duration-200 ${colorStyles[color]}`}>
-      <div className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-1">{label}</div>
-      <div className="text-2xl font-bold text-white">{value}</div>
-      {sub && <div className="text-xs text-slate-400 mt-0.5">{sub}</div>}
+    <div className={`bg-white rounded-xl border p-4 transition-all duration-200 ${colorStyles[color]}`}>
+      <div className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">{label}</div>
+      <div className="text-2xl font-bold text-gray-900">{value}</div>
+      {sub && <div className="text-xs text-gray-600 mt-0.5">{sub}</div>}
     </div>
   );
 }
@@ -115,8 +115,8 @@ export function PageHeader({ title, subtitle, children }: { title: string; subti
   return (
     <div className="flex items-start justify-between mb-8">
       <div>
-        <h1 className="text-2xl font-bold text-white">{title}</h1>
-        {subtitle && <p className="text-slate-400 mt-1 text-sm">{subtitle}</p>}
+        <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+        {subtitle && <p className="text-gray-600 mt-1 text-sm">{subtitle}</p>}
       </div>
       {children}
     </div>

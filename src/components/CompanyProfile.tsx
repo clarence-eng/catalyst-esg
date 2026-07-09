@@ -128,7 +128,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-2xl font-bold text-white">{co.name}</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{co.name}</h1>
               <RatingBadge rating={co.esgScore.rating} />
               <MaturityBadge level={co.maturity} />
               {co.netZeroCommitment !== "None" && (
@@ -140,7 +140,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
                 </span>
               )}
             </div>
-            <p className="text-slate-400 text-sm max-w-2xl mb-2">{co.description}</p>
+            <p className="text-gray-600 text-sm max-w-2xl mb-2">{co.description}</p>
             {co.sdgAlignment.length > 0 && (
               <div className="flex items-center gap-1.5 mb-3">
                 {co.sdgAlignment.map(({ sdg, label }) => (
@@ -148,12 +148,12 @@ export function CompanyProfile({ company: co }: { company: Company }) {
                 ))}
               </div>
             )}
-            <div className="flex items-center gap-4 text-xs text-slate-500">
+            <div className="flex items-center gap-4 text-xs text-gray-500">
               <span>{co.sasbCategory}</span>
               <span>·</span>
               <span>{co.country}, {co.region}</span>
               <span>·</span>
-              <span>Temasek Megatrend: <span className={MEGATREND_COLORS[co.temasekMegatrend] ?? "text-slate-400"}>{co.temasekMegatrend}</span></span>
+              <span>Temasek Megatrend: <span className={MEGATREND_COLORS[co.temasekMegatrend] ?? "text-gray-600"}>{co.temasekMegatrend}</span></span>
               <span>·</span>
               <span>Last updated: {formatDate(co.lastUpdated)}</span>
             </div>
@@ -169,7 +169,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
 
       {/* Tabs */}
       <div
-        className="flex items-center gap-1 border-b border-white/5 mb-6"
+        className="flex items-center gap-1 border-b border-gray-200 mb-6"
         role="tablist"
         aria-label="Company ESG sections"
         onKeyDown={(e) => {
@@ -199,7 +199,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
             className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors focus-visible:ring-2 focus-visible:ring-purple-500/50 focus-visible:outline-none rounded-sm ${
               tab === id
                 ? "border-purple-500 text-purple-400"
-                : "border-transparent text-slate-400 hover:text-slate-200"
+                : "border-transparent text-gray-600 hover:text-gray-800"
             }`}
           >
             <Icon className="w-3.5 h-3.5" />
@@ -259,20 +259,20 @@ function OverviewTab({
             {co.icRecommendation.conditions.length > 0 && (
               <div className="space-y-1 mb-2">
                 {co.icRecommendation.conditions.map((c, i) => (
-                  <div key={i} className="flex items-start gap-2 text-xs text-slate-300">
+                  <div key={i} className="flex items-start gap-2 text-xs text-gray-700">
                     <span className="text-amber-400 mt-0.5">◦</span>{c}
                   </div>
                 ))}
               </div>
             )}
-            <p className="text-xs text-slate-500 italic">{co.icRecommendation.esgGating}</p>
+            <p className="text-xs text-gray-500 italic">{co.icRecommendation.esgGating}</p>
           </div>
         )}
-        <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-          <h3 className="text-sm font-semibold text-white mb-4">Material ESG Issues</h3>
+        <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <h3 className="text-sm font-semibold text-gray-900 mb-4">Material ESG Issues</h3>
           <div className="space-y-3">
             {co.materialIssues.map((issue) => (
-              <div key={issue.issue} className="flex items-start gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/5">
+              <div key={issue.issue} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
                 <div className="flex-shrink-0 mt-0.5">
                   {issue.opportunity ? (
                     <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
@@ -282,16 +282,16 @@ function OverviewTab({
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-white">{issue.issue}</span>
+                    <span className="text-sm font-medium text-gray-900">{issue.issue}</span>
                     <RiskBadge level={issue.severity} />
-                    <span className="text-xs text-slate-500">{issue.category}</span>
+                    <span className="text-xs text-gray-500">{issue.category}</span>
                     {issue.opportunity && (
                       <span className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded">
                         Opportunity
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-400 leading-relaxed">{issue.detail}</p>
+                  <p className="text-xs text-gray-600 leading-relaxed">{issue.detail}</p>
                 </div>
               </div>
             ))}
@@ -299,31 +299,31 @@ function OverviewTab({
         </div>
 
         {/* Value Uplift */}
-        <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-          <h3 className="text-sm font-semibold text-white mb-4">Value Uplift Opportunities</h3>
+        <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <h3 className="text-sm font-semibold text-gray-900 mb-4">Value Uplift Opportunities</h3>
           <div className="space-y-3">
             {co.valueUplift.map((v) => (
               <div key={v.area} className="p-3 rounded-lg bg-emerald-600/5 border border-emerald-600/15">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-sm font-medium text-white">{v.area}</span>
+                  <span className="text-sm font-medium text-gray-900">{v.area}</span>
                   <span className={`text-xs px-2 py-0.5 rounded border ${
                     v.potential === "High" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
                     v.potential === "Medium" ? "text-amber-400 bg-amber-500/10 border-amber-500/20" :
-                    "text-slate-400 bg-white/5 border-white/10"
+                    "text-gray-600 bg-gray-100 border-gray-200"
                   }`}>{v.potential} potential</span>
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed">{v.description}</p>
+                <p className="text-xs text-gray-600 leading-relaxed">{v.description}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Deal Memo Generator */}
-        <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
+        <div className="bg-white rounded-xl border border-gray-200 p-5">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h3 className="text-sm font-semibold text-white">IC Memo ESG Section</h3>
-              <p className="text-xs text-slate-500 mt-0.5">Generate a Temasek-style investment committee ESG assessment.</p>
+              <h3 className="text-sm font-semibold text-gray-900">IC Memo ESG Section</h3>
+              <p className="text-xs text-gray-500 mt-0.5">Generate a Temasek-style investment committee ESG assessment.</p>
             </div>
             <button
               onClick={onGenerate}
@@ -342,29 +342,29 @@ function OverviewTab({
           )}
           {memo ? (
             <>
-              {memoLoading && <div className="text-xs text-slate-500 text-center py-2 mb-2">Regenerating…</div>}
+              {memoLoading && <div className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
               <AIOutput text={memo} />
               <div className="mt-3 flex items-center">
                 <button
                   onClick={() => navigator.clipboard?.writeText(memo).catch(() => {})}
-                  className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+                  className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                 >
                   <Copy className="w-3 h-3" />
                   Copy to clipboard
                 </button>
-                <span className="text-xs text-slate-600 ml-auto">
+                <span className="text-xs text-gray-500 ml-auto">
                   {memoGeneratedAt ? `Generated ${formatRelativeTime(memoGeneratedAt)}` : ""}
                 </span>
               </div>
             </>
           ) : memoLoading ? (
-            <div className="text-xs text-slate-500 text-center py-6 border border-dashed border-white/5 rounded-lg animate-pulse">
+            <div className="text-xs text-gray-500 text-center py-6 border border-dashed border-gray-200 rounded-lg animate-pulse">
               Generating assessment…
             </div>
           ) : (
-            <div className="text-xs text-slate-600 text-center py-6 border border-dashed border-white/5 rounded-lg">
+            <div className="text-xs text-gray-500 text-center py-6 border border-dashed border-gray-200 rounded-lg">
               <div>Generate a Temasek-style investment committee ESG assessment using AI</div>
-              <div className="text-slate-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
+              <div className="text-gray-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
             </div>
           )}
         </div>
@@ -373,8 +373,8 @@ function OverviewTab({
       {/* Right: Charts & Quick Stats */}
       <div className="space-y-4">
         {/* ESG Radar */}
-        <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-          <h3 className="text-sm font-semibold text-white mb-3">ESG Profile Radar</h3>
+        <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">ESG Profile Radar</h3>
           <div role="img" aria-label={`ESG profile radar for ${co.name}: Environmental ${co.esgScore.environmental}, Social ${co.esgScore.social}, Governance ${co.esgScore.governance}, Climate Resilience ${radarData[3]?.score ?? 0} (${co.climateRisk.pathwayAlignment}), Nature Resilience ${radarData[4]?.score ?? 0}`}>
           <ResponsiveContainer width="100%" height={240}>
             <RadarChart data={radarData}>
@@ -387,8 +387,8 @@ function OverviewTab({
         </div>
 
         {/* Score Trend */}
-        <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-          <h3 className="text-sm font-semibold text-white mb-3">Score Trend (E/S/G)</h3>
+        <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">Score Trend (E/S/G)</h3>
           <div role="img" aria-label={`Historical E/S/G score trend for ${co.name}`}>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={co.historicalScores}>
@@ -409,15 +409,15 @@ function OverviewTab({
             {[{ color: "#10b981", label: "E" }, { color: "#3b82f6", label: "S" }, { color: "#8b5cf6", label: "G" }].map(({ color, label }) => (
               <div key={label} className="flex items-center gap-1.5">
                 <div className="w-2.5 h-0.5 rounded" style={{ backgroundColor: color }} />
-                <span className="text-xs text-slate-500">{label}</span>
+                <span className="text-xs text-gray-500">{label}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Key Metrics */}
-        <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-          <h3 className="text-sm font-semibold text-white mb-3">Key Metrics</h3>
+        <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">Key Metrics</h3>
           <div className="space-y-3">
             <Metric label="Carbon Intensity" value={`${co.carbonIntensity} tCO₂e/$M`} />
             <Metric label="Green Revenue" value={`${co.greenRevenuePct}%`} />
@@ -433,46 +433,46 @@ function OverviewTab({
 function ClimateTab({ co }: { co: Company }) {
   return (
     <div className="grid grid-cols-2 gap-6">
-      <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
+      <div className="bg-white rounded-xl border border-gray-200 p-5">
         <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-sm font-semibold text-white">Physical Climate Risk</h3>
+          <h3 className="text-sm font-semibold text-gray-900">Physical Climate Risk</h3>
           <RiskBadge level={co.climateRisk.physical} />
         </div>
         <ul className="space-y-3">
           {co.climateRisk.physicalDetails.map((d, i) => (
-            <li key={i} className="flex items-start gap-3 text-sm text-slate-400">
+            <li key={i} className="flex items-start gap-3 text-sm text-gray-600">
               <div className="w-1.5 h-1.5 rounded-full bg-orange-400 mt-1.5 flex-shrink-0" />
               {d}
             </li>
           ))}
         </ul>
       </div>
-      <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
+      <div className="bg-white rounded-xl border border-gray-200 p-5">
         <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-sm font-semibold text-white">Transition Risk</h3>
+          <h3 className="text-sm font-semibold text-gray-900">Transition Risk</h3>
           <RiskBadge level={co.climateRisk.transition} />
         </div>
         <ul className="space-y-3">
           {co.climateRisk.transitionDetails.map((d, i) => (
-            <li key={i} className="flex items-start gap-3 text-sm text-slate-400">
+            <li key={i} className="flex items-start gap-3 text-sm text-gray-600">
               <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 flex-shrink-0" />
               {d}
             </li>
           ))}
         </ul>
       </div>
-      <div className="col-span-2 bg-[#0d1526] rounded-xl border border-white/5 p-5">
-        <h3 className="text-sm font-semibold text-white mb-3">Paris Pathway Alignment</h3>
+      <div className="col-span-2 bg-white rounded-xl border border-gray-200 p-5">
+        <h3 className="text-sm font-semibold text-gray-900 mb-3">Paris Pathway Alignment</h3>
         <div className="flex items-center gap-3">
           <div className={`px-4 py-2 rounded-lg text-sm font-bold border ${
             co.climateRisk.pathwayAlignment === "1.5°C" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
             co.climateRisk.pathwayAlignment === "2°C" ? "text-amber-400 bg-amber-500/10 border-amber-500/20" :
             co.climateRisk.pathwayAlignment === "3°C+" ? "text-red-400 bg-red-500/10 border-red-500/20" :
-            "text-slate-400 bg-white/5 border-white/10"
+            "text-gray-600 bg-gray-100 border-gray-200"
           }`}>
             {co.climateRisk.pathwayAlignment}
           </div>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-gray-600">
             {co.climateRisk.pathwayAlignment === "1.5°C" && "Company has committed to a 1.5°C-aligned emissions pathway (net zero pledge or validated SBTi targets). For financial institutions, this reflects financed emissions trajectory."}
             {co.climateRisk.pathwayAlignment === "2°C" && "Company's trajectory is consistent with a 2°C scenario. Gaps remain to achieve Paris 1.5°C alignment — further decarbonisation required."}
             {co.climateRisk.pathwayAlignment === "3°C+" && "Company's current strategy is not Paris-aligned. Significant transition risk and stranded asset exposure."}
@@ -486,10 +486,10 @@ function ClimateTab({ co }: { co: Company }) {
                 ? scenario === "1.5°C" ? "bg-emerald-500/10 border-emerald-500/20" :
                   scenario === "2°C" ? "bg-amber-500/10 border-amber-500/20" :
                   "bg-red-500/10 border-red-500/20"
-                : "bg-white/[0.02] border-white/5 opacity-40"
+                : "bg-gray-50 border-gray-200 opacity-40"
             }`}>
-              <div className="text-sm font-semibold text-white mb-1">{scenario} Scenario</div>
-              <div className="text-xs text-slate-500">
+              <div className="text-sm font-semibold text-gray-900 mb-1">{scenario} Scenario</div>
+              <div className="text-xs text-gray-500">
                 {scenario === "1.5°C" && "Paris-aligned, net zero by 2050"}
                 {scenario === "2°C" && "Below 2°C, IPCC-compliant"}
                 {scenario === "3°C+" && "BAU trajectory, high physical risk"}
@@ -497,9 +497,9 @@ function ClimateTab({ co }: { co: Company }) {
             </div>
           ))}
           {co.climateRisk.pathwayAlignment === "Not assessed" && (
-            <div className="col-span-3 p-3 rounded-lg border text-center bg-white/[0.02] border-white/5">
-              <div className="text-sm font-semibold text-white mb-1">Not Assessed</div>
-              <div className="text-xs text-slate-500">TCFD scenario analysis not yet conducted</div>
+            <div className="col-span-3 p-3 rounded-lg border text-center bg-gray-50 border-gray-200">
+              <div className="text-sm font-semibold text-gray-900 mb-1">Not Assessed</div>
+              <div className="text-xs text-gray-500">TCFD scenario analysis not yet conducted</div>
             </div>
           )}
         </div>
@@ -511,9 +511,9 @@ function ClimateTab({ co }: { co: Company }) {
 function NatureTab({ co }: { co: Company }) {
   return (
     <div className="grid grid-cols-2 gap-6">
-      <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
+      <div className="bg-white rounded-xl border border-gray-200 p-5">
         <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-sm font-semibold text-white">Nature Risk Overview</h3>
+          <h3 className="text-sm font-semibold text-gray-900">Nature Risk Overview</h3>
           <RiskBadge level={co.natureRisk.overall} />
         </div>
         <div className="grid grid-cols-2 gap-3 mb-4">
@@ -525,10 +525,10 @@ function NatureTab({ co }: { co: Company }) {
           ].map(({ label, val, isRisk }) => {
             const isWarning = isRisk ? val : !val;
             return (
-            <div key={label} className={`p-3 rounded-lg border ${isWarning ? "bg-amber-500/10 border-amber-500/20" : "bg-white/[0.02] border-white/5"}`}>
+            <div key={label} className={`p-3 rounded-lg border ${isWarning ? "bg-amber-500/10 border-amber-500/20" : "bg-gray-50 border-gray-200"}`}>
               <div className="flex items-center gap-2">
                 {isWarning ? <AlertCircle className="w-3.5 h-3.5 text-amber-400" /> : <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />}
-                <span className="text-xs text-slate-300">{label}</span>
+                <span className="text-xs text-gray-700">{label}</span>
               </div>
               <div className={`text-xs font-medium mt-1 ${isWarning ? "text-amber-400" : "text-emerald-400"}`}>
                 {val ? "Yes" : "No"}
@@ -539,16 +539,16 @@ function NatureTab({ co }: { co: Company }) {
         </div>
         <ul className="space-y-3">
           {co.natureRisk.details.map((d, i) => (
-            <li key={i} className="flex items-start gap-3 text-sm text-slate-400">
+            <li key={i} className="flex items-start gap-3 text-sm text-gray-600">
               <div className="w-1.5 h-1.5 rounded-full bg-green-400 mt-1.5 flex-shrink-0" />
               {d}
             </li>
           ))}
         </ul>
       </div>
-      <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-        <h3 className="text-sm font-semibold text-white mb-4">TNFD Framework</h3>
-        <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+      <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <h3 className="text-sm font-semibold text-gray-900 mb-4">TNFD Framework</h3>
+        <p className="text-xs text-gray-600 mb-4 leading-relaxed">
           The Taskforce on Nature-related Financial Disclosures (TNFD) provides a risk management and disclosure framework for nature-related dependencies, impacts, risks, and opportunities. Final recommendations published September 2023.
         </p>
         <div className="space-y-3">
@@ -562,14 +562,14 @@ function NatureTab({ co }: { co: Company }) {
               ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
               : status === "Partial"
               ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
-              : "text-slate-500 bg-white/5 border-white/10";
+              : "text-gray-500 bg-gray-100 border-gray-200";
             const dotColor = status === "Adopted" ? "bg-emerald-500" : status === "Partial" ? "bg-amber-500" : "bg-slate-600";
             return (
-              <div key={pillar} className="flex items-start gap-3 p-3 bg-white/[0.02] rounded-lg border border-white/5">
+              <div key={pillar} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
                 <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${dotColor}`} />
                 <div>
-                  <div className="text-sm font-medium text-white">{pillar}</div>
-                  <div className="text-xs text-slate-500">{TNFD_PILLAR_DESCS[pillar] ?? ""}</div>
+                  <div className="text-sm font-medium text-gray-900">{pillar}</div>
+                  <div className="text-xs text-gray-500">{TNFD_PILLAR_DESCS[pillar] ?? ""}</div>
                 </div>
                 <span className={`ml-auto text-xs px-2 py-0.5 rounded border flex-shrink-0 ${statusStyle}`}>{status}</span>
               </div>
@@ -588,38 +588,38 @@ function SocialTab({ co }: { co: Company }) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-6">
-        <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-          <h3 className="text-sm font-semibold text-white mb-4">Social Issues</h3>
+        <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <h3 className="text-sm font-semibold text-gray-900 mb-4">Social Issues</h3>
           {social.length === 0 ? (
-            <p className="text-xs text-slate-500">No material social issues identified</p>
+            <p className="text-xs text-gray-500">No material social issues identified</p>
           ) : (
             <div className="space-y-3">
               {social.map((issue) => (
-                <div key={issue.issue} className="p-3 bg-white/[0.02] rounded-lg border border-white/5">
+                <div key={issue.issue} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-white">{issue.issue}</span>
+                    <span className="text-sm font-medium text-gray-900">{issue.issue}</span>
                     <RiskBadge level={issue.severity} />
                     {issue.opportunity && <span className="text-xs text-emerald-400">Opportunity</span>}
                   </div>
-                  <p className="text-xs text-slate-400 leading-relaxed">{issue.detail}</p>
+                  <p className="text-xs text-gray-600 leading-relaxed">{issue.detail}</p>
                 </div>
               ))}
             </div>
           )}
         </div>
-        <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-          <h3 className="text-sm font-semibold text-white mb-4">Governance Issues</h3>
+        <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <h3 className="text-sm font-semibold text-gray-900 mb-4">Governance Issues</h3>
           {gov.length === 0 ? (
-            <p className="text-xs text-slate-500">No material governance issues identified</p>
+            <p className="text-xs text-gray-500">No material governance issues identified</p>
           ) : (
             <div className="space-y-3">
               {gov.map((issue) => (
-                <div key={issue.issue} className="p-3 bg-white/[0.02] rounded-lg border border-white/5">
+                <div key={issue.issue} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-white">{issue.issue}</span>
+                    <span className="text-sm font-medium text-gray-900">{issue.issue}</span>
                     <RiskBadge level={issue.severity} />
                   </div>
-                  <p className="text-xs text-slate-400 leading-relaxed">{issue.detail}</p>
+                  <p className="text-xs text-gray-600 leading-relaxed">{issue.detail}</p>
                 </div>
               ))}
             </div>
@@ -628,8 +628,8 @@ function SocialTab({ co }: { co: Company }) {
       </div>
 
       {/* Governance Scorecard */}
-      <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-        <h3 className="text-sm font-semibold text-white mb-4">Governance Scorecard</h3>
+      <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <h3 className="text-sm font-semibold text-gray-900 mb-4">Governance Scorecard</h3>
         <div className="grid grid-cols-3 gap-3 mb-4">
           <GovStatTile
             label="Board Size"
@@ -684,10 +684,10 @@ function GovStatTile({ label, value, note, status }: { label: string; value: str
     <div className={`p-3 rounded-lg border ${borderColor} ${bgColor}`}>
       <div className="flex items-start gap-2 mb-1">
         {iconEl}
-        <span className="text-xs text-slate-400 font-medium">{label}</span>
+        <span className="text-xs text-gray-600 font-medium">{label}</span>
       </div>
       <div className={`text-sm font-bold ${valueColor} mb-1`}>{value}</div>
-      <div className="text-xs text-slate-500 leading-relaxed">{note}</div>
+      <div className="text-xs text-gray-500 leading-relaxed">{note}</div>
     </div>
   );
 }
@@ -714,7 +714,7 @@ function EngagementTab({ co }: { co: Company }) {
     : "Attention Needed";
 
   const statusStyle = {
-    "Not Started": "text-slate-400 bg-white/5 border-white/10",
+    "Not Started": "text-gray-600 bg-gray-100 border-gray-200",
     "On Track": "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
     "Attention Needed": "text-amber-400 bg-amber-500/10 border-amber-500/20",
     "Action Required": "text-red-400 bg-red-500/10 border-red-500/20",
@@ -723,14 +723,14 @@ function EngagementTab({ co }: { co: Company }) {
   return (
     <div className="space-y-4">
       {/* Engagement Summary Row */}
-      <div className="bg-[#0d1526] rounded-xl border border-white/5 p-4">
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
         <div className="flex items-center gap-6 flex-wrap">
           <div className="flex-1 min-w-[180px]">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs text-slate-400 font-medium">Completion Rate</span>
-              <span className="text-xs text-slate-300 font-semibold">{completed}/{total} ({completionPct}%)</span>
+              <span className="text-xs text-gray-600 font-medium">Completion Rate</span>
+              <span className="text-xs text-gray-700 font-semibold">{completed}/{total} ({completionPct}%)</span>
             </div>
-            <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all ${completionPct === 0 ? "bg-slate-600" : completionPct >= 75 ? "bg-emerald-500" : completionPct >= 40 ? "bg-amber-500" : "bg-red-500"}`}
                 style={{ width: `${completionPct === 0 ? 0 : completionPct}%` }}
@@ -738,14 +738,14 @@ function EngagementTab({ co }: { co: Company }) {
             </div>
           </div>
           {nextDue && (
-            <div className="text-xs text-slate-500">
+            <div className="text-xs text-gray-500">
               {nextDue.status === "Overdue" ? (
                 <span className="text-red-400 font-medium">Overdue: </span>
               ) : (
                 <span>Next planned: </span>
               )}
-              <span className="text-slate-300 font-medium">{formatDate(nextDue.date)}</span>
-              <span className="ml-1 text-slate-600">({nextDue.topic})</span>
+              <span className="text-gray-700 font-medium">{formatDate(nextDue.date)}</span>
+              <span className="ml-1 text-gray-500">({nextDue.topic})</span>
             </div>
           )}
           <span className={`text-xs px-2.5 py-1 rounded border font-medium ${statusStyle}`}>
@@ -754,13 +754,13 @@ function EngagementTab({ co }: { co: Company }) {
         </div>
       </div>
 
-      <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-        <h3 className="text-sm font-semibold text-white mb-4">Engagement Log</h3>
+      <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <h3 className="text-sm font-semibold text-gray-900 mb-4">Engagement Log</h3>
         {co.engagement.length === 0 ? (
-          <p className="text-xs text-slate-500">No engagement records yet.</p>
+          <p className="text-xs text-gray-500">No engagement records yet.</p>
         ) : (
         <div className="relative">
-          <div className="absolute left-4 top-0 bottom-0 w-px bg-white/5" />
+          <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-100" />
           <div className="space-y-4">
             {[...co.engagement].sort((a, b) => a.date > b.date ? -1 : a.date < b.date ? 1 : 0).map((e) => (
               <div key={`${e.date}-${e.type}-${e.topic}`} className="relative pl-10">
@@ -768,14 +768,14 @@ function EngagementTab({ co }: { co: Company }) {
                   e.status === "Completed" ? "bg-emerald-500" :
                   e.status === "Planned" ? "bg-blue-500" : "bg-red-500"
                 }`} />
-                <div className="bg-white/[0.02] border border-white/5 rounded-lg p-4">
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-white">{e.topic}</span>
-                      <span className="text-xs text-slate-500 bg-white/5 px-2 py-0.5 rounded">{e.type}</span>
+                      <span className="text-sm font-medium text-gray-900">{e.topic}</span>
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{e.type}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-slate-500">{formatDate(e.date)}</span>
+                      <span className="text-xs text-gray-500">{formatDate(e.date)}</span>
                       <span className={`text-xs px-2 py-0.5 rounded border ${
                         e.status === "Completed" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
                         e.status === "Planned" ? "text-blue-400 bg-blue-500/10 border-blue-500/20" :
@@ -783,7 +783,7 @@ function EngagementTab({ co }: { co: Company }) {
                       }`}>{e.status}</span>
                     </div>
                   </div>
-                  <p className="text-xs text-slate-400 leading-relaxed">{e.notes}</p>
+                  <p className="text-xs text-gray-600 leading-relaxed">{e.notes}</p>
                 </div>
               </div>
             ))}
@@ -798,8 +798,8 @@ function EngagementTab({ co }: { co: Company }) {
 function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-xs text-slate-500">{label}</span>
-      <span className="text-xs text-white font-medium">{value}</span>
+      <span className="text-xs text-gray-500">{label}</span>
+      <span className="text-xs text-gray-900 font-medium">{value}</span>
     </div>
   );
 }
@@ -819,8 +819,8 @@ function SDGBadge({ sdg, label }: { sdg: number; label: string }) {
   const bg = sdgColors[sdg] ?? "bg-slate-600";
   return (
     <div className={`flex items-center gap-1 ${bg} rounded px-1.5 py-0.5`} title={`SDG ${sdg}: ${label}`}>
-      <span className="text-white text-[10px] font-bold leading-none">{sdg}</span>
-      <span className="text-white text-[9px] leading-none opacity-90 hidden sm:inline">{label}</span>
+      <span className="text-gray-900 text-[10px] font-bold leading-none">{sdg}</span>
+      <span className="text-gray-900 text-[9px] leading-none opacity-90 hidden sm:inline">{label}</span>
     </div>
   );
 }

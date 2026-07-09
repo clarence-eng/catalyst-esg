@@ -43,8 +43,8 @@ export default function ScoutPage() {
         title="Scout"
         subtitle="ESG due diligence for new investment opportunities and portfolio monitoring. Risk management and value uplift lens."
       >
-        <div className="flex items-center gap-2 text-xs text-slate-500">
-          <span className="bg-white/5 border border-white/10 px-2.5 py-1 rounded-full">{ACTIVE_COUNT} Active</span>
+        <div className="flex items-center gap-2 text-xs text-gray-500">
+          <span className="bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full">{ACTIVE_COUNT} Active</span>
           <span className="bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2.5 py-1 rounded-full flex items-center gap-1">
             <GitMerge className="w-3 h-3" />{PIPELINE_COUNT} Pipeline
           </span>
@@ -53,7 +53,7 @@ export default function ScoutPage() {
 
       {/* Filters */}
       <div className="flex items-center gap-3 mb-4">
-        <div className="flex items-center gap-1 bg-[#0d1526] border border-white/5 rounded-lg p-1">
+        <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
           {(["All", "Active", "Pipeline"] as StatusFilter[]).map((s) => (
             <button
               key={s}
@@ -64,36 +64,36 @@ export default function ScoutPage() {
                   ? s === "Pipeline"
                     ? "bg-blue-600/20 text-blue-400 border border-blue-500/30"
                     : "bg-[#4B2580]/20 text-purple-400 border border-purple-500/30"
-                  : "text-slate-400 hover:text-slate-200"
+                  : "text-gray-600 hover:text-gray-800"
               }`}
             >
               {s}
             </button>
           ))}
         </div>
-        <div className="text-xs text-slate-600">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</div>
+        <div className="text-xs text-gray-500">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</div>
       </div>
 
       {/* Search Bar */}
       <div className="relative mb-6">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Search portfolio companies"
           placeholder="Search by name, sector, country, SASB category, or description..."
-          className="w-full bg-[#0d1526] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-slate-300 text-sm placeholder:text-slate-600 focus:outline-none focus:border-purple-600/40 transition-colors"
+          className="w-full bg-white border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-gray-700 text-sm placeholder:text-gray-500 focus:outline-none focus:border-purple-600/40 transition-colors"
         />
         {query && (
-          <button onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-500 hover:text-slate-300">
+          <button onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-500 hover:text-gray-700">
             Clear
           </button>
         )}
       </div>
 
       {filtered.length === 0 && (
-        <div className="text-center py-12 text-slate-500 text-sm">No companies match your filters</div>
+        <div className="text-center py-12 text-gray-500 text-sm">No companies match your filters</div>
       )}
 
       {/* Company Cards */}
@@ -102,16 +102,16 @@ export default function ScoutPage() {
           <Link
             key={co.slug}
             href={`/scout/${co.slug}`}
-            className={`bg-[#0d1526] border rounded-xl p-5 transition-all group ${
+            className={`bg-white border rounded-xl p-5 transition-all group ${
               co.portfolioStatus === "Pipeline"
                 ? "border-blue-500/20 hover:border-blue-500/40 hover:bg-blue-600/5"
-                : "border-white/5 hover:border-purple-600/30 hover:bg-purple-600/5"
+                : "border-gray-200 hover:border-purple-600/30 hover:bg-purple-600/5"
             }`}
           >
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="font-semibold text-white">{co.name}</span>
+                  <span className="font-semibold text-gray-900">{co.name}</span>
                   {co.portfolioStatus === "Pipeline" && (
                     <span className="flex items-center gap-1 text-xs text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded-full font-medium">
                       <GitMerge className="w-2.5 h-2.5" /> Under Evaluation
@@ -141,7 +141,7 @@ export default function ScoutPage() {
                         );
                       } else {
                         return (
-                          <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-slate-500/10 text-slate-400 border border-slate-500/20">
+                          <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-slate-500/10 text-gray-600 border border-slate-500/20">
                             → 0
                           </span>
                         );
@@ -149,20 +149,20 @@ export default function ScoutPage() {
                     }
                     return null;
                   })()}
-                  <span className="text-xs text-slate-500 bg-white/5 px-2 py-0.5 rounded">{co.country}</span>
+                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{co.country}</span>
                 </div>
-                <p className="text-xs text-slate-400 mb-3 leading-relaxed max-w-3xl">{co.description}</p>
+                <p className="text-xs text-gray-600 mb-3 leading-relaxed max-w-3xl">{co.description}</p>
                 <div className="flex items-center gap-6">
-                  <div className="text-xs text-slate-500">
-                    <span className="text-slate-300">{co.sasbCategory}</span>
+                  <div className="text-xs text-gray-500">
+                    <span className="text-gray-700">{co.sasbCategory}</span>
                   </div>
-                  <div className="text-xs text-slate-500">
-                    Megatrend: <span className={MEGATREND_COLORS[co.temasekMegatrend] ?? "text-slate-400"}>{co.temasekMegatrend}</span>
+                  <div className="text-xs text-gray-500">
+                    Megatrend: <span className={MEGATREND_COLORS[co.temasekMegatrend] ?? "text-gray-600"}>{co.temasekMegatrend}</span>
                   </div>
                   {/* Green Revenue bar */}
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-500">Green Rev:</span>
-                    <div className="w-20 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <span className="text-xs text-gray-500">Green Rev:</span>
+                    <div className="w-20 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full ${
                           co.greenRevenuePct >= 30 ? "bg-emerald-500" : co.greenRevenuePct >= 10 ? "bg-amber-500" : "bg-red-500"
@@ -174,8 +174,8 @@ export default function ScoutPage() {
                       co.greenRevenuePct >= 30 ? "text-emerald-400" : co.greenRevenuePct >= 10 ? "text-amber-400" : "text-red-400"
                     }`}>{co.greenRevenuePct}%</span>
                   </div>
-                  <div className="text-xs text-slate-500">
-                    Carbon Intensity: <span className="text-slate-300">{co.carbonIntensity} tCO₂e/$M</span>
+                  <div className="text-xs text-gray-500">
+                    Carbon Intensity: <span className="text-gray-700">{co.carbonIntensity} tCO₂e/$M</span>
                   </div>
                 </div>
                 {co.sdgAlignment.length > 0 && (
@@ -190,19 +190,19 @@ export default function ScoutPage() {
                 <ESGScoreSet e={co.esgScore.environmental} s={co.esgScore.social} g={co.esgScore.governance} />
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-500 w-20">Physical Risk</span>
+                    <span className="text-xs text-gray-500 w-20">Physical Risk</span>
                     <RiskBadge level={co.climateRisk.physical} />
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-500 w-20">Transition Risk</span>
+                    <span className="text-xs text-gray-500 w-20">Transition Risk</span>
                     <RiskBadge level={co.climateRisk.transition} />
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-500 w-20">Nature Risk</span>
+                    <span className="text-xs text-gray-500 w-20">Nature Risk</span>
                     <RiskBadge level={co.natureRisk.overall} />
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors" />
+                <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-gray-600 transition-colors" />
               </div>
             </div>
           </Link>
@@ -220,11 +220,11 @@ function ESGScoreSet({ e, s, g }: { e: number; s: number; g: number }) {
           val >= 70 ? "bg-emerald-500" : val >= 50 ? "bg-amber-500" : val >= 35 ? "bg-orange-500" : "bg-red-500";
         return (
           <div key={label} className="flex items-center gap-2">
-            <span className="text-xs text-slate-500 w-3">{label}</span>
-            <div className="w-20 h-1.5 bg-white/10 rounded-full overflow-hidden">
+            <span className="text-xs text-gray-500 w-3">{label}</span>
+            <div className="w-20 h-1.5 bg-gray-200 rounded-full overflow-hidden">
               <div className={`h-full rounded-full ${color}`} style={{ width: `${val}%` }} />
             </div>
-            <span className="text-xs text-slate-400 w-6">{val}</span>
+            <span className="text-xs text-gray-600 w-6">{val}</span>
           </div>
         );
       })}
@@ -247,8 +247,8 @@ function SDGBadge({ sdg, label }: { sdg: number; label: string }) {
   const bg = sdgColors[sdg] ?? "bg-slate-600";
   return (
     <div className={`flex items-center gap-1 ${bg} rounded px-1.5 py-0.5`} title={`SDG ${sdg}: ${label}`}>
-      <span className="text-white text-[10px] font-bold leading-none">{sdg}</span>
-      <span className="text-white text-[9px] leading-none opacity-90 hidden sm:inline">{label}</span>
+      <span className="text-gray-900 text-[10px] font-bold leading-none">{sdg}</span>
+      <span className="text-gray-900 text-[9px] leading-none opacity-90 hidden sm:inline">{label}</span>
     </div>
   );
 }

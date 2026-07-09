@@ -87,9 +87,9 @@ export default function AboutPage() {
 
       {/* Investment Workflow Coverage */}
       <div className="mb-8">
-        <h2 className="text-base font-semibold text-white mb-1">Investment Workflow Coverage</h2>
-        <p className="text-xs text-slate-500 mb-3">Catalyst maps the end-to-end ESG investment workflow — from deal evaluation and risk assessment through post-investment engagement, thematic research, and portfolio reporting.</p>
-        <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5 space-y-3">
+        <h2 className="text-base font-semibold text-gray-900 mb-1">Investment Workflow Coverage</h2>
+        <p className="text-xs text-gray-500 mb-3">Catalyst maps the end-to-end ESG investment workflow — from deal evaluation and risk assessment through post-investment engagement, thematic research, and portfolio reporting.</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-3">
           {[
             { icon: Target, text: "ESG due diligence for new investment opportunities — risk management and value uplift lens" },
             { icon: ClipboardList, text: "Post-investment engagement monitoring with AI-generated 12-month ESG action plans" },
@@ -100,7 +100,7 @@ export default function AboutPage() {
           ].map(({ icon: Icon, text }) => (
             <div key={text} className="flex items-start gap-3">
               <Icon className="w-4 h-4 flex-shrink-0 text-purple-400" />
-              <p className="text-sm text-slate-300">{text}</p>
+              <p className="text-sm text-gray-700">{text}</p>
             </div>
           ))}
         </div>
@@ -108,23 +108,23 @@ export default function AboutPage() {
 
       {/* Modules */}
       <div className="mb-8">
-        <h2 className="text-base font-semibold text-white mb-3">Five Modules</h2>
+        <h2 className="text-base font-semibold text-gray-900 mb-3">Five Modules</h2>
         <div className="space-y-3">
           {modules.map((m) => (
             <Link
               key={m.href}
               href={m.href}
-              className={`flex items-start gap-4 bg-[#0d1526] rounded-xl border p-4 hover:opacity-90 transition-opacity ${m.bg}`}
+              className={`flex items-start gap-4 bg-white rounded-xl border p-4 hover:opacity-90 transition-opacity ${m.bg}`}
             >
-              <div className={`w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 ${m.color}`}>
+              <div className={`w-8 h-8 rounded-lg bg-gray-200 flex items-center justify-center flex-shrink-0 ${m.color}`}>
                 <m.icon className="w-4 h-4" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <span className={`text-sm font-semibold ${m.color}`}>{m.name}</span>
-                  <ChevronRight className="w-3 h-3 text-slate-600" />
+                  <ChevronRight className="w-3 h-3 text-gray-500" />
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed">{m.description}</p>
+                <p className="text-xs text-gray-600 leading-relaxed">{m.description}</p>
               </div>
             </Link>
           ))}
@@ -133,17 +133,17 @@ export default function AboutPage() {
 
       {/* AI Features */}
       <div className="mb-8">
-        <h2 className="text-base font-semibold text-white mb-1">Four AI Features</h2>
-        <p className="text-xs text-slate-500 mb-3">All powered by Google Gemini 2.5 Flash. Requires <code className="text-purple-400 bg-purple-500/10 px-1 rounded">GEMINI_API_KEY</code> in <code className="text-slate-300 bg-white/5 px-1 rounded">.env.local</code></p>
+        <h2 className="text-base font-semibold text-gray-900 mb-1">Four AI Features</h2>
+        <p className="text-xs text-gray-500 mb-3">All powered by Google Gemini 2.5 Flash. Requires <code className="text-purple-400 bg-purple-500/10 px-1 rounded">GEMINI_API_KEY</code> in <code className="text-gray-700 bg-gray-100 px-1 rounded">.env.local</code></p>
         <div className="grid grid-cols-2 gap-3">
           {aiFeatures.map((f) => (
-            <div key={f.name} className="bg-[#0d1526] rounded-xl border border-white/5 p-4">
+            <div key={f.name} className="bg-white rounded-xl border border-gray-200 p-4">
               <div className="flex items-center gap-2 mb-1">
                 <Cpu className="w-3.5 h-3.5 text-purple-400" />
-                <span className="text-sm font-medium text-white">{f.name}</span>
+                <span className="text-sm font-medium text-gray-900">{f.name}</span>
               </div>
-              <div className="text-xs text-slate-500 mb-2">{f.location}</div>
-              <p className="text-xs text-slate-400 leading-relaxed">{f.description}</p>
+              <div className="text-xs text-gray-500 mb-2">{f.location}</div>
+              <p className="text-xs text-gray-600 leading-relaxed">{f.description}</p>
             </div>
           ))}
         </div>
@@ -151,17 +151,17 @@ export default function AboutPage() {
 
       {/* Portfolio data */}
       <div className="mb-8">
-        <h2 className="text-base font-semibold text-white mb-3">Mock Portfolio ({companies.length} Companies)</h2>
-        <div className="bg-[#0d1526] rounded-xl border border-white/5 p-4">
+        <h2 className="text-base font-semibold text-gray-900 mb-3">Mock Portfolio ({companies.length} Companies)</h2>
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
           <div className="grid grid-cols-2 gap-2 text-xs">
             {companies.map((co) => (
-              <div key={co.slug} className={`p-2 rounded-lg border ${co.portfolioStatus === "Pipeline" ? "border-blue-500/20 bg-blue-500/5" : "border-white/5 bg-white/[0.02]"}`}>
+              <div key={co.slug} className={`p-2 rounded-lg border ${co.portfolioStatus === "Pipeline" ? "border-blue-500/20 bg-blue-500/5" : "border-gray-200 bg-gray-50"}`}>
                 <div className="flex items-center gap-1.5 mb-0.5">
                   {co.portfolioStatus === "Pipeline" && <GitMerge className="w-3 h-3 text-blue-400" />}
-                  <span className="font-medium text-white">{co.name}</span>
+                  <span className="font-medium text-gray-900">{co.name}</span>
                 </div>
-                <div className="text-slate-500">{co.sector}, {co.country}</div>
-                <div className="text-slate-600 mt-0.5">{companyWhy[co.slug] ?? ""}</div>
+                <div className="text-gray-500">{co.sector}, {co.country}</div>
+                <div className="text-gray-500 mt-0.5">{companyWhy[co.slug] ?? ""}</div>
               </div>
             ))}
           </div>
@@ -169,28 +169,28 @@ export default function AboutPage() {
       </div>
 
       {/* Disclaimer — candidate context */}
-      <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4 mb-6">
-        <p className="text-xs text-slate-500 leading-relaxed">
+      <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6">
+        <p className="text-xs text-gray-500 leading-relaxed">
           Catalyst is a candidate portfolio project for Temasek&apos;s ESG Investment Management team. It is not an official Temasek product.
           All portfolio company data is mock and for demonstration purposes only.
-          AI features use Google Gemini 2.5 Flash (free tier) and require a personal API key in <code className="text-slate-400 bg-white/5 px-1 rounded">.env.local</code>.
+          AI features use Google Gemini 2.5 Flash (free tier) and require a personal API key in <code className="text-gray-600 bg-gray-100 px-1 rounded">.env.local</code>.
         </p>
       </div>
 
       {/* Tech stack */}
       <div className="mb-6">
-        <h2 className="text-base font-semibold text-white mb-3">Tech Stack</h2>
+        <h2 className="text-base font-semibold text-gray-900 mb-3">Tech Stack</h2>
         <div className="flex flex-wrap gap-2">
           {stack.map((s) => (
-            <div key={s.name} className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5">
-              <span className="text-xs text-white font-medium">{s.name}</span>
-              <span className="text-xs text-slate-500 ml-1.5">{s.role}</span>
+            <div key={s.name} className="bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5">
+              <span className="text-xs text-gray-900 font-medium">{s.name}</span>
+              <span className="text-xs text-gray-500 ml-1.5">{s.role}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="text-xs text-slate-600 border-t border-white/5 pt-4">
+      <div className="text-xs text-gray-500 border-t border-gray-200 pt-4">
         Built with Next.js 16, Tailwind CSS v4, and Gemini AI · 2026
       </div>
     </div>

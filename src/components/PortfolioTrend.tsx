@@ -18,8 +18,8 @@ interface TrendPoint {
 
 export function PortfolioTrend({ data, activeCount = 5 }: { data: TrendPoint[]; activeCount?: number }) {
   if (data.length < 2) return (
-    <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5 mb-6 flex items-center justify-center h-32">
-      <p className="text-xs text-slate-500">Insufficient historical data to display trend</p>
+    <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6 flex items-center justify-center h-32">
+      <p className="text-xs text-gray-500">Insufficient historical data to display trend</p>
     </div>
   );
 
@@ -34,11 +34,11 @@ export function PortfolioTrend({ data, activeCount = 5 }: { data: TrendPoint[]; 
   }
 
   return (
-    <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5 mb-6">
+    <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-sm font-semibold text-white">Portfolio ESG Trajectory</h2>
-          <p className="text-xs text-slate-500 mt-0.5">Average E/S/G across {activeCount} active companies · {data[0].period} – {data[data.length - 1].period}</p>
+          <h2 className="text-sm font-semibold text-gray-900">Portfolio ESG Trajectory</h2>
+          <p className="text-xs text-gray-500 mt-0.5">Average E/S/G across {activeCount} active companies · {data[0].period} – {data[data.length - 1].period}</p>
         </div>
         <div className="flex items-center gap-4">
           {[
@@ -48,7 +48,7 @@ export function PortfolioTrend({ data, activeCount = 5 }: { data: TrendPoint[]; 
           ].map(({ label, value, change, color }) => (
             <div key={label} className="text-center">
               <div className={`text-lg font-bold ${color}`}>{value}</div>
-              <div className="text-xs text-slate-500">{label} <span className={change >= 0 ? "text-emerald-400" : "text-red-400"}>({sign(change)})</span></div>
+              <div className="text-xs text-gray-500">{label} <span className={change >= 0 ? "text-emerald-400" : "text-red-400"}>({sign(change)})</span></div>
             </div>
           ))}
         </div>
@@ -88,7 +88,7 @@ export function PortfolioTrend({ data, activeCount = 5 }: { data: TrendPoint[]; 
         {[{ color: "#10b981", label: "Environmental" }, { color: "#3b82f6", label: "Social" }, { color: "#8b5cf6", label: "Governance" }].map(({ color, label }) => (
           <div key={label} className="flex items-center gap-1.5">
             <div className="w-3 h-0.5 rounded" style={{ backgroundColor: color }} />
-            <span className="text-xs text-slate-500">{label}</span>
+            <span className="text-xs text-gray-500">{label}</span>
           </div>
         ))}
       </div>

@@ -35,12 +35,12 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
   if (!active || !payload?.[0]?.payload) return null;
   const d = payload[0].payload;
   return (
-    <div className="bg-[#0d1526] border border-white/10 rounded-lg p-3 text-xs shadow-lg">
-      <div className="font-semibold text-white mb-1">{d.name}</div>
-      <div className="text-slate-400">ESG Score: <span className="text-white">{d.esgScore}</span></div>
-      <div className="text-slate-400">Carbon Intensity: <span className="text-white">{d.carbonIntensity} tCO₂e/$M</span></div>
-      <div className="text-slate-400">Investment: <span className="text-white">S${d.investmentValue}M</span></div>
-      <div className="text-slate-400">Transition Risk: <span style={{ color: riskColor[d.transitionRisk] ?? "#94a3b8" }}>{d.transitionRisk}</span></div>
+    <div className="bg-white border border-gray-200 rounded-lg p-3 text-xs shadow-lg">
+      <div className="font-semibold text-gray-900 mb-1">{d.name}</div>
+      <div className="text-gray-600">ESG Score: <span className="text-gray-900">{d.esgScore}</span></div>
+      <div className="text-gray-600">Carbon Intensity: <span className="text-gray-900">{d.carbonIntensity} tCO₂e/$M</span></div>
+      <div className="text-gray-600">Investment: <span className="text-gray-900">S${d.investmentValue}M</span></div>
+      <div className="text-gray-600">Transition Risk: <span style={{ color: riskColor[d.transitionRisk] ?? "#94a3b8" }}>{d.transitionRisk}</span></div>
     </div>
   );
 }
@@ -48,19 +48,19 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
 export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
   if (data.length === 0) return null;
   return (
-    <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5 mb-6">
+    <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
       <div className="flex items-center justify-between mb-1">
-        <h2 className="text-sm font-semibold text-white">Portfolio Positioning</h2>
-        <div className="text-xs text-slate-500">ESG Score vs. Carbon Intensity · bubble = investment size</div>
+        <h2 className="text-sm font-semibold text-gray-900">Portfolio Positioning</h2>
+        <div className="text-xs text-gray-500">ESG Score vs. Carbon Intensity · bubble = investment size</div>
       </div>
       <div className="flex items-center gap-4 mb-3">
         {Object.entries(riskColor).map(([level, color]) => (
           <div key={level} className="flex items-center gap-1.5">
             <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
-            <span className="text-xs text-slate-500">{level}</span>
+            <span className="text-xs text-gray-500">{level}</span>
           </div>
         ))}
-        <span className="text-xs text-slate-600 ml-2">Transition Risk</span>
+        <span className="text-xs text-gray-500 ml-2">Transition Risk</span>
         {data.filter(d => d.carbonIntensity > 400).length > 0 && (
           <div className="ml-auto flex items-center gap-2 flex-shrink-0">
             {data.filter(d => d.carbonIntensity > 400).map(d => (
@@ -107,7 +107,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
       {(() => {
         const offChart = data.filter(d => d.carbonIntensity > 400);
         return (
-          <div className="text-xs text-slate-600 text-center mt-1">
+          <div className="text-xs text-gray-500 text-center mt-1">
             Ideal: bottom-right (high ESG, low carbon)
             {offChart.length > 0 && ` · ${offChart.map(d => `${d.name} (${d.carbonIntensity} tCO₂e/$M)`).join(", ")} off-chart`}
           </div>

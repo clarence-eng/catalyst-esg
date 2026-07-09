@@ -47,34 +47,34 @@ export function RiskHeatmap() {
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
 
   return (
-    <div className="bg-[#0d1526] rounded-xl border border-white/5 mb-8">
-      <div className="px-6 py-4 border-b border-white/5">
-        <h2 className="text-sm font-semibold text-white">Risk Matrix</h2>
-        <p className="text-xs text-slate-500 mt-0.5">Material risk exposure across active portfolio companies</p>
+    <div className="bg-white rounded-xl border border-gray-200 mb-8">
+      <div className="px-6 py-4 border-b border-gray-200">
+        <h2 className="text-sm font-semibold text-gray-900">Risk Matrix</h2>
+        <p className="text-xs text-gray-500 mt-0.5">Material risk exposure across active portfolio companies</p>
       </div>
       <div className="p-5 overflow-x-auto">
         <table className="w-full" aria-label="Risk matrix — material risk exposure across active portfolio companies">
           <thead>
             <tr>
-              <th scope="col" className="text-left text-xs text-slate-500 font-medium pb-3 pr-4 w-40">Company</th>
+              <th scope="col" className="text-left text-xs text-gray-500 font-medium pb-3 pr-4 w-40">Company</th>
               {RISK_COLUMNS.map((col) => (
-                <th scope="col" key={col.key} className="text-center text-xs text-slate-500 font-medium pb-3 px-2">
+                <th scope="col" key={col.key} className="text-center text-xs text-gray-500 font-medium pb-3 px-2">
                   {col.label}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-gray-100">
             {activeCompanies.map((co) => (
-              <tr key={co.slug} className="hover:bg-white/[0.02] transition-colors">
+              <tr key={co.slug} className="hover:bg-gray-50 transition-colors">
                 <th scope="row" className="py-2.5 pr-4 text-left font-normal">
                   <Link
                     href={`/scout/${co.slug}`}
-                    className="text-xs font-medium text-white hover:text-purple-300 transition-colors"
+                    className="text-xs font-medium text-gray-900 hover:text-purple-300 transition-colors"
                   >
                     {co.name}
                   </Link>
-                  <div className="text-xs text-slate-600 mt-0.5">{co.country}</div>
+                  <div className="text-xs text-gray-500 mt-0.5">{co.country}</div>
                 </th>
                 {RISK_COLUMNS.map((col) => (
                   <td key={col.key} className="py-2.5 px-2">
@@ -85,8 +85,8 @@ export function RiskHeatmap() {
             ))}
           </tbody>
         </table>
-        <div className="flex items-center gap-4 mt-4 pt-4 border-t border-white/5">
-          <span className="text-xs text-slate-600 font-medium">Legend:</span>
+        <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-200">
+          <span className="text-xs text-gray-500 font-medium">Legend:</span>
           {(["Critical", "High", "Medium", "Low"] as RiskLevel[]).map((level) => (
             <div key={level} className="flex items-center gap-1.5">
               <RiskCell level={level} />

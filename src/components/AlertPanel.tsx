@@ -80,7 +80,7 @@ export function AlertPanel({ companies }: { companies: Company[] }) {
     <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 mb-6">
       <div className="flex items-center gap-2 mb-3">
         <AlertCircle className="w-4 h-4 text-amber-400" />
-        <h2 className="text-sm font-semibold text-white">Portfolio Alerts</h2>
+        <h2 className="text-sm font-semibold text-gray-900">Portfolio Alerts</h2>
         <span className="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full font-medium">
           {alerts.length}
         </span>
@@ -89,7 +89,7 @@ export function AlertPanel({ companies }: { companies: Company[] }) {
         {alerts.map((alert, i) => (
           <div
             key={`${alert.slug}-${alert.severity}-${i}`}
-            className="flex items-center gap-3 p-3 bg-[#0d1526] rounded-lg border border-white/5"
+            className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200"
           >
             {alert.severity === 1
               ? <AlertCircle className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
@@ -97,7 +97,7 @@ export function AlertPanel({ companies }: { companies: Company[] }) {
               ? <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
               : <Info className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
             }
-            <span className="text-xs text-slate-300 flex-1">{alert.message}</span>
+            <span className="text-xs text-gray-700 flex-1">{alert.message}</span>
             <Link
               href={`/scout/${alert.slug}`}
               className="text-xs text-purple-400 hover:text-purple-300"

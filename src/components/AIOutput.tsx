@@ -32,7 +32,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
         elements.push(
           <ol key={key++} className="list-none space-y-1 my-2">
             {listBuffer.map((item, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
+              <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
                 <span className="text-emerald-500 mt-0.5 flex-shrink-0 font-medium w-4 text-right">{item.num ?? i + 1}.</span>
                 <span dangerouslySetInnerHTML={{ __html: renderInline(item.text) }} />
               </li>
@@ -43,7 +43,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
         elements.push(
           <ul key={key++} className="list-none space-y-1 my-2">
             {listBuffer.map((item, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
+              <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
                 <span className="text-emerald-500 mt-0.5 flex-shrink-0">·</span>
                 <span dangerouslySetInnerHTML={{ __html: renderInline(item.text) }} />
               </li>
@@ -59,8 +59,8 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
   // Escape HTML first, then apply safe markdown-to-HTML transforms
   function renderInline(s: string): string {
     return escapeHtml(s)
-      .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
-      .replace(/\*([^*]+)\*/g, '<em class="text-slate-200">$1</em>');
+      .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-gray-900 font-semibold">$1</strong>')
+      .replace(/\*([^*]+)\*/g, '<em class="text-gray-800">$1</em>');
   }
 
   for (const line of lines) {
@@ -90,7 +90,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       flushList();
       const content = line.replace(/^###\s*/, "").replace(/^\*\*|\*\*$/g, "");
       elements.push(
-        <div key={key++} className="text-sm font-semibold text-white mt-4 mb-1.5">
+        <div key={key++} className="text-sm font-semibold text-gray-900 mt-4 mb-1.5">
           {content}
         </div>
       );
@@ -118,7 +118,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
     // Regular paragraph
     flushList();
     elements.push(
-      <p key={key++} className="text-sm text-slate-300 leading-relaxed mb-2"
+      <p key={key++} className="text-sm text-gray-700 leading-relaxed mb-2"
         dangerouslySetInnerHTML={{ __html: renderInline(line) }}
       />
     );
@@ -127,7 +127,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
   flushList();
 
   return (
-    <div className={`bg-white/[0.02] border border-white/5 rounded-lg p-4 ${className}`}>
+    <div className={`bg-gray-50 border border-gray-200 rounded-lg p-4 ${className}`}>
       {elements}
     </div>
   );

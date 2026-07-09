@@ -20,7 +20,7 @@ export default async function CompanyPage({
   return (
     <>
       <div className="px-8 pt-6">
-        <Link href="/scout" className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-300 transition-colors">
+        <Link href="/scout" className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors">
           <ChevronLeft className="w-3 h-3" />
           Back to Scout
         </Link>

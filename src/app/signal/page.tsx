@@ -61,7 +61,7 @@ export default function SignalPage() {
       />
 
       {/* Megatrend Cards */}
-      <h2 className="text-sm font-semibold text-white mb-4">ESG Megatrends</h2>
+      <h2 className="text-sm font-semibold text-gray-900 mb-4">ESG Megatrends</h2>
       <div className="grid grid-cols-3 gap-4 mb-10">
         {megatrends.map((t) => {
           const exposureSummary = t.portfolioExposure.filter((p) => p.exposure === "High" && portfolioSlugs.has(p.slug)).length;
@@ -70,26 +70,26 @@ export default function SignalPage() {
             <Link
               key={t.slug}
               href={`/signal/${t.slug}`}
-              className={`bg-[#0d1526] rounded-xl border p-5 hover:bg-white/[0.02] transition-all group ${megatrendColorMap[t.color] ?? "border-white/10"}`}
+              className={`bg-white rounded-xl border p-5 hover:bg-gray-50 transition-all group ${megatrendColorMap[t.color] ?? "border-gray-200"}`}
             >
               <div className="flex items-start justify-between mb-3">
-                <span className={`text-xs font-medium px-2 py-0.5 rounded ${megatrendUrgencyMap[t.urgency] ?? "text-slate-400 bg-white/10"}`}>
+                <span className={`text-xs font-medium px-2 py-0.5 rounded ${megatrendUrgencyMap[t.urgency] ?? "text-gray-600 bg-gray-200"}`}>
                   {t.urgency}
                 </span>
-                <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors" />
+                <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-gray-600 transition-colors" />
               </div>
-              <h3 className="text-base font-semibold text-white mb-1">{t.title}</h3>
-              <p className="text-xs text-slate-400 mb-3">{t.subtitle}</p>
-              <p className="text-xs text-slate-500 leading-relaxed mb-4 line-clamp-3">{t.summary}</p>
+              <h3 className="text-base font-semibold text-gray-900 mb-1">{t.title}</h3>
+              <p className="text-xs text-gray-600 mb-3">{t.subtitle}</p>
+              <p className="text-xs text-gray-500 leading-relaxed mb-4 line-clamp-3">{t.summary}</p>
               <div className="flex items-center justify-between">
-                <div className="text-xs text-slate-500">
-                  <span className="text-slate-300">{exposureSummary}</span> high-exposure portfolio cos
+                <div className="text-xs text-gray-500">
+                  <span className="text-gray-700">{exposureSummary}</span> high-exposure portfolio cos
                 </div>
-                <div className={`text-xs ${megatrendTextMap[t.color] ?? "text-slate-400"}`}>{t.temasekAlignment}</div>
+                <div className={`text-xs ${megatrendTextMap[t.color] ?? "text-gray-600"}`}>{t.temasekAlignment}</div>
               </div>
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {t.frameworks.slice(0, 3).map((f) => (
-                  <span key={f} className="text-xs text-slate-500 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
+                  <span key={f} className="text-xs text-gray-500 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
                     {f}
                   </span>
                 ))}
@@ -101,14 +101,14 @@ export default function SignalPage() {
 
       {/* Regulatory Radar */}
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-semibold text-white">Regulatory Radar</h2>
-        <span className="text-xs text-slate-500">{filteredUpdates.length} of {regulatoryUpdates.length} regulations</span>
+        <h2 className="text-sm font-semibold text-gray-900">Regulatory Radar</h2>
+        <span className="text-xs text-gray-500">{filteredUpdates.length} of {regulatoryUpdates.length} regulations</span>
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-4">
         <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-xs text-slate-600">Jurisdiction:</span>
+          <span className="text-xs text-gray-500">Jurisdiction:</span>
           {allJurisdictions.map((j) => (
             <button
               key={j}
@@ -117,7 +117,7 @@ export default function SignalPage() {
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 jurisdictionFilter === j
                   ? "bg-[#4B2580]/20 text-purple-400 border-purple-500/30"
-                  : "text-slate-400 border-white/10 hover:text-slate-200"
+                  : "text-gray-600 border-gray-200 hover:text-gray-800"
               }`}
             >
               {j}
@@ -125,7 +125,7 @@ export default function SignalPage() {
           ))}
         </div>
         <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-xs text-slate-600">Category:</span>
+          <span className="text-xs text-gray-500">Category:</span>
           {allCategories.map((c) => (
             <button
               key={c}
@@ -134,7 +134,7 @@ export default function SignalPage() {
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 categoryFilter === c
                   ? "bg-[#4B2580]/20 text-purple-400 border-purple-500/30"
-                  : "text-slate-400 border-white/10 hover:text-slate-200"
+                  : "text-gray-600 border-gray-200 hover:text-gray-800"
               }`}
             >
               {c}
@@ -146,24 +146,24 @@ export default function SignalPage() {
       <div className="space-y-3 mb-8">
         {highUrgency.length > 0 && (
           <>
-            <div className="text-xs text-slate-500 uppercase tracking-wider font-medium pb-1">High Priority</div>
+            <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-1">High Priority</div>
             {highUrgency.map((r) => <RegUpdateCard key={r.id} update={r} />)}
           </>
         )}
         {mediumUrgency.length > 0 && (
           <>
-            <div className="text-xs text-slate-500 uppercase tracking-wider font-medium pb-1 pt-4">Monitor</div>
+            <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-1 pt-4">Monitor</div>
             {mediumUrgency.map((r) => <RegUpdateCard key={r.id} update={r} />)}
           </>
         )}
         {lowUrgency.length > 0 && (
           <>
-            <div className="text-xs text-slate-500 uppercase tracking-wider font-medium pb-1 pt-4">Policy Tailwinds</div>
+            <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-1 pt-4">Policy Tailwinds</div>
             {lowUrgency.map((r) => <RegUpdateCard key={r.id} update={r} />)}
           </>
         )}
         {filteredUpdates.length === 0 && (
-          <div className="text-xs text-slate-500 text-center py-8 border border-dashed border-white/5 rounded-lg">
+          <div className="text-xs text-gray-500 text-center py-8 border border-dashed border-gray-200 rounded-lg">
             No regulations match the selected filters
           </div>
         )}
@@ -176,8 +176,8 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
   const statusColors: Record<string, string> = {
     "In Force": "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
     "Effective 2026": "text-blue-400 bg-blue-500/10 border-blue-500/20",
-    Proposed: "text-slate-400 bg-white/5 border-white/10",
-    Consultation: "text-slate-400 bg-white/5 border-white/10",
+    Proposed: "text-gray-600 bg-gray-100 border-gray-200",
+    Consultation: "text-gray-600 bg-gray-100 border-gray-200",
   };
   const categoryColors: Record<string, string> = {
     "Climate Disclosure": "text-emerald-400",
@@ -189,16 +189,16 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
   };
 
   return (
-    <div className="bg-[#0d1526] rounded-xl border border-white/5 p-4">
+    <div className="bg-white rounded-xl border border-gray-200 p-4">
       <div className="flex items-start gap-4">
         <div className="w-4 h-4 mt-0.5 flex-shrink-0">
           {r.urgency === "High" && <AlertCircle className="w-4 h-4 text-amber-400" />}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-start gap-3 flex-wrap mb-1.5">
-            <span className="text-sm font-medium text-white">{r.title}</span>
-            <span className={`text-xs px-2 py-0.5 rounded border ${statusColors[r.status] ?? "text-slate-400 bg-white/5 border-white/10"}`}>{r.status}</span>
-            <span className={`text-xs font-medium ${categoryColors[r.category] ?? "text-slate-400"}`}>{r.category}</span>
+            <span className="text-sm font-medium text-gray-900">{r.title}</span>
+            <span className={`text-xs px-2 py-0.5 rounded border ${statusColors[r.status] ?? "text-gray-600 bg-gray-100 border-gray-200"}`}>{r.status}</span>
+            <span className={`text-xs font-medium ${categoryColors[r.category] ?? "text-gray-600"}`}>{r.category}</span>
             {r.portfolioImpact && r.portfolioImpact.length > 0 && (
               <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${
                 r.portfolioImpact.length <= 2
@@ -209,26 +209,26 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
               </span>
             )}
           </div>
-          <div className="flex items-center gap-3 text-xs text-slate-500 mb-2">
+          <div className="flex items-center gap-3 text-xs text-gray-500 mb-2">
             <span>{r.jurisdiction}</span>
             <span>·</span>
             <span>Effective: {r.effectiveDate}</span>
           </div>
-          <p className="text-xs text-slate-400 leading-relaxed mb-2">{r.summary}</p>
-          <div className="text-xs text-slate-500 bg-white/[0.02] border border-white/5 rounded p-2.5">
-            <span className="text-slate-400 font-medium">Investment Impact: </span>
+          <p className="text-xs text-gray-600 leading-relaxed mb-2">{r.summary}</p>
+          <div className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded p-2.5">
+            <span className="text-gray-600 font-medium">Investment Impact: </span>
             {r.investmentImpact}
           </div>
           <div className="flex flex-wrap gap-1.5 mt-2">
             {r.relevantSectors.map((s) => (
-              <span key={s} className="text-xs text-slate-600 bg-white/5 border border-white/5 px-2 py-0.5 rounded">
+              <span key={s} className="text-xs text-gray-500 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
                 {s}
               </span>
             ))}
           </div>
           {r.portfolioImpact && r.portfolioImpact.length > 0 && (
             <div className="flex items-center gap-2 mt-2 flex-wrap">
-              <span className="text-xs text-slate-600">Portfolio:</span>
+              <span className="text-xs text-gray-500">Portfolio:</span>
               {r.portfolioImpact.map((slug) => (
                 <Link
                   key={slug}

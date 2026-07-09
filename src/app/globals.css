@@ -43,57 +43,53 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-
-  /* Restore vivid semantic reds for danger/error/overdue states
-     Tailwind v4 defaults (red-400=#fca5a5) are too light on dark backgrounds */
-  --color-red-400: #f87171;
-  --color-red-500: #ef4444;
-  --color-red-600: #dc2626;
-  --color-red-700: #b91c1c;
 }
 
 :root {
-  --background: oklch(0.13 0.02 255);
-  --foreground: oklch(0.93 0.01 240);
-  --card: oklch(0.16 0.02 255);
-  --card-foreground: oklch(0.93 0.01 240);
-  --popover: oklch(0.16 0.02 255);
-  --popover-foreground: oklch(0.93 0.01 240);
+  /* Light theme */
+  --background: oklch(0.97 0 0);
+  --foreground: oklch(0.13 0.01 255);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.13 0.01 255);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.13 0.01 255);
   /* Temasek brand purple #4B2580 */
   --temasek: #4B2580;
   --primary: oklch(0.369 0.145 298);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.22 0.02 255);
-  --secondary-foreground: oklch(0.93 0.01 240);
-  --muted: oklch(0.22 0.02 255);
-  --muted-foreground: oklch(0.62 0.02 240);
-  --accent: oklch(0.22 0.02 255);
-  --accent-foreground: oklch(0.93 0.01 240);
+  --secondary: oklch(0.95 0 0);
+  --secondary-foreground: oklch(0.13 0.01 255);
+  --muted: oklch(0.95 0 0);
+  --muted-foreground: oklch(0.45 0.01 255);
+  --accent: oklch(0.95 0 0);
+  --accent-foreground: oklch(0.13 0.01 255);
   --destructive: oklch(0.55 0.22 25);
-  --border: oklch(0.28 0.02 255);
-  --input: oklch(0.28 0.02 255);
-  --ring: oklch(0.36 0.14 296);
+  --border: oklch(0.88 0 0);
+  --input: oklch(0.88 0 0);
+  --ring: oklch(0.369 0.145 298);
+  /* Chart colors — adjusted for light theme visibility */
   --chart-1: oklch(0.55 0.16 200);
-  --chart-2: oklch(0.7 0.15 85);
-  --chart-3: oklch(0.6 0.18 30);
-  --chart-4: oklch(0.65 0.15 280);
-  --chart-5: oklch(0.56 0.18 155);
+  --chart-2: oklch(0.60 0.15 85);
+  --chart-3: oklch(0.60 0.18 30);
+  --chart-4: oklch(0.55 0.15 280);
+  --chart-5: oklch(0.50 0.18 155);
   --radius: 0.625rem;
-  --sidebar: oklch(0.14 0.02 255);
-  --sidebar-foreground: oklch(0.93 0.01 240);
-  --sidebar-primary: oklch(0.36 0.14 296);
+  /* Sidebar — light theme */
+  --sidebar: oklch(0.975 0 0);
+  --sidebar-foreground: oklch(0.13 0.01 255);
+  --sidebar-primary: oklch(0.369 0.145 298);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.22 0.02 255);
-  --sidebar-accent-foreground: oklch(0.93 0.01 240);
-  --sidebar-border: oklch(0.28 0.02 255);
-  --sidebar-ring: oklch(0.36 0.14 296);
+  --sidebar-accent: oklch(0.93 0 0);
+  --sidebar-accent-foreground: oklch(0.13 0.01 255);
+  --sidebar-border: oklch(0.88 0 0);
+  --sidebar-ring: oklch(0.369 0.145 298);
 }
 
-/* scrollbar */
+/* scrollbar — light theme */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: oklch(0.13 0.02 255); }
-::-webkit-scrollbar-thumb { background: oklch(0.28 0.02 255); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: oklch(0.35 0.02 255); }
+::-webkit-scrollbar-track { background: oklch(0.95 0 0); }
+::-webkit-scrollbar-thumb { background: oklch(0.78 0 0); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: oklch(0.65 0 0); }
 
 @layer base {
   * {

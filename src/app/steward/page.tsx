@@ -42,23 +42,23 @@ export default function StewardPage() {
         subtitle="Post-investment portfolio engagement tracking — active company stewardship and pipeline pre-close monitoring."
       >
         <div className="flex items-center gap-3">
-          <div className="text-center bg-[#0d1526] border border-white/5 rounded-xl px-4 py-2">
-            <div className="text-lg font-bold text-white">{completedCount}</div>
-            <div className="text-xs text-slate-500">Completed (active)</div>
+          <div className="text-center bg-white border border-gray-200 rounded-xl px-4 py-2">
+            <div className="text-lg font-bold text-gray-900">{completedCount}</div>
+            <div className="text-xs text-gray-500">Completed (active)</div>
           </div>
-          <div className="text-center bg-[#0d1526] border border-white/5 rounded-xl px-4 py-2">
+          <div className="text-center bg-white border border-gray-200 rounded-xl px-4 py-2">
             <div className="text-lg font-bold text-blue-400">{plannedCount}</div>
-            <div className="text-xs text-slate-500">Planned (active)</div>
+            <div className="text-xs text-gray-500">Planned (active)</div>
           </div>
-          <div className="text-center bg-[#0d1526] border border-white/5 rounded-xl px-4 py-2">
+          <div className="text-center bg-white border border-gray-200 rounded-xl px-4 py-2">
             <div className="text-lg font-bold text-red-400">{overdueCount}</div>
-            <div className="text-xs text-slate-500">Overdue (active)</div>
+            <div className="text-xs text-gray-500">Overdue (active)</div>
           </div>
         </div>
       </PageHeader>
 
       {/* View Toggle */}
-      <div className="flex items-center gap-1 bg-[#0d1526] border border-white/5 rounded-lg p-1 mb-6 w-fit">
+      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 mb-6 w-fit">
         {(["cards", "calendar"] as const).map((v) => (
           <button
             key={v}
@@ -67,7 +67,7 @@ export default function StewardPage() {
             className={`text-xs px-3 py-1.5 rounded-md transition-colors font-medium capitalize ${
               view === v
                 ? "bg-[#4B2580]/20 text-purple-400 border border-purple-500/30"
-                : "text-slate-400 hover:text-slate-200"
+                : "text-gray-600 hover:text-gray-800"
             }`}
           >
             {v === "cards" ? "Cards" : "Calendar"}
@@ -78,17 +78,17 @@ export default function StewardPage() {
       {/* Calendar View */}
       {view === "calendar" && (
         <div className="mb-8">
-          <div className="bg-[#0d1526] rounded-xl border border-white/5">
-            <div className="px-5 py-4 border-b border-white/5">
-              <h2 className="text-sm font-semibold text-white">Upcoming &amp; Overdue Engagements</h2>
-              <p className="text-xs text-slate-500 mt-0.5">{calendarEngagements.length} engagements across {new Set(calendarEngagements.map(e => e.companySlug)).size} companies</p>
+          <div className="bg-white rounded-xl border border-gray-200">
+            <div className="px-5 py-4 border-b border-gray-200">
+              <h2 className="text-sm font-semibold text-gray-900">Upcoming &amp; Overdue Engagements</h2>
+              <p className="text-xs text-gray-500 mt-0.5">{calendarEngagements.length} engagements across {new Set(calendarEngagements.map(e => e.companySlug)).size} companies</p>
             </div>
             {calendarEngagements.length === 0 ? (
-              <div className="text-xs text-slate-500 text-center py-8">No planned or overdue engagements</div>
+              <div className="text-xs text-gray-500 text-center py-8">No planned or overdue engagements</div>
             ) : (
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-gray-100">
                 {calendarEngagements.map((e, i) => (
-                  <div key={`${e.companySlug}-${e.date}-${e.topic}-${i}`} className="flex items-center gap-4 px-5 py-3 hover:bg-white/[0.02] transition-colors">
+                  <div key={`${e.companySlug}-${e.date}-${e.topic}-${i}`} className="flex items-center gap-4 px-5 py-3 hover:bg-gray-50 transition-colors">
                     {/* Date Badge */}
                     <div className="w-16 flex-shrink-0 text-center">
                       <div className={`text-xs font-semibold px-2 py-1 rounded ${
@@ -111,8 +111,8 @@ export default function StewardPage() {
                     </div>
                     {/* Topic */}
                     <div className="flex-1 min-w-0">
-                      <span className="text-sm text-white truncate block">{e.topic}</span>
-                      <span className="text-xs text-slate-500 ml-2">{e.type}</span>
+                      <span className="text-sm text-gray-900 truncate block">{e.topic}</span>
+                      <span className="text-xs text-gray-500 ml-2">{e.type}</span>
                     </div>
                     {/* Status */}
                     <span className={`text-xs px-2 py-0.5 rounded border flex-shrink-0 ${
@@ -143,7 +143,7 @@ export default function StewardPage() {
       {pipelineCompanies.length > 0 && view === "cards" && (
         <div className="mt-8">
           <div className="flex items-center gap-3 mb-4">
-            <h2 className="text-sm font-semibold text-white">Pipeline — Pre-Investment ESG Due Diligence</h2>
+            <h2 className="text-sm font-semibold text-gray-900">Pipeline — Pre-Investment ESG Due Diligence</h2>
             <span className="flex items-center gap-1 text-xs text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 rounded-full">
               <GitMerge className="w-3 h-3" /> {pipelineCompanies.length} under evaluation
             </span>
@@ -219,10 +219,10 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
   }
 
   return (
-    <div className={`bg-[#0d1526] rounded-xl border transition-colors ${
+    <div className={`bg-white rounded-xl border transition-colors ${
       isPipeline
         ? "border-blue-500/20 hover:border-blue-500/30"
-        : "border-white/5 hover:border-white/10"
+        : "border-gray-200 hover:border-gray-200"
     }`}>
       {/* Card Header — click anywhere to expand */}
       <div
@@ -239,7 +239,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
             <div className="flex items-center gap-3 mb-2">
               <Link
                 href={`/scout/${co.slug}`}
-                className="font-semibold text-white hover:text-purple-300 transition-colors"
+                className="font-semibold text-gray-900 hover:text-purple-300 transition-colors"
                 onClick={(e) => e.stopPropagation()}
               >
                 {co.name}
@@ -247,7 +247,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
               <RatingBadge rating={co.esgScore.rating} />
               <MaturityBadge level={co.maturity} />
             </div>
-            <div className="flex items-center gap-4 text-xs text-slate-500">
+            <div className="flex items-center gap-4 text-xs text-gray-500">
               <span>{co.sector}</span>
               <span>·</span>
               <span>{co.country}</span>
@@ -266,11 +266,11 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 text-xs">
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-                <span className="text-slate-300">{completedCount}</span>
+                <span className="text-gray-700">{completedCount}</span>
               </div>
               <div className="flex items-center gap-1.5 text-xs">
                 <Clock className="w-3.5 h-3.5 text-blue-400" />
-                <span className="text-slate-300">{plannedCount}</span>
+                <span className="text-gray-700">{plannedCount}</span>
               </div>
               {overdueCount > 0 && (
                 <div className="flex items-center gap-1.5 text-xs">
@@ -279,19 +279,19 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
                 </div>
               )}
             </div>
-            <div className="text-slate-500">
+            <div className="text-gray-500">
               {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </div>
           </div>
         </div>
 
         {/* Risk quick view */}
-        <div className="flex items-center gap-4 mt-3 pt-3 border-t border-white/5">
+        <div className="flex items-center gap-4 mt-3 pt-3 border-t border-gray-200">
           <RiskItem label="Physical" level={co.climateRisk.physical} />
           <RiskItem label="Transition" level={co.climateRisk.transition} />
           <RiskItem label="Nature" level={co.natureRisk.overall} />
-          <div className="ml-auto text-xs text-slate-500">
-            Carbon intensity: <span className="text-slate-300">{co.carbonIntensity} tCO₂e/$M</span>
+          <div className="ml-auto text-xs text-gray-500">
+            Carbon intensity: <span className="text-gray-700">{co.carbonIntensity} tCO₂e/$M</span>
             <span className="mx-2">·</span>
             Green revenue: <span className="text-emerald-400">{co.greenRevenuePct}%</span>
           </div>
@@ -300,32 +300,32 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
 
       {/* Expanded Content */}
       {expanded && (
-        <div className="border-t border-white/5 p-5 space-y-5">
+        <div className="border-t border-gray-200 p-5 space-y-5">
           {/* Engagement Timeline */}
           <div>
-            <h3 className="text-sm font-semibold text-white mb-3">Engagement History</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Engagement History</h3>
             <div className="space-y-2">
               {[...co.engagement].sort((a, b) => {
                 // Sort chronologically descending (most recent first) so history reads naturally
                 return a.date > b.date ? -1 : a.date < b.date ? 1 : 0;
               }).map((e, i) => (
-                <div key={`${e.date}-${e.topic}-${i}`} className="flex items-start gap-3 p-3 bg-white/[0.02] rounded-lg border border-white/5">
+                <div key={`${e.date}-${e.topic}-${i}`} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
                     e.status === "Completed" ? "bg-emerald-500" :
                     e.status === "Planned" ? "bg-blue-500" : "bg-red-500"
                   }`} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <span className="text-sm font-medium text-white">{e.topic}</span>
-                      <span className="text-xs text-slate-500">{e.type}</span>
-                      <span className="text-xs text-slate-600">{formatDate(e.date)}</span>
+                      <span className="text-sm font-medium text-gray-900">{e.topic}</span>
+                      <span className="text-xs text-gray-500">{e.type}</span>
+                      <span className="text-xs text-gray-500">{formatDate(e.date)}</span>
                       <span className={`text-xs px-1.5 py-0.5 rounded border ${
                         e.status === "Completed" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
                         e.status === "Planned" ? "text-blue-400 bg-blue-500/10 border-blue-500/20" :
                         "text-red-400 bg-red-500/10 border-red-500/20"
                       }`}>{e.status}</span>
                     </div>
-                    <p className="text-xs text-slate-400 line-clamp-3">{e.notes}</p>
+                    <p className="text-xs text-gray-600 line-clamp-3">{e.notes}</p>
                   </div>
                 </div>
               ))}
@@ -336,8 +336,8 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
           <div>
             <div className="flex items-center justify-between mb-3">
               <div>
-                <h3 className="text-sm font-semibold text-white">ESG Action Plan</h3>
-                <p className="text-xs text-slate-500 mt-0.5">AI-generated 12-month ESG engagement roadmap with quarterly milestones</p>
+                <h3 className="text-sm font-semibold text-gray-900">ESG Action Plan</h3>
+                <p className="text-xs text-gray-500 mt-0.5">AI-generated 12-month ESG engagement roadmap with quarterly milestones</p>
               </div>
               <button
                 onClick={generateActionPlan}
@@ -356,29 +356,29 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
             )}
             {plan ? (
               <>
-                {planLoading && <div className="text-xs text-slate-500 text-center py-2 mb-2">Regenerating…</div>}
+                {planLoading && <div className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
                 <AIOutput text={plan} />
                 <div className="mt-3 flex items-center">
                   <button
                     onClick={() => navigator.clipboard?.writeText(plan).catch(() => {})}
-                    className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+                    className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                   >
                     <Copy className="w-3 h-3" />
                     Copy to clipboard
                   </button>
-                  <span className="text-xs text-slate-600 ml-auto">
+                  <span className="text-xs text-gray-500 ml-auto">
                     {planGeneratedAt ? `Generated ${formatRelativeTime(planGeneratedAt)}` : ""}
                   </span>
                 </div>
               </>
             ) : planLoading ? (
-              <div className="text-xs text-slate-500 text-center py-6 border border-dashed border-white/5 rounded-lg animate-pulse">
+              <div className="text-xs text-gray-500 text-center py-6 border border-dashed border-gray-200 rounded-lg animate-pulse">
                 Generating action plan…
               </div>
             ) : (
-              <div className="text-xs text-slate-600 text-center py-6 border border-dashed border-white/5 rounded-lg">
+              <div className="text-xs text-gray-500 text-center py-6 border border-dashed border-gray-200 rounded-lg">
                 <div>Generate a Temasek-style 12-month ESG engagement action plan with quarterly milestones and KPIs</div>
-                <div className="text-slate-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
+                <div className="text-gray-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
               </div>
             )}
           </div>
@@ -394,7 +394,7 @@ function ESGMini({ label, value }: { label: string; value: number }) {
   return (
     <div className="text-center">
       <div className={`text-sm font-bold ${color}`}>{value}</div>
-      <div className="text-xs text-slate-600">{label}</div>
+      <div className="text-xs text-gray-500">{label}</div>
     </div>
   );
 }
@@ -402,7 +402,7 @@ function ESGMini({ label, value }: { label: string; value: number }) {
 function RiskItem({ label, level }: { label: string; level: "Low" | "Medium" | "High" | "Critical" }) {
   return (
     <div className="flex items-center gap-1.5">
-      <span className="text-xs text-slate-500">{label}:</span>
+      <span className="text-xs text-gray-500">{label}:</span>
       <RiskBadge level={level} />
     </div>
   );

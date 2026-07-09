@@ -42,11 +42,11 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
   }
 
   return (
-    <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5 mb-8">
+    <div className="bg-white rounded-xl border border-gray-200 p-5 mb-8">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h2 className="text-sm font-semibold text-white">Portfolio ESG Brief</h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <h2 className="text-sm font-semibold text-gray-900">Portfolio ESG Brief</h2>
+          <p className="text-xs text-gray-500 mt-0.5">
             AI-generated quarterly ESG health summary across all active portfolio companies
           </p>
         </div>
@@ -67,7 +67,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
       )}
       {brief ? (
         <>
-          {loading && <div className="text-xs text-slate-500 text-center py-2 mb-2">Regenerating…</div>}
+          {loading && <div className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
           <AIOutput text={brief} />
           <div className="flex items-center gap-4 mt-3">
             <button
@@ -81,24 +81,24 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
                 const header = `CATALYST ESG INTELLIGENCE\n${quarter} Portfolio ESG Brief\nPrepared: ${date}\nPortfolio: ${countLabel}Active Companies (${names})\n${"─".repeat(60)}\n\n`;
                 navigator.clipboard?.writeText(header + brief).catch(() => {});
               }}
-              className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+              className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
             >
               <Copy className="w-3 h-3" />
               Copy as document
             </button>
             {generatedAt && (
-              <span className="text-xs text-slate-600">Generated {formatRelativeTime(generatedAt)}</span>
+              <span className="text-xs text-gray-500">Generated {formatRelativeTime(generatedAt)}</span>
             )}
           </div>
         </>
       ) : loading ? (
-        <div className="text-xs text-slate-500 text-center py-6 border border-dashed border-white/5 rounded-lg animate-pulse">
+        <div className="text-xs text-gray-500 text-center py-6 border border-dashed border-gray-200 rounded-lg animate-pulse">
           Generating ESG brief…
         </div>
       ) : (
-        <div className="text-xs text-slate-600 text-center py-6 border border-dashed border-white/5 rounded-lg">
+        <div className="text-xs text-gray-500 text-center py-6 border border-dashed border-gray-200 rounded-lg">
           <div>Generate a Temasek-style quarterly ESG portfolio health summary</div>
-          <div className="text-slate-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
+          <div className="text-gray-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
         </div>
       )}
     </div>

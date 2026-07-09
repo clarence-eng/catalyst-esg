@@ -60,20 +60,20 @@ export default function LearnPage() {
 
       {/* Search Bar */}
       <div className="relative mb-6">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           aria-label="Search ESG frameworks and case studies"
           placeholder="Search frameworks and case studies..."
-          className="w-full bg-[#0d1526] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-slate-300 text-sm placeholder:text-slate-600 focus:outline-none focus:border-purple-600/40 transition-colors"
+          className="w-full bg-white border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-gray-700 text-sm placeholder:text-gray-500 focus:outline-none focus:border-purple-600/40 transition-colors"
         />
         {searchQuery && (
           <button
             onClick={() => setSearchQuery("")}
             aria-label="Clear search"
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-500 hover:text-slate-300"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-500 hover:text-gray-700"
           >
             Clear
           </button>
@@ -85,8 +85,8 @@ export default function LearnPage() {
         {/* Left column: Frameworks */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-white">ESG Frameworks & Standards</h2>
-            <span className="text-xs text-slate-500">{filteredFrameworks.length} of {frameworks.length}</span>
+            <h2 className="text-sm font-semibold text-gray-900">ESG Frameworks & Standards</h2>
+            <span className="text-xs text-gray-500">{filteredFrameworks.length} of {frameworks.length}</span>
           </div>
 
           {/* Filter pills */}
@@ -99,7 +99,7 @@ export default function LearnPage() {
                 className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                   frameworkFilter === cat
                     ? "bg-[#4B2580]/20 text-purple-400 border-purple-500/30"
-                    : "text-slate-400 border-white/10 hover:text-slate-200 hover:border-white/20"
+                    : "text-gray-600 border-gray-200 hover:text-gray-800 hover:border-gray-300"
                 }`}
               >
                 {cat}
@@ -108,12 +108,12 @@ export default function LearnPage() {
           </div>
 
           {filteredFrameworks.length === 0 && (
-            <p className="text-xs text-slate-500 py-4">No frameworks in this category or search.</p>
+            <p className="text-xs text-gray-500 py-4">No frameworks in this category or search.</p>
           )}
 
           {highRelevance.length > 0 && (
           <div className="mb-2">
-            <div className="text-xs text-slate-500 uppercase tracking-wider font-medium pb-2">High Relevance to Temasek Portfolio</div>
+            <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-2">High Relevance to Temasek Portfolio</div>
             <div className="space-y-2">
               {highRelevance.map((f) => <FrameworkRow key={f.id} framework={f} />)}
             </div>
@@ -122,7 +122,7 @@ export default function LearnPage() {
 
           {medRelevance.length > 0 && (
             <div className="mt-4">
-              <div className="text-xs text-slate-500 uppercase tracking-wider font-medium pb-2 pt-2">Reference</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-2 pt-2">Reference</div>
               <div className="space-y-2">
                 {medRelevance.map((f) => <FrameworkRow key={f.id} framework={f} />)}
               </div>
@@ -133,11 +133,11 @@ export default function LearnPage() {
         {/* Right column: Case Studies */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-white">ESG Case Studies</h2>
-            <span className="text-xs text-slate-500">{filteredCaseStudies.length} of {caseStudies.length}</span>
+            <h2 className="text-sm font-semibold text-gray-900">ESG Case Studies</h2>
+            <span className="text-xs text-gray-500">{filteredCaseStudies.length} of {caseStudies.length}</span>
           </div>
           {filteredCaseStudies.length === 0 && (
-            <p className="text-xs text-slate-500 py-4">No case studies match your search.</p>
+            <p className="text-xs text-gray-500 py-4">No case studies match your search.</p>
           )}
           <div className="space-y-3">
             {filteredCaseStudies.map((cs) => <CaseStudyCard key={cs.id} study={cs} />)}
@@ -148,7 +148,7 @@ export default function LearnPage() {
       {/* Framework Detail Cards */}
       {deepDiveFrameworks.length > 0 && (
       <div className="mt-10">
-        <h2 className="text-sm font-semibold text-white mb-4">Framework Deep Dives</h2>
+        <h2 className="text-sm font-semibold text-gray-900 mb-4">Framework Deep Dives</h2>
         <div className="grid grid-cols-2 gap-4">
           {deepDiveFrameworks.map((f) => (
             <FrameworkDetailCard key={f.id} framework={f} />
@@ -175,19 +175,19 @@ function FrameworkRow({ framework: f }: { framework: (typeof frameworks)[0] }) {
   };
 
   return (
-    <div className="flex items-center gap-3 p-3 bg-[#0d1526] rounded-lg border border-white/5 hover:border-white/10 transition-colors">
-      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-base font-bold ${categoryColors[f.category] ?? "text-slate-400"} bg-white/5`}>
+    <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:border-gray-200 transition-colors">
+      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-base font-bold ${categoryColors[f.category] ?? "text-gray-600"} bg-gray-100`}>
         {f.name.charAt(0)}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-0.5">
-          <span className="text-sm font-medium text-white truncate">{f.name}</span>
-          <span className={`text-xs px-1.5 py-0.5 rounded border flex-shrink-0 ${statusStyles[f.status] ?? "text-slate-400 bg-white/5 border-white/10"}`}>{f.status}</span>
+          <span className="text-sm font-medium text-gray-900 truncate">{f.name}</span>
+          <span className={`text-xs px-1.5 py-0.5 rounded border flex-shrink-0 ${statusStyles[f.status] ?? "text-gray-600 bg-gray-100 border-gray-200"}`}>{f.status}</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className={`text-xs font-medium ${categoryColors[f.category] ?? "text-slate-400"}`}>{f.category}</span>
-          <span className="text-xs text-slate-600">·</span>
-          <span className="text-xs text-slate-500 truncate">{f.fullName}</span>
+          <span className={`text-xs font-medium ${categoryColors[f.category] ?? "text-gray-600"}`}>{f.category}</span>
+          <span className="text-xs text-gray-500">·</span>
+          <span className="text-xs text-gray-500 truncate">{f.fullName}</span>
         </div>
       </div>
       <a
@@ -195,7 +195,7 @@ function FrameworkRow({ framework: f }: { framework: (typeof frameworks)[0] }) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`Open ${f.name} website`}
-        className="text-slate-600 hover:text-slate-300 transition-colors flex-shrink-0"
+        className="text-gray-500 hover:text-gray-700 transition-colors flex-shrink-0"
       >
         <ExternalLink className="w-3.5 h-3.5" />
       </a>
@@ -213,25 +213,25 @@ function CaseStudyCard({ study: cs }: { study: (typeof caseStudies)[0] }) {
   };
 
   return (
-    <div className="bg-[#0d1526] rounded-xl border border-white/5 p-4">
+    <div className="bg-white rounded-xl border border-gray-200 p-4">
       <div className="flex items-start justify-between mb-2">
-        <span className={`text-xs font-medium px-2 py-0.5 rounded ${themeColors[cs.theme] ?? "text-slate-400 bg-white/10"}`}>{cs.theme}</span>
-        <span className="text-xs text-slate-600">{cs.year}</span>
+        <span className={`text-xs font-medium px-2 py-0.5 rounded ${themeColors[cs.theme] ?? "text-gray-600 bg-gray-200"}`}>{cs.theme}</span>
+        <span className="text-xs text-gray-500">{cs.year}</span>
       </div>
-      <h3 className="text-sm font-semibold text-white mb-1 leading-snug">{cs.title}</h3>
-      <div className="text-xs text-slate-500 mb-2">{cs.company} · {cs.sector} · {cs.region}</div>
-      <p className="text-xs text-slate-400 leading-relaxed mb-3 line-clamp-3">{cs.summary}</p>
+      <h3 className="text-sm font-semibold text-gray-900 mb-1 leading-snug">{cs.title}</h3>
+      <div className="text-xs text-gray-500 mb-2">{cs.company} · {cs.sector} · {cs.region}</div>
+      <p className="text-xs text-gray-600 leading-relaxed mb-3 line-clamp-3">{cs.summary}</p>
       <div className="bg-emerald-600/5 border border-emerald-600/15 rounded-lg p-2.5 mb-2">
         <div className="text-xs text-emerald-400 font-medium mb-0.5">Key Outcome</div>
-        <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">{cs.outcome}</p>
+        <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">{cs.outcome}</p>
       </div>
-      <div className="bg-white/[0.02] border border-white/5 rounded-lg p-2.5">
-        <div className="text-xs text-slate-400 font-medium mb-0.5">Lesson Learned</div>
-        <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">{cs.lessonLearned}</p>
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-2.5">
+        <div className="text-xs text-gray-600 font-medium mb-0.5">Lesson Learned</div>
+        <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">{cs.lessonLearned}</p>
       </div>
       <div className="flex flex-wrap gap-1 mt-2">
         {cs.frameworks.map((fw) => (
-          <span key={fw} className="text-xs text-slate-600 bg-white/5 border border-white/5 px-1.5 py-0.5 rounded">{fw}</span>
+          <span key={fw} className="text-xs text-gray-500 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded">{fw}</span>
         ))}
       </div>
     </div>
@@ -248,47 +248,47 @@ function FrameworkDetailCard({ framework: f }: { framework: (typeof frameworks)[
   };
 
   return (
-    <div className={`rounded-xl border p-5 ${categoryColors[f.category] ?? "border-white/10 bg-white/[0.02]"}`}>
+    <div className={`rounded-xl border p-5 ${categoryColors[f.category] ?? "border-gray-200 bg-gray-50"}`}>
       <div className="flex items-start justify-between mb-3">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-base font-bold text-white">{f.name}</span>
-            <span className="text-xs text-slate-500">{f.adoptionYear}</span>
+            <span className="text-base font-bold text-gray-900">{f.name}</span>
+            <span className="text-xs text-gray-500">{f.adoptionYear}</span>
           </div>
-          <p className="text-xs text-slate-400">{f.fullName}</p>
+          <p className="text-xs text-gray-600">{f.fullName}</p>
         </div>
         <a
           href={f.url}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Open ${f.name} website`}
-          className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200 transition-colors flex-shrink-0"
+          className="flex items-center gap-1 text-xs text-gray-600 hover:text-gray-800 transition-colors flex-shrink-0"
         >
           <ExternalLink className="w-3.5 h-3.5" />
         </a>
       </div>
-      <p className="text-xs text-slate-300 leading-relaxed mb-3">{f.description}</p>
+      <p className="text-xs text-gray-700 leading-relaxed mb-3">{f.description}</p>
 
       <div className="mb-3">
-        <div className="text-xs text-slate-500 font-medium mb-1.5">Key Requirements</div>
+        <div className="text-xs text-gray-500 font-medium mb-1.5">Key Requirements</div>
         <ul className="space-y-1">
           {f.keyRequirements.map((req) => (
-            <li key={req} className="flex items-start gap-2 text-xs text-slate-400">
-              <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0 text-slate-600" />
+            <li key={req} className="flex items-start gap-2 text-xs text-gray-600">
+              <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0 text-gray-500" />
               {req}
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="mb-3 p-3 bg-white/[0.03] rounded-lg border border-white/5">
-        <div className="text-xs text-slate-400 font-medium mb-1">Investment Relevance</div>
-        <p className="text-xs text-slate-400 leading-relaxed">{f.investmentRelevance}</p>
+      <div className="mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="text-xs text-gray-600 font-medium mb-1">Investment Relevance</div>
+        <p className="text-xs text-gray-600 leading-relaxed">{f.investmentRelevance}</p>
       </div>
 
-      <div className="p-3 bg-white/[0.02] rounded-lg border border-white/5">
-        <div className="text-xs text-slate-500 font-medium mb-1">ASEAN Context</div>
-        <p className="text-xs text-slate-500 leading-relaxed">{f.aseanContext}</p>
+      <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="text-xs text-gray-500 font-medium mb-1">ASEAN Context</div>
+        <p className="text-xs text-gray-500 leading-relaxed">{f.aseanContext}</p>
       </div>
     </div>
   );

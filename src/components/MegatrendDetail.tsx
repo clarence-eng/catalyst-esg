@@ -70,19 +70,19 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
   return (
     <div className="p-8">
       {/* Header */}
-      <div className={`rounded-xl border p-6 mb-8 ${colorMap[t.color] ?? "border-white/10 bg-white/5"}`}>
+      <div className={`rounded-xl border p-6 mb-8 ${colorMap[t.color] ?? "border-gray-200 bg-gray-100"}`}>
         <div className="flex items-start justify-between">
           <div>
-            <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded mb-3 ${urgencyMap[t.urgency] ?? "text-slate-400 bg-white/10"}`}>
+            <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded mb-3 ${urgencyMap[t.urgency] ?? "text-gray-600 bg-gray-200"}`}>
               {t.urgency}
             </span>
-            <h1 className="text-2xl font-bold text-white mb-1">{t.title}</h1>
-            <p className="text-slate-400 text-sm mb-3">{t.subtitle}</p>
-            <p className="text-sm text-slate-300 leading-relaxed max-w-3xl">{t.summary}</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">{t.title}</h1>
+            <p className="text-gray-600 text-sm mb-3">{t.subtitle}</p>
+            <p className="text-sm text-gray-700 leading-relaxed max-w-3xl">{t.summary}</p>
           </div>
           <div className="text-right ml-6 flex-shrink-0">
-            <div className="text-xs text-slate-500 mb-1">Temasek Megatrend</div>
-            <div className={`text-sm font-medium ${colorTextMap[t.color] ?? "text-slate-400"}`}>{t.temasekAlignment}</div>
+            <div className="text-xs text-gray-500 mb-1">Temasek Megatrend</div>
+            <div className={`text-sm font-medium ${colorTextMap[t.color] ?? "text-gray-600"}`}>{t.temasekAlignment}</div>
           </div>
         </div>
       </div>
@@ -91,22 +91,22 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
         {/* Left: Stats + Implications */}
         <div className="col-span-2 space-y-5">
           {/* Key Stats */}
-          <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-            <h3 className="text-sm font-semibold text-white mb-4">Key Data Points</h3>
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 className="text-sm font-semibold text-gray-900 mb-4">Key Data Points</h3>
             <div className="grid grid-cols-2 gap-3">
               {t.keyStats.map((stat) => (
-                <div key={stat.label} className="bg-white/[0.02] border border-white/5 rounded-lg p-3">
-                  <div className="text-lg font-bold text-white mb-0.5">{stat.value}</div>
-                  <div className="text-xs text-slate-400 mb-1">{stat.label}</div>
-                  <div className="text-xs text-slate-600">Source: {stat.source}</div>
+                <div key={stat.label} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                  <div className="text-lg font-bold text-gray-900 mb-0.5">{stat.value}</div>
+                  <div className="text-xs text-gray-600 mb-1">{stat.label}</div>
+                  <div className="text-xs text-gray-500">Source: {stat.source}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Investment Implications */}
-          <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-            <h3 className="text-sm font-semibold text-white mb-4">Investment Implications</h3>
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 className="text-sm font-semibold text-gray-900 mb-4">Investment Implications</h3>
             <div className="space-y-3">
               {t.investmentImplications.map((imp, i) => (
                 <div key={`${imp.type}-${imp.sector}-${i}`} className={`flex items-start gap-3 p-3 rounded-lg border ${
@@ -123,9 +123,9 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                       <span className={`text-xs font-medium ${imp.type === "Risk" ? "text-red-400" : "text-emerald-400"}`}>
                         {imp.type}
                       </span>
-                      <span className="text-xs text-slate-500">{imp.sector}</span>
+                      <span className="text-xs text-gray-500">{imp.sector}</span>
                     </div>
-                    <p className="text-sm text-slate-300">{imp.description}</p>
+                    <p className="text-sm text-gray-700">{imp.description}</p>
                   </div>
                 </div>
               ))}
@@ -133,11 +133,11 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
           </div>
 
           {/* AI Thematic Brief Generator */}
-          <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <div>
-                <h3 className="text-sm font-semibold text-white">AI Thematic Brief</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Generate a 600-word investment-grade brief on this megatrend</p>
+                <h3 className="text-sm font-semibold text-gray-900">AI Thematic Brief</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Generate a 600-word investment-grade brief on this megatrend</p>
               </div>
               <button
                 onClick={generateBrief}
@@ -156,29 +156,29 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
             )}
             {brief ? (
               <>
-                {loading && <div className="text-xs text-slate-500 text-center py-2 mb-2">Regenerating…</div>}
+                {loading && <div className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
                 <AIOutput text={brief} />
               </>
             ) : loading ? (
-              <div className="text-xs text-slate-500 text-center py-6 border border-dashed border-white/5 rounded-lg animate-pulse">
+              <div className="text-xs text-gray-500 text-center py-6 border border-dashed border-gray-200 rounded-lg animate-pulse">
                 Generating brief…
               </div>
             ) : (
-              <div className="text-xs text-slate-600 text-center py-6 border border-dashed border-white/5 rounded-lg">
+              <div className="text-xs text-gray-500 text-center py-6 border border-dashed border-gray-200 rounded-lg">
                 <div>Generate a Temasek Sustainability Group-style thematic investment brief using AI</div>
-                <div className="text-slate-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
+                <div className="text-gray-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
               </div>
             )}
             {brief && (
               <div className="mt-3 flex items-center">
                 <button
                   onClick={() => navigator.clipboard?.writeText(brief).catch(() => {})}
-                  className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+                  className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                 >
                   <Copy className="w-3 h-3" />
                   Copy to clipboard
                 </button>
-                <span className="text-xs text-slate-600 ml-auto">
+                <span className="text-xs text-gray-500 ml-auto">
                   {briefGeneratedAt ? `Generated ${formatRelativeTime(briefGeneratedAt)}` : ""}
                 </span>
               </div>
@@ -188,23 +188,23 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
 
         {/* Right: Frameworks + Portfolio Exposure */}
         <div className="space-y-4">
-          <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-            <h3 className="text-sm font-semibold text-white mb-3">Relevant Frameworks</h3>
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Relevant Frameworks</h3>
             <div className="space-y-2">
               {t.frameworks.map((f) => (
-                <div key={f} className="text-xs text-slate-400 bg-white/5 border border-white/10 px-3 py-2 rounded-lg">
+                <div key={f} className="text-xs text-gray-600 bg-gray-100 border border-gray-200 px-3 py-2 rounded-lg">
                   {f}
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
-            <h3 className="text-sm font-semibold text-white mb-3">Portfolio Exposure</h3>
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Portfolio Exposure</h3>
             <div className="space-y-2">
               {t.portfolioExposure.map((p) => (
                 <div key={p.slug} className="flex items-center justify-between">
-                  <Link href={`/scout/${p.slug}`} className="text-xs text-slate-400 hover:text-purple-300 transition-colors truncate mr-2">{p.name}</Link>
+                  <Link href={`/scout/${p.slug}`} className="text-xs text-gray-600 hover:text-purple-300 transition-colors truncate mr-2">{p.name}</Link>
                   <ExposureBadge level={p.exposure} />
                 </div>
               ))}
