@@ -9,8 +9,9 @@ import { AlertPanel } from "@/components/AlertPanel";
 import { RiskHeatmap } from "@/components/RiskHeatmap";
 import { ArrowRight, GitMerge } from "lucide-react";
 
+const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+
 const overviewColorMap: Record<string, string> = {
-  emerald: "border-emerald-600/20 bg-emerald-600/5",
   green: "border-green-600/20 bg-green-600/5",
   orange: "border-orange-500/20 bg-orange-500/5",
   blue: "border-blue-500/20 bg-blue-500/5",
@@ -58,11 +59,10 @@ export default function OverviewPage() {
     };
   });
 
-  const severityOrder: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
   const portfolioSummary = activeCompanies.map((c) => {
     const topIssue = [...c.materialIssues]
       .filter((i) => !i.opportunity)
-      .sort((a, b) => (severityOrder[a.severity] ?? 4) - (severityOrder[b.severity] ?? 4))[0];
+      .sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4))[0];
     return (
       `${c.name} (${c.sector}, ${c.country}): ESG ${c.esgScore.overall}/100 [E:${c.esgScore.environmental} S:${c.esgScore.social} G:${c.esgScore.governance}], ` +
       `Maturity: ${c.maturity}, Transition Risk: ${c.climateRisk.transition}, Nature Risk: ${c.natureRisk.overall}, ` +

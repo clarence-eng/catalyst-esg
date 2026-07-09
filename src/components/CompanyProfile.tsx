@@ -19,6 +19,8 @@ import {
 } from "recharts";
 import { Loader2, FileText, CheckCircle, AlertCircle, TrendingUp, Shield, Leaf, Users, Copy, GitMerge } from "lucide-react";
 
+const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+
 const TABS = [
   { id: "overview", label: "Overview", icon: TrendingUp },
   { id: "climate", label: "Climate", icon: Shield },
@@ -54,10 +56,9 @@ export function CompanyProfile({ company: co }: { company: Company }) {
     setMemoLoading(true);
     setMemoError("");
     try {
-      const severityOrder: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
       const topIssues = [...co.materialIssues]
         .filter((i) => !i.opportunity)
-        .sort((a, b) => (severityOrder[a.severity] ?? 4) - (severityOrder[b.severity] ?? 4))
+        .sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4))
         .slice(0, 3)
         .map((i) => `${i.issue} (${i.severity})`)
         .join(", ");

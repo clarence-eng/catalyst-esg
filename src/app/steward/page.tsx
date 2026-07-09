@@ -7,6 +7,8 @@ import { AIOutput } from "@/components/AIOutput";
 import Link from "next/link";
 import { formatRelativeTime, formatDate } from "@/lib/utils";
 
+const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+
 export default function StewardPage() {
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const pipelineCompanies = companies.filter((c) => c.portfolioStatus === "Pipeline");
@@ -171,10 +173,9 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
     setPlanLoading(true);
     setPlanError("");
     try {
-      const severityOrder: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
       const topIssues = [...co.materialIssues]
         .filter((i) => !i.opportunity)
-        .sort((a, b) => (severityOrder[a.severity] ?? 4) - (severityOrder[b.severity] ?? 4))
+        .sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4))
         .slice(0, 3)
         .map((i) => `${i.issue} (${i.severity})`)
         .join(", ");
