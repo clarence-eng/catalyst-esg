@@ -312,6 +312,7 @@ function OverviewTab({
           )}
           {memo ? (
             <>
+              {memoLoading && <div className="text-xs text-slate-500 text-center py-2 mb-2">Regenerating…</div>}
               <AIOutput text={memo} />
               <div className="mt-3 flex items-center">
                 <button

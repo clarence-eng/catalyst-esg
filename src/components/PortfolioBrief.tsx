@@ -67,6 +67,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
       )}
       {brief ? (
         <>
+          {loading && <div className="text-xs text-slate-500 text-center py-2 mb-2">Regenerating…</div>}
           <AIOutput text={brief} />
           <div className="flex items-center gap-4 mt-3">
             <button

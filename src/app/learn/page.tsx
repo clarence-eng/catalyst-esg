@@ -29,6 +29,7 @@ export default function LearnPage() {
     return (
       cs.title.toLowerCase().includes(q) ||
       cs.summary.toLowerCase().includes(q) ||
+      cs.outcome.toLowerCase().includes(q) ||
       cs.lessonLearned.toLowerCase().includes(q)
     );
   });

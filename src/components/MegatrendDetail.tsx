@@ -146,6 +146,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
             )}
             {brief ? (
               <>
+                {loading && <div className="text-xs text-slate-500 text-center py-2 mb-2">Regenerating…</div>}
                 <AIOutput text={brief} />
                 <div className="mt-3 flex items-center">
                   <button

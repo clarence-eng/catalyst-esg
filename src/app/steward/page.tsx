@@ -350,10 +350,11 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
             )}
             {plan ? (
               <>
+                {planLoading && <div className="text-xs text-slate-500 text-center py-2 mb-2">Regenerating…</div>}
                 <AIOutput text={plan} />
                 <div className="mt-3 flex items-center">
                   <button
-                    onClick={() => navigator.clipboard.writeText(plan).catch(() => {})}
+                    onClick={() => navigator.clipboard?.writeText(plan).catch(() => {})}
                     className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
                   >
                     <Copy className="w-3 h-3" />
