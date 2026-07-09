@@ -268,8 +268,8 @@ export const companies: Company[] = [
       { period: "Q2 2025", e: 40, s: 62, g: 60 },
       { period: "Q3 2025", e: 42, s: 63, g: 61 },
       { period: "Q4 2025", e: 43, s: 64, g: 63 },
-      { period: "Q1 2026", e: 44, s: 65, g: 65 },
-      { period: "Q2 2026", e: 45, s: 66, g: 66 },
+      { period: "Q1 2026", e: 39, s: 59, g: 56 },
+      { period: "Q2 2026", e: 41, s: 61, g: 58 },
     ],
   },
   {
@@ -450,8 +450,8 @@ export const companies: Company[] = [
       { period: "Q2 2025", e: 57, s: 69, g: 73 },
       { period: "Q3 2025", e: 56, s: 70, g: 74 },
       { period: "Q4 2025", e: 58, s: 71, g: 75 },
-      { period: "Q1 2026", e: 60, s: 72, g: 76 },
-      { period: "Q2 2026", e: 61, s: 73, g: 77 },
+      { period: "Q1 2026", e: 53, s: 66, g: 70 },
+      { period: "Q2 2026", e: 55, s: 68, g: 72 },
     ],
   },
   {
@@ -624,8 +624,8 @@ export const companies: Company[] = [
       { period: "Q2 2025", e: 65, s: 75, g: 79 },
       { period: "Q3 2025", e: 67, s: 76, g: 80 },
       { period: "Q4 2025", e: 68, s: 77, g: 81 },
-      { period: "Q1 2026", e: 70, s: 78, g: 81 },
-      { period: "Q2 2026", e: 72, s: 79, g: 82 },
+      { period: "Q1 2026", e: 61, s: 72, g: 76 },
+      { period: "Q2 2026", e: 63, s: 74, g: 78 },
     ],
   },
   {
@@ -811,8 +811,8 @@ export const companies: Company[] = [
       { period: "Q2 2025", e: 46, s: 63, g: 66 },
       { period: "Q3 2025", e: 50, s: 64, g: 67 },
       { period: "Q4 2025", e: 53, s: 65, g: 68 },
-      { period: "Q1 2026", e: 55, s: 66, g: 69 },
-      { period: "Q2 2026", e: 57, s: 67, g: 70 },
+      { period: "Q1 2026", e: 47, s: 61, g: 63 },
+      { period: "Q2 2026", e: 49, s: 63, g: 65 },
     ],
   },
   {
@@ -987,8 +987,8 @@ export const companies: Company[] = [
       { period: "Q2 2025", e: 34, s: 56, g: 53 },
       { period: "Q3 2025", e: 35, s: 57, g: 52 },
       { period: "Q4 2025", e: 36, s: 58, g: 54 },
-      { period: "Q1 2026", e: 37, s: 59, g: 55 },
-      { period: "Q2 2026", e: 38, s: 60, g: 56 },
+      { period: "Q1 2026", e: 30, s: 53, g: 50 },
+      { period: "Q2 2026", e: 32, s: 55, g: 52 },
     ],
   },
   {
@@ -1020,7 +1020,7 @@ export const companies: Company[] = [
         "Cloud infrastructure emissions (Scope 2) immaterial relative to healthcare impact value",
         "No significant regulatory climate risk for digital health sector",
       ],
-      pathwayAlignment: "Not assessed",
+      pathwayAlignment: "2°C",
     },
     natureRisk: {
       overall: "Low",
