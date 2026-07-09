@@ -422,6 +422,13 @@ export const companies: Company[] = [
         status: "Overdue",
         notes: "Q1 2026 PCAF methodology adoption review overdue. PCAF pilot with top 50 corporate clients was targeted for Q4 2025 — completion status unconfirmed.",
       },
+      {
+        date: "2026-09-22",
+        type: "Meeting",
+        topic: "PCAF Pilot Completion Review & TNFD Assessment Update",
+        status: "Planned",
+        notes: "Review PCAF financed emissions pilot completion across top 50 corporate clients. Assess TNFD assessment scoping progress and set Q4 2026 timeline for full LEAP methodology adoption. Discuss green bond framework for sustainable lending portfolio.",
+      },
     ],
     investmentValue: 620,
     carbonIntensity: 18,
@@ -783,6 +790,14 @@ export const companies: Company[] = [
         status: "Completed",
         notes:
           "Compliance verifier (Bureau Veritas) appointed May 2026, audit scope agreed. Full geo-coordinates submitted for 94% of concessions; 6% of third-party supplier plots still outstanding. EU buyer Unilever has granted 90-day grace period. Audit completion target September 2026. Revenue at risk: est. S$52M if EU market access suspended.",
+      },
+      {
+        date: "2026-09-30",
+        type: "Report Review",
+        topic: "Bureau Veritas EUDR Audit — Final Report Review",
+        status: "Planned",
+        notes:
+          "Review Bureau Veritas audit completion. Confirm EUDR compliance certificate issued. Assess residual 6% third-party supplier gaps and remediation plan. Confirm Unilever and other EU buyers' continued access. Discuss SBTi near-term targets submission timeline for Q4 2026.",
       },
     ],
     investmentValue: 340,
