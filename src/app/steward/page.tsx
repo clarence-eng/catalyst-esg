@@ -228,6 +228,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
         role="button"
         tabIndex={0}
         aria-expanded={expanded}
+        aria-label={`${co.name} engagement card, ${expanded ? "expanded" : "collapsed"}`}
         onClick={() => setExpanded(!expanded)}
         onKeyDown={(e) => { if ((e.target as HTMLElement).closest('a,button')) return; if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded(!expanded); } }}
       >

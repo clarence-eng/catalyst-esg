@@ -12,6 +12,7 @@ import { ArrowRight, GitMerge } from "lucide-react";
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
 const overviewColorMap: Record<string, string> = {
+  emerald: "border-emerald-600/20 bg-emerald-600/5",
   green: "border-green-600/20 bg-green-600/5",
   orange: "border-orange-500/20 bg-orange-500/5",
   blue: "border-blue-500/20 bg-blue-500/5",
