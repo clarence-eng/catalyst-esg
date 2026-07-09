@@ -34,7 +34,14 @@ export default function OverviewPage() {
     ? Math.round(activeCompanies.reduce((s, c) => s + c.esgScore.overall * c.investmentValue, 0) / totalActive)
     : 0;
   const highRisk = activeCompanies.filter((c) => ["High", "Critical"].includes(c.climateRisk.transition)).length;
-  const avgCarbonIntensity = totalActive > 0
+  // Carbon intensity: investment-weighted avg excluding electric utilities (segmented separately in carbon reporting)
+  const nonUtilityActive = activeCompanies.filter((c) => !c.sector.includes("Electric Utilit"));
+  const totalNonUtility = nonUtilityActive.reduce((s, c) => s + c.investmentValue, 0);
+  const avgCarbonIntensity = totalNonUtility > 0
+    ? Math.round(nonUtilityActive.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalNonUtility)
+    : 0;
+  // Full weighted avg for AI context (more informative with the outlier noted)
+  const avgCarbonIntensityFull = totalActive > 0
     ? Math.round(activeCompanies.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalActive)
     : 0;
   const overdueCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Overdue").length, 0);
@@ -67,7 +74,7 @@ export default function OverviewPage() {
     return (
       `${c.name} (${c.sector}, ${c.country}): ESG ${c.esgScore.overall}/100 [E:${c.esgScore.environmental} S:${c.esgScore.social} G:${c.esgScore.governance}], ` +
       `Maturity: ${c.maturity}, Transition Risk: ${c.climateRisk.transition}, Nature Risk: ${c.natureRisk.overall}, ` +
-      `Carbon Intensity: ${c.carbonIntensity} tCO2e/$M (portfolio avg: ${avgCarbonIntensity} tCO2e/$M), Green Revenue: ${c.greenRevenuePct}%, ` +
+      `Carbon Intensity: ${c.carbonIntensity} tCO2e/$M (non-utility portfolio avg: ${avgCarbonIntensity} tCO2e/$M, full portfolio avg incl. AsiaPower: ${avgCarbonIntensityFull} tCO2e/$M), Green Revenue: ${c.greenRevenuePct}%, ` +
       `Overdue engagements: ${c.engagement.filter(e => e.status === "Overdue").length}, Planned: ${c.engagement.filter(e => e.status === "Planned").length}, ` +
       `Top issue: ${topIssue ? `${topIssue.issue} (${topIssue.severity})` : "None"}`
     );
@@ -103,7 +110,7 @@ export default function OverviewPage() {
       <div className="grid grid-cols-5 gap-4 mb-6">
         <StatCard label="Portfolio ESG Score" value={avgScore} sub="Active companies · investment-weighted" color="green" />
         <StatCard label="Transition Risk Flags" value={highRisk} sub="High or Critical exposure" color="amber" />
-        <StatCard label="Avg Carbon Intensity" value={`${avgCarbonIntensity}`} sub="tCO₂e/$M revenue · equity-weighted avg" color="default" />
+        <StatCard label="Avg Carbon Intensity" value={`${avgCarbonIntensity}`} sub="tCO₂e/$M revenue · ex-utilities weighted avg" color="default" />
         <StatCard label="Overdue Engagements" value={overdueCount} sub="Requires immediate follow-up" color="red" />
         <StatCard label="Planned Engagements" value={plannedCount} sub="Upcoming" color="default" />
       </div>
