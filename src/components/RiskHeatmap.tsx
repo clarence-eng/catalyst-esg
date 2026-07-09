@@ -70,7 +70,7 @@ export function RiskHeatmap() {
                 <th scope="row" className="py-2.5 pr-4 text-left font-normal">
                   <Link
                     href={`/scout/${co.slug}`}
-                    className="text-xs font-medium text-gray-900 hover:text-purple-300 transition-colors"
+                    className="text-xs font-medium text-gray-900 hover:text-purple-700 transition-colors"
                   >
                     {co.name}
                   </Link>

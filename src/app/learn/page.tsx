@@ -98,7 +98,7 @@ export default function LearnPage() {
                 aria-pressed={frameworkFilter === cat}
                 className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                   frameworkFilter === cat
-                    ? "bg-[#4B2580]/20 text-purple-400 border-purple-500/30"
+                    ? "bg-[#4B2580]/15 text-purple-700 border-purple-500/40"
                     : "text-gray-600 border-gray-200 hover:text-gray-800 hover:border-gray-300"
                 }`}
               >

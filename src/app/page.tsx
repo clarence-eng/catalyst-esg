@@ -130,7 +130,7 @@ export default function OverviewPage() {
       <div className="bg-white rounded-xl border border-gray-200 mb-8">
         <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-gray-900">Companies</h2>
-          <Link href="/scout" className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1">
+          <Link href="/scout" className="text-xs text-purple-400 hover:text-purple-700 flex items-center gap-1">
             Scout new deals <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
@@ -154,7 +154,7 @@ export default function OverviewPage() {
               {companies.map((co) => (
                 <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4">
-                    <Link href={`/scout/${co.slug}`} className="font-medium text-gray-900 text-sm hover:text-purple-300 transition-colors">{co.name}</Link>
+                    <Link href={`/scout/${co.slug}`} className="font-medium text-gray-900 text-sm hover:text-purple-700 transition-colors">{co.name}</Link>
                     <div className="text-xs text-gray-500">{co.country}</div>
                   </td>
                   <td className="px-4 py-4">
@@ -190,7 +190,7 @@ export default function OverviewPage() {
                     <TransitionRiskDot level={co.climateRisk.transition} />
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <Link href={`/scout/${co.slug}`} className="text-xs text-purple-400 hover:text-purple-300">
+                    <Link href={`/scout/${co.slug}`} className="text-xs text-purple-400 hover:text-purple-700">
                       View →
                     </Link>
                   </td>
@@ -208,7 +208,7 @@ export default function OverviewPage() {
       {/* Megatrend Cards */}
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-sm font-semibold text-gray-900">ESG Megatrends</h2>
-        <Link href="/signal" className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1">
+        <Link href="/signal" className="text-xs text-purple-400 hover:text-purple-700 flex items-center gap-1">
           View all signals <ArrowRight className="w-3 h-3" />
         </Link>
       </div>

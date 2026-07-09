@@ -77,7 +77,7 @@ export function AlertPanel({ companies }: { companies: Company[] }) {
   if (alerts.length === 0) return null;
 
   return (
-    <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 mb-6">
+    <div className="rounded-xl border border-amber-400/40 bg-amber-50 p-4 mb-6">
       <div className="flex items-center gap-2 mb-3">
         <AlertCircle className="w-4 h-4 text-amber-400" />
         <h2 className="text-sm font-semibold text-gray-900">Portfolio Alerts</h2>

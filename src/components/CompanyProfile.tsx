@@ -22,11 +22,11 @@ import { Loader2, FileText, CheckCircle, AlertCircle, TrendingUp, Shield, Leaf, 
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
 const MEGATREND_COLORS: Record<string, string> = {
-  "Climate Transition": "text-emerald-400",
-  "Nature & Biodiversity": "text-green-400",
-  "Just Transition & Inclusive Growth": "text-orange-400",
-  "AI & Digital Ethics": "text-blue-400",
-  "Longer Lifespans": "text-indigo-400",
+  "Climate Transition": "text-emerald-700",
+  "Nature & Biodiversity": "text-green-700",
+  "Just Transition & Inclusive Growth": "text-orange-600",
+  "AI & Digital Ethics": "text-blue-700",
+  "Longer Lifespans": "text-indigo-700",
 };
 
 const TNFD_PILLAR_DESCS: Record<string, string> = {
@@ -196,9 +196,9 @@ export function CompanyProfile({ company: co }: { company: Company }) {
             aria-controls={`tabpanel-${id}`}
             tabIndex={tab === id ? 0 : -1}
             onClick={() => setTab(id)}
-            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors focus-visible:ring-2 focus-visible:ring-purple-500/50 focus-visible:outline-none rounded-sm ${
+            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors focus-visible:ring-2 focus-visible:ring-purple-600/50 focus-visible:outline-none rounded-sm ${
               tab === id
-                ? "border-purple-500 text-purple-400"
+                ? "border-purple-600 text-purple-700"
                 : "border-transparent text-gray-600 hover:text-gray-800"
             }`}
           >

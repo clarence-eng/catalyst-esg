@@ -204,7 +204,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
             <div className="space-y-2">
               {t.portfolioExposure.map((p) => (
                 <div key={p.slug} className="flex items-center justify-between">
-                  <Link href={`/scout/${p.slug}`} className="text-xs text-gray-600 hover:text-purple-300 transition-colors truncate mr-2">{p.name}</Link>
+                  <Link href={`/scout/${p.slug}`} className="text-xs text-gray-600 hover:text-purple-700 transition-colors truncate mr-2">{p.name}</Link>
                   <ExposureBadge level={p.exposure} />
                 </div>
               ))}

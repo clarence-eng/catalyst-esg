@@ -66,7 +66,7 @@ export default function StewardPage() {
             aria-pressed={view === v}
             className={`text-xs px-3 py-1.5 rounded-md transition-colors font-medium capitalize ${
               view === v
-                ? "bg-[#4B2580]/20 text-purple-400 border border-purple-500/30"
+                ? "bg-[#4B2580]/15 text-purple-700 border border-purple-500/40"
                 : "text-gray-600 hover:text-gray-800"
             }`}
           >
@@ -103,7 +103,7 @@ export default function StewardPage() {
                     <div className="w-40 flex-shrink-0 flex items-center gap-1.5">
                       <Link
                         href={`/scout/${e.companySlug}`}
-                        className="text-xs font-medium text-purple-400 hover:text-purple-300 transition-colors truncate"
+                        className="text-xs font-medium text-purple-400 hover:text-purple-700 transition-colors truncate"
                       >
                         {e.companyName}
                       </Link>
@@ -239,7 +239,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
             <div className="flex items-center gap-3 mb-2">
               <Link
                 href={`/scout/${co.slug}`}
-                className="font-semibold text-gray-900 hover:text-purple-300 transition-colors"
+                className="font-semibold text-gray-900 hover:text-purple-700 transition-colors"
                 onClick={(e) => e.stopPropagation()}
               >
                 {co.name}

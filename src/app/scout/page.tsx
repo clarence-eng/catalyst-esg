@@ -8,11 +8,11 @@ import { Search, ArrowRight, GitMerge } from "lucide-react";
 type StatusFilter = "All" | "Active" | "Pipeline";
 
 const MEGATREND_COLORS: Record<string, string> = {
-  "Climate Transition": "text-emerald-400",
-  "Nature & Biodiversity": "text-green-400",
-  "Just Transition & Inclusive Growth": "text-orange-400",
-  "AI & Digital Ethics": "text-blue-400",
-  "Longer Lifespans": "text-indigo-400",
+  "Climate Transition": "text-emerald-700",
+  "Nature & Biodiversity": "text-green-700",
+  "Just Transition & Inclusive Growth": "text-orange-600",
+  "AI & Digital Ethics": "text-blue-700",
+  "Longer Lifespans": "text-indigo-700",
 };
 
 const ACTIVE_COUNT = companies.filter((c) => c.portfolioStatus === "Active").length;
@@ -63,7 +63,7 @@ export default function ScoutPage() {
                 statusFilter === s
                   ? s === "Pipeline"
                     ? "bg-blue-600/20 text-blue-400 border border-blue-500/30"
-                    : "bg-[#4B2580]/20 text-purple-400 border border-purple-500/30"
+                    : "bg-[#4B2580]/15 text-purple-700 border border-purple-500/40"
                   : "text-gray-600 hover:text-gray-800"
               }`}
             >
