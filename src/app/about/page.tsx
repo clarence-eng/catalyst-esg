@@ -56,7 +56,7 @@ const modules = [
     color: "text-teal-400",
     bg: "bg-teal-600/10 border-teal-600/20",
     description:
-      "ESG knowledge repository for the Investment Group. 10 ESG frameworks (TCFD, TNFD, ISSB S1/S2, SASB, SBTi, EUDR, MAS GFAP, GRI, JETP/ETM, PCAF) with investment relevance and ASEAN context, filterable by category. 6 ASEAN ESG case studies. Full-text search across frameworks and case studies simultaneously.",
+      "ESG knowledge repository for the Investment Group. 11 ESG frameworks (TCFD, TNFD, ISSB S1/S2, SASB, SBTi, EUDR, MAS GFAP, GRI, JETP/ETM, PCAF, UNGPs) across 5 categories (Climate, Nature, Reporting, Cross-cutting, Social) with investment relevance and ASEAN context. 6 ASEAN ESG case studies. Full-text search across frameworks and case studies simultaneously.",
   },
 ];
 

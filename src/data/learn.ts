@@ -226,6 +226,28 @@ export const frameworks: FrameworkCard[] = [
     temasekRelevance: "High",
   },
   {
+    id: "ungp",
+    name: "UNGPs",
+    fullName: "UN Guiding Principles on Business and Human Rights",
+    category: "Social",
+    status: "Voluntary",
+    adoptionYear: "2011",
+    description:
+      "The UNGPs — the Ruggie Framework — are the authoritative global standard on business and human rights, endorsed by the UN Human Rights Council in 2011. The three-pillar structure covers State duty to protect human rights, corporate responsibility to respect human rights, and access to remedy. The UNGPs underpin the EU Corporate Sustainability Due Diligence Directive (CSDDD) and ILO just transition guidance.",
+    investmentRelevance:
+      "The UNGP framework is increasingly foundational for 'S' in ESG scoring. For ASEAN portfolio companies with complex supply chains — agriculture, manufacturing, logistics — UNGP alignment determines exposure to forced labour regulation (UK MSCA, EU CSDDD), ESG rating penalties, and investor exclusion risk. Stewardship engagement should include UNGP-aligned due diligence assessments as a standard investment condition.",
+    keyRequirements: [
+      "Human rights policy commitment at board level",
+      "Human rights due diligence (HRDD) process across value chain",
+      "Grievance and remedy mechanisms accessible to affected communities",
+      "Annual reporting aligned to UNGP Reporting Framework",
+    ],
+    aseanContext:
+      "ASEAN supply chains in agriculture, electronics, and construction face persistent forced labour and migrant worker risks. Singapore's MAS ESG guidelines and SGX sustainability reporting now reference UNGP as the baseline social standard. The EU CSDDD (effective 2026) mandates UNGP-aligned HRDD for EU-importing companies, directly affecting GreenHarvest, SeaPort Logistics, and Nusantara Bank's trade finance book.",
+    url: "https://www.ohchr.org/en/business-and-human-rights",
+    temasekRelevance: "High",
+  },
+  {
     id: "pcaf",
     name: "PCAF",
     fullName: "Partnership for Carbon Accounting Financials",
