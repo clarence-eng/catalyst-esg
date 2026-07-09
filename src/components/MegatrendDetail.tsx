@@ -33,6 +33,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
   const [briefGeneratedAt, setBriefGeneratedAt] = useState<Date | null>(null);
 
   async function generateBrief() {
+    if (loading) return;
     setLoading(true);
     setError("");
     try {

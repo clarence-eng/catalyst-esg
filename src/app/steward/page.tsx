@@ -183,6 +183,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
   const overdueCount = co.engagement.filter((e) => e.status === "Overdue").length;
 
   async function generateActionPlan() {
+    if (planLoading) return;
     setPlanLoading(true);
     setPlanError("");
     try {

@@ -72,6 +72,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
   }, [co.esgScore.environmental, co.esgScore.social, co.esgScore.governance, co.climateRisk.transition, co.climateRisk.physical, co.climateRisk.pathwayAlignment, co.natureRisk.overall]);
 
   async function generateMemo() {
+    if (memoLoading) return;
     setMemoLoading(true);
     setMemoError("");
     try {
@@ -126,6 +127,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
   }
 
   async function generateQuestions() {
+    if (questionsLoading) return;
     setQuestionsLoading(true);
     setQuestionsError("");
     try {
@@ -298,8 +300,8 @@ function getASEANTaxonomy(co: Company): { activity: string; tier: TaxonomyTier; 
   if (sector.includes("bank") || sector.includes("finance")) {
     const all: { activity: string; tier: TaxonomyTier; pct: number }[] = [
       { activity: "Green/Transition Finance Products", tier: "Tier 1", pct: co.greenRevenuePct },
-      { activity: "General Corporate Lending", tier: "Tier 2", pct: 60 - co.greenRevenuePct > 0 ? 60 - co.greenRevenuePct : 0 },
-      { activity: "Carbon-intensive Sector Lending", tier: "Not classified", pct: 40 },
+      { activity: "General Corporate Lending", tier: "Tier 2", pct: Math.max(0, Math.min(60, 60 - co.greenRevenuePct)) },
+      { activity: "Carbon-intensive Sector Lending", tier: "Not classified", pct: Math.max(0, 100 - co.greenRevenuePct - Math.max(0, Math.min(60, 60 - co.greenRevenuePct))) },
     ];
     return all.filter(a => a.pct > 0);
   }

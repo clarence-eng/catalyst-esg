@@ -16,6 +16,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
   const [generatedAt, setGeneratedAt] = useState<Date | null>(null);
 
   async function generate() {
+    if (loading) return;
     setLoading(true);
     setError("");
     try {
