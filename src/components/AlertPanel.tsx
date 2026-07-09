@@ -79,9 +79,9 @@ export function AlertPanel({ companies }: { companies: Company[] }) {
   return (
     <div className="rounded-xl border border-amber-400/40 bg-amber-50 p-4 mb-6">
       <div className="flex items-center gap-2 mb-3">
-        <AlertCircle className="w-4 h-4 text-amber-400" />
+        <AlertCircle className="w-4 h-4 text-amber-700" />
         <h2 className="text-sm font-semibold text-gray-900">Portfolio Alerts</h2>
-        <span className="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full font-medium">
+        <span className="text-xs text-amber-700 bg-amber-50 border border-amber-300 px-2 py-0.5 rounded-full font-medium">
           {alerts.length}
         </span>
       </div>
@@ -92,10 +92,10 @@ export function AlertPanel({ companies }: { companies: Company[] }) {
             className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200"
           >
             {alert.severity === 1
-              ? <AlertCircle className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
+              ? <AlertCircle className="w-3.5 h-3.5 text-red-700 flex-shrink-0" />
               : alert.severity === 2
-              ? <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-              : <Info className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
+              ? <AlertTriangle className="w-3.5 h-3.5 text-amber-700 flex-shrink-0" />
+              : <Info className="w-3.5 h-3.5 text-blue-700 flex-shrink-0" />
             }
             <span className="text-xs text-gray-700 flex-1">{alert.message}</span>
             <Link

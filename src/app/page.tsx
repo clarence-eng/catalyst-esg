@@ -137,7 +137,7 @@ export default function OverviewPage() {
       <div className="bg-white rounded-xl border border-gray-200 mb-8">
         <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-gray-900">Companies</h2>
-          <Link href="/scout" className="text-xs text-purple-400 hover:text-purple-700 flex items-center gap-1">
+          <Link href="/scout" className="text-xs text-purple-700 hover:text-purple-800 flex items-center gap-1">
             Scout new deals <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
@@ -197,7 +197,7 @@ export default function OverviewPage() {
                     <TransitionRiskDot level={co.climateRisk.transition} />
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <Link href={`/scout/${co.slug}`} className="text-xs text-purple-400 hover:text-purple-700">
+                    <Link href={`/scout/${co.slug}`} className="text-xs text-purple-700 hover:text-purple-800">
                       View →
                     </Link>
                   </td>
@@ -210,13 +210,14 @@ export default function OverviewPage() {
 
       {/* Portfolio ESG Brief — below table */}
       <RiskHeatmap />
+      <ESGDimensionHeatmap companies={companies} />
       <PCARFinancedEmissionsTable companies={activeCompanies} totalActive={totalActive} />
       <PortfolioBrief portfolioSummary={portfolioSummary} companyNames={activeCompanies.map(c => c.name)} />
 
       {/* Megatrend Cards */}
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-sm font-semibold text-gray-900">ESG Megatrends</h2>
-        <Link href="/signal" className="text-xs text-purple-400 hover:text-purple-700 flex items-center gap-1">
+        <Link href="/signal" className="text-xs text-purple-700 hover:text-purple-800 flex items-center gap-1">
           View all signals <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
@@ -244,6 +245,60 @@ export default function OverviewPage() {
         </Link>
       </div>
       )}
+    </div>
+  );
+}
+
+function ESGDimensionHeatmap({ companies }: { companies: Array<{ name: string; slug: string; esgScore: { environmental: number; social: number; governance: number; overall: number }; portfolioStatus: string }> }) {
+  const active = companies.filter(c => c.portfolioStatus === "Active");
+
+  const scoreColor = (score: number) =>
+    score >= 70 ? "bg-emerald-100 text-emerald-800 font-semibold" :
+    score >= 55 ? "bg-amber-100 text-amber-800 font-semibold" :
+    score >= 40 ? "bg-orange-100 text-orange-800 font-semibold" :
+    "bg-red-100 text-red-800 font-semibold";
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 mb-6">
+      <div className="px-6 py-4 border-b border-gray-200">
+        <h2 className="text-sm font-semibold text-gray-900">ESG Dimension Heatmap</h2>
+        <p className="text-xs text-gray-500 mt-0.5">E/S/G scores per active company — color indicates performance level</p>
+      </div>
+      <div className="p-5 overflow-x-auto">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="text-gray-500 font-medium">
+              <th className="text-left pb-3 pr-4 w-40">Company</th>
+              <th className="text-center pb-3 px-3 w-24">Environmental</th>
+              <th className="text-center pb-3 px-3 w-24">Social</th>
+              <th className="text-center pb-3 px-3 w-24">Governance</th>
+              <th className="text-center pb-3 px-3 w-24">Overall</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-50">
+            {active.sort((a, b) => b.esgScore.overall - a.esgScore.overall).map(co => (
+              <tr key={co.slug}>
+                <td className="py-2.5 pr-4">
+                  <a href={`/scout/${co.slug}`} className="text-gray-800 font-medium hover:text-purple-700 transition-colors">{co.name}</a>
+                </td>
+                {(["environmental", "social", "governance", "overall"] as const).map(dim => (
+                  <td key={dim} className="py-2.5 px-3 text-center">
+                    <span className={`inline-block w-12 py-0.5 rounded text-center ${scoreColor(co.esgScore[dim])}`}>
+                      {co.esgScore[dim]}
+                    </span>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-100">
+          <span className="text-xs text-gray-500 font-medium">Score legend:</span>
+          {[{ label: "≥70 Strong", cls: "bg-emerald-100 text-emerald-800" }, { label: "55–69 Adequate", cls: "bg-amber-100 text-amber-800" }, { label: "40–54 Developing", cls: "bg-orange-100 text-orange-800" }, { label: "<40 Lagging", cls: "bg-red-100 text-red-800" }].map(l => (
+            <span key={l.label} className={`text-xs px-2 py-0.5 rounded font-medium ${l.cls}`}>{l.label}</span>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -408,7 +463,7 @@ function PCARFinancedEmissionsTable({ companies, totalActive }: { companies: Com
 
   const rows = companies.map(co => {
     const stake = totalActive > 0 ? (co.investmentValue / totalActive) * 100 : 0;
-    const estimatedEmissions = Math.round((co.investmentValue / totalActive) * co.carbonIntensity * 2.5);
+    const estimatedEmissions = totalActive > 0 ? Math.round((co.investmentValue / totalActive) * co.carbonIntensity * 2.5) : 0;
     const score = pcafScore(co.netZeroCommitment);
     return { co, stake, estimatedEmissions, score };
   });

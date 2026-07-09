@@ -48,7 +48,7 @@ export function PortfolioTrend({ data, activeCount = 5 }: { data: TrendPoint[]; 
           ].map(({ label, value, change, color }) => (
             <div key={label} className="text-center">
               <div className={`text-lg font-bold ${color}`}>{value}</div>
-              <div className="text-xs text-gray-500">{label} <span className={change >= 0 ? "text-emerald-700" : "text-red-400"}>({sign(change)})</span></div>
+              <div className="text-xs text-gray-500">{label} <span className={change >= 0 ? "text-emerald-700" : "text-red-600"}>({sign(change)})</span></div>
             </div>
           ))}
         </div>

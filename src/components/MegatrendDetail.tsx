@@ -14,11 +14,11 @@ const colorMap: Record<string, string> = {
   purple: "border-purple-500/20 bg-purple-500/5",
 };
 const colorTextMap: Record<string, string> = {
-  emerald: "text-emerald-400",
-  green: "text-green-400",
-  orange: "text-orange-400",
-  blue: "text-blue-400",
-  purple: "text-purple-400",
+  emerald: "text-emerald-700",
+  green: "text-green-700",
+  orange: "text-orange-600",
+  blue: "text-blue-700",
+  purple: "text-purple-700",
 };
 const urgencyMap: Record<string, string> = {
   Immediate: "text-red-700 bg-red-100",
@@ -116,8 +116,8 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                     : "bg-emerald-500/5 border-emerald-500/15"
                 }`}>
                   {imp.type === "Risk"
-                    ? <AlertTriangle className="w-3.5 h-3.5 text-red-400 mt-0.5 flex-shrink-0" />
-                    : <TrendingUp className="w-3.5 h-3.5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                    ? <AlertTriangle className="w-3.5 h-3.5 text-red-600 mt-0.5 flex-shrink-0" />
+                    : <TrendingUp className="w-3.5 h-3.5 text-emerald-600 mt-0.5 flex-shrink-0" />
                   }
                   <div>
                     <div className="flex items-center gap-2 mb-0.5">

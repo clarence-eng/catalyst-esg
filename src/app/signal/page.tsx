@@ -99,6 +99,43 @@ export default function SignalPage() {
         })}
       </div>
 
+      {/* Regulatory Compliance Timeline */}
+      <div className="mb-8">
+        <h2 className="text-sm font-semibold text-gray-900 mb-2">Compliance Deadline Calendar</h2>
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          {regulatoryUpdates
+            .sort((a, b) => {
+              const urgencyOrder = { High: 0, Medium: 1, Low: 2 };
+              return (urgencyOrder[a.urgency as keyof typeof urgencyOrder] ?? 3) - (urgencyOrder[b.urgency as keyof typeof urgencyOrder] ?? 3);
+            })
+            .map((r, i) => (
+              <div key={r.id} className={`flex items-start gap-4 px-5 py-3 ${i % 2 === 0 ? "bg-gray-50" : "bg-white"} border-b border-gray-100 last:border-0`}>
+                <div className="w-28 flex-shrink-0">
+                  <div className={`text-xs font-semibold px-2 py-1 rounded text-center ${
+                    r.status === "In Force" ? "text-emerald-700 bg-emerald-50 border border-emerald-300" :
+                    r.status === "Effective 2026" ? "text-blue-700 bg-blue-50 border border-blue-300" :
+                    "text-gray-600 bg-gray-100 border border-gray-300"
+                  }`}>{r.effectiveDate}</div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className="text-sm font-medium text-gray-900">{r.title}</span>
+                    <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
+                      r.urgency === "High" ? "text-red-700 bg-red-100" :
+                      r.urgency === "Medium" ? "text-amber-700 bg-amber-100" :
+                      "text-blue-700 bg-blue-100"
+                    }`}>{r.urgency}</span>
+                  </div>
+                  <div className="text-xs text-gray-500">{r.jurisdiction} · {r.category}</div>
+                </div>
+                <div className="flex-shrink-0 text-xs text-gray-500">
+                  {r.portfolioImpact?.length ? `${r.portfolioImpact.length} co${r.portfolioImpact.length > 1 ? "s" : ""}` : ""}
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
+
       {/* Portfolio Exposure Matrix */}
       <div className="mb-8">
         <h2 className="text-sm font-semibold text-gray-900 mb-2">Portfolio Exposure Matrix</h2>
@@ -233,7 +270,7 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
     <div className="bg-white rounded-xl border border-gray-200 p-4">
       <div className="flex items-start gap-4">
         <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-          {r.urgency === "High" && <AlertCircle className="w-4 h-4 text-amber-400" />}
+          {r.urgency === "High" && <AlertCircle className="w-4 h-4 text-amber-600" />}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-start gap-3 flex-wrap mb-1.5">
@@ -243,8 +280,8 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
             {r.portfolioImpact && r.portfolioImpact.length > 0 && (
               <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${
                 r.portfolioImpact.length <= 2
-                  ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
-                  : "text-orange-400 bg-orange-500/10 border-orange-500/20"
+                  ? "text-amber-700 bg-amber-50 border-amber-300"
+                  : "text-orange-700 bg-orange-50 border-orange-300"
               }`}>
                 Affects {r.portfolioImpact.length} {r.portfolioImpact.length === 1 ? "company" : "companies"}
               </span>

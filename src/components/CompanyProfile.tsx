@@ -887,7 +887,7 @@ function ClimateTab({ co }: { co: Company }) {
         <div className="space-y-2">
           {issbChecks.map(({ item, status, pass }) => {
             const isPartial = status === "Partial" || status === "In Progress";
-            const iconColor = pass ? "text-emerald-600" : isPartial ? "text-amber-500" : "text-red-400";
+            const iconColor = pass ? "text-emerald-600" : isPartial ? "text-amber-500" : "text-red-600";
             const rowBg = pass ? "bg-emerald-50 border-emerald-200" : isPartial ? "bg-amber-50 border-amber-200" : "bg-gray-50 border-gray-200";
             return (
               <div key={item} className={`flex items-center gap-3 p-2.5 rounded-lg border ${rowBg}`}>
@@ -897,6 +897,42 @@ function ClimateTab({ co }: { co: Company }) {
             );
           })}
         </div>
+      </div>
+      {/* Net Zero Pathway Timeline */}
+      <div className="col-span-2 bg-white rounded-xl border border-gray-200 p-5">
+        <h3 className="text-sm font-semibold text-gray-900 mb-1">Net Zero Decarbonization Pathway</h3>
+        <p className="text-xs text-gray-500 mb-4">Key milestones on the path to net zero — derived from commitments and engagement history</p>
+        {(() => {
+          const milestones = [
+            { year: "2024", label: "Baseline", event: `Current: ${co.carbonIntensity} tCO₂e/$M, ESG Score ${co.esgScore.overall}`, status: "done" },
+            { year: "2025", label: "Near-term", event: co.netZeroCommitment === "SBTi Committed" ? "SBTi near-term target submission (committed)" : co.netZeroCommitment === "SBTi Targets Set" ? "SBTi near-term targets validated ✓" : "No near-term target set", status: co.netZeroCommitment !== "None" ? "done" : "gap" },
+            { year: "2026", label: "Engagement", event: co.engagement.filter(e => e.status === "Planned").slice(0,1).map(e => `Planned: ${e.topic}`).join("") || "No planned engagements", status: co.engagement.some(e => e.status === "Planned") ? "upcoming" : "gap" },
+            { year: "2030", label: "SBTi Target", event: co.netZeroCommitment === "SBTi Targets Set" ? "42% Scope 1+2 reduction (validated SBTi)" : co.netZeroCommitment === "SBTi Committed" ? "42% reduction target (pending validation)" : `Target needed — current pathway: ${co.climateRisk.pathwayAlignment}`, status: co.netZeroCommitment !== "None" ? (co.netZeroCommitment === "SBTi Targets Set" ? "committed" : "planned") : "gap" },
+            { year: "2050", label: "Net Zero", event: co.netZeroCommitment !== "None" ? "Net zero by 2050 (committed)" : "No net zero commitment", status: co.netZeroCommitment !== "None" ? "committed" : "gap" },
+          ];
+          return (
+            <div className="relative">
+              {/* Connecting line */}
+              <div className="absolute top-4 left-0 right-0 h-0.5 bg-gray-200 mx-8" />
+              <div className="flex justify-between relative">
+                {milestones.map((m, i) => (
+                  <div key={i} className="flex flex-col items-center w-36 text-center">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold relative z-10 ${
+                      m.status === "done" ? "bg-emerald-600 text-white" :
+                      m.status === "upcoming" ? "bg-blue-600 text-white" :
+                      m.status === "committed" ? "bg-purple-600 text-white" :
+                      m.status === "planned" ? "bg-amber-500 text-white" :
+                      "bg-gray-300 text-gray-600"
+                    }`}>{m.year.slice(-2)}</div>
+                    <div className="text-xs font-semibold text-gray-700 mt-2">{m.year}</div>
+                    <div className="text-[10px] text-gray-500 font-medium mt-0.5">{m.label}</div>
+                    <div className="text-[10px] text-gray-600 mt-1 leading-tight">{m.event}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
       </div>
       <div className="col-span-2 bg-white rounded-xl border border-gray-200 p-5">
         <h3 className="text-sm font-semibold text-gray-900 mb-3">Paris Pathway Alignment</h3>
@@ -1088,7 +1124,7 @@ function NatureTab({ co }: { co: Company }) {
             return (
             <div key={label} className={`p-3 rounded-lg border ${isWarning ? "bg-amber-500/10 border-amber-500/20" : "bg-gray-50 border-gray-200"}`}>
               <div className="flex items-center gap-2">
-                {isWarning ? <AlertCircle className="w-3.5 h-3.5 text-amber-600" /> : <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />}
+                {isWarning ? <AlertCircle className="w-3.5 h-3.5 text-amber-600" /> : <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />}
                 <span className="text-xs text-gray-700">{label}</span>
               </div>
               <div className={`text-xs font-medium mt-1 ${isWarning ? "text-amber-700 font-semibold" : "text-emerald-700 font-semibold"}`}>

@@ -45,7 +45,7 @@ export default function ScoutPage() {
       >
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <span className="bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full">{ACTIVE_COUNT} Active</span>
-          <span className="bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2.5 py-1 rounded-full flex items-center gap-1">
+          <span className="bg-blue-500/10 border border-blue-500/20 text-blue-700 bg-blue-50 border-blue-300 px-2.5 py-1 rounded-full flex items-center gap-1">
             <GitMerge className="w-3 h-3" />{PIPELINE_COUNT} Pipeline
           </span>
         </div>
@@ -113,7 +113,7 @@ export default function ScoutPage() {
                 <div className="flex items-center gap-3 mb-2">
                   <span className="font-semibold text-gray-900">{co.name}</span>
                   {co.portfolioStatus === "Pipeline" && (
-                    <span className="flex items-center gap-1 text-xs text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded-full font-medium">
+                    <span className="flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-300 px-2 py-0.5 rounded-full font-medium">
                       <GitMerge className="w-2.5 h-2.5" /> Under Evaluation
                     </span>
                   )}
@@ -175,7 +175,7 @@ export default function ScoutPage() {
                       />
                     </div>
                     <span className={`text-xs font-medium ${
-                      co.greenRevenuePct >= 30 ? "text-emerald-400" : co.greenRevenuePct >= 10 ? "text-amber-400" : "text-red-400"
+                      co.greenRevenuePct >= 30 ? "text-emerald-700" : co.greenRevenuePct >= 10 ? "text-amber-700" : "text-red-700"
                     }`}>{co.greenRevenuePct}%</span>
                   </div>
                   <div className="text-xs text-gray-500">

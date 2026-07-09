@@ -47,11 +47,11 @@ export default function StewardPage() {
             <div className="text-xs text-gray-500">Completed (active)</div>
           </div>
           <div className="text-center bg-white border border-gray-200 rounded-xl px-4 py-2">
-            <div className="text-lg font-bold text-blue-400">{plannedCount}</div>
+            <div className="text-lg font-bold text-blue-700">{plannedCount}</div>
             <div className="text-xs text-gray-500">Planned (active)</div>
           </div>
           <div className="text-center bg-white border border-gray-200 rounded-xl px-4 py-2">
-            <div className="text-lg font-bold text-red-400">{overdueCount}</div>
+            <div className="text-lg font-bold text-red-700">{overdueCount}</div>
             <div className="text-xs text-gray-500">Overdue (active)</div>
           </div>
         </div>
@@ -103,7 +103,7 @@ export default function StewardPage() {
                     <div className="w-40 flex-shrink-0 flex items-center gap-1.5">
                       <Link
                         href={`/scout/${e.companySlug}`}
-                        className="text-xs font-medium text-purple-400 hover:text-purple-700 transition-colors truncate"
+                        className="text-xs font-medium text-purple-700 hover:text-purple-900 transition-colors truncate"
                       >
                         {e.companyName}
                       </Link>
@@ -296,7 +296,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
               {overdueCount > 0 && (
                 <div className="flex items-center gap-1.5 text-xs">
                   <AlertCircle className="w-3.5 h-3.5 text-red-500" />
-                  <span className="text-red-400 font-medium">{overdueCount}</span>
+                  <span className="text-red-700 font-medium">{overdueCount}</span>
                 </div>
               )}
             </div>
@@ -314,7 +314,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
           <div className="ml-auto text-xs text-gray-500">
             Carbon intensity: <span className="text-gray-700">{co.carbonIntensity} tCO₂e/$M</span>
             <span className="mx-2">·</span>
-            Green revenue: <span className="text-emerald-400">{co.greenRevenuePct}%</span>
+            Green revenue: <span className="text-emerald-700">{co.greenRevenuePct}%</span>
           </div>
         </div>
       </div>
