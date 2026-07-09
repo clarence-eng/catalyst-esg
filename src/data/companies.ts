@@ -303,7 +303,7 @@ export const companies: Company[] = [
         "Indonesia coal phase-out under JETP creates credit risk for mining and power sector clients",
         "OJK (Indonesia FSA) mandatory climate risk disclosure requirements effective 2025",
       ],
-      pathwayAlignment: "2°C",
+      pathwayAlignment: "1.5°C",
     },
     natureRisk: {
       overall: "High",
@@ -667,7 +667,7 @@ export const companies: Company[] = [
         "Carbon pricing under Malaysia's voluntary carbon market will affect peatland management costs",
         "Consumer boycott risk from palm oil controversies in European retail channels",
       ],
-      pathwayAlignment: "2°C",
+      pathwayAlignment: "1.5°C",
     },
     natureRisk: {
       overall: "Critical",
