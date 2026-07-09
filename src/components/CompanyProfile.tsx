@@ -457,8 +457,8 @@ function ClimateTab({ co }: { co: Company }) {
             {co.climateRisk.pathwayAlignment}
           </div>
           <p className="text-sm text-slate-400">
-            {co.climateRisk.pathwayAlignment === "1.5°C" && "Company's current strategy is consistent with limiting warming to 1.5°C. Science-Based Targets or equivalent."}
-            {co.climateRisk.pathwayAlignment === "2°C" && "Company's trajectory is consistent with a 2°C scenario. Gaps remain to Paris 1.5°C alignment."}
+            {co.climateRisk.pathwayAlignment === "1.5°C" && "Company has committed to a 1.5°C-aligned emissions pathway (net zero pledge or validated SBTi targets). For financial institutions, this reflects financed emissions trajectory."}
+            {co.climateRisk.pathwayAlignment === "2°C" && "Company's trajectory is consistent with a 2°C scenario. Gaps remain to achieve Paris 1.5°C alignment — further decarbonisation required."}
             {co.climateRisk.pathwayAlignment === "3°C+" && "Company's current strategy is not Paris-aligned. Significant transition risk and stranded asset exposure."}
             {co.climateRisk.pathwayAlignment === "Not assessed" && "Climate pathway alignment has not been formally assessed. TCFD scenario analysis recommended."}
           </p>
