@@ -479,6 +479,12 @@ function ClimateTab({ co }: { co: Company }) {
               </div>
             </div>
           ))}
+          {co.climateRisk.pathwayAlignment === "Not assessed" && (
+            <div className="col-span-3 p-3 rounded-lg border text-center bg-white/[0.02] border-white/5">
+              <div className="text-sm font-semibold text-white mb-1">Not Assessed</div>
+              <div className="text-xs text-slate-500">TCFD scenario analysis not yet conducted</div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -529,7 +535,7 @@ function NatureTab({ co }: { co: Company }) {
           The Taskforce on Nature-related Financial Disclosures (TNFD) provides a risk management and disclosure framework for nature-related dependencies, impacts, risks, and opportunities. Final recommendations published September 2023.
         </p>
         <div className="space-y-3">
-          {(co.natureRisk.tnfdPillars?.length ? co.natureRisk.tnfdPillars : [
+          {(co.natureRisk.tnfdPillars != null && co.natureRisk.tnfdPillars.length > 0 ? co.natureRisk.tnfdPillars : [
             { pillar: "Governance", status: co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const },
             { pillar: "Strategy", status: co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const },
             { pillar: "Risk & Impact Mgmt", status: co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const },
@@ -691,7 +697,7 @@ function EngagementTab({ co }: { co: Company }) {
   const nextDue = overdueItems[0] ?? plannedItems[0] ?? null;
 
   const stewardshipStatus: "Not Started" | "On Track" | "Attention Needed" | "Action Required" =
-    total === 0 ? "Not Started"
+    total === 0 || (completed === 0 && overdue === 0) ? "Not Started"
     : overdue === 0 ? "On Track"
     : overdue >= 2 || completed === 0 ? "Action Required"
     : "Attention Needed";
@@ -746,7 +752,7 @@ function EngagementTab({ co }: { co: Company }) {
           <div className="absolute left-4 top-0 bottom-0 w-px bg-white/5" />
           <div className="space-y-4">
             {[...co.engagement].sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0).map((e) => (
-              <div key={`${e.date}-${e.topic}`} className="relative pl-10">
+              <div key={`${e.date}-${e.type}-${e.topic}`} className="relative pl-10">
                 <div className={`absolute left-4 top-1.5 w-2 h-2 rounded-full -translate-x-1/2 ${
                   e.status === "Completed" ? "bg-emerald-500" :
                   e.status === "Planned" ? "bg-blue-500" : "bg-red-500"
