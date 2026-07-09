@@ -154,7 +154,7 @@ export default function OverviewPage() {
               {companies.map((co) => (
                 <tr key={co.slug} className="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors">
                   <td className="px-6 py-4">
-                    <Link href={`/scout/${co.slug}`} className="font-medium text-white text-sm hover:text-red-300 transition-colors">{co.name}</Link>
+                    <Link href={`/scout/${co.slug}`} className="font-medium text-white text-sm hover:text-purple-300 transition-colors">{co.name}</Link>
                     <div className="text-xs text-slate-500">{co.country}</div>
                   </td>
                   <td className="px-4 py-4">

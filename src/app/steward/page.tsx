@@ -238,7 +238,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
             <div className="flex items-center gap-3 mb-2">
               <Link
                 href={`/scout/${co.slug}`}
-                className="font-semibold text-white hover:text-red-300 transition-colors"
+                className="font-semibold text-white hover:text-purple-300 transition-colors"
                 onClick={(e) => e.stopPropagation()}
               >
                 {co.name}
