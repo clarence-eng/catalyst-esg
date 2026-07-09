@@ -35,6 +35,7 @@ export default function OverviewPage() {
     : 0;
   const highRisk = activeCompanies.filter((c) => ["High", "Critical"].includes(c.climateRisk.transition)).length;
   // Carbon intensity: investment-weighted avg excluding electric utilities (segmented separately in carbon reporting)
+  const utilityCompanies = activeCompanies.filter((c) => c.sector.includes("Electric Utilit"));
   const nonUtilityActive = activeCompanies.filter((c) => !c.sector.includes("Electric Utilit"));
   const totalNonUtility = nonUtilityActive.reduce((s, c) => s + c.investmentValue, 0);
   const avgCarbonIntensity = totalNonUtility > 0
@@ -44,6 +45,7 @@ export default function OverviewPage() {
   const avgCarbonIntensityFull = totalActive > 0
     ? Math.round(activeCompanies.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalActive)
     : 0;
+  const utilityLabel = utilityCompanies.length > 0 ? utilityCompanies.map(c => c.name).join(", ") : "electric utilities";
   const overdueCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Overdue").length, 0);
   const plannedCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Planned").length, 0);
 
@@ -74,7 +76,7 @@ export default function OverviewPage() {
     return (
       `${c.name} (${c.sector}, ${c.country}): ESG ${c.esgScore.overall}/100 [E:${c.esgScore.environmental} S:${c.esgScore.social} G:${c.esgScore.governance}], ` +
       `Maturity: ${c.maturity}, Transition Risk: ${c.climateRisk.transition}, Nature Risk: ${c.natureRisk.overall}, ` +
-      `Carbon Intensity: ${c.carbonIntensity} tCO2e/$M (non-utility portfolio avg: ${avgCarbonIntensity} tCO2e/$M, full portfolio avg incl. AsiaPower: ${avgCarbonIntensityFull} tCO2e/$M), Green Revenue: ${c.greenRevenuePct}%, ` +
+      `Carbon Intensity: ${c.carbonIntensity} tCO2e/$M (non-utility portfolio avg: ${avgCarbonIntensity} tCO2e/$M, full portfolio avg incl. ${utilityLabel}: ${avgCarbonIntensityFull} tCO2e/$M), Green Revenue: ${c.greenRevenuePct}%, ` +
       `Overdue engagements: ${c.engagement.filter(e => e.status === "Overdue").length}, Planned: ${c.engagement.filter(e => e.status === "Planned").length}, ` +
       `Top issue: ${topIssue ? `${topIssue.issue} (${topIssue.severity})` : "None"}`
     );

@@ -29,7 +29,7 @@ export default function LearnPage() {
     Climate: ["Climate Transition"],
     Nature: ["Nature & Biodiversity"],
     Social: ["Just Transition"],
-    Reporting: ["Climate Transition", "Sustainable Finance"],
+    Reporting: ["Climate Transition", "Nature & Biodiversity", "Just Transition", "Governance", "Sustainable Finance"],
     "Cross-cutting": ["Climate Transition", "Nature & Biodiversity", "Just Transition", "Governance", "Sustainable Finance"],
   };
   const relevantThemes = frameworkFilter === "All" ? null : categoryToThemes[frameworkFilter] ?? null;
