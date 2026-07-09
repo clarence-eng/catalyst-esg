@@ -33,10 +33,10 @@ export const frameworks: FrameworkCard[] = [
     name: "TCFD",
     fullName: "Task Force on Climate-related Financial Disclosures",
     category: "Climate",
-    status: "Voluntary",
+    status: "Mandatory",
     adoptionYear: "2017",
     description:
-      "The TCFD framework — developed by the FSB Task Force — provides a structure for companies to disclose climate-related risks and opportunities across four pillars: Governance, Strategy, Risk Management, and Metrics & Targets. TCFD was formally disbanded in October 2023 as its architecture was absorbed into the mandatory ISSB S2 standard.",
+      "The TCFD framework — developed by the FSB Task Force — provides a structure for companies to disclose climate-related risks and opportunities across four pillars: Governance, Strategy, Risk Management, and Metrics & Targets. TCFD was formally disbanded in October 2023 as its architecture was absorbed into the mandatory ISSB S2 standard. Its four-pillar structure is now effectively mandated for SGX-listed companies via ISSB S2 (FY2025).",
     investmentRelevance:
       "TCFD disclosure is now mandatory for SGX-listed companies under ISSB S2 (from FY2025). It provides the primary lens for assessing whether portfolio companies are managing climate risk systematically and quantifying potential financial impacts.",
     keyRequirements: [
@@ -126,7 +126,7 @@ export const frameworks: FrameworkCard[] = [
     status: "Voluntary",
     adoptionYear: "2015",
     description:
-      "SBTi enables companies to set emissions reduction targets aligned with climate science — specifically the 1.5°C pathway. Targets must cover Scope 1, 2, and material Scope 3. The Financial Sector SBTi (FiST) provides equivalent methodology for financial institutions' financed emissions.",
+      "SBTi enables companies to set emissions reduction targets aligned with climate science — specifically the 1.5°C pathway. Targets must cover Scope 1, 2, and material Scope 3. The SBTi for Financial Institutions (SBTi FI) provides equivalent methodology for financial institutions' financed emissions.",
     investmentRelevance:
       "SBTi targets are increasingly required by institutional investors and MNC buyers as a condition for supply chain qualification. Companies without SBTi face procurement risk. For portfolio companies, SBTi adoption signals strategic alignment and unlocks ESG-linked financing.",
     keyRequirements: [
@@ -311,7 +311,7 @@ export const caseStudies: CaseStudy[] = [
       "Full PCAF Scope 3 Cat 15 disclosure for 80% of corporate book. Identified 4 sectors with >70% of financed emissions. Set 2030 sector-level intensity targets for power and steel. Unlocked IFC co-lending partnership conditional on PCAF adoption.",
     lessonLearned:
       "PCAF adoption changes the entire risk lens for a bank's corporate book. High financed emissions concentration in 2–3 sectors creates both credit risk (stranded assets) and commercial opportunity (transition finance products). Start with top 50 clients for maximum insight at manageable data complexity.",
-    frameworks: ["PCAF", "GHG Protocol", "TCFD", "ISSB S2", "SBTi FiST"],
+    frameworks: ["PCAF", "GHG Protocol", "TCFD", "ISSB S2", "SBTi FI"],
     year: "2025",
   },
   {

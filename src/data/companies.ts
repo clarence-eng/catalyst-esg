@@ -667,7 +667,7 @@ export const companies: Company[] = [
         "Carbon pricing under Malaysia's voluntary carbon market will affect peatland management costs",
         "Consumer boycott risk from palm oil controversies in European retail channels",
       ],
-      pathwayAlignment: "1.5°C",
+      pathwayAlignment: "2°C",
     },
     natureRisk: {
       overall: "Critical",
@@ -958,7 +958,7 @@ export const companies: Company[] = [
         topic: "Geothermal Financing Strategy",
         status: "Overdue",
         notes:
-          "Review options for green bond issuance to fund 400MW geothermal Phase 1. Target B+ credit rating uplift from green certification.",
+          "Meeting missed — CFO travel conflict, rescheduled but not completed. Agenda was to review green bond issuance options for 400MW geothermal Phase 1 and assess B+ credit rating uplift pathway from green certification. Postponed to Q4 2025 but deprioritised as ETM application preparation took priority.",
       },
       {
         date: "2025-10-15",
