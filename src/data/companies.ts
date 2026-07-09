@@ -73,7 +73,7 @@ export interface Company {
   region: string;
   description: string;
   portfolioStatus: "Active" | "Pipeline";
-  temasekMegatrend: "Digitisation" | "Sustainable Living" | "Longer Lifespans";
+  temasekMegatrend: "Climate Transition" | "Nature & Biodiversity" | "Just Transition & Inclusive Growth" | "AI & Digital Ethics" | "Longer Lifespans";
   esgScore: ESGScore;
   maturity: MaturityLevel;
   climateRisk: ClimateRisk;
@@ -107,7 +107,7 @@ export const companies: Company[] = [
     description:
       "A leading regional port and logistics operator headquartered in Singapore, operating across six ASEAN countries with deep-sea terminal concessions and inland freight networks.",
     portfolioStatus: "Active",
-    temasekMegatrend: "Sustainable Living",
+    temasekMegatrend: "Climate Transition",
     esgScore: {
       overall: 53,
       environmental: 41,
@@ -282,7 +282,7 @@ export const companies: Company[] = [
     description:
       "Indonesia's fourth-largest commercial bank by assets, with a growing retail and SME franchise across Java, Sumatra, and Kalimantan, and a rising sustainable finance portfolio.",
     portfolioStatus: "Active",
-    temasekMegatrend: "Sustainable Living",
+    temasekMegatrend: "Climate Transition",
     esgScore: {
       overall: 65,
       environmental: 55,
@@ -471,7 +471,7 @@ export const companies: Company[] = [
     description:
       "A Singapore-headquartered B2B cloud infrastructure and SaaS provider serving financial services, healthcare, and government clients across APAC, with data centres in Singapore, Australia, and Japan.",
     portfolioStatus: "Active",
-    temasekMegatrend: "Digitisation",
+    temasekMegatrend: "AI & Digital Ethics",
     esgScore: {
       overall: 72,
       environmental: 63,
@@ -645,7 +645,7 @@ export const companies: Company[] = [
     description:
       "A Malaysian agribusiness producing sustainable palm oil, rubber, and tropical fruits across Sabah and Sarawak, with RSPO certification and growing export markets in Europe and China.",
     portfolioStatus: "Active",
-    temasekMegatrend: "Sustainable Living",
+    temasekMegatrend: "Nature & Biodiversity",
     esgScore: {
       overall: 59,
       environmental: 49,
@@ -848,7 +848,7 @@ export const companies: Company[] = [
     description:
       "An Indonesian independent power producer operating a mixed portfolio of coal, gas, geothermal, and early-stage solar assets across Java, Sumatra, and Sulawesi, actively transitioning towards renewables under Indonesia's JETP commitments.",
     portfolioStatus: "Active",
-    temasekMegatrend: "Sustainable Living",
+    temasekMegatrend: "Climate Transition",
     esgScore: {
       overall: 46,
       environmental: 32,
@@ -993,7 +993,7 @@ export const companies: Company[] = [
       },
     ],
     investmentValue: 510,
-    carbonIntensity: 890,
+    carbonIntensity: 4850,
     greenRevenuePct: 18,
     lastUpdated: "2026-06-10",
     sdgAlignment: [

@@ -318,7 +318,7 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
     id: "pdpa-asean-digital",
     title: "PDPA Amendment & Indonesia PDPL — Cross-Border Health Data",
     jurisdiction: "Indonesia / Singapore",
-    effectiveDate: "2025",
+    effectiveDate: "September 2024",
     status: "In Force",
     category: "Social",
     summary:
