@@ -37,7 +37,7 @@ export default function StewardPage() {
     <div className="p-8">
       <PageHeader
         title="Steward"
-        subtitle="Post-investment portfolio engagement — monitoring, action plans, and active stewardship."
+        subtitle="ESG portfolio engagement — post-investment monitoring and pre-investment due diligence."
       >
         <div className="flex items-center gap-3">
           <div className="text-center bg-[#0d1526] border border-white/5 rounded-xl px-4 py-2">

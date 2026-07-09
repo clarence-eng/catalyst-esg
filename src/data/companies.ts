@@ -781,7 +781,7 @@ export const companies: Company[] = [
         topic: "EUDR Compliance Verification",
         status: "Overdue",
         notes:
-          "Final EUDR compliance audit before EU export deadline. Third-party verifier to be appointed.",
+          "EUDR compliance audit missed December 2025 deadline. Third-party verifier had not been appointed by deadline. Issue escalated to emergency review in June 2026 (see below).",
       },
       {
         date: "2026-06-10",
