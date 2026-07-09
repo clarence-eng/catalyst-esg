@@ -201,7 +201,7 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
               <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${
                 r.portfolioImpact.length <= 2
                   ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
-                  : "text-red-400 bg-red-500/10 border-red-500/20"
+                  : "text-orange-400 bg-orange-500/10 border-orange-500/20"
               }`}>
                 Affects {r.portfolioImpact.length} {r.portfolioImpact.length === 1 ? "company" : "companies"}
               </span>
@@ -231,7 +231,7 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
                 <Link
                   key={slug}
                   href={`/scout/${slug}`}
-                  className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded hover:bg-red-500/15 transition-colors"
+                  className="text-xs text-purple-400 bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded hover:bg-purple-500/15 transition-colors"
                 >
                   {companyNameMap[slug] ?? slug}
                 </Link>
