@@ -274,6 +274,163 @@ export function CompanyProfile({ company: co }: { company: Company }) {
   );
 }
 
+type TaxonomyTier = "Tier 1" | "Tier 2" | "Not classified";
+
+function getASEANTaxonomy(co: Company): { activity: string; tier: TaxonomyTier; pct: number }[] {
+  const sector = co.sector.toLowerCase();
+  if (sector.includes("electric util")) return [
+    { activity: "Renewable/Geothermal Generation", tier: "Tier 1", pct: co.greenRevenuePct },
+    { activity: "Coal/Gas Generation", tier: "Not classified", pct: 100 - co.greenRevenuePct },
+  ].filter(a => a.pct > 0) as { activity: string; tier: TaxonomyTier; pct: number }[];
+  if (sector.includes("marine") || sector.includes("transport")) return [
+    { activity: `Shipping (transition via ${co.netZeroCommitment !== "None" ? "SBTi pathway" : "IMO CII"})`, tier: "Tier 2", pct: 100 },
+  ];
+  if (sector.includes("agriculture")) return [
+    { activity: "Certified Sustainable Agri (RSPO/EUDR-compliant)", tier: "Tier 1", pct: co.greenRevenuePct },
+    { activity: "Conventional Agriculture", tier: "Tier 2", pct: 100 - co.greenRevenuePct },
+  ].filter(a => a.pct > 0) as { activity: string; tier: TaxonomyTier; pct: number }[];
+  if (sector.includes("bank") || sector.includes("finance")) return [
+    { activity: "Green/Transition Finance Products", tier: "Tier 1", pct: co.greenRevenuePct },
+    { activity: "General Corporate Lending", tier: "Tier 2", pct: 60 - co.greenRevenuePct > 0 ? 60 - co.greenRevenuePct : 0 },
+    { activity: "Carbon-intensive Sector Lending", tier: "Not classified", pct: 40 },
+  ].filter(a => a.pct > 0) as { activity: string; tier: TaxonomyTier; pct: number }[];
+  if (sector.includes("technology") || sector.includes("digital")) return [
+    { activity: "Cloud/Digital Infrastructure", tier: (co.greenRevenuePct > 20 ? "Tier 1" : "Tier 2") as TaxonomyTier, pct: 100 },
+  ];
+  if (sector.includes("health")) return [
+    { activity: "Digital Health Platform", tier: "Tier 2", pct: 100 },
+  ];
+  return [{ activity: co.sector, tier: "Not classified", pct: 100 }];
+}
+
+function ASEANTaxonomyCard({ co }: { co: Company }) {
+  const activities = getASEANTaxonomy(co);
+  const tier1Pct = activities.filter(a => a.tier === "Tier 1").reduce((s, a) => s + a.pct, 0);
+  const tier2Pct = activities.filter(a => a.tier === "Tier 2").reduce((s, a) => s + a.pct, 0);
+  const unclassifiedPct = activities.filter(a => a.tier === "Not classified").reduce((s, a) => s + a.pct, 0);
+
+  const tierBadgeClass: Record<TaxonomyTier, string> = {
+    "Tier 1": "text-emerald-700 bg-emerald-50 border-emerald-300",
+    "Tier 2": "text-amber-700 bg-amber-50 border-amber-300",
+    "Not classified": "text-gray-600 bg-gray-100 border-gray-300",
+  };
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-5">
+      <div className="flex items-start justify-between mb-1">
+        <h3 className="text-sm font-semibold text-gray-900">ASEAN Taxonomy Alignment (ATSF v2)</h3>
+      </div>
+      <p className="text-xs text-gray-500 mb-4">Singapore-Asia Taxonomy for Sustainable Finance · 2023</p>
+
+      {/* Stacked bar */}
+      <div className="w-full h-3 rounded-full overflow-hidden flex mb-4 bg-gray-100">
+        {tier1Pct > 0 && (
+          <div
+            className="bg-emerald-500 h-full"
+            style={{ width: `${tier1Pct}%` }}
+            title={`Tier 1 (Green): ${tier1Pct}%`}
+          />
+        )}
+        {tier2Pct > 0 && (
+          <div
+            className="bg-amber-400 h-full"
+            style={{ width: `${tier2Pct}%` }}
+            title={`Tier 2 (Transitional): ${tier2Pct}%`}
+          />
+        )}
+        {unclassifiedPct > 0 && (
+          <div
+            className="bg-gray-300 h-full"
+            style={{ width: `${unclassifiedPct}%` }}
+            title={`Not classified: ${unclassifiedPct}%`}
+          />
+        )}
+      </div>
+
+      {/* Bar legend */}
+      <div className="flex gap-4 mb-4 flex-wrap">
+        {tier1Pct > 0 && (
+          <div className="flex items-center gap-1.5 text-xs text-gray-600">
+            <div className="w-2.5 h-2.5 rounded-sm bg-emerald-500" />
+            Tier 1 (Green) — {tier1Pct}%
+          </div>
+        )}
+        {tier2Pct > 0 && (
+          <div className="flex items-center gap-1.5 text-xs text-gray-600">
+            <div className="w-2.5 h-2.5 rounded-sm bg-amber-400" />
+            Tier 2 (Transitional) — {tier2Pct}%
+          </div>
+        )}
+        {unclassifiedPct > 0 && (
+          <div className="flex items-center gap-1.5 text-xs text-gray-600">
+            <div className="w-2.5 h-2.5 rounded-sm bg-gray-300" />
+            Not classified — {unclassifiedPct}%
+          </div>
+        )}
+      </div>
+
+      {/* Activity rows */}
+      <div className="space-y-2">
+        {activities.map((a, i) => (
+          <div key={i} className="flex items-center justify-between py-1.5 px-3 rounded-lg bg-gray-50 border border-gray-100">
+            <span className="text-xs text-gray-700 flex-1 min-w-0 mr-3 truncate">{a.activity}</span>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span className="text-xs text-gray-500">{a.pct}%</span>
+              <span className={`text-xs px-2 py-0.5 rounded border font-medium ${tierBadgeClass[a.tier]}`}>
+                {a.tier}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; benchmark: string; note?: string }[] {
+  const cat = co.sasbCategory.toLowerCase();
+
+  if (cat.includes("marine") || cat.includes("shipping")) return [
+    { kpi: "Carbon Intensity", value: co.carbonIntensity.toString(), unit: "tCO₂e/$M revenue", benchmark: "Industry median: ~280", note: "IMO CII compliance critical" },
+    { kpi: "Fuel Mix (HFO %)", value: `~${100 - co.greenRevenuePct}%`, unit: "of fuel", benchmark: "IMO 2030 target: <50%", note: "Decarbonisation driver" },
+    { kpi: "Port Environmental Rating", value: co.natureRisk.overall === "Low" ? "ECA Compliant" : "Needs Review", unit: "", benchmark: "Industry: 70% compliant" },
+    { kpi: "Near-miss Safety Incidents", value: "Not disclosed", unit: "per year", benchmark: "ISM Code required", note: co.materialIssues.some(i => i.issue.toLowerCase().includes("safety")) ? "Material issue" : undefined },
+  ];
+
+  if (cat.includes("banking") || cat.includes("commercial bank")) return [
+    { kpi: "Green & Transition Finance Ratio", value: `${co.greenRevenuePct}%`, unit: "of total lending", benchmark: "Singapore target: 10%+ by 2025" },
+    { kpi: "Carbon-Intensive Sector Exposure", value: co.materialIssues.some(i => i.issue.includes("Financed Emissions")) ? "High — disclosed" : "Moderate", unit: "of loan book", benchmark: "PCAF required for Scope 3 Cat. 15" },
+    { kpi: "ESG Screening Coverage", value: co.natureRisk.overall === "Low" ? ">80% of new loans" : "Partial (<50%)", unit: "of new origination", benchmark: "MAS best practice: 100%" },
+    { kpi: "Financial Inclusion Score", value: co.materialIssues.some(i => i.issue.includes("Inclusion")) ? "Active programmes" : "Not reported", unit: "", benchmark: "OJK mandate for Indonesian banks" },
+  ];
+
+  if (cat.includes("agriculture")) return [
+    { kpi: "Deforestation-Free Supply Chain", value: co.natureRisk.deforestationRisk ? "Partial (gaps remain)" : "Certified", unit: "", benchmark: "EUDR Dec 2026 deadline", note: "NDPE policy verification critical" },
+    { kpi: "Water Intensity", value: co.natureRisk.waterStress ? "High water footprint" : "Within local limits", unit: "m³/$M revenue", benchmark: "TNFD/SBTN watershed threshold" },
+    { kpi: "Smallholder Certification", value: `${co.greenRevenuePct}%`, unit: "of supply base certified", benchmark: "RSPO P&C: 100% target" },
+    { kpi: "Land Under NDPE Policy", value: co.natureRisk.deforestationRisk ? "Partial coverage" : "Full concession coverage", unit: "", benchmark: "RSPO 2018 P&C required" },
+  ];
+
+  if (cat.includes("electric util") || cat.includes("power")) return [
+    { kpi: "Carbon Intensity (Generation)", value: `${co.carbonIntensity} tCO₂e/$M`, unit: "revenue", benchmark: "IEA ASEAN 2030: <500 tCO₂e/$M" },
+    { kpi: "Renewable Capacity Share", value: `${co.greenRevenuePct}%`, unit: "of total installed", benchmark: "Indonesia NDC: 23% RE by 2025" },
+    { kpi: "Just Transition Plan", value: co.materialIssues.some(i => i.issue.includes("Just Transition")) ? "In development" : "Not initiated", unit: "", benchmark: "JETP ETM requirement" },
+    { kpi: "Coal Phase-out Target", value: co.netZeroCommitment !== "None" ? "Committed" : "Not committed", unit: "", benchmark: "Indonesia 2040 coal exit target" },
+  ];
+
+  if (cat.includes("technology") || cat.includes("software") || cat.includes("health care")) return [
+    { kpi: "Data Centre PUE", value: co.carbonIntensity < 50 ? "≤1.40 (efficient)" : "1.40–1.60 (improving)", unit: "", benchmark: "BCA Green Mark: ≤1.35" },
+    { kpi: "Renewable Energy %", value: `${co.greenRevenuePct}%`, unit: "of electricity use", benchmark: "Singapore MAS: 100% RE target" },
+    { kpi: "Data Privacy Incidents", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("data") || i.issue.toLowerCase().includes("privacy")) ? "Material concern" : "No disclosed breaches", unit: "last 12 months", benchmark: "PDPA/PDPL zero-tolerance" },
+    { kpi: "AI Ethics Policy", value: co.boardComposition.esgCommittee ? "Board-approved policy" : "Under development", unit: "", benchmark: "MAS FEAT Principles" },
+  ];
+
+  return [
+    { kpi: "ESG Score", value: co.esgScore.overall.toString(), unit: "/100", benchmark: "Portfolio median: 59" },
+    { kpi: "Carbon Intensity", value: co.carbonIntensity.toString(), unit: "tCO₂e/$M", benchmark: "Portfolio median varies by sector" },
+  ];
+}
+
 function OverviewTab({
   co, radarData, memo, memoLoading, memoError, onGenerate, memoGeneratedAt,
 }: {
@@ -365,6 +522,9 @@ function OverviewTab({
         </div>
 
 
+        {/* ASEAN Green Taxonomy */}
+        <ASEANTaxonomyCard co={co} />
+
         {/* ESG Credibility Check */}
         {(() => {
           const greenwashChecks = [
@@ -429,6 +589,41 @@ function OverviewTab({
                   </div>
                 ))}
               </div>
+            </div>
+          );
+        })()}
+
+        {/* SASB Material KPIs */}
+        {(() => {
+          const sasbKPIs = getSASBKPIs(co);
+          return (
+            <div className="bg-white rounded-xl border border-gray-200 p-5">
+              <div className="mb-4">
+                <h3 className="text-sm font-semibold text-gray-900">SASB Material KPIs — {co.sasbCategory}</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Most financially material ESG metrics for this industry</p>
+              </div>
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-gray-200">
+                    <th className="text-left font-medium text-gray-500 pb-2 pr-3">KPI</th>
+                    <th className="text-left font-medium text-gray-500 pb-2 pr-3">Value</th>
+                    <th className="text-left font-medium text-gray-500 pb-2 pr-3">Benchmark</th>
+                    <th className="text-left font-medium text-gray-500 pb-2">Note</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sasbKPIs.map((row, i) => (
+                    <tr key={row.kpi} className={i % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                      <td className="py-2 pr-3 font-medium text-gray-700 whitespace-nowrap">{row.kpi}</td>
+                      <td className="py-2 pr-3 text-gray-900 font-medium">
+                        {row.value}{row.unit ? <span className="text-gray-500 font-normal ml-1">{row.unit}</span> : null}
+                      </td>
+                      <td className="py-2 pr-3 text-gray-500">{row.benchmark}</td>
+                      <td className="py-2 text-gray-500 italic">{row.note ?? ""}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           );
         })()}
@@ -926,6 +1121,55 @@ function SocialTab({ co }: { co: Company }) {
           />
         </div>
       </div>
+
+      {/* Just Transition Readiness */}
+      {(() => {
+        const showJustTransition =
+          (co.climateRisk.transition === "Critical" || co.climateRisk.transition === "High") &&
+          (co.sector.toLowerCase().includes("electric") || co.sector.toLowerCase().includes("energy") ||
+            co.sector.toLowerCase().includes("marine"));
+
+        if (!showJustTransition) return null;
+
+        const jtChecks = [
+          { item: "Workforce transition plan documented", pass: co.materialIssues.some(i => i.issue.includes("Just Transition") || i.issue.includes("workforce")), note: "ILO Just Transition Guidelines" },
+          { item: "Community impact assessment completed", pass: co.materialIssues.some(i => i.category === "Social" && i.issue.includes("Communit")), note: "UNGP community consultation" },
+          { item: "Reskilling/retraining programmes funded", pass: co.engagement.some(e => e.topic.toLowerCase().includes("transition") || e.topic.toLowerCase().includes("just")), note: "JETP social safeguards requirement" },
+          { item: "Social plan covers downstream supply chain", pass: co.engagement.length > 3, note: "IFC Performance Standards" },
+          { item: "Just transition disclosure in annual report", pass: co.netZeroCommitment !== "None", note: "Transition Finance framework" },
+        ];
+
+        const passCount = jtChecks.filter(c => c.pass).length;
+
+        return (
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-sm font-semibold text-gray-900">Just Transition Readiness</h3>
+              <span className={`text-xs px-2 py-0.5 rounded border font-semibold ${
+                passCount >= 4 ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
+                passCount >= 2 ? "text-amber-700 bg-amber-50 border-amber-200" :
+                "text-red-700 bg-red-50 border-red-200"
+              }`}>
+                {passCount}/{jtChecks.length} criteria met
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 mb-4">High-carbon sector — just transition safeguards assessed against ILO, JETP, and IFC standards</p>
+            <div className="space-y-2">
+              {jtChecks.map((check, i) => (
+                <div key={i} className={`flex items-start gap-2 p-2 rounded-lg ${check.pass ? "bg-gray-50 border border-gray-100" : "bg-red-50 border border-red-100"}`}>
+                  <span className={`flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 ${check.pass ? "bg-emerald-500 text-white" : "bg-red-500 text-white"}`}>
+                    {check.pass ? "✓" : "✗"}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <span className={`text-xs font-medium ${check.pass ? "text-gray-700" : "text-red-800"}`}>{check.item}</span>
+                    <p className="text-xs text-gray-500 mt-0.5">{check.note}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

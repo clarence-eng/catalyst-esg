@@ -159,6 +159,18 @@ export default function StewardPage() {
   );
 }
 
+function getEscalationLevel(co: (typeof companies)[0]): { level: number; label: string; color: string } {
+  const overdueCount = co.engagement.filter(e => e.status === "Overdue").length;
+  const hasCritical = co.materialIssues.some(i => i.severity === "Critical" && !i.opportunity);
+  const totalEngagements = co.engagement.length;
+  const completedRatio = totalEngagements > 0 ? co.engagement.filter(e => e.status === "Completed").length / totalEngagements : 0;
+
+  if (overdueCount >= 2 || (overdueCount >= 1 && hasCritical)) return { level: 2, label: "Formal Escalation", color: "text-red-700 bg-red-50 border-red-300" };
+  if (overdueCount === 1) return { level: 1, label: "Follow-up Required", color: "text-amber-700 bg-amber-50 border-amber-300" };
+  if (completedRatio >= 0.6 && !hasCritical) return { level: 0, label: "On Track", color: "text-emerald-700 bg-emerald-50 border-emerald-300" };
+  return { level: 0, label: "Active Monitoring", color: "text-blue-700 bg-blue-50 border-blue-300" };
+}
+
 function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof companies)[0]; isPipeline?: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const [plan, setPlan] = useState("");
@@ -246,6 +258,14 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
               </Link>
               <RatingBadge rating={co.esgScore.rating} />
               <MaturityBadge level={co.maturity} />
+              {!isPipeline && (() => {
+                const esc = getEscalationLevel(co);
+                return (
+                  <span className={`text-xs px-2 py-0.5 rounded border font-medium ${esc.color}`}>
+                    {esc.label}
+                  </span>
+                );
+              })()}
             </div>
             <div className="flex items-center gap-4 text-xs text-gray-500">
               <span>{co.sector}</span>

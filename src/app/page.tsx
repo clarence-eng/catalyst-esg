@@ -121,6 +121,9 @@ export default function OverviewPage() {
       {/* Paris Pathway Alignment Widget */}
       <ParisPathwayWidget companies={activeCompanies.map(c => ({ name: c.name, pathwayAlignment: c.climateRisk.pathwayAlignment, investmentValue: c.investmentValue }))} />
 
+      {/* Portfolio ESG Attribution */}
+      <PortfolioESGAttribution companies={activeCompanies} />
+
       {/* Needs Attention Alerts */}
       <AlertPanel companies={companies} />
 
@@ -325,6 +328,65 @@ function ParisPathwayWidget({ companies }: { companies: { pathwayAlignment: stri
       ) : (
         <p className="text-xs text-gray-500">No active companies.</p>
       )}
+    </div>
+  );
+}
+
+function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
+  const Q1 = "Q1 2026";
+  const Q2 = "Q2 2026";
+
+  const rows = companies
+    .map(co => {
+      const q1 = co.historicalScores.find(s => s.period === Q1);
+      const q2 = co.historicalScores.find(s => s.period === Q2);
+      if (!q1 || !q2) return null;
+      const avg1 = (q1.e + q1.s + q1.g) / 3;
+      const avg2 = (q2.e + q2.s + q2.g) / 3;
+      const delta = Math.round((avg2 - avg1) * 10) / 10;
+      return { name: co.name, delta };
+    })
+    .filter((r): r is { name: string; delta: number } => r !== null)
+    .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+
+  if (rows.length === 0) return null;
+
+  const maxAbs = Math.max(...rows.map(r => Math.abs(r.delta)), 1);
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
+      <h2 className="text-sm font-semibold text-gray-900 mb-1">Portfolio ESG Change — Q2 2026 vs Q1 2026</h2>
+      <p className="text-xs text-gray-500 mb-4">Average (E+S+G)/3 score delta per company, sorted by absolute change</p>
+      <div className="space-y-2.5">
+        {rows.map(({ name, delta }) => {
+          const barPct = (Math.abs(delta) / maxAbs) * 100;
+          const isPositive = delta >= 0;
+          return (
+            <div key={name} className="flex items-center gap-3">
+              <span className="text-xs text-gray-700 w-44 flex-shrink-0 truncate">{name}</span>
+              <div className="flex-1 flex items-center gap-2">
+                <div className="flex-1 h-4 bg-gray-100 rounded-sm overflow-hidden">
+                  <div
+                    className={`h-full rounded-sm ${isPositive ? "bg-emerald-500" : "bg-red-500"}`}
+                    style={{ width: `${barPct}%` }}
+                  />
+                </div>
+                <span className={`text-xs font-semibold w-10 text-right flex-shrink-0 ${isPositive ? "text-emerald-700" : "text-red-700"}`}>
+                  {isPositive ? "+" : ""}{delta}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex gap-4 mt-3">
+        <div className="flex items-center gap-1.5 text-xs text-gray-500">
+          <div className="w-2.5 h-2.5 rounded-sm bg-emerald-500" /> Improved
+        </div>
+        <div className="flex items-center gap-1.5 text-xs text-gray-500">
+          <div className="w-2.5 h-2.5 rounded-sm bg-red-500" /> Declined
+        </div>
+      </div>
     </div>
   );
 }
