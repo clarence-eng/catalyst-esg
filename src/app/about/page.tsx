@@ -38,7 +38,7 @@ const modules = [
     color: "text-purple-400",
     bg: "bg-purple-600/10 border-purple-600/20",
     description:
-      "Post-investment engagement tracking. Cards view (urgency-sorted) and calendar view (chronological engagement timeline across all companies including pipeline). AI-generated 12-month ESG Action Plans with quarterly milestones. Pipeline companies shown separately.",
+      "Post-investment engagement monitoring and pre-investment ESG due diligence. Cards view (urgency-sorted) and calendar view (chronological engagement timeline across all companies including pipeline). AI-generated 12-month ESG Action Plans with quarterly milestones. Pipeline companies shown separately.",
   },
   {
     href: "/signal",

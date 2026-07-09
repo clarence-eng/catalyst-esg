@@ -38,7 +38,7 @@ export default function LearnPage() {
   const medRelevance = filteredFrameworks.filter((f) => f.temasekRelevance === "Medium");
   const deepDiveFrameworks = highRelevance; // high-relevance frameworks that also match search/filter
 
-  const filterCategories: FrameworkFilter[] = ["All", "Climate", "Nature", "Reporting", "Cross-cutting"];
+  const filterCategories: FrameworkFilter[] = ["All", "Climate", "Nature", "Reporting", "Cross-cutting", "Social"];
 
   return (
     <div className="p-8">
