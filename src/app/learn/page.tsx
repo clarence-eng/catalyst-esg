@@ -35,8 +35,8 @@ export default function LearnPage() {
 
   const highRelevance = filteredFrameworks.filter((f) => f.temasekRelevance === "High");
   const medRelevance = filteredFrameworks.filter((f) => f.temasekRelevance === "Medium");
-  // Deep Dives always show category-filtered high-relevance frameworks (search doesn't collapse them)
-  const deepDiveFrameworks = frameworks.filter((f) => f.temasekRelevance === "High" && (frameworkFilter === "All" || f.category === frameworkFilter));
+  // Deep Dives: category-filtered, and also hide when search returns no match for that framework
+  const deepDiveFrameworks = filteredFrameworks.filter((f) => f.temasekRelevance === "High");
 
   const filterCategories: FrameworkFilter[] = ["All", "Climate", "Nature", "Reporting", "Cross-cutting"];
 
@@ -54,6 +54,7 @@ export default function LearnPage() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label="Search ESG frameworks and case studies"
           placeholder="Search frameworks and case studies..."
           className="w-full bg-[#0d1526] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-slate-300 text-sm placeholder:text-slate-600 focus:outline-none focus:border-emerald-600/40 transition-colors"
         />

@@ -70,7 +70,8 @@ export default function ScoutPage() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by name, sector, or country..."
+          aria-label="Search portfolio companies"
+          placeholder="Search by name, sector, country, or SASB category..."
           className="w-full bg-[#0d1526] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-slate-300 text-sm placeholder:text-slate-600 focus:outline-none focus:border-emerald-600/40 transition-colors"
         />
         {query && (
