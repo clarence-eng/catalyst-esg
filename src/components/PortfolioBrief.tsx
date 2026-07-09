@@ -54,7 +54,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
           onClick={generate}
           disabled={loading}
           aria-busy={loading}
-          className="flex items-center gap-2 text-sm bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+          className="flex items-center gap-2 text-sm bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
         >
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <BarChart3 className="w-4 h-4" />}
           {loading ? "Generating..." : brief ? "Regenerate" : "Generate Brief"}

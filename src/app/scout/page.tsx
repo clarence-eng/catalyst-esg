@@ -54,7 +54,7 @@ export default function ScoutPage() {
                 statusFilter === s
                   ? s === "Pipeline"
                     ? "bg-blue-600/20 text-blue-400 border border-blue-500/30"
-                    : "bg-emerald-600/20 text-emerald-400 border border-emerald-500/30"
+                    : "bg-red-600/20 text-red-400 border border-red-500/30"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -74,7 +74,7 @@ export default function ScoutPage() {
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Search portfolio companies"
           placeholder="Search by name, sector, country, SASB category, or description..."
-          className="w-full bg-[#0d1526] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-slate-300 text-sm placeholder:text-slate-600 focus:outline-none focus:border-emerald-600/40 transition-colors"
+          className="w-full bg-[#0d1526] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-slate-300 text-sm placeholder:text-slate-600 focus:outline-none focus:border-red-600/40 transition-colors"
         />
         {query && (
           <button onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-500 hover:text-slate-300">
@@ -96,7 +96,7 @@ export default function ScoutPage() {
             className={`bg-[#0d1526] border rounded-xl p-5 transition-all group ${
               co.portfolioStatus === "Pipeline"
                 ? "border-blue-500/20 hover:border-blue-500/40 hover:bg-blue-600/5"
-                : "border-white/5 hover:border-emerald-600/30 hover:bg-emerald-600/5"
+                : "border-white/5 hover:border-red-600/30 hover:bg-red-600/5"
             }`}
           >
             <div className="flex items-start justify-between">

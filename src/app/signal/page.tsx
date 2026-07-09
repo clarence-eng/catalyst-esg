@@ -108,7 +108,7 @@ export default function SignalPage() {
               onClick={() => setJurisdictionFilter(j)}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 jurisdictionFilter === j
-                  ? "bg-emerald-600/20 text-emerald-400 border-emerald-500/30"
+                  ? "bg-red-600/20 text-red-400 border-red-500/30"
                   : "text-slate-400 border-white/10 hover:text-slate-200"
               }`}
             >
@@ -124,7 +124,7 @@ export default function SignalPage() {
               onClick={() => setCategoryFilter(c)}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 categoryFilter === c
-                  ? "bg-emerald-600/20 text-emerald-400 border-emerald-500/30"
+                  ? "bg-red-600/20 text-red-400 border-red-500/30"
                   : "text-slate-400 border-white/10 hover:text-slate-200"
               }`}
             >
@@ -224,7 +224,7 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
                 <Link
                   key={slug}
                   href={`/scout/${slug}`}
-                  className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded hover:bg-emerald-500/15 transition-colors"
+                  className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded hover:bg-red-500/15 transition-colors"
                 >
                   {companyNameMap[slug] ?? slug}
                 </Link>

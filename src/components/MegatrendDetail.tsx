@@ -136,7 +136,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                 onClick={generateBrief}
                 disabled={loading}
                 aria-busy={loading}
-                className="flex items-center gap-2 text-sm bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+                className="flex items-center gap-2 text-sm bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
                 {loading ? "Generating..." : brief ? "Regenerate" : "Generate Brief"}
@@ -197,7 +197,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
             <div className="space-y-2">
               {t.portfolioExposure.map((p) => (
                 <div key={p.slug} className="flex items-center justify-between">
-                  <Link href={`/scout/${p.slug}`} className="text-xs text-slate-400 hover:text-emerald-300 transition-colors truncate mr-2">{p.name}</Link>
+                  <Link href={`/scout/${p.slug}`} className="text-xs text-slate-400 hover:text-red-300 transition-colors truncate mr-2">{p.name}</Link>
                   <ExposureBadge level={p.exposure} />
                 </div>
               ))}

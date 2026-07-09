@@ -67,7 +67,7 @@ export default function LearnPage() {
           onChange={(e) => setSearchQuery(e.target.value)}
           aria-label="Search ESG frameworks and case studies"
           placeholder="Search frameworks and case studies..."
-          className="w-full bg-[#0d1526] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-slate-300 text-sm placeholder:text-slate-600 focus:outline-none focus:border-emerald-600/40 transition-colors"
+          className="w-full bg-[#0d1526] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-slate-300 text-sm placeholder:text-slate-600 focus:outline-none focus:border-red-600/40 transition-colors"
         />
         {searchQuery && (
           <button
@@ -97,7 +97,7 @@ export default function LearnPage() {
                 onClick={() => setFrameworkFilter(cat)}
                 className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                   frameworkFilter === cat
-                    ? "bg-emerald-600/20 text-emerald-400 border-emerald-500/30"
+                    ? "bg-red-600/20 text-red-400 border-red-500/30"
                     : "text-slate-400 border-white/10 hover:text-slate-200 hover:border-white/20"
                 }`}
               >
