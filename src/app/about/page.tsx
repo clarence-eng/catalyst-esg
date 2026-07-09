@@ -155,7 +155,7 @@ export default function AboutPage() {
         <div className="bg-white rounded-xl border border-gray-200 p-4">
           <div className="grid grid-cols-2 gap-2 text-xs">
             {companies.map((co) => (
-              <div key={co.slug} className={`p-2 rounded-lg border ${co.portfolioStatus === "Pipeline" ? "border-blue-500/20 bg-blue-500/5" : "border-gray-200 bg-gray-50"}`}>
+              <div key={co.slug} className={`p-2 rounded-lg border ${co.portfolioStatus === "Pipeline" ? "border-blue-400/40 bg-blue-50" : "border-gray-200 bg-gray-50"}`}>
                 <div className="flex items-center gap-1.5 mb-0.5">
                   {co.portfolioStatus === "Pipeline" && <GitMerge className="w-3 h-3 text-blue-400" />}
                   <span className="font-medium text-gray-900">{co.name}</span>

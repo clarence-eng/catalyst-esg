@@ -3,10 +3,10 @@ import { type RiskLevel, type MaturityLevel, type ESGRating } from "@/data/compa
 
 export function RiskBadge({ level }: { level: RiskLevel }) {
   const styles: Record<RiskLevel, string> = {
-    Low: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
-    Medium: "bg-amber-500/15 text-amber-400 border-amber-500/20",
-    High: "bg-orange-500/15 text-orange-400 border-orange-500/20",
-    Critical: "bg-red-500/15 text-red-400 border-red-500/20",
+    Low: "bg-emerald-50 text-emerald-700 border-emerald-300",
+    Medium: "bg-amber-50 text-amber-700 border-amber-300",
+    High: "bg-orange-50 text-orange-700 border-orange-300",
+    Critical: "bg-red-50 text-red-700 border-red-300",
   };
   return (
     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${styles[level]}`}>
@@ -17,10 +17,10 @@ export function RiskBadge({ level }: { level: RiskLevel }) {
 
 export function MaturityBadge({ level }: { level: MaturityLevel }) {
   const styles: Record<MaturityLevel, string> = {
-    Leading: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
-    Advanced: "bg-blue-500/15 text-blue-400 border-blue-500/20",
-    Developing: "bg-amber-500/15 text-amber-400 border-amber-500/20",
-    Lagging: "bg-red-500/15 text-red-400 border-red-500/20",
+    Leading: "bg-emerald-50 text-emerald-700 border-emerald-300",
+    Advanced: "bg-blue-50 text-blue-700 border-blue-300",
+    Developing: "bg-amber-50 text-amber-700 border-amber-300",
+    Lagging: "bg-red-50 text-red-700 border-red-300",
   };
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${styles[level]}`}>
@@ -36,10 +36,10 @@ export function RatingBadge({ rating }: { rating: ESGRating }) {
     <span
       className={`inline-flex items-center px-2.5 py-1 rounded text-sm font-bold border ${
         isGreen
-          ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/20"
+          ? "bg-emerald-50 text-emerald-700 border-emerald-300"
           : isAmber
-          ? "bg-amber-500/15 text-amber-400 border-amber-500/20"
-          : "bg-red-500/15 text-red-400 border-red-500/20"
+          ? "bg-amber-50 text-amber-700 border-amber-300"
+          : "bg-red-50 text-red-700 border-red-300"
       }`}
     >
       {rating}

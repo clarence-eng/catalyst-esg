@@ -21,9 +21,9 @@ const colorTextMap: Record<string, string> = {
   purple: "text-purple-400",
 };
 const urgencyMap: Record<string, string> = {
-  Immediate: "text-red-400 bg-red-500/10",
-  "Near-term": "text-amber-400 bg-amber-500/10",
-  "Long-term": "text-blue-400 bg-blue-500/10",
+  Immediate: "text-red-700 bg-red-100",
+  "Near-term": "text-amber-700 bg-amber-100",
+  "Long-term": "text-blue-700 bg-blue-100",
 };
 
 export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {

@@ -120,7 +120,11 @@ export default function ScoutPage() {
                   <RatingBadge rating={co.esgScore.rating} />
                   <MaturityBadge level={co.maturity} />
                   {(() => {
-                    const scores = co.historicalScores;
+                    const scores = [...co.historicalScores].sort((a, b) => {
+                      const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) || ["","0","9999"]).slice(1).map(Number);
+                      const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) || ["","0","9999"]).slice(1).map(Number);
+                      return ay !== by ? ay - by : aq - bq;
+                    });
                     const last = scores[scores.length - 1];
                     const prev = scores[scores.length - 2];
                     if (last && prev) {
@@ -129,19 +133,19 @@ export default function ScoutPage() {
                       const delta = Math.round(lastAvg - prevAvg);
                       if (delta > 0) {
                         return (
-                          <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                          <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-300">
                             ↑ +{delta}
                           </span>
                         );
                       } else if (delta < 0) {
                         return (
-                          <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20">
+                          <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-red-50 text-red-700 border border-red-300">
                             ↓ {delta}
                           </span>
                         );
                       } else {
                         return (
-                          <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-slate-500/10 text-gray-600 border border-slate-500/20">
+                          <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 border border-gray-300">
                             → 0
                           </span>
                         );
@@ -247,8 +251,8 @@ function SDGBadge({ sdg, label }: { sdg: number; label: string }) {
   const bg = sdgColors[sdg] ?? "bg-slate-600";
   return (
     <div className={`flex items-center gap-1 ${bg} rounded px-1.5 py-0.5`} title={`SDG ${sdg}: ${label}`}>
-      <span className="text-gray-900 text-[10px] font-bold leading-none">{sdg}</span>
-      <span className="text-gray-900 text-[9px] leading-none opacity-90 hidden sm:inline">{label}</span>
+      <span className="text-white text-[10px] font-bold leading-none">{sdg}</span>
+      <span className="text-white text-[9px] leading-none opacity-90 hidden sm:inline">{label}</span>
     </div>
   );
 }

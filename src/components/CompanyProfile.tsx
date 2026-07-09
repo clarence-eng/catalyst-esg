@@ -252,7 +252,7 @@ function OverviewTab({
               : "border-red-500/30 bg-red-500/5"
           }`}>
             <div className="flex items-center gap-2 mb-2">
-              <span className={`text-sm font-bold ${co.icRecommendation.verdict === "Invest Conditional" ? "text-amber-400" : co.icRecommendation.verdict === "Invest" ? "text-emerald-400" : "text-red-400"}`}>
+              <span className={`text-sm font-bold ${co.icRecommendation.verdict === "Invest Conditional" ? "text-amber-700" : co.icRecommendation.verdict === "Invest" ? "text-emerald-700" : "text-red-700"}`}>
                 IC Recommendation: {co.icRecommendation.verdict}
               </span>
             </div>
@@ -286,7 +286,7 @@ function OverviewTab({
                     <RiskBadge level={issue.severity} />
                     <span className="text-xs text-gray-500">{issue.category}</span>
                     {issue.opportunity && (
-                      <span className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded">
+                      <span className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-300 px-1.5 py-0.5 rounded">
                         Opportunity
                       </span>
                     )}
@@ -307,7 +307,7 @@ function OverviewTab({
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-sm font-medium text-gray-900">{v.area}</span>
                   <span className={`text-xs px-2 py-0.5 rounded border ${
-                    v.potential === "High" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
+                    v.potential === "High" ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
                     v.potential === "Medium" ? "text-amber-400 bg-amber-500/10 border-amber-500/20" :
                     "text-gray-600 bg-gray-100 border-gray-200"
                   }`}>{v.potential} potential</span>
@@ -559,9 +559,9 @@ function NatureTab({ co }: { co: Company }) {
             { pillar: "Metrics & Targets", status: co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const },
           ]).map(({ pillar, status }) => {
             const statusStyle = status === "Adopted"
-              ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+              ? "text-emerald-700 bg-emerald-50 border-emerald-300"
               : status === "Partial"
-              ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
+              ? "text-amber-700 bg-amber-50 border-amber-300"
               : "text-gray-500 bg-gray-100 border-gray-200";
             const dotColor = status === "Adopted" ? "bg-emerald-500" : status === "Partial" ? "bg-amber-500" : "bg-slate-600";
             return (
@@ -676,7 +676,7 @@ function SocialTab({ co }: { co: Company }) {
 function GovStatTile({ label, value, note, status }: { label: string; value: string; note: string; status: "ok" | "warn" | "gap" }) {
   const borderColor = status === "ok" ? "border-emerald-500/20" : status === "gap" ? "border-red-500/20" : "border-amber-500/20";
   const bgColor = status === "ok" ? "bg-emerald-500/5" : status === "gap" ? "bg-red-500/5" : "bg-amber-500/5";
-  const valueColor = status === "ok" ? "text-emerald-400" : status === "gap" ? "text-red-400" : "text-amber-400";
+  const valueColor = status === "ok" ? "text-emerald-700" : status === "gap" ? "text-red-700" : "text-amber-700";
   const iconEl = status === "ok"
     ? <CheckCircle className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
     : <AlertCircle className={`w-3.5 h-3.5 flex-shrink-0 ${status === "gap" ? "text-red-400" : "text-amber-400"}`} />;
@@ -714,10 +714,10 @@ function EngagementTab({ co }: { co: Company }) {
     : "Attention Needed";
 
   const statusStyle = {
-    "Not Started": "text-gray-600 bg-gray-100 border-gray-200",
-    "On Track": "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
-    "Attention Needed": "text-amber-400 bg-amber-500/10 border-amber-500/20",
-    "Action Required": "text-red-400 bg-red-500/10 border-red-500/20",
+    "Not Started": "text-gray-600 bg-gray-100 border-gray-300",
+    "On Track": "text-emerald-700 bg-emerald-50 border-emerald-300",
+    "Attention Needed": "text-amber-700 bg-amber-50 border-amber-300",
+    "Action Required": "text-red-700 bg-red-50 border-red-300",
   }[stewardshipStatus];
 
   return (
@@ -819,17 +819,17 @@ function SDGBadge({ sdg, label }: { sdg: number; label: string }) {
   const bg = sdgColors[sdg] ?? "bg-slate-600";
   return (
     <div className={`flex items-center gap-1 ${bg} rounded px-1.5 py-0.5`} title={`SDG ${sdg}: ${label}`}>
-      <span className="text-gray-900 text-[10px] font-bold leading-none">{sdg}</span>
-      <span className="text-gray-900 text-[9px] leading-none opacity-90 hidden sm:inline">{label}</span>
+      <span className="text-white text-[10px] font-bold leading-none">{sdg}</span>
+      <span className="text-white text-[9px] leading-none opacity-90 hidden sm:inline">{label}</span>
     </div>
   );
 }
 
 function NetZeroBadge({ commitment }: { commitment: "SBTi Committed" | "SBTi Targets Set" | "Net Zero Pledged" }) {
   const styles: Record<string, string> = {
-    "SBTi Committed": "text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
-    "SBTi Targets Set": "text-blue-400 bg-blue-500/10 border-blue-500/30",
-    "Net Zero Pledged": "text-teal-400 bg-teal-500/10 border-teal-500/30",
+    "SBTi Committed": "text-emerald-700 bg-emerald-50 border-emerald-300",
+    "SBTi Targets Set": "text-blue-700 bg-blue-50 border-blue-300",
+    "Net Zero Pledged": "text-teal-700 bg-teal-50 border-teal-300",
   };
   return (
     <span className={`text-xs font-medium px-2 py-0.5 rounded border ${styles[commitment]}`}>

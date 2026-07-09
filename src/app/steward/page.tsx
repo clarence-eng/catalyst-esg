@@ -93,7 +93,7 @@ export default function StewardPage() {
                     <div className="w-16 flex-shrink-0 text-center">
                       <div className={`text-xs font-semibold px-2 py-1 rounded ${
                         e.status === "Overdue"
-                          ? "bg-red-500/10 text-red-400 border border-red-500/20"
+                          ? "bg-red-50 text-red-700 border border-red-300"
                           : "bg-blue-500/10 text-blue-400 border border-blue-500/20"
                       }`}>
                         {formatDate(e.date)}
@@ -107,7 +107,7 @@ export default function StewardPage() {
                       >
                         {e.companyName}
                       </Link>
-                      {e.isPipeline && <span className="text-xs text-blue-400 flex-shrink-0">·Pipeline</span>}
+                      {e.isPipeline && <span className="text-xs text-blue-700 flex-shrink-0">·Pipeline</span>}
                     </div>
                     {/* Topic */}
                     <div className="flex-1 min-w-0">
@@ -117,8 +117,8 @@ export default function StewardPage() {
                     {/* Status */}
                     <span className={`text-xs px-2 py-0.5 rounded border flex-shrink-0 ${
                       e.status === "Overdue"
-                        ? "text-red-400 bg-red-500/10 border-red-500/20"
-                        : "text-blue-400 bg-blue-500/10 border-blue-500/20"
+                        ? "text-red-700 bg-red-50 border-red-300"
+                        : "text-blue-700 bg-blue-50 border-blue-300"
                     }`}>
                       {e.status}
                     </span>
@@ -269,7 +269,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
                 <span className="text-gray-700">{completedCount}</span>
               </div>
               <div className="flex items-center gap-1.5 text-xs">
-                <Clock className="w-3.5 h-3.5 text-blue-400" />
+                <Clock className="w-3.5 h-3.5 text-blue-600" />
                 <span className="text-gray-700">{plannedCount}</span>
               </div>
               {overdueCount > 0 && (
@@ -320,9 +320,9 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
                       <span className="text-xs text-gray-500">{e.type}</span>
                       <span className="text-xs text-gray-500">{formatDate(e.date)}</span>
                       <span className={`text-xs px-1.5 py-0.5 rounded border ${
-                        e.status === "Completed" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
-                        e.status === "Planned" ? "text-blue-400 bg-blue-500/10 border-blue-500/20" :
-                        "text-red-400 bg-red-500/10 border-red-500/20"
+                        e.status === "Completed" ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
+                        e.status === "Planned" ? "text-blue-700 bg-blue-50 border-blue-300" :
+                        "text-red-700 bg-red-50 border-red-300"
                       }`}>{e.status}</span>
                     </div>
                     <p className="text-xs text-gray-600 line-clamp-3">{e.notes}</p>
