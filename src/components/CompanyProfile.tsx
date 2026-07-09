@@ -145,16 +145,15 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         onKeyDown={(e) => {
           const ids = TABS.map(t => t.id);
           const currentIdx = ids.indexOf(tab);
-          if (e.key === "ArrowRight") {
+          let target: string | null = null;
+          if (e.key === "ArrowRight") target = ids[(currentIdx + 1) % ids.length];
+          else if (e.key === "ArrowLeft") target = ids[(currentIdx - 1 + ids.length) % ids.length];
+          else if (e.key === "Home") target = ids[0];
+          else if (e.key === "End") target = ids[ids.length - 1];
+          if (target) {
             e.preventDefault();
-            const next = ids[(currentIdx + 1) % ids.length];
-            setTab(next);
-            document.getElementById(`tab-${next}`)?.focus();
-          } else if (e.key === "ArrowLeft") {
-            e.preventDefault();
-            const prev = ids[(currentIdx - 1 + ids.length) % ids.length];
-            setTab(prev);
-            document.getElementById(`tab-${prev}`)?.focus();
+            setTab(target as typeof tab);
+            document.getElementById(`tab-${target}`)?.focus();
           }
         }}
       >
