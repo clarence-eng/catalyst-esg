@@ -73,7 +73,7 @@ export interface Company {
   region: string;
   description: string;
   portfolioStatus: "Active" | "Pipeline";
-  temasekMegatrend: "Digitisation" | "Sustainable Living" | "Future of Consumption" | "Longer Lifespans";
+  temasekMegatrend: "Digitisation" | "Sustainable Living" | "Longer Lifespans";
   esgScore: ESGScore;
   maturity: MaturityLevel;
   climateRisk: ClimateRisk;
@@ -282,7 +282,7 @@ export const companies: Company[] = [
     description:
       "Indonesia's fourth-largest commercial bank by assets, with a growing retail and SME franchise across Java, Sumatra, and Kalimantan, and a rising sustainable finance portfolio.",
     portfolioStatus: "Active",
-    temasekMegatrend: "Future of Consumption",
+    temasekMegatrend: "Sustainable Living",
     esgScore: {
       overall: 65,
       environmental: 55,

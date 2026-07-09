@@ -42,7 +42,7 @@ export default function StewardPage() {
         <div className="flex items-center gap-3">
           <div className="text-center bg-[#0d1526] border border-white/5 rounded-xl px-4 py-2">
             <div className="text-lg font-bold text-white">{completedCount}</div>
-            <div className="text-xs text-slate-500">Completed</div>
+            <div className="text-xs text-slate-500">Completed (active)</div>
           </div>
           <div className="text-center bg-[#0d1526] border border-white/5 rounded-xl px-4 py-2">
             <div className="text-lg font-bold text-blue-400">{plannedCount}</div>

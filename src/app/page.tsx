@@ -167,7 +167,7 @@ export default function OverviewPage() {
                   </td>
                   <td className="px-4 py-4">
                     <span className="text-xs text-slate-400">
-                      {co.portfolioStatus === "Pipeline" ? "Pipeline" : totalActive > 0 ? `${Math.round(co.investmentValue / totalActive * 100)}%` : "—"}
+                      {co.portfolioStatus === "Pipeline" ? "Pipeline" : totalActive > 0 ? `${(co.investmentValue / totalActive * 100).toFixed(1)}%` : "—"}
                     </span>
                   </td>
                   <td className="px-4 py-4">
