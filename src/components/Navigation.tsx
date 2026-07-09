@@ -18,7 +18,7 @@ export function Navigation() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-64 bg-[#F9F8FA] border-r border-gray-200 flex flex-col z-50">
+    <aside className="fixed left-0 top-0 h-full w-64 bg-[#F9F8FA] border-r border-gray-200 flex flex-col z-50 text-gray-800">
       {/* Brand */}
       <div className="p-5 border-b border-gray-200">
         <div className="flex flex-col gap-1">
@@ -54,8 +54,8 @@ export function Navigation() {
               aria-current={active ? "page" : undefined}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
                 active
-                  ? "bg-[#4B2580]/10 border border-[#4B2580]/20"
-                  : "hover:bg-gray-100"
+                  ? "bg-[#4B2580]/15 border border-[#4B2580]/30"
+                  : "hover:bg-gray-200"
               }`}
             >
               <Icon
