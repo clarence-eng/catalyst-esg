@@ -304,8 +304,8 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
             <h3 className="text-sm font-semibold text-white mb-3">Engagement History</h3>
             <div className="space-y-2">
               {[...co.engagement].sort((a, b) => {
-                const order: Record<string, number> = { Overdue: 0, Planned: 1, Completed: 2 };
-                return (order[a.status] ?? 3) - (order[b.status] ?? 3);
+                // Sort chronologically descending (most recent first) so history reads naturally
+                return a.date > b.date ? -1 : a.date < b.date ? 1 : 0;
               }).map((e, i) => (
                 <div key={`${e.date}-${e.topic}-${i}`} className="flex items-start gap-3 p-3 bg-white/[0.02] rounded-lg border border-white/5">
                   <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
@@ -323,7 +323,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
                         "text-red-400 bg-red-500/10 border-red-500/20"
                       }`}>{e.status}</span>
                     </div>
-                    <p className="text-xs text-slate-400">{e.notes}</p>
+                    <p className="text-xs text-slate-400 line-clamp-3">{e.notes}</p>
                   </div>
                 </div>
               ))}

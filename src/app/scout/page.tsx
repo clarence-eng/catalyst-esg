@@ -24,7 +24,8 @@ export default function ScoutPage() {
       c.sector.toLowerCase().includes(q) ||
       c.country.toLowerCase().includes(q) ||
       c.sasbCategory.toLowerCase().includes(q) ||
-      c.description.toLowerCase().includes(q)
+      c.description.toLowerCase().includes(q) ||
+      c.temasekMegatrend.toLowerCase().includes(q)
     );
   });
 
