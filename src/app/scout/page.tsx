@@ -168,8 +168,8 @@ export default function ScoutPage() {
                 </div>
                 {co.sdgAlignment.length > 0 && (
                   <div className="flex items-center gap-1.5 mt-2.5">
-                    {co.sdgAlignment.map(({ sdg, label }) => (
-                      <SDGBadge key={sdg} sdg={sdg} label={label} />
+                    {co.sdgAlignment.map(({ sdg, label }, i) => (
+                      <SDGBadge key={`${sdg}-${i}`} sdg={sdg} label={label} />
                     ))}
                   </div>
                 )}

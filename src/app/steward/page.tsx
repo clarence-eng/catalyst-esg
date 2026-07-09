@@ -46,11 +46,11 @@ export default function StewardPage() {
           </div>
           <div className="text-center bg-[#0d1526] border border-white/5 rounded-xl px-4 py-2">
             <div className="text-lg font-bold text-blue-400">{plannedCount}</div>
-            <div className="text-xs text-slate-500">Planned</div>
+            <div className="text-xs text-slate-500">Planned (active)</div>
           </div>
           <div className="text-center bg-[#0d1526] border border-white/5 rounded-xl px-4 py-2">
             <div className="text-lg font-bold text-red-400">{overdueCount}</div>
-            <div className="text-xs text-slate-500">Overdue</div>
+            <div className="text-xs text-slate-500">Overdue (active)</div>
           </div>
         </div>
       </PageHeader>

@@ -94,7 +94,7 @@ export default function OverviewPage() {
 
       {/* KPI Row — scoped to Active portfolio */}
       <div className="grid grid-cols-5 gap-4 mb-6">
-        <StatCard label="Portfolio ESG Score" value={avgScore} sub="Active companies (E+S+G avg)" color="green" />
+        <StatCard label="Portfolio ESG Score" value={avgScore} sub="Active companies · investment-weighted" color="green" />
         <StatCard label="Transition Risk Flags" value={highRisk} sub="High or Critical exposure" color="amber" />
         <StatCard label="Avg Carbon Intensity" value={`${avgCarbonIntensity}`} sub="tCO₂e/$M revenue · active cos" color="default" />
         <StatCard label="Overdue Engagements" value={overdueCount} sub="Requires immediate follow-up" color="red" />
