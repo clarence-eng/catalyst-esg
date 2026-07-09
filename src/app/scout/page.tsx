@@ -23,7 +23,8 @@ export default function ScoutPage() {
       c.name.toLowerCase().includes(q) ||
       c.sector.toLowerCase().includes(q) ||
       c.country.toLowerCase().includes(q) ||
-      c.sasbCategory.toLowerCase().includes(q)
+      c.sasbCategory.toLowerCase().includes(q) ||
+      c.description.toLowerCase().includes(q)
     );
   });
 
@@ -71,7 +72,7 @@ export default function ScoutPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Search portfolio companies"
-          placeholder="Search by name, sector, country, or SASB category..."
+          placeholder="Search by name, sector, country, SASB category, or description..."
           className="w-full bg-[#0d1526] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-slate-300 text-sm placeholder:text-slate-600 focus:outline-none focus:border-emerald-600/40 transition-colors"
         />
         {query && (
