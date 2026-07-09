@@ -97,8 +97,8 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       continue;
     }
 
-    // Bullet items: - or • or * at start
-    if (/^[-•*]\s+/.test(line)) {
+    // Bullet items: - or • at start, or * followed by non-* (to avoid capturing **bold** lines)
+    if (/^[-•]\s+|^\*\s+[^*]/.test(line)) {
       if (listIsOrdered && listBuffer.length > 0) flushList();
       listIsOrdered = false;
       listBuffer.push({ text: line.replace(/^[-•*]\s+/, "") });

@@ -96,7 +96,7 @@ export default function OverviewPage() {
       <div className="grid grid-cols-5 gap-4 mb-6">
         <StatCard label="Portfolio ESG Score" value={avgScore} sub="Active companies · investment-weighted" color="green" />
         <StatCard label="Transition Risk Flags" value={highRisk} sub="High or Critical exposure" color="amber" />
-        <StatCard label="Avg Carbon Intensity" value={`${avgCarbonIntensity}`} sub="tCO₂e/$M revenue · active cos" color="default" />
+        <StatCard label="Avg Carbon Intensity" value={`${avgCarbonIntensity}`} sub="tCO₂e/$M revenue · equity-weighted avg" color="default" />
         <StatCard label="Overdue Engagements" value={overdueCount} sub="Requires immediate follow-up" color="red" />
         <StatCard label="Planned Engagements" value={plannedCount} sub="Upcoming" color="default" />
       </div>

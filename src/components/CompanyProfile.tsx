@@ -35,17 +35,20 @@ export function CompanyProfile({ company: co }: { company: Company }) {
   const [memoGeneratedAt, setMemoGeneratedAt] = useState<Date | null>(null);
 
   const radarData = useMemo(() => {
-    // Climate Resilience blends transition and physical risk (equal weight)
+    // Climate Resilience blends transition, physical risk, and pathway alignment
     const transitionPenalty = co.climateRisk.transition === "Critical" ? 100 : co.climateRisk.transition === "High" ? 70 : co.climateRisk.transition === "Medium" ? 40 : 0;
     const physicalPenalty = co.climateRisk.physical === "Critical" ? 100 : co.climateRisk.physical === "High" ? 70 : co.climateRisk.physical === "Medium" ? 40 : 0;
+    const pathwayPenalty = co.climateRisk.pathwayAlignment === "3°C+" ? 30 : co.climateRisk.pathwayAlignment === "2°C" ? 15 : co.climateRisk.pathwayAlignment === "Not assessed" ? 20 : 0;
+    const climateResScore = Math.max(0, 100 - Math.round((transitionPenalty + physicalPenalty + pathwayPenalty) / 3));
+    const climateResLabel = `Climate Resilience (${co.climateRisk.pathwayAlignment})`;
     return [
       { subject: "Environmental", score: co.esgScore.environmental },
       { subject: "Social", score: co.esgScore.social },
       { subject: "Governance", score: co.esgScore.governance },
-      { subject: "Climate Resilience", score: Math.max(0, 100 - Math.round((transitionPenalty + physicalPenalty) / 2)) },
+      { subject: climateResLabel, score: climateResScore },
       { subject: "Nature Resilience", score: Math.max(0, 100 - (co.natureRisk.overall === "Critical" ? 100 : co.natureRisk.overall === "High" ? 70 : co.natureRisk.overall === "Medium" ? 40 : 0)) },
     ];
-  }, [co.esgScore.environmental, co.esgScore.social, co.esgScore.governance, co.climateRisk.transition, co.climateRisk.physical, co.natureRisk.overall]);
+  }, [co.esgScore.environmental, co.esgScore.social, co.esgScore.governance, co.climateRisk.transition, co.climateRisk.physical, co.climateRisk.pathwayAlignment, co.natureRisk.overall]);
 
   async function generateMemo() {
     setMemoLoading(true);
@@ -345,7 +348,7 @@ function OverviewTab({
         {/* ESG Radar */}
         <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
           <h3 className="text-sm font-semibold text-white mb-3">ESG Profile Radar</h3>
-          <div role="img" aria-label={`ESG profile radar for ${co.name}: Environmental ${co.esgScore.environmental}, Social ${co.esgScore.social}, Governance ${co.esgScore.governance}`}>
+          <div role="img" aria-label={`ESG profile radar for ${co.name}: Environmental ${co.esgScore.environmental}, Social ${co.esgScore.social}, Governance ${co.esgScore.governance}, Climate Resilience (${co.climateRisk.pathwayAlignment}), Nature Resilience`}>
           <ResponsiveContainer width="100%" height={240}>
             <RadarChart data={radarData}>
               <PolarGrid stroke="rgba(255,255,255,0.06)" />
@@ -668,9 +671,14 @@ function EngagementTab({ co }: { co: Company }) {
   const overdue = co.engagement.filter((e) => e.status === "Overdue").length;
   const completionPct = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-  const nextDue = co.engagement
-    .filter((e) => e.status === "Planned" || e.status === "Overdue")
-    .sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0)[0];
+  // Show most recent overdue (if any) or earliest planned
+  const overdueItems = co.engagement
+    .filter((e) => e.status === "Overdue")
+    .sort((a, b) => a.date > b.date ? -1 : a.date < b.date ? 1 : 0); // newest overdue first
+  const plannedItems = co.engagement
+    .filter((e) => e.status === "Planned")
+    .sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0); // earliest planned first
+  const nextDue = overdueItems[0] ?? plannedItems[0] ?? null;
 
   const stewardshipStatus: "Not Started" | "On Track" | "Attention Needed" | "Action Required" =
     total === 0 ? "Not Started"

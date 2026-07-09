@@ -12,7 +12,20 @@ function generateAlerts(companies: Company[]): Alert[] {
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const alerts: Alert[] = [];
 
-  // 1. Overdue engagements (max 1 alert per company to prevent one company dominating)
+  // 1. Critical material issues — highest priority (unmitigated financial material risks)
+  for (const co of activeCompanies) {
+    for (const issue of co.materialIssues) {
+      if (issue.severity === "Critical" && !issue.opportunity) {
+        alerts.push({
+          message: `${co.name}: Critical ESG issue — ${issue.issue}`,
+          slug: co.slug,
+          severity: 1,
+        });
+      }
+    }
+  }
+
+  // 2. Overdue engagements (max 1 alert per company to prevent one company dominating)
   for (const co of activeCompanies) {
     const overdueEngs = co.engagement
       .filter(e => e.status === "Overdue")
@@ -25,21 +38,8 @@ function generateAlerts(companies: Company[]): Alert[] {
           ? `${co.name}: ${count} overdue engagements (oldest: "${topic}")`
           : `${co.name}: Overdue engagement — "${topic}"`,
         slug: co.slug,
-        severity: 1,
+        severity: 2,
       });
-    }
-  }
-
-  // 2. Critical material issues
-  for (const co of activeCompanies) {
-    for (const issue of co.materialIssues) {
-      if (issue.severity === "Critical" && !issue.opportunity) {
-        alerts.push({
-          message: `${co.name}: Critical ESG issue — ${issue.issue}`,
-          slug: co.slug,
-          severity: 2,
-        });
-      }
     }
   }
 
