@@ -143,7 +143,9 @@ export function CompanyProfile({ company: co }: { company: Company }) {
           <button
             key={id}
             role="tab"
+            id={`tab-${id}`}
             aria-selected={tab === id}
+            aria-controls={`tabpanel-${id}`}
             onClick={() => setTab(id)}
             className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:outline-none rounded-sm ${
               tab === id
@@ -159,12 +161,14 @@ export function CompanyProfile({ company: co }: { company: Company }) {
 
       {/* Tab Content */}
       {tab === "overview" && (
-        <OverviewTab co={co} radarData={radarData} memo={memo} memoLoading={memoLoading} memoError={memoError} onGenerate={generateMemo} memoGeneratedAt={memoGeneratedAt} />
+        <div role="tabpanel" id="tabpanel-overview" aria-labelledby="tab-overview">
+          <OverviewTab co={co} radarData={radarData} memo={memo} memoLoading={memoLoading} memoError={memoError} onGenerate={generateMemo} memoGeneratedAt={memoGeneratedAt} />
+        </div>
       )}
-      {tab === "climate" && <ClimateTab co={co} />}
-      {tab === "nature" && <NatureTab co={co} />}
-      {tab === "social" && <SocialTab co={co} />}
-      {tab === "engagement" && <EngagementTab co={co} />}
+      {tab === "climate" && <div role="tabpanel" id="tabpanel-climate" aria-labelledby="tab-climate"><ClimateTab co={co} /></div>}
+      {tab === "nature" && <div role="tabpanel" id="tabpanel-nature" aria-labelledby="tab-nature"><NatureTab co={co} /></div>}
+      {tab === "social" && <div role="tabpanel" id="tabpanel-social" aria-labelledby="tab-social"><SocialTab co={co} /></div>}
+      {tab === "engagement" && <div role="tabpanel" id="tabpanel-engagement" aria-labelledby="tab-engagement"><EngagementTab co={co} /></div>}
     </div>
   );
 }
@@ -477,7 +481,7 @@ function NatureTab({ co }: { co: Company }) {
           The Taskforce on Nature-related Financial Disclosures (TNFD) provides a risk management and disclosure framework for nature-related dependencies, impacts, risks, and opportunities. Final recommendations published September 2023.
         </p>
         <div className="space-y-3">
-          {(co.natureRisk.tnfdPillars ?? [
+          {(co.natureRisk.tnfdPillars?.length ? co.natureRisk.tnfdPillars : [
             { pillar: "Governance", status: co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const },
             { pillar: "Strategy", status: co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const },
             { pillar: "Risk & Impact Mgmt", status: co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const },

@@ -83,8 +83,9 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
 
     // Section headers: entire line wrapped in exactly one bold span (**text**), or ### style
     // Exclude lines like "**foo** and **bar**" that start AND end with ** but have inner ** pairs
+    // Also exclude long prose lines that happen to be fully bolded (> 60 chars inner content)
     const isSingleBoldWrap = line.startsWith("**") && line.endsWith("**") && line.length > 4 &&
-      line.slice(2, -2).indexOf("**") === -1;
+      line.slice(2, -2).indexOf("**") === -1 && line.slice(2, -2).length <= 60;
     if (isSingleBoldWrap || line.startsWith("### ")) {
       flushList();
       const content = line.replace(/^###\s*/, "").replace(/^\*\*|\*\*$/g, "");

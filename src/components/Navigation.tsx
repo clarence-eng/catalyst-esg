@@ -30,7 +30,7 @@ export function Navigation() {
       </div>
 
       {/* Nav items */}
-      <nav className="flex-1 p-3 space-y-1">
+      <nav className="flex-1 p-3 space-y-1" aria-label="Main navigation">
         {navItems.map(({ href, icon: Icon, label, desc }) => {
           const active =
             href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -38,6 +38,7 @@ export function Navigation() {
             <Link
               key={href}
               href={href}
+              aria-current={active ? "page" : undefined}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
                 active
                   ? "bg-emerald-600/15 text-emerald-400 border border-emerald-600/20"
