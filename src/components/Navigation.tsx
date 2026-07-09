@@ -55,7 +55,7 @@ export function Navigation() {
               aria-current={active ? "page" : undefined}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
                 active
-                  ? "border border-white/10 bg-white/5"
+                  ? "bg-[#4B2580]/20 border border-[#4B2580]/30"
                   : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
               }`}
             >

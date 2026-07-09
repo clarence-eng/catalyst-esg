@@ -44,19 +44,6 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Temasek brand purple #4B2580 — brand accent replaces the old red scheme
-     used for buttons, active states, interactive elements */
-  --color-brand-50: #f3eefa;
-  --color-brand-100: #e2d0f5;
-  --color-brand-200: #c4a2ea;
-  --color-brand-300: #a674de;
-  --color-brand-400: #8852cc;
-  --color-brand-500: #6b35b0;
-  --color-brand-600: #4b2580;
-  --color-brand-700: #3d1a6e;
-  --color-brand-800: #2e1155;
-  --color-brand-900: #1e0a38;
-
   /* Restore vivid semantic reds for danger/error/overdue states
      Tailwind v4 defaults (red-400=#fca5a5) are too light on dark backgrounds */
   --color-red-400: #f87171;
