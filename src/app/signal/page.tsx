@@ -115,7 +115,7 @@ export default function SignalPage() {
               onClick={() => setJurisdictionFilter(j)}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 jurisdictionFilter === j
-                  ? "bg-red-600/20 text-red-400 border-red-500/30"
+                  ? "bg-[#4B2580]/20 text-purple-400 border-purple-500/30"
                   : "text-slate-400 border-white/10 hover:text-slate-200"
               }`}
             >
@@ -131,7 +131,7 @@ export default function SignalPage() {
               onClick={() => setCategoryFilter(c)}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 categoryFilter === c
-                  ? "bg-red-600/20 text-red-400 border-red-500/30"
+                  ? "bg-[#4B2580]/20 text-purple-400 border-purple-500/30"
                   : "text-slate-400 border-white/10 hover:text-slate-200"
               }`}
             >

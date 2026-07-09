@@ -17,8 +17,8 @@ const modules = [
     href: "/",
     icon: LayoutDashboard,
     name: "Overview",
-    color: "text-red-400",
-    bg: "bg-red-600/10 border-red-600/20",
+    color: "text-purple-400",
+    bg: "bg-purple-600/10 border-purple-600/20",
     description:
       "Portfolio ESG health dashboard. Investment-weighted KPIs, E/S/G trajectory chart, portfolio positioning bubble chart (ESG vs carbon intensity), risk heatmap (physical/transition/nature/governance), needs-attention alert panel with overdue engagements and Critical issues, company table with Active/Pipeline distinction, portfolio weights, and an AI-powered Portfolio ESG Brief generator.",
   },
@@ -99,7 +99,7 @@ export default function AboutPage() {
             { icon: Cpu, text: "Practical AI integration across four distinct investment workflow use cases" },
           ].map(({ icon: Icon, text }) => (
             <div key={text} className="flex items-start gap-3">
-              <Icon className="w-4 h-4 flex-shrink-0 text-red-400" />
+              <Icon className="w-4 h-4 flex-shrink-0 text-purple-400" />
               <p className="text-sm text-slate-300">{text}</p>
             </div>
           ))}
@@ -134,12 +134,12 @@ export default function AboutPage() {
       {/* AI Features */}
       <div className="mb-8">
         <h2 className="text-base font-semibold text-white mb-1">Four AI Features</h2>
-        <p className="text-xs text-slate-500 mb-3">All powered by Google Gemini 2.5 Flash. Requires <code className="text-red-400 bg-red-500/10 px-1 rounded">GEMINI_API_KEY</code> in <code className="text-slate-300 bg-white/5 px-1 rounded">.env.local</code></p>
+        <p className="text-xs text-slate-500 mb-3">All powered by Google Gemini 2.5 Flash. Requires <code className="text-purple-400 bg-purple-500/10 px-1 rounded">GEMINI_API_KEY</code> in <code className="text-slate-300 bg-white/5 px-1 rounded">.env.local</code></p>
         <div className="grid grid-cols-2 gap-3">
           {aiFeatures.map((f) => (
             <div key={f.name} className="bg-[#0d1526] rounded-xl border border-white/5 p-4">
               <div className="flex items-center gap-2 mb-1">
-                <Cpu className="w-3.5 h-3.5 text-red-400" />
+                <Cpu className="w-3.5 h-3.5 text-purple-400" />
                 <span className="text-sm font-medium text-white">{f.name}</span>
               </div>
               <div className="text-xs text-slate-500 mb-2">{f.location}</div>

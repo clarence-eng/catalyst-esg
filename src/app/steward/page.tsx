@@ -65,7 +65,7 @@ export default function StewardPage() {
             onClick={() => setView(v)}
             className={`text-xs px-3 py-1.5 rounded-md transition-colors font-medium capitalize ${
               view === v
-                ? "bg-red-600/20 text-red-400 border border-red-500/30"
+                ? "bg-[#4B2580]/20 text-purple-400 border border-purple-500/30"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
@@ -102,7 +102,7 @@ export default function StewardPage() {
                     <div className="w-40 flex-shrink-0 flex items-center gap-1.5">
                       <Link
                         href={`/scout/${e.companySlug}`}
-                        className="text-xs font-medium text-red-400 hover:text-red-300 transition-colors truncate"
+                        className="text-xs font-medium text-purple-400 hover:text-purple-300 transition-colors truncate"
                       >
                         {e.companyName}
                       </Link>
@@ -225,7 +225,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
     }`}>
       {/* Card Header — click anywhere to expand */}
       <div
-        className="p-5 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50 focus-visible:ring-inset rounded-t-xl"
+        className="p-5 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/50 focus-visible:ring-inset rounded-t-xl"
         role="button"
         tabIndex={0}
         aria-expanded={expanded}
@@ -342,7 +342,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
                 onClick={generateActionPlan}
                 disabled={planLoading}
                 aria-busy={planLoading}
-                className="flex items-center gap-2 text-sm bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+                className="flex items-center gap-2 text-sm bg-[#4B2580] hover:bg-[#3D1A6E] disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
               >
                 {planLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
                 {planLoading ? "Generating..." : plan ? "Regenerate Plan" : "Generate Plan"}

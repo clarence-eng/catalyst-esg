@@ -130,7 +130,7 @@ export default function OverviewPage() {
       <div className="bg-[#0d1526] rounded-xl border border-white/5 mb-8">
         <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-white">Companies</h2>
-          <Link href="/scout" className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1">
+          <Link href="/scout" className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1">
             Scout new deals <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
@@ -190,7 +190,7 @@ export default function OverviewPage() {
                     <TransitionRiskDot level={co.climateRisk.transition} />
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <Link href={`/scout/${co.slug}`} className="text-xs text-red-400 hover:text-red-300">
+                    <Link href={`/scout/${co.slug}`} className="text-xs text-purple-400 hover:text-purple-300">
                       View →
                     </Link>
                   </td>
@@ -208,7 +208,7 @@ export default function OverviewPage() {
       {/* Megatrend Cards */}
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-sm font-semibold text-white">ESG Megatrends</h2>
-        <Link href="/signal" className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1">
+        <Link href="/signal" className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1">
           View all signals <ArrowRight className="w-3 h-3" />
         </Link>
       </div>

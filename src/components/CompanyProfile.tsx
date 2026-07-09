@@ -196,9 +196,9 @@ export function CompanyProfile({ company: co }: { company: Company }) {
             aria-controls={`tabpanel-${id}`}
             tabIndex={tab === id ? 0 : -1}
             onClick={() => setTab(id)}
-            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors focus-visible:ring-2 focus-visible:ring-red-500/50 focus-visible:outline-none rounded-sm ${
+            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors focus-visible:ring-2 focus-visible:ring-purple-500/50 focus-visible:outline-none rounded-sm ${
               tab === id
-                ? "border-red-500 text-red-400"
+                ? "border-purple-500 text-purple-400"
                 : "border-transparent text-slate-400 hover:text-slate-200"
             }`}
           >
@@ -329,7 +329,7 @@ function OverviewTab({
               onClick={onGenerate}
               disabled={memoLoading}
               aria-busy={memoLoading}
-              className="flex items-center gap-2 text-sm bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+              className="flex items-center gap-2 text-sm bg-[#4B2580] hover:bg-[#3D1A6E] disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
             >
               {memoLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
               {memoLoading ? "Generating..." : memo ? "Regenerate" : "Generate Assessment"}
