@@ -50,6 +50,10 @@ export function CompanyProfile({ company: co }: { company: Company }) {
   const [memoLoading, setMemoLoading] = useState(false);
   const [memoError, setMemoError] = useState("");
   const [memoGeneratedAt, setMemoGeneratedAt] = useState<Date | null>(null);
+  const [questions, setQuestions] = useState("");
+  const [questionsLoading, setQuestionsLoading] = useState(false);
+  const [questionsError, setQuestionsError] = useState("");
+  const [questionsGeneratedAt, setQuestionsGeneratedAt] = useState<Date | null>(null);
 
   const radarData = useMemo(() => {
     // Climate Resilience blends transition, physical risk, and pathway alignment
@@ -118,6 +122,48 @@ export function CompanyProfile({ company: co }: { company: Company }) {
       setMemoError(e instanceof Error ? e.message : "Failed to generate memo");
     } finally {
       setMemoLoading(false);
+    }
+  }
+
+  async function generateQuestions() {
+    setQuestionsLoading(true);
+    setQuestionsError("");
+    try {
+      const topIssues = [...co.materialIssues]
+        .filter((i) => !i.opportunity)
+        .sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4))
+        .slice(0, 4).map((i) => `${i.issue} (${i.severity}, ${i.category})`).join("; ");
+      const overdueEngs = co.engagement.filter(e => e.status === "Overdue").map(e => e.topic).join("; ");
+      const regulatoryContext = [
+        co.climateRisk.transition !== "Low" && "Climate transition regulatory pressure",
+        co.natureRisk.deforestationRisk && "EUDR deforestation compliance",
+        co.netZeroCommitment === "None" && "No net zero commitment — ISSB S2 readiness gap",
+      ].filter(Boolean).join("; ");
+      const res = await fetch("/api/gemini", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "engagement_questions",
+          context: {
+            name: co.name, sector: co.sector, country: co.country, maturity: co.maturity,
+            transitionRisk: co.climateRisk.transition, natureRisk: co.natureRisk.overall,
+            pathway: co.climateRisk.pathwayAlignment, commitment: co.netZeroCommitment,
+            topIssues, overdueEngagements: overdueEngs || "None",
+            regulatoryContext: regulatoryContext || "Standard regulatory environment",
+          },
+        }),
+      });
+      if (!res.ok) throw new Error(`Request failed: ${res.status} ${res.statusText}`);
+      let data: { error?: string; text?: string };
+      try { data = await res.json(); } catch { throw new Error(`Request failed: ${res.status}`); }
+      if (data.error) throw new Error(data.error);
+      if (!data.text) throw new Error("No content received from AI");
+      setQuestions(data.text);
+      setQuestionsGeneratedAt(new Date());
+    } catch (e: unknown) {
+      setQuestionsError(e instanceof Error ? e.message : "Failed to generate questions");
+    } finally {
+      setQuestionsLoading(false);
     }
   }
 
@@ -222,7 +268,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         {tab === "social" && <SocialTab co={co} />}
       </div>
       <div role="tabpanel" id="tabpanel-engagement" aria-labelledby="tab-engagement" hidden={tab !== "engagement"}>
-        {tab === "engagement" && <EngagementTab co={co} />}
+        {tab === "engagement" && <EngagementTab co={co} onGenerateQuestions={generateQuestions} questions={questions} questionsLoading={questionsLoading} questionsError={questionsError} questionsGeneratedAt={questionsGeneratedAt} />}
       </div>
     </div>
   );
@@ -260,7 +306,7 @@ function OverviewTab({
               <div className="space-y-1 mb-2">
                 {co.icRecommendation.conditions.map((c, i) => (
                   <div key={i} className="flex items-start gap-2 text-xs text-gray-700">
-                    <span className="text-amber-400 mt-0.5">◦</span>{c}
+                    <span className="text-amber-600 mt-0.5">◦</span>{c}
                   </div>
                 ))}
               </div>
@@ -275,9 +321,9 @@ function OverviewTab({
               <div key={issue.issue} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
                 <div className="flex-shrink-0 mt-0.5">
                   {issue.opportunity ? (
-                    <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+                    <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
                   ) : (
-                    <AlertCircle className="w-3.5 h-3.5 text-amber-400" />
+                    <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -317,6 +363,75 @@ function OverviewTab({
             ))}
           </div>
         </div>
+
+
+        {/* ESG Credibility Check */}
+        {(() => {
+          const greenwashChecks = [
+            {
+              label: "Net Zero pledge without validated SBTi targets",
+              concern: co.netZeroCommitment === "Net Zero Pledged",
+              note: co.netZeroCommitment === "Net Zero Pledged" ? "Net Zero Pledged without science-based validation — credibility risk" : null,
+            },
+            {
+              label: "Pathway alignment consistent with commitment level",
+              concern: co.climateRisk.pathwayAlignment === "3°C+" && co.netZeroCommitment !== "None",
+              note: co.climateRisk.pathwayAlignment === "3°C+" && co.netZeroCommitment !== "None" ? "3°C+ trajectory conflicts with stated commitment" : null,
+            },
+            {
+              label: "ESG maturity consistent with ESG score",
+              concern: co.maturity === "Leading" && co.esgScore.overall < 65,
+              note: co.maturity === "Leading" && co.esgScore.overall < 65 ? `'Leading' maturity with score ${co.esgScore.overall} may overstate progress` : null,
+            },
+            {
+              label: "No overdue Critical engagements",
+              concern: co.engagement.filter(e => e.status === "Overdue").length > 0 && co.materialIssues.some(i => i.severity === "Critical"),
+              note: co.engagement.filter(e => e.status === "Overdue").length > 0 && co.materialIssues.some(i => i.severity === "Critical") ? "Critical ESG issues present with overdue engagement commitments" : null,
+            },
+            {
+              label: "TNFD assessment consistent with nature risk level",
+              concern: co.natureRisk.overall === "Critical" && !co.natureRisk.tnfdAligned && !co.natureRisk.tnfdPillars?.some(p => p.status !== "Gap"),
+              note: co.natureRisk.overall === "Critical" ? "Critical nature risk without TNFD assessment initiated" : null,
+            },
+            {
+              label: "Green revenue credibly defined",
+              concern: co.greenRevenuePct > 30 && co.netZeroCommitment === "None",
+              note: co.greenRevenuePct > 30 && co.netZeroCommitment === "None" ? "High green revenue claim without emissions commitment may lack credibility" : null,
+            },
+          ];
+          const concernCount = greenwashChecks.filter(c => c.concern).length;
+          const credibilityScore = greenwashChecks.length - concernCount;
+          const scoreColor =
+            concernCount === 0 ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
+            concernCount <= 2 ? "text-amber-700 bg-amber-50 border-amber-200" :
+            "text-red-700 bg-red-50 border-red-200";
+          return (
+            <div className="bg-white rounded-xl border border-gray-200 p-5">
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="text-sm font-semibold text-gray-900">ESG Credibility Check</h3>
+                <span className={`text-xs px-2 py-0.5 rounded border font-semibold ${scoreColor}`}>
+                  {credibilityScore}/{greenwashChecks.length} checks passed
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mb-4">Automated flags based on internal data consistency</p>
+              <div className="space-y-2">
+                {greenwashChecks.map((check, i) => (
+                  <div key={i} className={`flex items-start gap-2 p-2 rounded-lg ${check.concern ? "bg-red-50 border border-red-100" : "bg-gray-50 border border-gray-100"}`}>
+                    <span className={`flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 ${check.concern ? "bg-red-500 text-white" : "bg-emerald-500 text-white"}`}>
+                      {check.concern ? "✗" : "✓"}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <span className={`text-xs font-medium ${check.concern ? "text-red-800" : "text-gray-700"}`}>{check.label}</span>
+                      {check.concern && check.note && (
+                        <p className="text-xs text-red-600 mt-0.5">{check.note}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Deal Memo Generator */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
@@ -431,6 +546,44 @@ function OverviewTab({
 }
 
 function ClimateTab({ co }: { co: Company }) {
+  const tcfdPillars = [
+    {
+      pillar: "Governance",
+      desc: "Board oversight of climate risks and opportunities",
+      status: co.boardComposition.esgCommittee ? "Adopted" as const :
+              co.boardComposition.ceoChairSplit ? "Partial" as const : "Gap" as const,
+    },
+    {
+      pillar: "Strategy",
+      desc: "Climate-related risks/opportunities, scenario analysis, financial planning",
+      status: co.climateRisk.transitionDetails.length >= 3 ? "Adopted" as const :
+              co.climateRisk.transitionDetails.length >= 1 ? "Partial" as const : "Gap" as const,
+    },
+    {
+      pillar: "Risk Management",
+      desc: "Process for identifying, assessing, and managing climate risks",
+      status: co.climateRisk.physicalDetails.length > 0 && co.climateRisk.transitionDetails.length > 0 ? "Adopted" as const :
+              co.climateRisk.physicalDetails.length > 0 || co.climateRisk.transitionDetails.length > 0 ? "Partial" as const : "Gap" as const,
+    },
+    {
+      pillar: "Metrics & Targets",
+      desc: "Metrics and targets to assess and manage climate risks",
+      status: co.netZeroCommitment !== "None" && co.carbonIntensity > 0 ? "Adopted" as const :
+              co.carbonIntensity > 0 ? "Partial" as const : "Gap" as const,
+    },
+  ];
+
+  const issbChecks = [
+    { item: "Board climate oversight documented", status: co.boardComposition.esgCommittee ? "✓" : "✗", pass: co.boardComposition.esgCommittee },
+    { item: "Climate scenario analysis (≥2 scenarios)", status: co.climateRisk.transitionDetails.length >= 2 ? "✓" : "Partial", pass: co.climateRisk.transitionDetails.length >= 2 },
+    { item: "Physical risk quantification", status: co.climateRisk.physicalDetails.length > 0 ? "✓" : "✗", pass: co.climateRisk.physicalDetails.length > 0 },
+    { item: "Scope 1+2 emissions disclosed", status: co.carbonIntensity > 0 ? "✓" : "✗", pass: co.carbonIntensity > 0 },
+    { item: "Scope 3 assessment / financed emissions", status: co.materialIssues.some(i => i.issue.toLowerCase().includes("emission")) ? "Partial" : "✗", pass: false },
+    { item: "Climate-related targets set", status: co.netZeroCommitment !== "None" ? "✓" : "✗", pass: co.netZeroCommitment !== "None" },
+    { item: "SBTi-validated or equivalent pathway", status: co.netZeroCommitment === "SBTi Targets Set" ? "✓" : co.netZeroCommitment === "SBTi Committed" ? "In Progress" : "✗", pass: co.netZeroCommitment === "SBTi Targets Set" },
+  ];
+  const issbScore = issbChecks.filter(c => c.pass).length;
+
   return (
     <div className="grid grid-cols-2 gap-6">
       <div className="bg-white rounded-xl border border-gray-200 p-5">
@@ -460,6 +613,54 @@ function ClimateTab({ co }: { co: Company }) {
             </li>
           ))}
         </ul>
+      </div>
+      {/* TCFD Framework Disclosure */}
+      <div className="col-span-2 bg-white rounded-xl border border-gray-200 p-5">
+        <h3 className="text-sm font-semibold text-gray-900 mb-4">TCFD Framework Disclosure</h3>
+        <div className="space-y-3">
+          {tcfdPillars.map(({ pillar, desc, status }) => {
+            const statusStyle = status === "Adopted"
+              ? "text-emerald-700 bg-emerald-50 border-emerald-300"
+              : status === "Partial"
+              ? "text-amber-700 bg-amber-50 border-amber-300"
+              : "text-gray-500 bg-gray-100 border-gray-200";
+            const dotColor = status === "Adopted" ? "bg-emerald-500" : status === "Partial" ? "bg-amber-500" : "bg-slate-600";
+            return (
+              <div key={pillar} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${dotColor}`} />
+                <div>
+                  <div className="text-sm font-medium text-gray-900">{pillar}</div>
+                  <div className="text-xs text-gray-500">{desc}</div>
+                </div>
+                <span className={`ml-auto text-xs px-2 py-0.5 rounded border flex-shrink-0 ${statusStyle}`}>{status}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      {/* ISSB S2 Disclosure Readiness */}
+      <div className="col-span-2 bg-white rounded-xl border border-gray-200 p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold text-gray-900">ISSB S2 Disclosure Readiness</h3>
+          <span className={`text-xs px-2.5 py-1 rounded border font-medium ${
+            issbScore >= 6 ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
+            issbScore >= 4 ? "text-amber-700 bg-amber-50 border-amber-300" :
+            "text-red-700 bg-red-50 border-red-300"
+          }`}>{issbScore}/{issbChecks.length} requirements met</span>
+        </div>
+        <div className="space-y-2">
+          {issbChecks.map(({ item, status, pass }) => {
+            const isPartial = status === "Partial" || status === "In Progress";
+            const iconColor = pass ? "text-emerald-600" : isPartial ? "text-amber-500" : "text-red-400";
+            const rowBg = pass ? "bg-emerald-50 border-emerald-200" : isPartial ? "bg-amber-50 border-amber-200" : "bg-gray-50 border-gray-200";
+            return (
+              <div key={item} className={`flex items-center gap-3 p-2.5 rounded-lg border ${rowBg}`}>
+                <span className={`text-sm font-bold w-5 text-center flex-shrink-0 ${iconColor}`}>{status}</span>
+                <span className="text-xs text-gray-700">{item}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
       <div className="col-span-2 bg-white rounded-xl border border-gray-200 p-5">
         <h3 className="text-sm font-semibold text-gray-900 mb-3">Paris Pathway Alignment</h3>
@@ -509,8 +710,64 @@ function ClimateTab({ co }: { co: Company }) {
 }
 
 function NatureTab({ co }: { co: Company }) {
+  const leapStage =
+    co.natureRisk.tnfdAligned ? 4 :
+    co.natureRisk.tnfdPillars?.some(p => p.pillar === "Metrics & Targets" && (p.status === "Partial" || p.status === "Adopted")) ? 3 :
+    co.natureRisk.tnfdPillars?.some(p => p.pillar === "Strategy" && (p.status === "Partial" || p.status === "Adopted")) ? 2 :
+    (co.natureRisk.biodiversityExposure || co.natureRisk.waterStress || co.natureRisk.deforestationRisk) ? 1 : 0;
+
+  const leapPhases = [
+    { phase: "L", name: "Locate", desc: "Identify interfaces with nature" },
+    { phase: "E", name: "Evaluate", desc: "Understand dependencies & impacts" },
+    { phase: "A", name: "Assess", desc: "Assess material nature-related risks" },
+    { phase: "P", name: "Prepare", desc: "Prepare to respond and report" },
+  ];
+
   return (
     <div className="grid grid-cols-2 gap-6">
+      {/* TNFD LEAP Assessment Progress */}
+      <div className="col-span-2 bg-white rounded-xl border border-gray-200 p-5">
+        <h3 className="text-sm font-semibold text-gray-900 mb-5">TNFD LEAP Assessment Progress</h3>
+        <div className="flex items-start gap-0">
+          {leapPhases.map(({ phase, name, desc }, index) => {
+            const completed = leapStage > index;
+            const current = leapStage === index;
+            const circleStyle = completed
+              ? "bg-emerald-600 text-white border-emerald-600"
+              : current
+              ? "bg-amber-600 text-white border-amber-600"
+              : "bg-gray-200 text-gray-400 border-gray-200";
+            const labelColor = completed ? "text-emerald-700" : current ? "text-amber-700" : "text-gray-400";
+            const lineColor = completed ? "bg-emerald-600" : "bg-gray-200";
+            return (
+              <div key={phase} className="flex items-start flex-1">
+                <div className="flex flex-col items-center flex-1">
+                  <div className={`w-9 h-9 rounded-full border-2 flex items-center justify-center text-sm font-bold flex-shrink-0 ${circleStyle}`}>
+                    {phase}
+                  </div>
+                  <div className="mt-2 text-center">
+                    <div className={`text-xs font-semibold ${labelColor}`}>{name}</div>
+                    <div className="text-xs text-gray-400 mt-0.5 max-w-[90px] leading-relaxed">{desc}</div>
+                  </div>
+                </div>
+                {index < leapPhases.length - 1 && (
+                  <div className={`h-0.5 flex-1 mt-4 ${lineColor}`} />
+                )}
+              </div>
+            );
+          })}
+        </div>
+        {leapStage === 4 && (
+          <p className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 mt-4">
+            All LEAP phases complete — company is TNFD-aligned and ready to report.
+          </p>
+        )}
+        {leapStage === 0 && (
+          <p className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mt-4">
+            LEAP assessment not yet initiated. Begin by identifying interfaces with nature across the value chain.
+          </p>
+        )}
+      </div>
       <div className="bg-white rounded-xl border border-gray-200 p-5">
         <div className="flex items-center gap-2 mb-4">
           <h3 className="text-sm font-semibold text-gray-900">Nature Risk Overview</h3>
@@ -527,10 +784,10 @@ function NatureTab({ co }: { co: Company }) {
             return (
             <div key={label} className={`p-3 rounded-lg border ${isWarning ? "bg-amber-500/10 border-amber-500/20" : "bg-gray-50 border-gray-200"}`}>
               <div className="flex items-center gap-2">
-                {isWarning ? <AlertCircle className="w-3.5 h-3.5 text-amber-400" /> : <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />}
+                {isWarning ? <AlertCircle className="w-3.5 h-3.5 text-amber-600" /> : <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />}
                 <span className="text-xs text-gray-700">{label}</span>
               </div>
-              <div className={`text-xs font-medium mt-1 ${isWarning ? "text-amber-400" : "text-emerald-400"}`}>
+              <div className={`text-xs font-medium mt-1 ${isWarning ? "text-amber-700 font-semibold" : "text-emerald-700 font-semibold"}`}>
                 {val ? "Yes" : "No"}
               </div>
             </div>
@@ -599,7 +856,7 @@ function SocialTab({ co }: { co: Company }) {
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-sm font-medium text-gray-900">{issue.issue}</span>
                     <RiskBadge level={issue.severity} />
-                    {issue.opportunity && <span className="text-xs text-emerald-400">Opportunity</span>}
+                    {issue.opportunity && <span className="text-xs text-emerald-700">Opportunity</span>}
                   </div>
                   <p className="text-xs text-gray-600 leading-relaxed">{issue.detail}</p>
                 </div>
@@ -679,7 +936,7 @@ function GovStatTile({ label, value, note, status }: { label: string; value: str
   const valueColor = status === "ok" ? "text-emerald-700" : status === "gap" ? "text-red-700" : "text-amber-700";
   const iconEl = status === "ok"
     ? <CheckCircle className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
-    : <AlertCircle className={`w-3.5 h-3.5 flex-shrink-0 ${status === "gap" ? "text-red-400" : "text-amber-400"}`} />;
+    : <AlertCircle className={`w-3.5 h-3.5 flex-shrink-0 ${status === "gap" ? "text-red-700" : "text-amber-700"}`} />;
   return (
     <div className={`p-3 rounded-lg border ${borderColor} ${bgColor}`}>
       <div className="flex items-start gap-2 mb-1">
@@ -692,7 +949,14 @@ function GovStatTile({ label, value, note, status }: { label: string; value: str
   );
 }
 
-function EngagementTab({ co }: { co: Company }) {
+function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, questionsError, questionsGeneratedAt }: {
+  co: Company;
+  onGenerateQuestions: () => void;
+  questions: string;
+  questionsLoading: boolean;
+  questionsError: string;
+  questionsGeneratedAt: Date | null;
+}) {
   const total = co.engagement.length;
   const completed = co.engagement.filter((e) => e.status === "Completed").length;
   const overdue = co.engagement.filter((e) => e.status === "Overdue").length;
@@ -740,7 +1004,7 @@ function EngagementTab({ co }: { co: Company }) {
           {nextDue && (
             <div className="text-xs text-gray-500">
               {nextDue.status === "Overdue" ? (
-                <span className="text-red-400 font-medium">Overdue: </span>
+                <span className="text-red-700 font-medium">Overdue: </span>
               ) : (
                 <span>Next planned: </span>
               )}
@@ -789,6 +1053,57 @@ function EngagementTab({ co }: { co: Company }) {
             ))}
           </div>
         </div>
+        )}
+      </div>
+
+      {/* Pre-Engagement Question Pack — AI Feature #5 */}
+      <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900">Pre-Engagement Question Pack</h3>
+            <p className="text-xs text-gray-500 mt-0.5">AI-generated due diligence questions tailored to this company's ESG profile</p>
+          </div>
+          <button
+            onClick={onGenerateQuestions}
+            disabled={questionsLoading}
+            aria-busy={questionsLoading}
+            className="flex items-center gap-2 text-sm bg-[#4B2580] hover:bg-[#3D1A6E] disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+          >
+            {questionsLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+            {questionsLoading ? "Generating..." : questions ? "Regenerate" : "Generate Questions"}
+          </button>
+        </div>
+        {questionsError && (
+          <div role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-lg p-3 mb-3">
+            {questionsError}
+          </div>
+        )}
+        {questions ? (
+          <>
+            {questionsLoading && <div className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
+            <AIOutput text={questions} />
+            <div className="mt-3 flex items-center">
+              <button
+                onClick={() => navigator.clipboard?.writeText(questions).catch(() => {})}
+                className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                <Copy className="w-3 h-3" />
+                Copy question pack
+              </button>
+              <span className="text-xs text-gray-400 ml-auto">
+                {questionsGeneratedAt ? `Generated ${formatRelativeTime(questionsGeneratedAt)}` : ""}
+              </span>
+            </div>
+          </>
+        ) : questionsLoading ? (
+          <div className="text-xs text-gray-500 text-center py-6 border border-dashed border-gray-200 rounded-lg animate-pulse">
+            Generating engagement questions…
+          </div>
+        ) : (
+          <div className="text-xs text-gray-500 text-center py-6 border border-dashed border-gray-200 rounded-lg">
+            <div>Generate 12 targeted ESG due diligence questions for this company</div>
+            <div className="text-gray-400 mt-1">Requires GEMINI_API_KEY in .env.local</div>
+          </div>
         )}
       </div>
     </div>

@@ -3,7 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
-const ALLOWED_TYPES = ["deal_memo", "action_plan", "thematic_brief", "portfolio_brief"] as const;
+const ALLOWED_TYPES = ["deal_memo", "action_plan", "thematic_brief", "portfolio_brief", "engagement_questions"] as const;
 type GenerationType = (typeof ALLOWED_TYPES)[number];
 
 function sanitize(value: unknown, maxLen = 200): string {
@@ -35,6 +35,9 @@ function validateContext(type: GenerationType, ctx: Record<string, unknown>): bo
   }
   if (type === "portfolio_brief") {
     return typeof ctx.portfolioSummary === "string" && ctx.portfolioSummary.trim().length > 0;
+  }
+  if (type === "engagement_questions") {
+    return ["name", "sector", "maturity"].every((k) => typeof ctx[k] === "string");
   }
   return false;
 }
@@ -140,6 +143,38 @@ Write exactly 3 paragraphs:
 3. ESG Value Creation Highlights: Concrete value uplift achievements and upcoming opportunities — green financing, engagement milestones, and pipeline evaluation progress.
 
 Write for an internal quarterly portfolio review — investment-grade, specific, and action-oriented. Reference TCFD, TNFD, ISSB, and Temasek's mandate. Use company names. No headers.`;
+    } else if (type === "engagement_questions") {
+      prompt = `You are a senior ESG Engagement Specialist at Temasek, preparing for a stewardship meeting with a portfolio company.
+
+Company: ${sanitize(ctx.name)}
+Sector: ${sanitize(ctx.sector)}
+Country: ${sanitize(ctx.country)}
+ESG Maturity: ${sanitize(ctx.maturity)}
+Transition Risk Level: ${sanitize(ctx.transitionRisk)}
+Nature Risk Level: ${sanitize(ctx.natureRisk)}
+Pathway Alignment: ${sanitize(ctx.pathway)}
+Net Zero Commitment: ${sanitize(ctx.commitment)}
+Top Material Issues: ${sanitize(ctx.topIssues, 400)}
+Overdue Engagements: ${sanitize(ctx.overdueEngagements, 300)}
+Key Regulatory Pressures: ${sanitize(ctx.regulatoryContext, 300)}
+
+Generate exactly 12 targeted due diligence questions for this company engagement, organized into 4 sections:
+
+**Section 1 — Climate & Net Zero (3 questions)**
+Questions about transition plan specifics, capital allocation, and pathway validation. Reference TCFD, ISSB S2, SBTi as appropriate.
+
+**Section 2 — Nature & Supply Chain (3 questions)**
+Questions about TNFD LEAP progress, supply chain traceability (EUDR where relevant), biodiversity risk management.
+
+**Section 3 — Social & Governance (3 questions)**
+Questions about board ESG oversight, UNGP HRDD, just transition plans for affected workers, labour practices.
+
+**Section 4 — Regulatory & Reporting Readiness (3 questions)**
+Questions about ISSB S1/S2 readiness, relevant Singapore/ASEAN regulatory compliance (MAS, SGX, OJK), data assurance plans.
+
+For each question: make it specific to this company's profile, not generic. Reference actual risks identified above. Frame as questions an institutional investor would ask in an engagement meeting.
+
+Format: Numbered list within each section. Investment-grade language. Singapore/ASEAN context-aware.`;
     }
 
     const response = await ai.models.generateContent({

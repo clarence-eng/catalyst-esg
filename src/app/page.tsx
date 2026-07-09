@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { companies } from "@/data/companies";
+import type { Company } from "@/data/companies";
 import { megatrends } from "@/data/megatrends";
 import { RatingBadge, MaturityBadge, PageHeader, StatCard } from "@/components/ui-elements";
 import { PortfolioBrief } from "@/components/PortfolioBrief";
@@ -101,7 +102,7 @@ export default function OverviewPage() {
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           S${(totalActive / 1000).toFixed(1)}B active
           {pipelineCount > 0 && (
-            <span className="flex items-center gap-1 text-blue-400 ml-1">
+            <span className="flex items-center gap-1 text-blue-700 ml-1">
               · <GitMerge className="w-3 h-3" /> {pipelineCount} pipeline
             </span>
           )}
@@ -116,6 +117,9 @@ export default function OverviewPage() {
         <StatCard label="Overdue Engagements" value={overdueCount} sub="Requires immediate follow-up" color="red" />
         <StatCard label="Planned Engagements" value={plannedCount} sub="Upcoming" color="default" />
       </div>
+
+      {/* Paris Pathway Alignment Widget */}
+      <ParisPathwayWidget companies={activeCompanies.map(c => ({ name: c.name, pathwayAlignment: c.climateRisk.pathwayAlignment, investmentValue: c.investmentValue }))} />
 
       {/* Needs Attention Alerts */}
       <AlertPanel companies={companies} />
@@ -159,11 +163,11 @@ export default function OverviewPage() {
                   </td>
                   <td className="px-4 py-4">
                     {co.portfolioStatus === "Pipeline" ? (
-                      <span className="flex items-center gap-1 text-xs text-blue-400 bg-blue-500/10 border border-blue-500/20 px-1.5 py-0.5 rounded w-fit">
+                      <span className="flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-300 px-1.5 py-0.5 rounded w-fit">
                         <GitMerge className="w-2.5 h-2.5" /> Pipeline
                       </span>
                     ) : (
-                      <span className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded">Active</span>
+                      <span className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-300 px-1.5 py-0.5 rounded">Active</span>
                     )}
                   </td>
                   <td className="px-4 py-4">
@@ -203,6 +207,7 @@ export default function OverviewPage() {
 
       {/* Portfolio ESG Brief — below table */}
       <RiskHeatmap />
+      <PCARFinancedEmissionsTable companies={activeCompanies} totalActive={totalActive} />
       <PortfolioBrief portfolioSummary={portfolioSummary} companyNames={activeCompanies.map(c => c.name)} />
 
       {/* Megatrend Cards */}
@@ -264,6 +269,139 @@ function TransitionRiskDot({ level }: { level: string }) {
     <div className="flex items-center gap-2">
       <div className={`w-2 h-2 rounded-full ${colors[level] ?? "bg-slate-500"}`} />
       <span className="text-xs text-gray-600">{level}</span>
+    </div>
+  );
+}
+
+function ParisPathwayWidget({ companies }: { companies: { pathwayAlignment: string; investmentValue: number; name: string }[] }) {
+  const active = companies;
+  const total = active.reduce((s, c) => s + c.investmentValue, 0);
+
+  const tiers = [
+    { label: "1.5°C", color: "bg-emerald-600", textColor: "text-emerald-700", companies: active.filter(c => c.pathwayAlignment === "1.5°C") },
+    { label: "2°C", color: "bg-amber-500", textColor: "text-amber-700", companies: active.filter(c => c.pathwayAlignment === "2°C") },
+    { label: "3°C+", color: "bg-red-600", textColor: "text-red-700", companies: active.filter(c => c.pathwayAlignment === "3°C+") },
+    { label: "Not assessed", color: "bg-gray-400", textColor: "text-gray-600", companies: active.filter(c => c.pathwayAlignment === "Not assessed") },
+  ].filter(t => t.companies.length > 0);
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
+      <h2 className="text-sm font-semibold text-gray-900 mb-4">Paris Pathway Alignment — Active Portfolio</h2>
+      {total > 0 ? (
+        <>
+          {/* Stacked bar */}
+          <div className="w-full h-4 rounded-full overflow-hidden flex mb-4">
+            {tiers.map(tier => {
+              const tierAUM = tier.companies.reduce((s, c) => s + c.investmentValue, 0);
+              const pct = (tierAUM / total) * 100;
+              return (
+                <div
+                  key={tier.label}
+                  className={tier.color}
+                  style={{ width: `${pct}%` }}
+                  title={`${tier.label}: ${pct.toFixed(1)}%`}
+                />
+              );
+            })}
+          </div>
+          {/* Legend */}
+          <div className="space-y-2">
+            {tiers.map(tier => {
+              const tierAUM = tier.companies.reduce((s, c) => s + c.investmentValue, 0);
+              const pct = total > 0 ? (tierAUM / total) * 100 : 0;
+              return (
+                <div key={tier.label} className="flex items-start gap-3">
+                  <div className={`w-2.5 h-2.5 rounded-full mt-0.5 flex-shrink-0 ${tier.color}`} />
+                  <div className="flex-1 min-w-0">
+                    <span className={`text-xs font-semibold ${tier.textColor}`}>{tier.label}</span>
+                    <span className="text-xs text-gray-500 ml-2">{pct.toFixed(1)}% AUM</span>
+                    <span className="text-xs text-gray-400 ml-2">— {tier.companies.map(c => c.name).join(", ")}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      ) : (
+        <p className="text-xs text-gray-500">No active companies.</p>
+      )}
+    </div>
+  );
+}
+
+function PCARFinancedEmissionsTable({ companies, totalActive }: { companies: Company[]; totalActive: number }) {
+  const pcafScore = (commitment: string): number => {
+    if (commitment === "SBTi Targets Set") return 2;
+    if (commitment === "SBTi Committed") return 3;
+    if (commitment === "Net Zero Pledged") return 4;
+    return 5;
+  };
+
+  const pcafLabel: Record<number, string> = {
+    2: "Reported, 3rd-party verified",
+    3: "Reported",
+    4: "Estimated from company data",
+    5: "Modeled from sector averages",
+  };
+
+  const rows = companies.map(co => {
+    const stake = totalActive > 0 ? (co.investmentValue / totalActive) * 100 : 0;
+    const estimatedEmissions = Math.round((co.investmentValue / totalActive) * co.carbonIntensity * 2.5);
+    const score = pcafScore(co.netZeroCommitment);
+    return { co, stake, estimatedEmissions, score };
+  });
+
+  const totalEmissions = rows.reduce((s, r) => s + r.estimatedEmissions, 0);
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 mb-6">
+      <div className="px-6 py-4 border-b border-gray-200">
+        <h2 className="text-sm font-semibold text-gray-900">PCAF Financed Emissions</h2>
+        <p className="text-xs text-gray-500 mt-0.5">Simplified proxy — investment-weighted carbon intensity allocation</p>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-gray-200">
+              <th className="text-left text-xs text-gray-500 font-medium px-6 py-3">Company</th>
+              <th className="text-left text-xs text-gray-500 font-medium px-4 py-3">Sector</th>
+              <th className="text-right text-xs text-gray-500 font-medium px-4 py-3">Stake ~%</th>
+              <th className="text-right text-xs text-gray-500 font-medium px-4 py-3">Est. Financed Emissions (tCO₂e)</th>
+              <th className="text-left text-xs text-gray-500 font-medium px-4 py-3">PCAF Quality (1–5)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(({ co, stake, estimatedEmissions, score }) => (
+              <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-3 text-sm font-medium text-gray-900">{co.name}</td>
+                <td className="px-4 py-3 text-xs text-gray-600">{co.sector}</td>
+                <td className="px-4 py-3 text-xs text-gray-600 text-right">{stake.toFixed(1)}%</td>
+                <td className="px-4 py-3 text-xs text-gray-800 text-right font-medium">{estimatedEmissions.toLocaleString()}</td>
+                <td className="px-4 py-3">
+                  <span className={`text-xs px-2 py-0.5 rounded border ${
+                    score <= 2 ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
+                    score === 3 ? "text-blue-700 bg-blue-50 border-blue-200" :
+                    score === 4 ? "text-amber-700 bg-amber-50 border-amber-200" :
+                    "text-gray-600 bg-gray-100 border-gray-200"
+                  }`}>
+                    {score} — {pcafLabel[score]}
+                  </span>
+                </td>
+              </tr>
+            ))}
+            <tr className="bg-gray-50 font-semibold">
+              <td className="px-6 py-3 text-xs text-gray-900" colSpan={3}>Portfolio Total</td>
+              <td className="px-4 py-3 text-xs text-gray-900 text-right">{totalEmissions.toLocaleString()}</td>
+              <td className="px-4 py-3" />
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div className="px-6 py-3 border-t border-gray-100">
+        <p className="text-xs text-gray-400 italic">
+          Estimated using simplified proxy methodology. Full PCAF calculation requires enterprise value and verified absolute Scope 1+2+3 emissions per PCAF Global Standard v2 (2020).
+        </p>
+      </div>
     </div>
   );
 }
