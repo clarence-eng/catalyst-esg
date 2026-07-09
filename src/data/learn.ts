@@ -148,7 +148,7 @@ export const frameworks: FrameworkCard[] = [
     status: "Mandatory",
     adoptionYear: "2023",
     description:
-      "EUDR prohibits placing key commodities (palm oil, soy, cattle, wood, cocoa, coffee, rubber, and derived products) on the EU market if produced on land deforested after December 2020. Requires geo-coordinates and due diligence statements from operators. Effective December 2025 (delayed from December 2024).",
+      "EUDR prohibits placing key commodities (palm oil, soy, cattle, wood, cocoa, coffee, rubber, and derived products) on the EU market if produced on land deforested after December 2020. Requires geo-coordinates and due diligence statements from operators. Enforcement deadline: 30 December 2026 for large/medium operators, 30 June 2027 for small operators (delayed twice from the original December 2024 date).",
     investmentRelevance:
       "Direct revenue risk for ASEAN agribusiness with EU export exposure. Second-order credit risk for banks lending to non-compliant commodity producers. GreenHarvest Agri's EU revenue (22% of total) is directly at risk without full compliance.",
     keyRequirements: [

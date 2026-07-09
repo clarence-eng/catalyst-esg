@@ -31,7 +31,7 @@ export const megatrends: Megatrend[] = [
     slug: "climate-transition",
     title: "Climate Transition",
     subtitle: "Net Zero & Physical Climate Risk",
-    temasekAlignment: "Sustainable Living",
+    temasekAlignment: "Stewardship & Sustainability",
     urgency: "Immediate",
     color: "emerald",
     summary:
@@ -229,11 +229,11 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
     id: "eudr-2025",
     title: "EU Deforestation Regulation (EUDR)",
     jurisdiction: "European Union",
-    effectiveDate: "December 2025",
-    status: "In Force",
+    effectiveDate: "December 2026",
+    status: "Effective 2026",
     category: "Nature",
     summary:
-      "Prohibits placing commodities (palm oil, soy, cattle, wood, cocoa, coffee, rubber) on the EU market if produced on deforested land after December 2020. Requires geo-coordinates and due diligence statements. Originally effective December 2024, delayed 12 months.",
+      "Prohibits placing commodities (palm oil, soy, cattle, wood, cocoa, coffee, rubber) on the EU market if produced on deforested land after December 2020. Requires geo-coordinates and due diligence statements. Originally effective December 2024, delayed to December 2025, then delayed again to 30 December 2026 for large/medium operators (30 June 2027 for small operators) following EU Omnibus review.",
     investmentImpact:
       "Material revenue risk for ASEAN agribusiness companies with EU export exposure. Also creates second-order credit risk in bank loan books with forest-risk commodity exposure.",
     relevantSectors: ["Agriculture", "Commercial Banking", "Consumer Goods", "Logistics"],
