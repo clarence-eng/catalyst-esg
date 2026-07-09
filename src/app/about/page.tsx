@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { companies } from "@/data/companies";
 import { PageHeader } from "@/components/ui-elements";
-import { Search, Users, Radio, BookOpen, LayoutDashboard, Cpu, GitMerge, ChevronRight, Target, ClipboardList, BarChart2, Upload } from "lucide-react";
+import { Search, Users, Radio, BookOpen, LayoutDashboard, Cpu, GitMerge, ChevronRight, Target, ClipboardList, BarChart2 } from "lucide-react";
 
 const companyWhy: Record<string, string> = {
   "seaport-logistics": "IMO CII, EU ETS, physical climate risk",
@@ -92,10 +92,10 @@ export default function AboutPage() {
         <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5 space-y-3">
           {[
             { icon: Target, text: "ESG due diligence for new investment opportunities — risk management and value uplift lens" },
-            { icon: ClipboardList, text: "Post-investment engagement monitoring with AI-generated quarterly ESG action plans" },
+            { icon: ClipboardList, text: "Post-investment engagement monitoring with AI-generated 12-month ESG action plans" },
             { icon: BarChart2, text: "Thematic ESG research across megatrends with AI-generated investment briefs" },
             { icon: BookOpen, text: "ESG knowledge repository — frameworks, guidelines, and case studies for the Investment Group" },
-            { icon: Upload, text: "Portfolio-level ESG health summaries formatted for internal and external delivery" },
+            { icon: BarChart2, text: "Portfolio-level ESG health summaries for internal review — copyable formatted document" },
             { icon: Cpu, text: "Practical AI integration across four distinct investment workflow use cases" },
           ].map(({ icon: Icon, text }) => (
             <div key={text} className="flex items-start gap-3">

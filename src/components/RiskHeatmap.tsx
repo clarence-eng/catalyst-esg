@@ -67,7 +67,7 @@ export function RiskHeatmap() {
           <tbody className="divide-y divide-white/5">
             {activeCompanies.map((co) => (
               <tr key={co.slug} className="hover:bg-white/[0.02] transition-colors">
-                <td className="py-2.5 pr-4">
+                <th scope="row" className="py-2.5 pr-4 text-left font-normal">
                   <Link
                     href={`/scout/${co.slug}`}
                     className="text-xs font-medium text-white hover:text-emerald-300 transition-colors"
@@ -75,7 +75,7 @@ export function RiskHeatmap() {
                     {co.name}
                   </Link>
                   <div className="text-xs text-slate-600 mt-0.5">{co.country}</div>
-                </td>
+                </th>
                 {RISK_COLUMNS.map((col) => (
                   <td key={col.key} className="py-2.5 px-2">
                     <RiskCell level={getRiskForColumn(co, col.key)} />

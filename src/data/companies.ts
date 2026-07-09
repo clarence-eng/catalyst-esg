@@ -250,7 +250,7 @@ export const companies: Company[] = [
       { sdg: 13, label: "Climate Action" },
       { sdg: 14, label: "Life Below Water" },
     ],
-    netZeroCommitment: "None",
+    netZeroCommitment: "SBTi Committed",
     boardComposition: {
       boardSize: 9,
       independentPct: 44,
@@ -703,7 +703,7 @@ export const companies: Company[] = [
         severity: "Critical",
         opportunity: false,
         detail:
-          "EU accounts for 22% of revenue. EUDR deadline passed December 2025 — third-party compliance audit underway (Bureau Veritas appointed May 2026). Full verification expected Q3 2026; EU export revenues (22% of total) remain at risk until audit completes.",
+          "EU accounts for 22% of revenue. EUDR deadline passed December 2025 — Bureau Veritas appointed May 2026 as compliance verifier; audit scope agreed. Unilever (key EU buyer) has granted a 90-day grace period. Full verification targeted Q3 2026. EU export revenues remain at risk until audit certificate issued.",
       },
       {
         category: "Social",
