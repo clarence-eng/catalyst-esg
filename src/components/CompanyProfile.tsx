@@ -26,7 +26,7 @@ const MEGATREND_COLORS: Record<string, string> = {
   "Nature & Biodiversity": "text-green-400",
   "Just Transition & Inclusive Growth": "text-orange-400",
   "AI & Digital Ethics": "text-blue-400",
-  "Longer Lifespans": "text-purple-400",
+  "Longer Lifespans": "text-indigo-400",
 };
 
 const TNFD_PILLAR_DESCS: Record<string, string> = {
@@ -375,7 +375,7 @@ function OverviewTab({
         {/* ESG Radar */}
         <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
           <h3 className="text-sm font-semibold text-white mb-3">ESG Profile Radar</h3>
-          <div role="img" aria-label={`ESG profile radar for ${co.name}: Environmental ${co.esgScore.environmental}, Social ${co.esgScore.social}, Governance ${co.esgScore.governance}, Climate Resilience (${co.climateRisk.pathwayAlignment}), Nature Resilience`}>
+          <div role="img" aria-label={`ESG profile radar for ${co.name}: Environmental ${co.esgScore.environmental}, Social ${co.esgScore.social}, Governance ${co.esgScore.governance}, Climate Resilience ${radarData[3]?.score ?? 0} (${co.climateRisk.pathwayAlignment}), Nature Resilience ${radarData[4]?.score ?? 0}`}>
           <ResponsiveContainer width="100%" height={240}>
             <RadarChart data={radarData}>
               <PolarGrid stroke="rgba(255,255,255,0.06)" />
@@ -762,7 +762,7 @@ function EngagementTab({ co }: { co: Company }) {
         <div className="relative">
           <div className="absolute left-4 top-0 bottom-0 w-px bg-white/5" />
           <div className="space-y-4">
-            {[...co.engagement].sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0).map((e) => (
+            {[...co.engagement].sort((a, b) => a.date > b.date ? -1 : a.date < b.date ? 1 : 0).map((e) => (
               <div key={`${e.date}-${e.type}-${e.topic}`} className="relative pl-10">
                 <div className={`absolute left-4 top-1.5 w-2 h-2 rounded-full -translate-x-1/2 ${
                   e.status === "Completed" ? "bg-emerald-500" :
@@ -829,7 +829,7 @@ function NetZeroBadge({ commitment }: { commitment: "SBTi Committed" | "SBTi Tar
   const styles: Record<string, string> = {
     "SBTi Committed": "text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
     "SBTi Targets Set": "text-blue-400 bg-blue-500/10 border-blue-500/30",
-    "Net Zero Pledged": "text-purple-400 bg-purple-500/10 border-purple-500/30",
+    "Net Zero Pledged": "text-teal-400 bg-teal-500/10 border-teal-500/30",
   };
   return (
     <span className={`text-xs font-medium px-2 py-0.5 rounded border ${styles[commitment]}`}>

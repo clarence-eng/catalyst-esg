@@ -29,7 +29,7 @@ function generateAlerts(companies: Company[]): Alert[] {
   for (const co of activeCompanies) {
     const overdueEngs = co.engagement
       .filter(e => e.status === "Overdue")
-      .sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
+      .sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0); // ascending: oldest first
     if (overdueEngs.length > 0) {
       const count = overdueEngs.length;
       const topic = overdueEngs[0].topic;
@@ -67,7 +67,7 @@ function generateAlerts(companies: Company[]): Alert[] {
   alerts.sort((a, b) => a.severity - b.severity);
 
   // Limit to 12 most urgent alerts — ensures all Critical issues AND all overdue
-  // engagement alerts can appear simultaneously (5 Critical + 6 overdue = 11 needed)
+  // engagement alerts can appear simultaneously (current max: 5 Critical + 5 overdue = 10)
   return alerts.slice(0, 12);
 }
 

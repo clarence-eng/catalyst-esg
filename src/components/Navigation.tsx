@@ -25,11 +25,11 @@ export function Navigation() {
         <div className="flex flex-col gap-1">
           {/* TEMASEK wordmark — serif bold purple, matching the actual logo */}
           <div
-            className="font-serif font-bold tracking-[0.12em] leading-none"
+            className="font-bold tracking-[0.12em] leading-none"
             style={{
               color: TEMASEK_PURPLE,
               fontSize: "18px",
-              fontFamily: "'Georgia', 'Times New Roman', serif",
+              fontFamily: "'Georgia', 'Palatino Linotype', 'Palatino', 'Book Antiqua', 'Times New Roman', serif",
               letterSpacing: "0.15em",
             }}
           >

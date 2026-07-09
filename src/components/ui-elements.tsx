@@ -70,6 +70,7 @@ export function ScoreRing({ score, size = 80, label }: { score: number; size?: n
         />
         )}
         <text
+          aria-hidden="true"
           x={size / 2}
           y={size / 2}
           dominantBaseline="middle"

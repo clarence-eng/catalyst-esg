@@ -12,7 +12,7 @@ const MEGATREND_COLORS: Record<string, string> = {
   "Nature & Biodiversity": "text-green-400",
   "Just Transition & Inclusive Growth": "text-orange-400",
   "AI & Digital Ethics": "text-blue-400",
-  "Longer Lifespans": "text-purple-400",
+  "Longer Lifespans": "text-indigo-400",
 };
 
 const ACTIVE_COUNT = companies.filter((c) => c.portfolioStatus === "Active").length;
