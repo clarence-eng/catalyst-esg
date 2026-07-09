@@ -95,7 +95,7 @@ Company: ${sanitize(ctx.name)}
 Sector: ${sanitize(ctx.sector)}
 ESG Maturity: ${sanitize(ctx.maturity)}
 Top Issues: ${sanitize(ctx.topIssues, 500)}
-Key Gaps: ${sanitize(ctx.keyGaps, 500)}
+Key Gaps: ${sanitizeBlock(ctx.keyGaps, 500)}
 
 Structure the plan as follows:
 - Q1 (Months 1-3): Foundation & Assessment (2-3 actions with specific KPIs)
@@ -112,7 +112,7 @@ Theme: ${sanitize(ctx.theme)}
 Subtitle: ${sanitize(ctx.subtitle)}
 Temasek alignment: ${sanitize(ctx.temasekAlignment)}
 Key frameworks: ${sanitize(ctx.frameworks, 400)}
-Portfolio exposure: ${sanitize(ctx.portfolioExposure, 400)}
+Portfolio exposure: ${sanitizeBlock(ctx.portfolioExposure, 400)}
 
 Structure:
 1. Why This Matters Now (150 words): The investment case — why this theme is urgent and financially material

@@ -97,8 +97,9 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       continue;
     }
 
-    // Bullet items: - or • at start, or * followed by non-* (to avoid capturing **bold** lines)
-    if (/^[-•]\s+|^\*\s+[^*]/.test(line)) {
+    // Bullet items: - or • at start, or * at start (any content, including bold-starting items)
+    // Only exclude lines that are ENTIRELY wrapped in bold: **text** (those are section headers above)
+    if (/^[-•]\s+|^\*\s+/.test(line)) {
       if (listIsOrdered && listBuffer.length > 0) flushList();
       listIsOrdered = false;
       listBuffer.push({ text: line.replace(/^[-•*]\s+/, "") });
