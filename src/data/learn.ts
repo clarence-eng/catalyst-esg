@@ -59,7 +59,7 @@ export const frameworks: FrameworkCard[] = [
     status: "Voluntary",
     adoptionYear: "2023",
     description:
-      "TNFD (final recommendations September 2023) provides a TCFD-equivalent framework for nature-related financial disclosures using the LEAP methodology (Locate, Evaluate, Assess, Prepare). Over 320 organisations globally have committed to TNFD-aligned reporting.",
+      "TNFD (final recommendations September 2023) provides a TCFD-equivalent framework for nature-related financial disclosures using the LEAP methodology (Locate, Evaluate, Assess, Prepare). Over 500 organisations globally have committed to TNFD-aligned reporting (2025).",
     investmentRelevance:
       "Critical for ASEAN portfolios with agriculture, forestry, and extractives exposure. Banks with forest-risk commodity lending face growing scrutiny. Nature-positive strategies create access to blended finance from DFIs requiring TNFD alignment.",
     keyRequirements: [
@@ -243,7 +243,7 @@ export const frameworks: FrameworkCard[] = [
       "Annual reporting aligned to UNGP Reporting Framework",
     ],
     aseanContext:
-      "ASEAN supply chains in agriculture, electronics, and construction face persistent forced labour and migrant worker risks. Singapore's MAS ESG guidelines and SGX sustainability reporting now reference UNGP as the baseline social standard. The EU CSDDD (effective 2026) mandates UNGP-aligned HRDD for EU-importing companies, directly affecting GreenHarvest, SeaPort Logistics, and Nusantara Bank's trade finance book.",
+      "ASEAN supply chains in agriculture, electronics, and construction face persistent forced labour and migrant worker risks. Singapore's MAS ESG guidelines and SGX sustainability reporting now reference UNGP as the baseline social standard. The EU CSDDD (company compliance from 2029 under the amended Omnibus I timeline) mandates UNGP-aligned HRDD for EU-importing companies, directly affecting GreenHarvest, SeaPort Logistics, and Nusantara Bank's trade finance book.",
     url: "https://www.ohchr.org/en/business-and-human-rights",
     temasekRelevance: "High",
   },
@@ -253,7 +253,7 @@ export const frameworks: FrameworkCard[] = [
     fullName: "Partnership for Carbon Accounting Financials",
     category: "Climate",
     status: "Voluntary",
-    adoptionYear: "2019",
+    adoptionYear: "2020",
     description:
       "PCAF provides a standardised methodology for financial institutions to measure and disclose their financed emissions (Scope 3 Category 15). Covers 8 asset classes including listed equity, corporate bonds, business loans, commercial real estate, mortgages, motor vehicle loans, project finance, and sovereign debt.",
     investmentRelevance:
