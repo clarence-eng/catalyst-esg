@@ -177,6 +177,10 @@ For each question: make it specific to this company's profile, not generic. Refe
 Format: Numbered list within each section. Investment-grade language. Singapore/ASEAN context-aware.`;
     }
 
+    if (!prompt) {
+      return NextResponse.json({ error: "Prompt construction failed for this generation type" }, { status: 500 });
+    }
+
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,

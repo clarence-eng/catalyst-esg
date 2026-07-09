@@ -749,6 +749,36 @@ function OverviewTab({
   );
 }
 
+function getScope3Categories(co: Company): { label: string; pct: number; color: string; note: string }[] {
+  const sector = co.sector.toLowerCase();
+  if (sector.includes("electric util")) return [
+    { label: "Cat 15: Investments", pct: 5, color: "bg-purple-500", note: "Equity financed" },
+    { label: "Cat 11: Use of sold products", pct: 0, color: "bg-gray-300", note: "N/A" },
+    { label: "Cat 1: Purchased goods", pct: 25, color: "bg-orange-500", note: "Coal/gas fuel supply chain" },
+    { label: "Cat 3: Fuel & energy", pct: 65, color: "bg-red-600", note: "Grid emission factor" },
+    { label: "Other categories", pct: 5, color: "bg-gray-400", note: "T&D losses, waste" },
+  ];
+  if (sector.includes("bank")) return [
+    { label: "Cat 15: Financed emissions", pct: 82, color: "bg-red-600", note: "Largest category for banks" },
+    { label: "Cat 1: Purchased goods", pct: 8, color: "bg-orange-400", note: "Office operations" },
+    { label: "Cat 6: Business travel", pct: 5, color: "bg-amber-400", note: "Staff travel" },
+    { label: "Cat 11: Sold products", pct: 5, color: "bg-blue-400", note: "Financial products" },
+  ];
+  if (sector.includes("agriculture")) return [
+    { label: "Cat 1: Purchased goods", pct: 45, color: "bg-red-600", note: "Fertilizer, chemicals" },
+    { label: "Cat 11: Sold products", pct: 30, color: "bg-orange-500", note: "Deforestation-linked" },
+    { label: "Cat 4: Upstream transport", pct: 15, color: "bg-amber-400", note: "Supply chain logistics" },
+    { label: "Cat 15: Investments", pct: 10, color: "bg-purple-400", note: "Smallholder suppliers" },
+  ];
+  if (sector.includes("marine") || sector.includes("transport")) return [
+    { label: "Cat 11: Use of sold products", pct: 72, color: "bg-red-600", note: "Vessel fuel combustion" },
+    { label: "Cat 1: Purchased goods", pct: 15, color: "bg-orange-400", note: "Vessel construction" },
+    { label: "Cat 4: Upstream transport", pct: 8, color: "bg-amber-400", note: "Port operations" },
+    { label: "Other", pct: 5, color: "bg-gray-400", note: "" },
+  ];
+  return [];
+}
+
 function ClimateTab({ co }: { co: Company }) {
   const tcfdPillars = [
     {
@@ -909,6 +939,74 @@ function ClimateTab({ co }: { co: Company }) {
           )}
         </div>
       </div>
+      {/* JETP / ETM Exposure Panel */}
+      {(co.climateRisk.transition === "Critical" || co.climateRisk.transition === "High") && co.sector.toLowerCase().includes("electric") && (
+        <div className="col-span-2 bg-white rounded-xl border border-gray-200 p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <h3 className="text-sm font-semibold text-gray-900">JETP / Energy Transition Mechanism</h3>
+            <span className="text-xs bg-amber-50 text-amber-700 border border-amber-300 px-2 py-0.5 rounded">High Priority</span>
+          </div>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+              <div className="text-xs text-gray-500 mb-1">JETP Eligibility</div>
+              <div className="text-sm font-semibold text-gray-900">{co.country === "Indonesia" ? "Indonesia JETP ($20B committed)" : co.country === "Philippines" ? "Philippines JETP" : "Not applicable"}</div>
+              <div className="text-xs text-gray-500 mt-1">ADB-facilitated, Temasek FAST-P aligned</div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+              <div className="text-xs text-gray-500 mb-1">ETM Coal Retirement Potential</div>
+              <div className={`text-sm font-semibold ${co.climateRisk.transition === "Critical" ? "text-red-700" : "text-amber-700"}`}>
+                {co.climateRisk.transition === "Critical" ? "High priority — S$2.8B at risk" : "Medium priority"}
+              </div>
+              <div className="text-xs text-gray-500 mt-1">Early retirement via blended finance</div>
+            </div>
+          </div>
+          {/* JETP milestones derived from engagement */}
+          <div className="space-y-2">
+            <div className="text-xs font-medium text-gray-700 mb-2">Transition Milestones</div>
+            {[
+              { milestone: "JETP ETM Feasibility Study", status: co.engagement.some(e => e.topic.toLowerCase().includes("jetp") || e.topic.toLowerCase().includes("etm")) ? "In Progress" : "Not Initiated", color: "amber" },
+              { milestone: "Just Transition Social Plan", status: co.materialIssues.some(i => i.issue.includes("Just Transition")) ? "Scoped" : "Pending", color: co.materialIssues.some(i => i.issue.includes("Just Transition")) ? "blue" : "red" },
+              { milestone: "Renewable Replacement Pipeline", status: `${co.greenRevenuePct}% green revenue — target: 40% by 2030`, color: co.greenRevenuePct >= 20 ? "emerald" : "amber" },
+              { milestone: "Green Bond Framework", status: co.engagement.some(e => e.topic.toLowerCase().includes("bond")) ? "Under development" : "Not initiated", color: co.engagement.some(e => e.topic.toLowerCase().includes("bond")) ? "blue" : "gray" },
+            ].map((m, i) => (
+              <div key={i} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                <span className="text-xs text-gray-700">{m.milestone}</span>
+                <span className={`text-xs px-2 py-0.5 rounded border ${
+                  m.color === "emerald" ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
+                  m.color === "amber" ? "text-amber-700 bg-amber-50 border-amber-300" :
+                  m.color === "blue" ? "text-blue-700 bg-blue-50 border-blue-300" :
+                  m.color === "red" ? "text-red-700 bg-red-50 border-red-300" :
+                  "text-gray-600 bg-gray-50 border-gray-300"
+                }`}>{m.status}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {/* Scope 3 Materiality by Category */}
+      {(co.climateRisk.transition === "Critical" || co.climateRisk.transition === "High") && (() => {
+        const scope3Categories = getScope3Categories(co);
+        if (scope3Categories.length === 0) return null;
+        return (
+          <div className="col-span-2 bg-white rounded-xl border border-gray-200 p-5">
+            <h3 className="text-sm font-semibold text-gray-900 mb-1">Scope 3 Materiality by Category</h3>
+            <p className="text-xs text-gray-500 mb-4">GHG Protocol Category relative materiality — sector-derived estimate</p>
+            <div className="space-y-2">
+              {scope3Categories.map((cat, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="w-28 text-xs text-gray-600 text-right flex-shrink-0">{cat.label}</div>
+                  <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full ${cat.color}`} style={{ width: `${cat.pct}%` }} />
+                  </div>
+                  <div className="w-8 text-xs text-gray-700 font-medium flex-shrink-0">{cat.pct}%</div>
+                  <div className="text-xs text-gray-500 flex-shrink-0">{cat.note}</div>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-gray-400 mt-3 italic">Estimated from sector benchmarks. Full disclosure requires PCAF/GHG Protocol Category-level reporting.</p>
+          </div>
+        );
+      })()}
     </div>
   );
 }

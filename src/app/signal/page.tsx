@@ -99,6 +99,47 @@ export default function SignalPage() {
         })}
       </div>
 
+      {/* Portfolio Exposure Matrix */}
+      <div className="mb-8">
+        <h2 className="text-sm font-semibold text-gray-900 mb-2">Portfolio Exposure Matrix</h2>
+        <p className="text-xs text-gray-500 mb-4">High/Medium exposure by portfolio company × megatrend</p>
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="bg-gray-50 border-b border-gray-200">
+                <th className="text-left px-4 py-3 text-gray-500 font-medium w-36">Company</th>
+                {megatrends.map(t => (
+                  <th key={t.slug} className="text-center px-2 py-3 text-gray-600 font-medium w-28">{t.title.split(" ")[0]}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {companies.filter(c => c.portfolioStatus === "Active").map(co => (
+                <tr key={co.slug} className="hover:bg-gray-50">
+                  <td className="px-4 py-2.5">
+                    <Link href={`/scout/${co.slug}`} className="text-gray-900 font-medium hover:text-purple-700">{co.name}</Link>
+                  </td>
+                  {megatrends.map(t => {
+                    const exposure = t.portfolioExposure.find(p => p.slug === co.slug);
+                    return (
+                      <td key={t.slug} className="text-center px-2 py-2.5">
+                        {exposure ? (
+                          <span className={`inline-block w-16 text-center py-0.5 rounded text-xs font-medium border ${
+                            exposure.exposure === "High" ? "text-red-700 bg-red-50 border-red-300" :
+                            exposure.exposure === "Medium" ? "text-amber-700 bg-amber-50 border-amber-300" :
+                            "text-emerald-700 bg-emerald-50 border-emerald-300"
+                          }`}>{exposure.exposure}</span>
+                        ) : <span className="text-gray-300">—</span>}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/* Regulatory Radar */}
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-sm font-semibold text-gray-900">Regulatory Radar</h2>
