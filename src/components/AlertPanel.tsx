@@ -62,8 +62,9 @@ function generateAlerts(companies: Company[]): Alert[] {
   // Sort by severity (lowest number = highest severity first)
   alerts.sort((a, b) => a.severity - b.severity);
 
-  // Limit to 5 most urgent alerts
-  return alerts.slice(0, 5);
+  // Limit to 8 most urgent alerts — raised from 5 to prevent Critical issues
+  // consuming all slots and silently dropping overdue engagement alerts
+  return alerts.slice(0, 8);
 }
 
 export function AlertPanel({ companies }: { companies: Company[] }) {
