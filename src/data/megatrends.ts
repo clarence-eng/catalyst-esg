@@ -316,7 +316,7 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
     title: "PDPA Amendment & Indonesia PDPL — Cross-Border Health Data",
     jurisdiction: "Indonesia / Singapore",
     effectiveDate: "2025",
-    status: "In Force",
+    status: "Consultation",
     category: "Social",
     summary:
       "Singapore's Personal Data Protection Act (PDPA) 2020 amendments strengthen consent requirements and data portability rules. Indonesia's Personal Data Protection Law (UU PDP/PDPL), effective September 2024, introduces strict cross-border data transfer restrictions and mandatory data protection officers. Critical for digital health platforms processing patient data across ASEAN.",
@@ -331,7 +331,7 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
     title: "EU Carbon Border Adjustment Mechanism (CBAM) — Permanent Phase",
     jurisdiction: "European Union",
     effectiveDate: "January 2026",
-    status: "In Force",
+    status: "Effective 2026",
     category: "Carbon Pricing",
     summary:
       "CBAM's permanent phase began January 2026, requiring EU importers of steel, aluminium, cement, fertilisers, electricity, and hydrogen to purchase CBAM certificates at the prevailing EU ETS carbon price (currently ~€65-75/tCO2e). CBAM expands to additional downstream manufactured goods from 2030, with ongoing reviews of sector scope.",
