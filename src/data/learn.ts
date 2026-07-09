@@ -255,7 +255,7 @@ export const frameworks: FrameworkCard[] = [
     status: "Voluntary",
     adoptionYear: "2019",
     description:
-      "PCAF provides a standardised methodology for financial institutions to measure and disclose their financed emissions (Scope 3 Category 15). Covers 7 asset classes including listed equity, corporate bonds, business loans, mortgages, motor vehicle loans, project finance, and sovereign debt.",
+      "PCAF provides a standardised methodology for financial institutions to measure and disclose their financed emissions (Scope 3 Category 15). Covers 8 asset classes including listed equity, corporate bonds, business loans, commercial real estate, mortgages, motor vehicle loans, project finance, and sovereign debt.",
     investmentRelevance:
       "Critical for Nusantara Bank's financed emissions disclosure. Without PCAF, banks cannot credibly report Scope 3 Category 15. PCAF adoption is increasingly expected by institutional investors and regulators as part of net zero alignment.",
     keyRequirements: [

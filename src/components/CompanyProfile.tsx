@@ -53,7 +53,6 @@ export function CompanyProfile({ company: co }: { company: Company }) {
   async function generateMemo() {
     setMemoLoading(true);
     setMemoError("");
-    setMemo("");
     try {
       const severityOrder: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
       const topIssues = [...co.materialIssues]

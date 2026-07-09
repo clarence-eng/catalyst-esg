@@ -28,7 +28,6 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
   async function generateBrief() {
     setLoading(true);
     setError("");
-    setBrief("");
     try {
       const res = await fetch("/api/gemini", {
         method: "POST",

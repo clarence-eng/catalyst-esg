@@ -129,7 +129,7 @@ export const companies: Company[] = [
         "EU ETS expansion to shipping from 2024 increases operating costs by est. 8-12%",
         "Customer Scope 3 reduction targets creating pressure to offer low-emission freight options",
       ],
-      pathwayAlignment: "3°C+",
+      pathwayAlignment: "2°C",
     },
     natureRisk: {
       overall: "Medium",
@@ -303,7 +303,7 @@ export const companies: Company[] = [
         "Indonesia coal phase-out under JETP creates credit risk for mining and power sector clients",
         "OJK (Indonesia FSA) mandatory climate risk disclosure requirements effective 2025",
       ],
-      pathwayAlignment: "2°C",
+      pathwayAlignment: "1.5°C",
     },
     natureRisk: {
       overall: "High",
@@ -1022,7 +1022,7 @@ export const companies: Company[] = [
       environmental: 58,
       social: 72,
       governance: 56,
-      rating: "A",
+      rating: "BBB",
     },
     maturity: "Developing",
     climateRisk: {
@@ -1035,7 +1035,7 @@ export const companies: Company[] = [
         "Cloud infrastructure emissions (Scope 2) immaterial relative to healthcare impact value",
         "No significant regulatory climate risk for digital health sector",
       ],
-      pathwayAlignment: "2°C",
+      pathwayAlignment: "1.5°C",
     },
     natureRisk: {
       overall: "Low",

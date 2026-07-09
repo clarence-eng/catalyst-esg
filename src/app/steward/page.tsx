@@ -170,7 +170,6 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
   async function generateActionPlan() {
     setPlanLoading(true);
     setPlanError("");
-    setPlan("");
     try {
       const topIssues = co.materialIssues
         .filter((i) => !i.opportunity)

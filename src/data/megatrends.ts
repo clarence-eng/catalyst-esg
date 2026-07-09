@@ -73,7 +73,7 @@ export const megatrends: Megatrend[] = [
       { label: "Species extinction rate vs. natural baseline", value: "1,000x faster", source: "IPBES Global Assessment" },
       { label: "EUDR-covered commodities EU import value", value: "€12 billion/yr", source: "European Commission" },
       { label: "Voluntary biodiversity credit market potential (2030)", value: "$2 billion", source: "BNEF Nature Market Outlook" },
-      { label: "TNFD adopters globally (2025)", value: "320+", source: "TNFD Disclosure Platform" },
+      { label: "TNFD adopters globally (2025)", value: "500+", source: "TNFD Disclosure Platform" },
     ],
     investmentImplications: [
       { type: "Risk", sector: "Agriculture", description: "EUDR compliance requires full supply chain traceability for palm oil, soy, cattle, cocoa — affecting export revenues for non-compliant producers." },
@@ -109,12 +109,12 @@ export const megatrends: Megatrend[] = [
     ],
     investmentImplications: [
       { type: "Risk", sector: "Energy", description: "Coal plant closures without credible social plans risk community conflict, regulatory delays, and reputational damage for investors." },
-      { type: "Risk", sector: "Industrials", description: "Supply chains with labour rights violations face import bans (EU CSDD) and buyer delisting, with direct revenue impact." },
+      { type: "Risk", sector: "Industrials", description: "Supply chains with labour rights violations face import bans (EU CSDDD) and buyer delisting, with direct revenue impact." },
       { type: "Opportunity", sector: "Finance", description: "Social and sustainability-linked bonds with just transition use of proceeds are growing rapidly. DFI co-investment available." },
       { type: "Opportunity", sector: "Technology", description: "Digital reskilling platforms and inclusive fintech solutions aligned with ASEAN's 150M unbanked population represent large unserved markets." },
       { type: "Opportunity", sector: "Healthcare", description: "Affordable healthcare access in Southeast Asia (Temasek megatrend: Longer Lifespans) is a structural growth opportunity." },
     ],
-    frameworks: ["ILO Just Transition Guidelines", "UN SDGs (SDG 8, 10)", "EU CSDD", "GRI 414 (Supply Chain Social)"],
+    frameworks: ["ILO Just Transition Guidelines", "UN SDGs (SDG 8, 10)", "EU CSDDD", "GRI 414: Supplier Social Assessment"],
     portfolioExposure: [
       { slug: "asiapower-energy", name: "AsiaPower Energy", exposure: "High" },
       { slug: "nusantara-bank", name: "Nusantara Bank", exposure: "Medium" },
