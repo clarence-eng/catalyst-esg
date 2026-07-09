@@ -56,9 +56,9 @@ export function RiskHeatmap() {
         <table className="w-full">
           <thead>
             <tr>
-              <th className="text-left text-xs text-slate-500 font-medium pb-3 pr-4 w-40">Company</th>
+              <th scope="col" className="text-left text-xs text-slate-500 font-medium pb-3 pr-4 w-40">Company</th>
               {RISK_COLUMNS.map((col) => (
-                <th key={col.key} className="text-center text-xs text-slate-500 font-medium pb-3 px-2">
+                <th scope="col" key={col.key} className="text-center text-xs text-slate-500 font-medium pb-3 px-2">
                   {col.label}
                 </th>
               ))}

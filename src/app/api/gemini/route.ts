@@ -129,7 +129,12 @@ Write for an internal quarterly portfolio review — investment-grade, specific,
       contents: prompt,
     });
 
-    const text = response.text;
+    let text: string | undefined;
+    try {
+      text = response.text;
+    } catch {
+      return NextResponse.json({ error: "No content returned from AI (response may have been filtered)" }, { status: 502 });
+    }
     if (!text) {
       return NextResponse.json({ error: "No content returned from AI (response may have been filtered)" }, { status: 502 });
     }

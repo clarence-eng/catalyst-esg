@@ -34,13 +34,18 @@ export function CompanyProfile({ company: co }: { company: Company }) {
   const [memoError, setMemoError] = useState("");
   const [memoGeneratedAt, setMemoGeneratedAt] = useState<Date | null>(null);
 
-  const radarData = useMemo(() => [
-    { subject: "Environmental", score: co.esgScore.environmental },
-    { subject: "Social", score: co.esgScore.social },
-    { subject: "Governance", score: co.esgScore.governance },
-    { subject: "Climate Resilience", score: Math.max(0, 100 - (co.climateRisk.transition === "Critical" ? 100 : co.climateRisk.transition === "High" ? 70 : co.climateRisk.transition === "Medium" ? 40 : 0)) },
-    { subject: "Nature Resilience", score: Math.max(0, 100 - (co.natureRisk.overall === "Critical" ? 100 : co.natureRisk.overall === "High" ? 70 : co.natureRisk.overall === "Medium" ? 40 : 0)) },
-  ], [co.esgScore.environmental, co.esgScore.social, co.esgScore.governance, co.climateRisk.transition, co.natureRisk.overall]);
+  const radarData = useMemo(() => {
+    // Climate Resilience blends transition and physical risk (equal weight)
+    const transitionPenalty = co.climateRisk.transition === "Critical" ? 100 : co.climateRisk.transition === "High" ? 70 : co.climateRisk.transition === "Medium" ? 40 : 0;
+    const physicalPenalty = co.climateRisk.physical === "Critical" ? 100 : co.climateRisk.physical === "High" ? 70 : co.climateRisk.physical === "Medium" ? 40 : 0;
+    return [
+      { subject: "Environmental", score: co.esgScore.environmental },
+      { subject: "Social", score: co.esgScore.social },
+      { subject: "Governance", score: co.esgScore.governance },
+      { subject: "Climate Resilience", score: Math.max(0, 100 - Math.round((transitionPenalty + physicalPenalty) / 2)) },
+      { subject: "Nature Resilience", score: Math.max(0, 100 - (co.natureRisk.overall === "Critical" ? 100 : co.natureRisk.overall === "High" ? 70 : co.natureRisk.overall === "Medium" ? 40 : 0)) },
+    ];
+  }, [co.esgScore.environmental, co.esgScore.social, co.esgScore.governance, co.climateRisk.transition, co.climateRisk.physical, co.natureRisk.overall]);
 
   async function generateMemo() {
     setMemoLoading(true);
@@ -601,7 +606,7 @@ function SocialTab({ co }: { co: Company }) {
           <GovStatTile
             label="Independent Directors"
             value={`${bc.independentPct}%`}
-            note={bc.independentPct >= 50 ? "Meets SGX best practice (50%+)" : `${bc.independentPct}% — below SGX best practice 50%`}
+            note={bc.independentPct >= 50 ? "Meets best practice (50%+ independent)" : `${bc.independentPct}% — below 50% best practice threshold`}
             status={bc.independentPct >= 50 ? "ok" : "warn"}
           />
           <GovStatTile

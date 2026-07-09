@@ -71,7 +71,8 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
           </div>
         )}
       </div>
-      <ResponsiveContainer width="100%" height={240} aria-label="Portfolio positioning chart — ESG Score vs Carbon Intensity">
+      <div role="img" aria-label="Portfolio positioning chart — ESG Score vs Carbon Intensity">
+      <ResponsiveContainer width="100%" height={240}>
         <ScatterChart margin={{ top: 8, right: 24, bottom: 16, left: 8 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
           <XAxis
@@ -102,6 +103,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
           </Scatter>
         </ScatterChart>
       </ResponsiveContainer>
+      </div>
       {(() => {
         const offChart = data.filter(d => d.carbonIntensity > 400);
         return (

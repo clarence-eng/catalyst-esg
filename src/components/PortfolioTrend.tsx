@@ -17,7 +17,11 @@ interface TrendPoint {
 }
 
 export function PortfolioTrend({ data, activeCount = 5 }: { data: TrendPoint[]; activeCount?: number }) {
-  if (data.length < 2) return null;
+  if (data.length < 2) return (
+    <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5 mb-6 flex items-center justify-center h-32">
+      <p className="text-xs text-slate-500">Insufficient historical data to display trend</p>
+    </div>
+  );
 
   const latest = data[data.length - 1];
   const earliest = data[0];

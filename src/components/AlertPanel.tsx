@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, AlertTriangle, Info } from "lucide-react";
 import { type Company } from "@/data/companies";
 
 interface Alert {
@@ -86,7 +86,12 @@ export function AlertPanel({ companies }: { companies: Company[] }) {
             key={`${alert.slug}-${alert.severity}-${i}`}
             className="flex items-center gap-3 p-3 bg-[#0d1526] rounded-lg border border-white/5"
           >
-            <AlertCircle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+            {alert.severity === 1
+              ? <AlertCircle className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
+              : alert.severity === 2
+              ? <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+              : <Info className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
+            }
             <span className="text-xs text-slate-300 flex-1">{alert.message}</span>
             <Link
               href={`/scout/${alert.slug}`}
