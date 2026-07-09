@@ -58,13 +58,19 @@ export default function OverviewPage() {
     };
   });
 
-  const portfolioSummary = activeCompanies.map((c) => (
-    `${c.name} (${c.sector}, ${c.country}): ESG ${c.esgScore.overall}/100 [E:${c.esgScore.environmental} S:${c.esgScore.social} G:${c.esgScore.governance}], ` +
-    `Maturity: ${c.maturity}, Transition Risk: ${c.climateRisk.transition}, Nature Risk: ${c.natureRisk.overall}, ` +
-    `Carbon Intensity: ${c.carbonIntensity} tCO2e/$M (portfolio avg: ${avgCarbonIntensity} tCO2e/$M), Green Revenue: ${c.greenRevenuePct}%, ` +
-    `Overdue engagements: ${c.engagement.filter(e => e.status === "Overdue").length}, Planned: ${c.engagement.filter(e => e.status === "Planned").length}, ` +
-    `Top issue: ${c.materialIssues[0] ? `${c.materialIssues[0].issue} (${c.materialIssues[0].severity})` : "None"}`
-  )).join("\n");
+  const severityOrder: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+  const portfolioSummary = activeCompanies.map((c) => {
+    const topIssue = [...c.materialIssues]
+      .filter((i) => !i.opportunity)
+      .sort((a, b) => (severityOrder[a.severity] ?? 4) - (severityOrder[b.severity] ?? 4))[0];
+    return (
+      `${c.name} (${c.sector}, ${c.country}): ESG ${c.esgScore.overall}/100 [E:${c.esgScore.environmental} S:${c.esgScore.social} G:${c.esgScore.governance}], ` +
+      `Maturity: ${c.maturity}, Transition Risk: ${c.climateRisk.transition}, Nature Risk: ${c.natureRisk.overall}, ` +
+      `Carbon Intensity: ${c.carbonIntensity} tCO2e/$M (portfolio avg: ${avgCarbonIntensity} tCO2e/$M), Green Revenue: ${c.greenRevenuePct}%, ` +
+      `Overdue engagements: ${c.engagement.filter(e => e.status === "Overdue").length}, Planned: ${c.engagement.filter(e => e.status === "Planned").length}, ` +
+      `Top issue: ${topIssue ? `${topIssue.issue} (${topIssue.severity})` : "None"}`
+    );
+  }).join("\n");
 
   const bubbleData = activeCompanies.map((c) => ({
     name: c.name,
