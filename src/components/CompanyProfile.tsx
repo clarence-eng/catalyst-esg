@@ -345,6 +345,7 @@ function OverviewTab({
         {/* ESG Radar */}
         <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
           <h3 className="text-sm font-semibold text-white mb-3">ESG Profile Radar</h3>
+          <div role="img" aria-label={`ESG profile radar for ${co.name}: Environmental ${co.esgScore.environmental}, Social ${co.esgScore.social}, Governance ${co.esgScore.governance}`}>
           <ResponsiveContainer width="100%" height={240}>
             <RadarChart data={radarData}>
               <PolarGrid stroke="rgba(255,255,255,0.06)" />
@@ -352,11 +353,13 @@ function OverviewTab({
               <Radar name="ESG" dataKey="score" stroke="#10b981" fill="#10b981" fillOpacity={0.15} strokeWidth={2} />
             </RadarChart>
           </ResponsiveContainer>
+          </div>
         </div>
 
         {/* Score Trend */}
         <div className="bg-[#0d1526] rounded-xl border border-white/5 p-5">
           <h3 className="text-sm font-semibold text-white mb-3">Score Trend (E/S/G)</h3>
+          <div role="img" aria-label={`Historical E/S/G score trend for ${co.name}`}>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={co.historicalScores}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
@@ -371,6 +374,7 @@ function OverviewTab({
               <Line type="monotone" dataKey="g" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 2, fill: "#8b5cf6", strokeWidth: 0 }} name="G" />
             </LineChart>
           </ResponsiveContainer>
+          </div>
           <div className="flex gap-3 mt-2 justify-center">
             {[{ color: "#10b981", label: "E" }, { color: "#3b82f6", label: "S" }, { color: "#8b5cf6", label: "G" }].map(({ color, label }) => (
               <div key={label} className="flex items-center gap-1.5">

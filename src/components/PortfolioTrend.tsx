@@ -53,6 +53,7 @@ export function PortfolioTrend({ data, activeCount = 5 }: { data: TrendPoint[]; 
           ))}
         </div>
       </div>
+      <div role="img" aria-label={`Portfolio ESG trend from ${data[0].period} to ${data[data.length - 1].period}`}>
       <ResponsiveContainer width="100%" height={140}>
         <LineChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
@@ -82,6 +83,7 @@ export function PortfolioTrend({ data, activeCount = 5 }: { data: TrendPoint[]; 
           <Line type="monotone" dataKey="g" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 2, fill: "#8b5cf6", strokeWidth: 0 }} name="Gov" />
         </LineChart>
       </ResponsiveContainer>
+      </div>
       <div className="flex gap-4 mt-2 justify-center">
         {[{ color: "#10b981", label: "Environmental" }, { color: "#3b82f6", label: "Social" }, { color: "#8b5cf6", label: "Governance" }].map(({ color, label }) => (
           <div key={label} className="flex items-center gap-1.5">
