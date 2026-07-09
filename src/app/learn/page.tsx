@@ -24,7 +24,19 @@ export default function LearnPage() {
     );
   });
 
+  // Map framework categories to related case study themes for cross-column filtering
+  const categoryToThemes: Record<string, string[]> = {
+    Climate: ["Climate Transition"],
+    Nature: ["Nature & Biodiversity"],
+    Social: ["Just Transition"],
+    Governance: ["Governance"],
+    Reporting: ["Climate Transition", "Sustainable Finance"],
+    "Cross-cutting": ["Climate Transition", "Nature & Biodiversity", "Just Transition", "Governance", "Sustainable Finance"],
+  };
+  const relevantThemes = frameworkFilter === "All" ? null : categoryToThemes[frameworkFilter] ?? null;
+
   const filteredCaseStudies = caseStudies.filter((cs) => {
+    if (relevantThemes && !relevantThemes.includes(cs.theme)) return false;
     if (!q) return true;
     return (
       cs.title.toLowerCase().includes(q) ||
