@@ -390,7 +390,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
 
 function ESGMini({ label, value }: { label: string; value: number }) {
   const color =
-    value >= 70 ? "text-emerald-400" : value >= 50 ? "text-amber-400" : value >= 35 ? "text-orange-400" : "text-red-400";
+    value >= 70 ? "text-emerald-700" : value >= 50 ? "text-amber-600" : value >= 35 ? "text-orange-600" : "text-red-600";
   return (
     <div className="text-center">
       <div className={`text-sm font-bold ${color}`}>{value}</div>

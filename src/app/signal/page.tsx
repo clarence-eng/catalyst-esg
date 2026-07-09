@@ -24,11 +24,11 @@ const megatrendColorMap: Record<string, string> = {
   purple: "border-purple-500/20 hover:border-purple-400/40",
 };
 const megatrendTextMap: Record<string, string> = {
-  emerald: "text-emerald-400",
-  green: "text-green-400",
-  orange: "text-orange-400",
-  blue: "text-blue-400",
-  purple: "text-purple-400",
+  emerald: "text-emerald-700",
+  green: "text-green-700",
+  orange: "text-orange-600",
+  blue: "text-blue-700",
+  purple: "text-purple-700",
 };
 const megatrendUrgencyMap: Record<string, string> = {
   Immediate: "text-red-400 bg-red-500/10",
@@ -180,12 +180,12 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
     Consultation: "text-gray-600 bg-gray-100 border-gray-200",
   };
   const categoryColors: Record<string, string> = {
-    "Climate Disclosure": "text-emerald-400",
-    Nature: "text-green-400",
-    Social: "text-blue-400",
-    Governance: "text-purple-400",
-    Taxonomy: "text-teal-400",
-    "Carbon Pricing": "text-orange-400",
+    "Climate Disclosure": "text-emerald-700",
+    Nature: "text-green-700",
+    Social: "text-blue-700",
+    Governance: "text-purple-700",
+    Taxonomy: "text-teal-700",
+    "Carbon Pricing": "text-orange-600",
   };
 
   return (

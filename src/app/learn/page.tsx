@@ -162,11 +162,11 @@ export default function LearnPage() {
 
 function FrameworkRow({ framework: f }: { framework: (typeof frameworks)[0] }) {
   const categoryColors: Record<string, string> = {
-    Climate: "text-emerald-400",
-    Nature: "text-green-400",
-    "Cross-cutting": "text-purple-400",
-    Reporting: "text-amber-400",
-    Social: "text-blue-400",
+    Climate: "text-emerald-700",
+    Nature: "text-green-700",
+    "Cross-cutting": "text-purple-700",
+    Reporting: "text-amber-700",
+    Social: "text-blue-700",
   };
   const statusStyles: Record<string, string> = {
     Mandatory: "text-red-400 bg-red-500/10 border-red-500/20",
@@ -205,11 +205,11 @@ function FrameworkRow({ framework: f }: { framework: (typeof frameworks)[0] }) {
 
 function CaseStudyCard({ study: cs }: { study: (typeof caseStudies)[0] }) {
   const themeColors: Record<string, string> = {
-    "Climate Transition": "text-emerald-400 bg-emerald-500/10",
-    "Nature & Biodiversity": "text-green-400 bg-green-500/10",
-    "Just Transition": "text-orange-400 bg-orange-500/10",
-    "Governance": "text-purple-400 bg-purple-500/10",
-    "Sustainable Finance": "text-blue-400 bg-blue-500/10",
+    "Climate Transition": "text-emerald-700 bg-emerald-500/10",
+    "Nature & Biodiversity": "text-green-700 bg-green-500/10",
+    "Just Transition": "text-orange-700 bg-orange-500/10",
+    "Governance": "text-purple-700 bg-purple-500/10",
+    "Sustainable Finance": "text-blue-700 bg-blue-500/10",
   };
 
   return (
@@ -222,7 +222,7 @@ function CaseStudyCard({ study: cs }: { study: (typeof caseStudies)[0] }) {
       <div className="text-xs text-gray-500 mb-2">{cs.company} · {cs.sector} · {cs.region}</div>
       <p className="text-xs text-gray-600 leading-relaxed mb-3 line-clamp-3">{cs.summary}</p>
       <div className="bg-emerald-600/5 border border-emerald-600/15 rounded-lg p-2.5 mb-2">
-        <div className="text-xs text-emerald-400 font-medium mb-0.5">Key Outcome</div>
+        <div className="text-xs text-emerald-700 font-medium mb-0.5">Key Outcome</div>
         <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">{cs.outcome}</p>
       </div>
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-2.5">

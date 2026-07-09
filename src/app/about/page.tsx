@@ -26,7 +26,7 @@ const modules = [
     href: "/scout",
     icon: Search,
     name: "Scout",
-    color: "text-blue-400",
+    color: "text-blue-700",
     bg: "bg-blue-600/10 border-blue-600/20",
     description:
       "ESG due diligence for new and existing portfolio companies. Active/Pipeline filter, live search, ESG momentum badges (↑/→/↓), SDG alignment tags, green revenue bars, IC Recommendation panel for pipeline companies, and full company profiles with 5 tabbed views including governance scorecard, TNFD pillar status, engagement completion tracker, and net zero commitment badges.",
@@ -44,7 +44,7 @@ const modules = [
     href: "/signal",
     icon: Radio,
     name: "Signal",
-    color: "text-amber-400",
+    color: "text-amber-700",
     bg: "bg-amber-600/10 border-amber-600/20",
     description:
       "ESG megatrend intelligence and regulatory radar. 5 megatrend deep-dives (Climate Transition, Nature & Biodiversity, Just Transition, AI & Digital Ethics, Longer Lifespans) each with investment implications, portfolio exposure, and AI thematic brief generator. Regulatory radar covering 10 regulations across Singapore, EU, Indonesia, Malaysia, and Global jurisdictions with direct portfolio company links.",
@@ -53,7 +53,7 @@ const modules = [
     href: "/learn",
     icon: BookOpen,
     name: "Learn",
-    color: "text-teal-400",
+    color: "text-teal-700",
     bg: "bg-teal-600/10 border-teal-600/20",
     description:
       "ESG knowledge repository for the Investment Group. 11 ESG frameworks (TCFD, TNFD, ISSB S1/S2, SASB, SBTi, EUDR, MAS GFAP, GRI, JETP/ETM, PCAF, UNGPs) across 5 categories (Climate, Nature, Reporting, Cross-cutting, Social) with investment relevance and ASEAN context. 6 ASEAN ESG case studies. Full-text search across frameworks and case studies simultaneously.",
@@ -99,7 +99,7 @@ export default function AboutPage() {
             { icon: Cpu, text: "Practical AI integration across four distinct investment workflow use cases" },
           ].map(({ icon: Icon, text }) => (
             <div key={text} className="flex items-start gap-3">
-              <Icon className="w-4 h-4 flex-shrink-0 text-purple-400" />
+              <Icon className="w-4 h-4 flex-shrink-0 text-purple-700" />
               <p className="text-sm text-gray-700">{text}</p>
             </div>
           ))}
