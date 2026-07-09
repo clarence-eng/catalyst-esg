@@ -13,6 +13,13 @@ const colorMap: Record<string, string> = {
   blue: "border-blue-500/20 bg-blue-500/5",
   purple: "border-purple-500/20 bg-purple-500/5",
 };
+const colorTextMap: Record<string, string> = {
+  emerald: "text-emerald-400",
+  green: "text-green-400",
+  orange: "text-orange-400",
+  blue: "text-blue-400",
+  purple: "text-purple-400",
+};
 const urgencyMap: Record<string, string> = {
   Immediate: "text-red-400 bg-red-500/10",
   "Near-term": "text-amber-400 bg-amber-500/10",
@@ -75,7 +82,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
           </div>
           <div className="text-right ml-6 flex-shrink-0">
             <div className="text-xs text-slate-500 mb-1">Temasek Megatrend</div>
-            <div className="text-sm font-medium text-emerald-400">{t.temasekAlignment}</div>
+            <div className={`text-sm font-medium ${colorTextMap[t.color] ?? "text-slate-400"}`}>{t.temasekAlignment}</div>
           </div>
         </div>
       </div>

@@ -23,6 +23,13 @@ const megatrendColorMap: Record<string, string> = {
   blue: "border-blue-500/20 hover:border-blue-400/40",
   purple: "border-purple-500/20 hover:border-purple-400/40",
 };
+const megatrendTextMap: Record<string, string> = {
+  emerald: "text-emerald-400",
+  green: "text-green-400",
+  orange: "text-orange-400",
+  blue: "text-blue-400",
+  purple: "text-purple-400",
+};
 const megatrendUrgencyMap: Record<string, string> = {
   Immediate: "text-red-400 bg-red-500/10",
   "Near-term": "text-amber-400 bg-amber-500/10",
@@ -78,7 +85,7 @@ export default function SignalPage() {
                 <div className="text-xs text-slate-500">
                   <span className="text-slate-300">{exposureSummary}</span> high-exposure portfolio cos
                 </div>
-                <div className="text-xs text-emerald-400">{t.temasekAlignment}</div>
+                <div className={`text-xs ${megatrendTextMap[t.color] ?? "text-slate-400"}`}>{t.temasekAlignment}</div>
               </div>
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {t.frameworks.slice(0, 3).map((f) => (

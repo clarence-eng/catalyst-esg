@@ -21,6 +21,14 @@ import { Loader2, FileText, CheckCircle, AlertCircle, TrendingUp, Shield, Leaf, 
 
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
+const MEGATREND_COLORS: Record<string, string> = {
+  "Climate Transition": "text-emerald-400",
+  "Nature & Biodiversity": "text-green-400",
+  "Just Transition & Inclusive Growth": "text-orange-400",
+  "AI & Digital Ethics": "text-blue-400",
+  "Longer Lifespans": "text-purple-400",
+};
+
 const TNFD_PILLAR_DESCS: Record<string, string> = {
   "Governance": "Board oversight of nature-related risks and opportunities",
   "Strategy": "Actual and potential nature-related impacts on business strategy",
@@ -145,7 +153,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
               <span>·</span>
               <span>{co.country}, {co.region}</span>
               <span>·</span>
-              <span>Temasek Megatrend: <span className="text-emerald-400">{co.temasekMegatrend}</span></span>
+              <span>Temasek Megatrend: <span className={MEGATREND_COLORS[co.temasekMegatrend] ?? "text-slate-400"}>{co.temasekMegatrend}</span></span>
               <span>·</span>
               <span>Last updated: {formatDate(co.lastUpdated)}</span>
             </div>

@@ -16,9 +16,10 @@ function TemasekMark() {
     <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Temasek mark">
       {/* Background */}
       <rect width="36" height="36" rx="6" fill="#C8102E" />
-      {/* Stylised T mark — horizontal bar + vertical stem */}
-      <rect x="7" y="9" width="22" height="5" rx="1.5" fill="white" />
-      <rect x="15.5" y="9" width="5" height="18" rx="1.5" fill="white" />
+      {/* Horizontal bar of T */}
+      <rect x="6" y="9" width="24" height="5" rx="1.5" fill="white" />
+      {/* Vertical stem of T — starts below the bar */}
+      <rect x="15.5" y="14" width="5" height="14" rx="1.5" fill="white" />
     </svg>
   );
 }
@@ -32,10 +33,10 @@ export function Navigation() {
       <div className="p-5 border-b border-white/5">
         <div className="flex items-center gap-3">
           <TemasekMark />
-          <div>
-            <div className="font-bold text-white text-sm tracking-wide">TEMASEK</div>
-            <div className="text-xs text-red-400 font-semibold leading-none mt-0.5">Catalyst</div>
-            <div className="text-[10px] text-slate-500 mt-0.5 leading-none">ESG Intelligence</div>
+        <div className="flex flex-col justify-center">
+            <div className="font-bold text-white text-sm tracking-wide leading-tight">TEMASEK</div>
+            <div className="text-xs text-red-400 font-semibold leading-tight">Catalyst</div>
+            <div className="text-[10px] text-slate-500 leading-tight">ESG Intelligence</div>
           </div>
         </div>
       </div>

@@ -7,6 +7,14 @@ import { Search, ArrowRight, GitMerge } from "lucide-react";
 
 type StatusFilter = "All" | "Active" | "Pipeline";
 
+const MEGATREND_COLORS: Record<string, string> = {
+  "Climate Transition": "text-emerald-400",
+  "Nature & Biodiversity": "text-green-400",
+  "Just Transition & Inclusive Growth": "text-orange-400",
+  "AI & Digital Ethics": "text-blue-400",
+  "Longer Lifespans": "text-purple-400",
+};
+
 const ACTIVE_COUNT = companies.filter((c) => c.portfolioStatus === "Active").length;
 const PIPELINE_COUNT = companies.filter((c) => c.portfolioStatus === "Pipeline").length;
 
@@ -148,7 +156,7 @@ export default function ScoutPage() {
                     <span className="text-slate-300">{co.sasbCategory}</span>
                   </div>
                   <div className="text-xs text-slate-500">
-                    Megatrend: <span className="text-emerald-400">{co.temasekMegatrend}</span>
+                    Megatrend: <span className={MEGATREND_COLORS[co.temasekMegatrend] ?? "text-slate-400"}>{co.temasekMegatrend}</span>
                   </div>
                   {/* Green Revenue bar */}
                   <div className="flex items-center gap-2">

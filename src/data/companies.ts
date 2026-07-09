@@ -663,7 +663,7 @@ export const companies: Company[] = [
         "Peat soil subsidence risk in drainage areas following peat conservation commitments",
       ],
       transitionDetails: [
-        "EU Deforestation Regulation (EUDR) effective 2025 requires supply chain geolocation data for EU export",
+        "EU Deforestation Regulation (EUDR) enforcement deadline 30 December 2026 requires supply chain geolocation data for EU export",
         "Carbon pricing under Malaysia's voluntary carbon market will affect peatland management costs",
         "Consumer boycott risk from palm oil controversies in European retail channels",
       ],
@@ -703,7 +703,7 @@ export const companies: Company[] = [
         severity: "Critical",
         opportunity: false,
         detail:
-          "EU accounts for 22% of revenue. EUDR deadline passed December 2025 — Bureau Veritas appointed May 2026 as compliance verifier; audit scope agreed. Unilever (key EU buyer) has granted a 90-day grace period. Full verification targeted Q3 2026. EU export revenues remain at risk until audit certificate issued.",
+          "EU accounts for 22% of revenue. EUDR enforcement deadline is 30 December 2026 (delayed twice from December 2024). Bureau Veritas appointed May 2026 as compliance verifier; audit scope agreed. Unilever (key EU buyer) has granted a 90-day grace period. Full verification targeted Q3 2026. EU export revenues remain at risk until audit certificate issued.",
       },
       {
         category: "Social",
@@ -789,7 +789,7 @@ export const companies: Company[] = [
         topic: "EUDR Compliance Verification",
         status: "Overdue",
         notes:
-          "EUDR compliance audit missed December 2025 deadline. Third-party verifier had not been appointed by deadline. Issue escalated to emergency review in June 2026 (see below).",
+          "EUDR compliance preparation behind schedule — third-party verifier had not been appointed by the internal Q4 2025 target. Issue escalated to emergency review in June 2026 (see below). Regulatory enforcement deadline is 30 December 2026.",
       },
       {
         date: "2026-06-10",
