@@ -120,7 +120,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                   }
                   <div>
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className={`text-xs font-medium ${imp.type === "Risk" ? "text-red-400" : "text-emerald-400"}`}>
+                      <span className={`text-xs font-medium ${imp.type === "Risk" ? "text-red-700" : "text-emerald-700"}`}>
                         {imp.type}
                       </span>
                       <span className="text-xs text-gray-500">{imp.sector}</span>
@@ -218,9 +218,9 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
 
 function ExposureBadge({ level }: { level: "High" | "Medium" | "Low" }) {
   const styles: Record<string, string> = {
-    High: "bg-red-500/15 text-red-400 border-red-500/20",
-    Medium: "bg-amber-500/15 text-amber-400 border-amber-500/20",
-    Low: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
+    High: "bg-red-50 text-red-700 border-red-300",
+    Medium: "bg-amber-50 text-amber-700 border-amber-300",
+    Low: "bg-emerald-50 text-emerald-700 border-emerald-300",
   };
   return (
     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border flex-shrink-0 ${styles[level]}`}>

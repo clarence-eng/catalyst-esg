@@ -174,8 +174,8 @@ export default function SignalPage() {
 
 function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] }) {
   const statusColors: Record<string, string> = {
-    "In Force": "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
-    "Effective 2026": "text-blue-400 bg-blue-500/10 border-blue-500/20",
+    "In Force": "text-emerald-700 bg-emerald-50 border-emerald-300",
+    "Effective 2026": "text-blue-700 bg-blue-50 border-blue-300",
     Proposed: "text-gray-600 bg-gray-100 border-gray-200",
     Consultation: "text-gray-600 bg-gray-100 border-gray-200",
   };
@@ -233,7 +233,7 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
                 <Link
                   key={slug}
                   href={`/scout/${slug}`}
-                  className="text-xs text-purple-400 bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded hover:bg-purple-500/15 transition-colors"
+                  className="text-xs text-purple-700 bg-purple-50 border border-purple-300 px-2 py-0.5 rounded hover:bg-purple-100 transition-colors"
                 >
                   {companyNameMap[slug] ?? slug}
                 </Link>

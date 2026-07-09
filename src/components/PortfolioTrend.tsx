@@ -42,13 +42,13 @@ export function PortfolioTrend({ data, activeCount = 5 }: { data: TrendPoint[]; 
         </div>
         <div className="flex items-center gap-4">
           {[
-            { label: "E", value: Math.round(latest.e), change: eChange, color: "text-emerald-400" },
-            { label: "S", value: Math.round(latest.s), change: sChange, color: "text-blue-400" },
-            { label: "G", value: Math.round(latest.g), change: gChange, color: "text-purple-400" },
+            { label: "E", value: Math.round(latest.e), change: eChange, color: "text-emerald-700" },
+            { label: "S", value: Math.round(latest.s), change: sChange, color: "text-blue-700" },
+            { label: "G", value: Math.round(latest.g), change: gChange, color: "text-purple-700" },
           ].map(({ label, value, change, color }) => (
             <div key={label} className="text-center">
               <div className={`text-lg font-bold ${color}`}>{value}</div>
-              <div className="text-xs text-gray-500">{label} <span className={change >= 0 ? "text-emerald-400" : "text-red-400"}>({sign(change)})</span></div>
+              <div className="text-xs text-gray-500">{label} <span className={change >= 0 ? "text-emerald-700" : "text-red-400"}>({sign(change)})</span></div>
             </div>
           ))}
         </div>

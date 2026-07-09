@@ -169,9 +169,9 @@ function FrameworkRow({ framework: f }: { framework: (typeof frameworks)[0] }) {
     Social: "text-blue-700",
   };
   const statusStyles: Record<string, string> = {
-    Mandatory: "text-red-400 bg-red-500/10 border-red-500/20",
-    Voluntary: "text-blue-400 bg-blue-500/10 border-blue-500/20",
-    Emerging: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+    Mandatory: "text-red-700 bg-red-50 border-red-300",
+    Voluntary: "text-blue-700 bg-blue-50 border-blue-300",
+    Emerging: "text-amber-700 bg-amber-50 border-amber-300",
   };
 
   return (

@@ -31,10 +31,10 @@ function getRiskForColumn(co: (typeof companies)[0], colKey: RiskColumnKey): Ris
 
 function RiskCell({ level }: { level: RiskLevel }) {
   const styles: Record<RiskLevel, string> = {
-    Critical: "bg-red-500/20 text-red-400 border-red-500/30",
-    High: "bg-orange-500/20 text-orange-400 border-orange-500/30",
-    Medium: "bg-amber-500/15 text-amber-400 border-amber-500/25",
-    Low: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
+    Critical: "bg-red-50 text-red-700 border-red-300",
+    High: "bg-orange-50 text-orange-700 border-orange-300",
+    Medium: "bg-amber-50 text-amber-700 border-amber-300",
+    Low: "bg-emerald-50 text-emerald-700 border-emerald-300",
   };
   return (
     <div className={`px-2 py-1.5 rounded border text-center text-xs font-medium ${styles[level]}`}>
