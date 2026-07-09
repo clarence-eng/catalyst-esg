@@ -8,7 +8,10 @@ type GenerationType = (typeof ALLOWED_TYPES)[number];
 
 function sanitize(value: unknown, maxLen = 200): string {
   if (value === null || value === undefined) return "";
-  return String(value).slice(0, maxLen).replace(/[<>]/g, "");
+  return String(value)
+    .slice(0, maxLen)
+    .replace(/[<>]/g, "")
+    .replace(/[\r\n]+/g, " ");
 }
 
 function validateContext(type: GenerationType, ctx: Record<string, unknown>): boolean {
@@ -141,6 +144,7 @@ Write for an internal quarterly portfolio review — investment-grade, specific,
     return NextResponse.json({ text });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    const safe = message.length > 200 ? message.slice(0, 200) + "…" : message;
+    return NextResponse.json({ error: safe }, { status: 500 });
   }
 }
