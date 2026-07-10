@@ -33,7 +33,7 @@ export const frameworks: FrameworkCard[] = [
     name: "TCFD",
     fullName: "Task Force on Climate-related Financial Disclosures",
     category: "Climate",
-    status: "Mandatory",
+    status: "Voluntary",
     adoptionYear: "2017",
     description:
       "The TCFD framework — developed by the FSB Task Force — provides a structure for companies to disclose climate-related risks and opportunities across four pillars: Governance, Strategy, Risk Management, and Metrics & Targets. TCFD was formally disbanded in October 2023 as its architecture was absorbed into the mandatory ISSB S2 standard. Its four-pillar structure is now effectively mandated for SGX-listed companies via ISSB S2 (FY2025).",

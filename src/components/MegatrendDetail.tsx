@@ -2,9 +2,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { type Megatrend } from "@/data/megatrends";
+import { companies } from "@/data/companies";
 import { Loader2, FileText, TrendingUp, AlertTriangle, Copy } from "lucide-react";
 import { AIOutput } from "@/components/AIOutput";
 import { formatRelativeTime } from "@/lib/utils";
+
+const pipelineSlugs = new Set(companies.filter(c => c.portfolioStatus === "Pipeline").map(c => c.slug));
+const activeSlugs = new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug));
 
 const colorMap: Record<string, string> = {
   emerald: "border-emerald-600/20 bg-emerald-600/5",
@@ -211,13 +215,16 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {t.portfolioExposure.filter(p => p.exposure === "High" || p.exposure === "Medium").map((p) => (
                 <div key={p.slug} className="flex items-center justify-between">
-                  <Link href={`/scout/${p.slug}`} className="text-xs text-gray-600 hover:text-purple-700 transition-colors truncate mr-2">{p.name}</Link>
+                  <div className="flex items-center gap-1.5 truncate mr-2">
+                    <Link href={`/scout/${p.slug}`} className="text-xs text-gray-600 hover:text-purple-700 transition-colors truncate">{p.name}</Link>
+                    {pipelineSlugs.has(p.slug) && <span className="text-[10px] text-blue-600 flex-shrink-0">·Pipeline</span>}
+                  </div>
                   <ExposureBadge level={p.exposure} />
                 </div>
               ))}
-              {t.portfolioExposure.filter(p => p.exposure === "Low").length > 0 && (
+              {t.portfolioExposure.filter(p => p.exposure === "Low" && activeSlugs.has(p.slug)).length > 0 && (
                 <div className="text-xs text-gray-500 pt-1 border-t border-gray-100">
-                  +{t.portfolioExposure.filter(p => p.exposure === "Low").length} low-exposure companies
+                  +{t.portfolioExposure.filter(p => p.exposure === "Low" && activeSlugs.has(p.slug)).length} active low-exposure companies
                 </div>
               )}
             </div>

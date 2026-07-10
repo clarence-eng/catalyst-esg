@@ -84,7 +84,10 @@ export default function SignalPage() {
               <p className="text-xs text-gray-500 leading-relaxed mb-4 line-clamp-3">{t.summary}</p>
               <div className="flex items-center justify-between">
                 <div className="text-xs text-gray-500">
-                  <span className="text-gray-700">{exposureSummary}</span> high-exposure portfolio cos
+                  {exposureSummary > 0
+                    ? <><span className="text-gray-700">{exposureSummary}</span> high-exposure active cos</>
+                    : <span className="text-gray-500">No high-exposure active cos</span>
+                  }
                 </div>
                 <div className={`text-xs ${megatrendTextMap[t.color] ?? "text-gray-600"}`}>{t.temasekAlignment}</div>
               </div>
@@ -104,7 +107,7 @@ export default function SignalPage() {
       <div className="mb-8">
         <h2 className="text-sm font-semibold text-gray-900 mb-2">Compliance Deadline Calendar</h2>
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          {[...regulatoryUpdates]
+          {[...filteredUpdates]
             .sort((a, b) => {
               const urgencyOrder = { High: 0, Medium: 1, Low: 2 };
               return (urgencyOrder[a.urgency as keyof typeof urgencyOrder] ?? 3) - (urgencyOrder[b.urgency as keyof typeof urgencyOrder] ?? 3);
