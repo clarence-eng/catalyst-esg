@@ -627,7 +627,7 @@ function OverviewTab({
                     <tr key={row.kpi} className={i % 2 === 0 ? "bg-gray-50" : "bg-white"}>
                       <td className="py-2 pr-3 font-medium text-gray-700 whitespace-nowrap">{row.kpi}</td>
                       <td className="py-2 pr-3 text-gray-900 font-medium">
-                        {row.value}{row.unit ? <span className="text-gray-500 font-normal ml-1">{row.unit}</span> : null}
+                        {row.value}{row.unit ? <span className="text-gray-600 font-normal ml-1">{row.unit}</span> : null}
                       </td>
                       <td className="py-2 pr-3 text-gray-600">{row.benchmark}</td>
                       <td className="py-2 text-gray-600 italic">{row.note ?? ""}</td>
@@ -972,7 +972,7 @@ function ClimateTab({ co }: { co: Company }) {
           {co.climateRisk.pathwayAlignment === "Not assessed" && (
             <div className="col-span-3 p-3 rounded-lg border text-center bg-gray-50 border-gray-200">
               <div className="text-sm font-semibold text-gray-900 mb-1">Not Assessed</div>
-              <div className="text-xs text-gray-500">TCFD scenario analysis not yet conducted</div>
+              <div className="text-xs text-gray-600">TCFD scenario analysis not yet conducted</div>
             </div>
           )}
         </div>
