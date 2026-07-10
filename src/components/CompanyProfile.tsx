@@ -1041,7 +1041,7 @@ function ClimateTab({ co }: { co: Company }) {
                 </div>
               ))}
             </div>
-            <p className="text-xs text-gray-400 mt-3 italic">Estimated from sector benchmarks. Full disclosure requires PCAF/GHG Protocol Category-level reporting.</p>
+            <p className="text-xs text-gray-500 mt-3 italic">Estimated from sector benchmarks. Full disclosure requires PCAF/GHG Protocol Category-level reporting.</p>
           </div>
         );
       })()}
@@ -1076,8 +1076,8 @@ function NatureTab({ co }: { co: Company }) {
               ? "bg-emerald-600 text-white border-emerald-600"
               : current
               ? "bg-amber-600 text-white border-amber-600"
-              : "bg-gray-200 text-gray-400 border-gray-200";
-            const labelColor = completed ? "text-emerald-700" : current ? "text-amber-700" : "text-gray-400";
+              : "bg-gray-200 text-gray-600 border-gray-200";
+            const labelColor = completed ? "text-emerald-700" : current ? "text-amber-700" : "text-gray-500";
             const lineColor = completed ? "bg-emerald-600" : "bg-gray-200";
             return (
               <div key={phase} className="flex items-start flex-1">
@@ -1087,7 +1087,7 @@ function NatureTab({ co }: { co: Company }) {
                   </div>
                   <div className="mt-2 text-center">
                     <div className={`text-xs font-semibold ${labelColor}`}>{name}</div>
-                    <div className="text-xs text-gray-400 mt-0.5 max-w-[90px] leading-relaxed">{desc}</div>
+                    <div className="text-xs text-gray-500 mt-0.5 max-w-[90px] leading-relaxed">{desc}</div>
                   </div>
                 </div>
                 {index < leapPhases.length - 1 && (
@@ -1479,7 +1479,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
                 <Copy className="w-3 h-3" />
                 Copy question pack
               </button>
-              <span className="text-xs text-gray-400 ml-auto">
+              <span className="text-xs text-gray-500 ml-auto">
                 {questionsGeneratedAt ? `Generated ${formatRelativeTime(questionsGeneratedAt)}` : ""}
               </span>
             </div>
@@ -1491,7 +1491,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
         ) : (
           <div className="text-xs text-gray-500 text-center py-6 border border-dashed border-gray-200 rounded-lg">
             <div>Generate 12 targeted ESG due diligence questions for this company</div>
-            <div className="text-gray-400 mt-1">Requires GEMINI_API_KEY in .env.local</div>
+            <div className="text-gray-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
           </div>
         )}
       </div>

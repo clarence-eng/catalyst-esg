@@ -37,7 +37,7 @@ export function Navigation() {
           {/* Product name and descriptor */}
           <div className="flex items-center gap-2 mt-1">
             <div className="text-xs font-semibold text-gray-800">Catalyst</div>
-            <div className="text-[9px] text-gray-400 font-medium uppercase tracking-wider">ESG Intelligence</div>
+            <div className="text-[9px] text-gray-500 font-medium uppercase tracking-wider">ESG Intelligence</div>
           </div>
         </div>
       </div>
@@ -89,13 +89,13 @@ export function Navigation() {
         <Link
           href="/about"
           aria-current={pathname === "/about" ? "page" : undefined}
-          className="flex items-center gap-2 text-xs mb-2 transition-colors text-gray-400 hover:text-gray-600"
+          className="flex items-center gap-2 text-xs mb-2 transition-colors text-gray-500 hover:text-gray-700"
           style={pathname === "/about" ? { color: TEMASEK_PURPLE } : undefined}
         >
           <Info className="w-3 h-3" />
           About this demo
         </Link>
-        <div className="text-xs text-gray-400 leading-relaxed">
+        <div className="text-xs text-gray-500 leading-relaxed">
           Temasek ESG Investment Intelligence
         </div>
       </div>

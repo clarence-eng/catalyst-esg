@@ -276,10 +276,10 @@ function ESGDimensionHeatmap({ companies }: { companies: Array<{ name: string; s
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
-            {active.sort((a, b) => b.esgScore.overall - a.esgScore.overall).map(co => (
+            {[...active].sort((a, b) => b.esgScore.overall - a.esgScore.overall).map(co => (
               <tr key={co.slug}>
                 <td className="py-2.5 pr-4">
-                  <a href={`/scout/${co.slug}`} className="text-gray-800 font-medium hover:text-purple-700 transition-colors">{co.name}</a>
+                  <Link href={`/scout/${co.slug}`} className="text-gray-800 font-medium hover:text-purple-700 transition-colors">{co.name}</Link>
                 </td>
                 {(["environmental", "social", "governance", "overall"] as const).map(dim => (
                   <td key={dim} className="py-2.5 px-3 text-center">
@@ -520,7 +520,7 @@ function PCARFinancedEmissionsTable({ companies, totalActive }: { companies: Com
         </table>
       </div>
       <div className="px-6 py-3 border-t border-gray-100">
-        <p className="text-xs text-gray-400 italic">
+        <p className="text-xs text-gray-500 italic">
           Estimated using simplified proxy methodology. Full PCAF calculation requires enterprise value and verified absolute Scope 1+2+3 emissions per PCAF Global Standard v2 (2020).
         </p>
       </div>

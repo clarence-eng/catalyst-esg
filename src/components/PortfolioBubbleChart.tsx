@@ -26,6 +26,13 @@ const riskColor: Record<string, string> = {
   Medium: "#f59e0b",
   Low: "#10b981",
 };
+// WCAG AA–safe text equivalents for tooltip (4.5:1 on white)
+const riskTextColor: Record<string, string> = {
+  Critical: "#b91c1c",
+  High: "#c2410c",
+  Medium: "#b45309",
+  Low: "#047857",
+};
 
 interface TooltipPayload {
   payload?: BubblePoint;
@@ -40,7 +47,7 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
       <div className="text-gray-600">ESG Score: <span className="text-gray-900">{d.esgScore}</span></div>
       <div className="text-gray-600">Carbon Intensity: <span className="text-gray-900">{d.carbonIntensity} tCO₂e/$M</span></div>
       <div className="text-gray-600">Investment: <span className="text-gray-900">S${d.investmentValue}M</span></div>
-      <div className="text-gray-600">Transition Risk: <span style={{ color: riskColor[d.transitionRisk] ?? "#6b7280" }}>{d.transitionRisk}</span></div>
+      <div className="text-gray-600">Transition Risk: <span style={{ color: riskTextColor[d.transitionRisk] ?? "#374151" }}>{d.transitionRisk}</span></div>
     </div>
   );
 }
@@ -64,7 +71,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
         {data.filter(d => d.carbonIntensity > 400).length > 0 && (
           <div className="ml-auto flex items-center gap-2 flex-shrink-0">
             {data.filter(d => d.carbonIntensity > 400).map(d => (
-              <span key={d.slug} className="text-xs text-red-400/80 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded">
+              <span key={d.slug} className="text-xs text-red-700 bg-red-50 border border-red-300 px-2 py-0.5 rounded">
                 ↑ {d.name} ({d.carbonIntensity} tCO₂e/$M) — off chart Y
               </span>
             ))}

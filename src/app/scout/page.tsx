@@ -45,7 +45,7 @@ export default function ScoutPage() {
       >
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <span className="bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full">{ACTIVE_COUNT} Active</span>
-          <span className="bg-blue-500/10 border border-blue-500/20 text-blue-700 bg-blue-50 border-blue-300 px-2.5 py-1 rounded-full flex items-center gap-1">
+          <span className="bg-blue-50 border border-blue-300 text-blue-700 px-2.5 py-1 rounded-full flex items-center gap-1">
             <GitMerge className="w-3 h-3" />{PIPELINE_COUNT} Pipeline
           </span>
         </div>
