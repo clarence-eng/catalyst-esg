@@ -183,7 +183,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
                 <NetZeroBadge commitment={co.netZeroCommitment} />
               )}
               {co.portfolioStatus === "Pipeline" && (
-                <span className="flex items-center gap-1 text-xs text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 rounded-full font-medium">
+                <span className="flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-300 px-2.5 py-1 rounded-full font-medium">
                   <GitMerge className="w-3 h-3" /> Under Evaluation
                 </span>
               )}
@@ -522,7 +522,7 @@ function OverviewTab({
                   <span className="text-sm font-medium text-gray-900">{v.area}</span>
                   <span className={`text-xs px-2 py-0.5 rounded border ${
                     v.potential === "High" ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
-                    v.potential === "Medium" ? "text-amber-400 bg-amber-500/10 border-amber-500/20" :
+                    v.potential === "Medium" ? "text-amber-700 bg-amber-50 border-amber-300" :
                     "text-gray-600 bg-gray-100 border-gray-200"
                   }`}>{v.potential} potential</span>
                 </div>
@@ -814,7 +814,7 @@ function ClimateTab({ co }: { co: Company }) {
     { item: "Climate scenario analysis (≥2 scenarios)", status: co.climateRisk.transitionDetails.length >= 2 ? "✓" : "Partial", pass: co.climateRisk.transitionDetails.length >= 2 },
     { item: "Physical risk quantification", status: co.climateRisk.physicalDetails.length > 0 ? "✓" : "✗", pass: co.climateRisk.physicalDetails.length > 0 },
     { item: "Scope 1+2 emissions disclosed", status: co.carbonIntensity > 0 ? "✓" : "✗", pass: co.carbonIntensity > 0 },
-    { item: "Scope 3 assessment / financed emissions", status: co.materialIssues.some(i => i.issue.toLowerCase().includes("emission") || i.issue.toLowerCase().includes("financed")) ? "Partial" : "✗", pass: co.materialIssues.some(i => !i.opportunity && (i.issue.toLowerCase().includes("emission") || i.issue.toLowerCase().includes("financed"))) },
+    { item: "Scope 3 assessment / financed emissions", status: co.materialIssues.some(i => i.issue.toLowerCase().includes("financed") || (i.issue.toLowerCase().includes("scope 3") || i.issue.toLowerCase().includes("financed emissions"))) ? "Partial" : "✗", pass: co.materialIssues.some(i => !i.opportunity && (i.issue.toLowerCase().includes("financed") || i.issue.toLowerCase().includes("scope 3"))) },
     { item: "Climate-related targets set", status: co.netZeroCommitment !== "None" ? "✓" : "✗", pass: co.netZeroCommitment !== "None" },
     { item: "SBTi-validated or equivalent pathway", status: co.netZeroCommitment === "SBTi Targets Set" ? "✓" : co.netZeroCommitment === "SBTi Committed" ? "In Progress" : "✗", pass: co.netZeroCommitment === "SBTi Targets Set" },
   ];
@@ -938,9 +938,9 @@ function ClimateTab({ co }: { co: Company }) {
         <h3 className="text-sm font-semibold text-gray-900 mb-3">Paris Pathway Alignment</h3>
         <div className="flex items-center gap-3">
           <div className={`px-4 py-2 rounded-lg text-sm font-bold border ${
-            co.climateRisk.pathwayAlignment === "1.5°C" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
-            co.climateRisk.pathwayAlignment === "2°C" ? "text-amber-400 bg-amber-500/10 border-amber-500/20" :
-            co.climateRisk.pathwayAlignment === "3°C+" ? "text-red-400 bg-red-500/10 border-red-500/20" :
+            co.climateRisk.pathwayAlignment === "1.5°C" ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
+            co.climateRisk.pathwayAlignment === "2°C" ? "text-amber-700 bg-amber-50 border-amber-300" :
+            co.climateRisk.pathwayAlignment === "3°C+" ? "text-red-700 bg-red-50 border-red-300" :
             "text-gray-600 bg-gray-100 border-gray-200"
           }`}>
             {co.climateRisk.pathwayAlignment}
@@ -1430,9 +1430,9 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-gray-500">{formatDate(e.date)}</span>
                       <span className={`text-xs px-2 py-0.5 rounded border ${
-                        e.status === "Completed" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
-                        e.status === "Planned" ? "text-blue-400 bg-blue-500/10 border-blue-500/20" :
-                        "text-red-400 bg-red-500/10 border-red-500/20"
+                        e.status === "Completed" ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
+                        e.status === "Planned" ? "text-blue-700 bg-blue-50 border-blue-300" :
+                        "text-red-700 bg-red-50 border-red-300"
                       }`}>{e.status}</span>
                     </div>
                   </div>

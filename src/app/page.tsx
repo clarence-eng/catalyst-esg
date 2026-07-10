@@ -145,16 +145,16 @@ export default function OverviewPage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-200">
-                <th className="text-left text-xs text-gray-500 font-medium px-6 py-3">Company</th>
-                <th className="text-left text-xs text-gray-500 font-medium px-4 py-3">Status</th>
-                <th className="text-left text-xs text-gray-500 font-medium px-4 py-3">Rating</th>
-                <th className="text-left text-xs text-gray-500 font-medium px-4 py-3">E</th>
-                <th className="text-left text-xs text-gray-500 font-medium px-4 py-3">S</th>
-                <th className="text-left text-xs text-gray-500 font-medium px-4 py-3">G</th>
-                <th className="text-left text-xs text-gray-500 font-medium px-4 py-3">Maturity</th>
-                <th className="text-left text-xs text-gray-500 font-medium px-4 py-3">Portfolio Weight</th>
-                <th className="text-left text-xs text-gray-500 font-medium px-4 py-3">Transition Risk</th>
-                <th className="text-right text-xs text-gray-500 font-medium px-6 py-3"></th>
+                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-6 py-3">Company</th>
+                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Status</th>
+                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Rating</th>
+                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">E</th>
+                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">S</th>
+                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">G</th>
+                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Maturity</th>
+                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Portfolio Weight</th>
+                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Transition Risk</th>
+                <th scope="col" className="text-right text-xs text-gray-500 font-medium px-6 py-3"></th>
               </tr>
             </thead>
             <tbody>
@@ -485,11 +485,11 @@ function PCARFinancedEmissionsTable({ companies, totalActive }: { companies: Com
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-200">
-              <th className="text-left text-xs text-gray-500 font-medium px-6 py-3">Company</th>
-              <th className="text-left text-xs text-gray-500 font-medium px-4 py-3">Sector</th>
-              <th className="text-right text-xs text-gray-500 font-medium px-4 py-3">Stake ~%</th>
-              <th className="text-right text-xs text-gray-500 font-medium px-4 py-3">Est. Financed Emissions (tCO₂e)</th>
-              <th className="text-left text-xs text-gray-500 font-medium px-4 py-3">PCAF Quality (1–5)</th>
+              <th scope="col" className="text-left text-xs text-gray-500 font-medium px-6 py-3">Company</th>
+              <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Sector</th>
+              <th scope="col" className="text-right text-xs text-gray-500 font-medium px-4 py-3">Stake ~%</th>
+              <th scope="col" className="text-right text-xs text-gray-500 font-medium px-4 py-3">Est. Financed Emissions (tCO₂e)</th>
+              <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">PCAF Quality (1–5)</th>
             </tr>
           </thead>
           <tbody>
