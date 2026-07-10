@@ -276,6 +276,7 @@ function FrameworkDetailCard({ framework: f }: { framework: (typeof frameworks)[
       </div>
       <p className="text-xs text-gray-700 leading-relaxed mb-3">{f.description}</p>
 
+      {f.keyRequirements.length > 0 && (
       <div className="mb-3">
         <div className="text-xs text-gray-500 font-medium mb-1.5">Key Requirements</div>
         <ul className="space-y-1">
@@ -287,6 +288,7 @@ function FrameworkDetailCard({ framework: f }: { framework: (typeof frameworks)[
           ))}
         </ul>
       </div>
+      )}
 
       <div className="mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
         <div className="text-xs text-gray-600 font-medium mb-1">Investment Relevance</div>
