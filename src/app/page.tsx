@@ -407,9 +407,9 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
       const avg1 = (q1.e + q1.s + q1.g) / 3;
       const avg2 = (q2.e + q2.s + q2.g) / 3;
       const delta = Math.round((avg2 - avg1) * 10) / 10;
-      return { name: co.name, delta };
+      return { name: co.name, slug: co.slug, delta };
     })
-    .filter((r): r is { name: string; delta: number } => r !== null)
+    .filter((r): r is { name: string; slug: string; delta: number } => r !== null)
     .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
 
   if (rows.length === 0) return null;
@@ -422,16 +422,16 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
       <p className="text-xs text-gray-500 mb-4">
         Average (E+S+G)/3 score delta per company, sorted by absolute change
         {rows.length < companies.length && (
-          <span className="ml-1 text-amber-600">· {companies.length - rows.length} company(ies) excluded (missing Q1/Q2 2026 data)</span>
+          <span className="ml-1 text-amber-600">· {companies.length - rows.length} company(ies) excluded (missing {Q1}/{Q2} data)</span>
         )}
       </p>
       <div className="space-y-2.5">
-        {rows.map(({ name, delta }) => {
+        {rows.map(({ name, slug, delta }) => {
           const barPct = (Math.abs(delta) / maxAbs) * 100;
           const isPositive = delta > 0;
           const isNeutral = delta === 0;
           return (
-            <div key={name} className="flex items-center gap-3">
+            <div key={slug} className="flex items-center gap-3">
               <span className="text-xs text-gray-700 w-44 flex-shrink-0 truncate">{name}</span>
               <div className="flex-1 flex items-center gap-2">
                 <div className="flex-1 h-4 bg-gray-100 rounded-sm overflow-hidden">
