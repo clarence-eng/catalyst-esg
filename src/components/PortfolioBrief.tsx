@@ -80,7 +80,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
                 const names = count > 0 ? companyNames.join(", ") : "Active Portfolio Companies";
                 const countLabel = count > 0 ? `${count} ` : "";
                 const header = `CATALYST ESG INTELLIGENCE\n${quarter} Portfolio ESG Brief\nPrepared: ${date}\nPortfolio: ${countLabel}Active Companies (${names})\n${"─".repeat(60)}\n\n`;
-                navigator.clipboard?.writeText(header + brief).catch(() => {});
+                navigator.clipboard?.writeText(header + brief)?.catch(() => {});
               }}
               className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
             >

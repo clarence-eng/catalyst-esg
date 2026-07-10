@@ -667,7 +667,7 @@ function OverviewTab({
               <AIOutput text={memo} />
               <div className="mt-3 flex items-center">
                 <button
-                  onClick={() => navigator.clipboard?.writeText(memo).catch(() => {})}
+                  onClick={() => navigator.clipboard?.writeText(memo)?.catch(() => {})}
                   className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                 >
                   <Copy className="w-3 h-3" />
@@ -1473,7 +1473,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
             <AIOutput text={questions} />
             <div className="mt-3 flex items-center">
               <button
-                onClick={() => navigator.clipboard?.writeText(questions).catch(() => {})}
+                onClick={() => navigator.clipboard?.writeText(questions)?.catch(() => {})}
                 className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
               >
                 <Copy className="w-3 h-3" />
