@@ -1066,8 +1066,8 @@ function ClimateTab({ co }: { co: Company }) {
 function NatureTab({ co }: { co: Company }) {
   const leapStage =
     co.natureRisk.tnfdAligned ? 4 :
-    co.natureRisk.tnfdPillars?.some(p => p.pillar === "Metrics & Targets" && (p.status === "Partial" || p.status === "Adopted")) ? 3 :
-    co.natureRisk.tnfdPillars?.some(p => p.pillar === "Risk & Impact Mgmt" && (p.status === "Partial" || p.status === "Adopted")) ? 3 :
+    co.natureRisk.tnfdPillars?.some(p => p.pillar === "Metrics & Targets" && p.status === "Adopted") ? 4 :
+    co.natureRisk.tnfdPillars?.some(p => (p.pillar === "Metrics & Targets" || p.pillar === "Risk & Impact Mgmt") && (p.status === "Partial" || p.status === "Adopted")) ? 3 :
     co.natureRisk.tnfdPillars?.some(p => p.pillar === "Strategy" && (p.status === "Partial" || p.status === "Adopted")) ? 2 :
     (co.natureRisk.biodiversityExposure || co.natureRisk.waterStress || co.natureRisk.deforestationRisk) ? 1 : 0;
 

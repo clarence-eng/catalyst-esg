@@ -678,7 +678,7 @@ export const companies: Company[] = [
       details: [
         "Operations adjacent to Maliau Basin Conservation Area (Sabah's 'Lost World'); buffer zone management is critical",
         "High Conservation Value (HCV) assessments completed for 80% of landbank, 20% pending",
-        "TNFD LEAP assessment completed Q3 2025 — one of first agribusiness companies in ASEAN to complete TNFD LEAP. Results published in 2025 sustainability report",
+        "TNFD LEAP assessment (phases L-A) completed Q3 2025 — one of first agribusiness companies in ASEAN to complete TNFD LEAP Risk Assessment phase. Metrics & Targets phase in progress for 2026 sustainability report",
         "Water abstraction from shared catchments requires multi-stakeholder basin management approach",
       ],
       tnfdPillars: [
