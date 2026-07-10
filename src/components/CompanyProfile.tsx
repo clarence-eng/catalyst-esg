@@ -305,11 +305,11 @@ function getASEANTaxonomy(co: Company): { activity: string; tier: TaxonomyTier; 
     ];
     return all.filter(a => a.pct > 0);
   }
-  if (sector.includes("technology") || sector.includes("digital") || sector.includes("cloud") || sector.includes("saas") || sector.includes("software")) return [
-    { activity: "Cloud/Digital Infrastructure", tier: (co.greenRevenuePct > 20 ? "Tier 1" : "Tier 2") as TaxonomyTier, pct: 100 },
-  ];
   if (sector.includes("health")) return [
     { activity: "Digital Health Platform", tier: "Tier 2", pct: 100 },
+  ];
+  if (sector.includes("technology") || sector.includes("digital") || sector.includes("cloud") || sector.includes("saas") || sector.includes("software")) return [
+    { activity: "Cloud/Digital Infrastructure", tier: (co.greenRevenuePct > 20 ? "Tier 1" : "Tier 2") as TaxonomyTier, pct: 100 },
   ];
   return [{ activity: co.sector, tier: "Not classified", pct: 100 }];
 }
@@ -415,7 +415,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
     { kpi: "Financial Inclusion Score", value: co.materialIssues.some(i => i.issue.includes("Inclusion")) ? "Active programmes" : "Not reported", unit: "", benchmark: "OJK mandate for Indonesian banks" },
   ];
 
-  if (cat.includes("agriculture")) return [
+  if (cat.includes("agriculture") || cat.includes("agri")) return [
     { kpi: "Deforestation-Free Supply Chain", value: co.natureRisk.deforestationRisk ? "Partial (gaps remain)" : "Certified", unit: "", benchmark: "EUDR Dec 2026 deadline", note: "NDPE policy verification critical" },
     { kpi: "Water Intensity", value: co.natureRisk.waterStress ? "High water footprint" : "Within local limits", unit: "m³/$M revenue", benchmark: "TNFD/SBTN watershed threshold" },
     { kpi: "Smallholder Certification", value: `${co.greenRevenuePct}%`, unit: "of supply base certified", benchmark: "RSPO P&C: 100% target" },
@@ -430,7 +430,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
   ];
 
   if (cat.includes("technology") || cat.includes("software") || cat.includes("health care")) return [
-    { kpi: "Data Centre PUE", value: co.carbonIntensity < 50 ? "≤1.40 (efficient)" : "1.40–1.60 (improving)", unit: "", benchmark: "BCA Green Mark: ≤1.35" },
+    { kpi: "Data Centre PUE", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("energy") && i.severity !== "Low") ? "1.40–1.60 (improvement needed)" : "≤1.40 (efficient)", unit: "", benchmark: "BCA Green Mark: ≤1.35" },
     { kpi: "Renewable Energy %", value: `${co.greenRevenuePct}%`, unit: "of electricity use", benchmark: "Singapore MAS: 100% RE target" },
     { kpi: "Data Privacy Incidents", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("data") || i.issue.toLowerCase().includes("privacy")) ? "Material concern" : "No disclosed breaches", unit: "last 12 months", benchmark: "PDPA/PDPL zero-tolerance" },
     { kpi: "AI Ethics Policy", value: co.boardComposition.esgCommittee ? "Board-approved policy" : "Under development", unit: "", benchmark: "MAS FEAT Principles" },
