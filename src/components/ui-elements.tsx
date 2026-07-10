@@ -80,7 +80,7 @@ export function ScoreRing({ score, size = 80, label }: { score: number; size?: n
           {score}
         </text>
       </svg>
-      {label && <span className="text-xs text-gray-500">{label}</span>}
+      {label && <span className="text-xs text-gray-600">{label}</span>}
     </div>
   );
 }

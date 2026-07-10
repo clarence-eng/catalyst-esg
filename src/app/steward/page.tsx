@@ -23,7 +23,9 @@ export default function StewardPage() {
     const overdueA = a.engagement.filter(e => e.status === "Overdue").length;
     const overdueB = b.engagement.filter(e => e.status === "Overdue").length;
     if (overdueB !== overdueA) return overdueB - overdueA;
-    return b.engagement.filter(e => e.status === "Planned").length - a.engagement.filter(e => e.status === "Planned").length;
+    const plannedDiff = b.engagement.filter(e => e.status === "Planned").length - a.engagement.filter(e => e.status === "Planned").length;
+    if (plannedDiff !== 0) return plannedDiff;
+    return a.name.localeCompare(b.name);
   });
 
   // Calendar view: flatten all engagements (Planned + Overdue) from active AND pipeline companies
@@ -338,8 +340,8 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
                       <span className="text-sm font-medium text-gray-900">{e.topic}</span>
-                      <span className="text-xs text-gray-500">{e.type}</span>
-                      <span className="text-xs text-gray-500">{formatDate(e.date)}</span>
+                      <span className="text-xs text-gray-600">{e.type}</span>
+                      <span className="text-xs text-gray-600">{formatDate(e.date)}</span>
                       <span className={`text-xs px-1.5 py-0.5 rounded border ${
                         e.status === "Completed" ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
                         e.status === "Planned" ? "text-blue-700 bg-blue-50 border-blue-300" :

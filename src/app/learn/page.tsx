@@ -111,6 +111,10 @@ export default function LearnPage() {
             <p className="text-xs text-gray-500 py-4">No frameworks in this category or search.</p>
           )}
 
+          {filteredFrameworks.length > 0 && highRelevance.length === 0 && medRelevance.length === 0 && (
+            <p className="text-xs text-gray-500 py-4">No High or Reference relevance frameworks in this category.</p>
+          )}
+
           {highRelevance.length > 0 && (
           <div className="mb-2">
             <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-2">High Relevance to Temasek Portfolio</div>
@@ -227,7 +231,7 @@ function CaseStudyCard({ study: cs }: { study: (typeof caseStudies)[0] }) {
       </div>
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-2.5">
         <div className="text-xs text-gray-600 font-medium mb-0.5">Lesson Learned</div>
-        <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">{cs.lessonLearned}</p>
+        <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">{cs.lessonLearned}</p>
       </div>
       <div className="flex flex-wrap gap-1 mt-2">
         {cs.frameworks.map((fw) => (
