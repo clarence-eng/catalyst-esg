@@ -1103,7 +1103,7 @@ function NatureTab({ co }: { co: Company }) {
           </p>
         )}
         {leapStage === 0 && (
-          <p className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mt-4">
+          <p className="text-xs text-gray-600 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mt-4">
             LEAP assessment not yet initiated. Begin by identifying interfaces with nature across the value chain.
           </p>
         )}

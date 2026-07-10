@@ -293,7 +293,7 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
             <span>Effective: {r.effectiveDate}</span>
           </div>
           <p className="text-xs text-gray-600 leading-relaxed mb-2">{r.summary}</p>
-          <div className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded p-2.5">
+          <div className="text-xs text-gray-600 bg-gray-50 border border-gray-200 rounded p-2.5">
             <span className="text-gray-600 font-medium">Investment Impact: </span>
             {r.investmentImpact}
           </div>
