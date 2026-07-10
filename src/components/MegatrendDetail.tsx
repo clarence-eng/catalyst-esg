@@ -36,7 +36,6 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
     if (loading) return;
     setLoading(true);
     setError("");
-    setBrief("");
     try {
       const res = await fetch("/api/gemini", {
         method: "POST",
@@ -96,8 +95,8 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <h3 className="text-sm font-semibold text-gray-900 mb-4">Key Data Points</h3>
             <div className="grid grid-cols-2 gap-3">
-              {t.keyStats.map((stat) => (
-                <div key={stat.label} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+              {t.keyStats.map((stat, idx) => (
+                <div key={`${stat.label}-${idx}`} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
                   <div className="text-lg font-bold text-gray-900 mb-0.5">{stat.value}</div>
                   <div className="text-xs text-gray-600 mb-1">{stat.label}</div>
                   <div className="text-xs text-gray-600">Source: {stat.source}</div>
@@ -199,8 +198,8 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <h3 className="text-sm font-semibold text-gray-900 mb-3">Relevant Frameworks</h3>
             <div className="space-y-2">
-              {t.frameworks.map((f) => (
-                <div key={f} className="text-xs text-gray-600 bg-gray-100 border border-gray-200 px-3 py-2 rounded-lg">
+              {t.frameworks.map((f, idx) => (
+                <div key={`${f}-${idx}`} className="text-xs text-gray-600 bg-gray-100 border border-gray-200 px-3 py-2 rounded-lg">
                   {f}
                 </div>
               ))}
@@ -209,13 +208,18 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
 
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <h3 className="text-sm font-semibold text-gray-900 mb-3">Portfolio Exposure</h3>
-            <div className="space-y-2">
-              {t.portfolioExposure.map((p) => (
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {t.portfolioExposure.filter(p => p.exposure === "High" || p.exposure === "Medium").map((p) => (
                 <div key={p.slug} className="flex items-center justify-between">
                   <Link href={`/scout/${p.slug}`} className="text-xs text-gray-600 hover:text-purple-700 transition-colors truncate mr-2">{p.name}</Link>
                   <ExposureBadge level={p.exposure} />
                 </div>
               ))}
+              {t.portfolioExposure.filter(p => p.exposure === "Low").length > 0 && (
+                <div className="text-xs text-gray-500 pt-1 border-t border-gray-100">
+                  +{t.portfolioExposure.filter(p => p.exposure === "Low").length} low-exposure companies
+                </div>
+              )}
             </div>
           </div>
         </div>

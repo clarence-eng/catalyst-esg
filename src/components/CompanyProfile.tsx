@@ -75,7 +75,6 @@ export function CompanyProfile({ company: co }: { company: Company }) {
     if (memoLoading) return;
     setMemoLoading(true);
     setMemoError("");
-    setMemo("");
     try {
       const topIssues = [...co.materialIssues]
         .filter((i) => !i.opportunity)
@@ -131,7 +130,6 @@ export function CompanyProfile({ company: co }: { company: Company }) {
     if (questionsLoading) return;
     setQuestionsLoading(true);
     setQuestionsError("");
-    setQuestions("");
     try {
       const topIssues = [...co.materialIssues]
         .filter((i) => !i.opportunity)

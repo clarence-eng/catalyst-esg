@@ -19,7 +19,7 @@ export async function generateMetadata({
   if (!company) return { title: "Company Not Found" };
   return {
     title: `${company.name} — Catalyst ESG`,
-    description: `ESG profile for ${company.name}: ${company.esgScore.rating} rating, ${company.maturity} maturity. ${company.description.slice(0, 120)}`,
+    description: `ESG profile for ${company.name}: ${company.esgScore.rating} rating, ${company.maturity} maturity. ${company.description}`.slice(0, 160),
   };
 }
 
