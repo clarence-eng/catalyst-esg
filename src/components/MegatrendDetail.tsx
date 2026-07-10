@@ -141,6 +141,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                 <p className="text-xs text-gray-500 mt-0.5">Generate a 600-word investment-grade brief on this megatrend</p>
               </div>
               <button
+                type="button"
                 onClick={generateBrief}
                 disabled={loading}
                 aria-busy={loading}
@@ -173,6 +174,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
             {brief && (
               <div className="mt-3 flex items-center">
                 <button
+                  type="button"
                   onClick={() => {
                     const date = new Date().toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" });
                     const header = `CATALYST ESG INTELLIGENCE\nThematic Brief: ${t.title}\nPrepared: ${date}\n${"─".repeat(60)}\n\n`;

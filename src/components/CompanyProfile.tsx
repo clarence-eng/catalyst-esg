@@ -237,6 +237,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
       >
         {TABS.map(({ id, label, icon: Icon }) => (
           <button
+            type="button"
             key={id}
             role="tab"
             id={`tab-${id}`}
@@ -650,6 +651,7 @@ function OverviewTab({
               <p className="text-xs text-gray-500 mt-0.5">Generate a Temasek-style investment committee ESG assessment.</p>
             </div>
             <button
+              type="button"
               onClick={onGenerate}
               disabled={memoLoading}
               aria-busy={memoLoading}
@@ -670,6 +672,7 @@ function OverviewTab({
               <AIOutput text={memo} />
               <div className="mt-3 flex items-center">
                 <button
+                  type="button"
                   onClick={() => navigator.clipboard?.writeText(memo)?.catch(() => {})}
                   className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                 >
@@ -1457,6 +1460,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
             <p className="text-xs text-gray-500 mt-0.5">AI-generated due diligence questions tailored to this company's ESG profile</p>
           </div>
           <button
+            type="button"
             onClick={onGenerateQuestions}
             disabled={questionsLoading}
             aria-busy={questionsLoading}
@@ -1477,6 +1481,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
             <AIOutput text={questions} />
             <div className="mt-3 flex items-center">
               <button
+                type="button"
                 onClick={() => navigator.clipboard?.writeText(questions)?.catch(() => {})}
                 className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
               >

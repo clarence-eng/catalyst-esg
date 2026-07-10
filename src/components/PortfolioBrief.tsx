@@ -52,6 +52,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
           </p>
         </div>
         <button
+          type="button"
           onClick={generate}
           disabled={loading || !portfolioSummary.trim()}
           aria-busy={loading}
@@ -72,6 +73,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
           <AIOutput text={brief} />
           <div className="flex items-center gap-4 mt-3">
             <button
+              type="button"
               onClick={() => {
                 const date = new Date().toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" });
                 const now = new Date();

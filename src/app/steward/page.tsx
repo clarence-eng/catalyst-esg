@@ -63,6 +63,7 @@ export default function StewardPage() {
       <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 mb-6 w-fit">
         {(["cards", "calendar"] as const).map((v) => (
           <button
+            type="button"
             key={v}
             onClick={() => setView(v)}
             aria-pressed={view === v}
@@ -363,6 +364,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
                 <p className="text-xs text-gray-500 mt-0.5">AI-generated 12-month ESG engagement roadmap with quarterly milestones</p>
               </div>
               <button
+                type="button"
                 onClick={generateActionPlan}
                 disabled={planLoading}
                 aria-busy={planLoading}
@@ -383,6 +385,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
                 <AIOutput text={plan} />
                 <div className="mt-3 flex items-center">
                   <button
+                    type="button"
                     onClick={() => navigator.clipboard?.writeText(plan)?.catch(() => {})}
                     className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                   >

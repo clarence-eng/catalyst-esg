@@ -189,6 +189,7 @@ export default function SignalPage() {
           <span className="text-xs text-gray-500">Jurisdiction:</span>
           {allJurisdictions.map((j) => (
             <button
+              type="button"
               key={j}
               onClick={() => setJurisdictionFilter(j)}
               aria-pressed={jurisdictionFilter === j}
@@ -206,6 +207,7 @@ export default function SignalPage() {
           <span className="text-xs text-gray-500">Category:</span>
           {allCategories.map((c) => (
             <button
+              type="button"
               key={c}
               onClick={() => setCategoryFilter(c)}
               aria-pressed={categoryFilter === c}

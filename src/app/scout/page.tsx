@@ -56,6 +56,7 @@ export default function ScoutPage() {
         <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
           {(["All", "Active", "Pipeline"] as StatusFilter[]).map((s) => (
             <button
+              type="button"
               key={s}
               onClick={() => setStatusFilter(s)}
               aria-pressed={statusFilter === s}
@@ -86,7 +87,7 @@ export default function ScoutPage() {
           className="w-full bg-white border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-gray-700 text-sm placeholder:text-gray-500 focus:outline-none focus:border-purple-600/40 transition-colors"
         />
         {query && (
-          <button onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-500 hover:text-gray-700">
+          <button type="button" onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-500 hover:text-gray-700">
             Clear
           </button>
         )}

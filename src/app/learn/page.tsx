@@ -72,6 +72,7 @@ export default function LearnPage() {
         />
         {searchQuery && (
           <button
+            type="button"
             onClick={() => setSearchQuery("")}
             aria-label="Clear search"
             className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-500 hover:text-gray-700"
@@ -94,6 +95,7 @@ export default function LearnPage() {
           <div className="flex flex-wrap gap-1.5 mb-4">
             {filterCategories.map((cat) => (
               <button
+                type="button"
                 key={cat}
                 onClick={() => setFrameworkFilter(cat)}
                 aria-pressed={frameworkFilter === cat}
