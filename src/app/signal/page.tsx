@@ -9,6 +9,7 @@ import { ArrowRight, AlertCircle } from "lucide-react";
 const companyNameMap = Object.fromEntries(companies.map((c) => [c.slug, c.name]));
 // Active companies only — must match Portfolio Exposure Matrix which also filters to Active
 const activePortfolioSlugs = new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug));
+const pipelinePortfolioSlugs = new Set(companies.filter(c => c.portfolioStatus === "Pipeline").map(c => c.slug));
 
 const allJurisdictions = ["All", ...new Set(regulatoryUpdates.map((r) => {
   const j = r.jurisdiction.split(" /")[0].trim();
@@ -317,9 +318,13 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
                 <Link
                   key={slug}
                   href={`/scout/${slug}`}
-                  className="text-xs text-purple-700 bg-purple-50 border border-purple-300 px-2 py-0.5 rounded hover:bg-purple-100 transition-colors"
+                  className={`text-xs px-2 py-0.5 rounded transition-colors ${
+                    pipelinePortfolioSlugs.has(slug)
+                      ? "text-blue-700 bg-blue-50 border border-blue-300 hover:bg-blue-100"
+                      : "text-purple-700 bg-purple-50 border border-purple-300 hover:bg-purple-100"
+                  }`}
                 >
-                  {companyNameMap[slug] ?? slug}
+                  {companyNameMap[slug] ?? slug}{pipelinePortfolioSlugs.has(slug) ? " ·Pipeline" : ""}
                 </Link>
               ))}
             </div>
