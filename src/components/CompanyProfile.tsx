@@ -1194,8 +1194,8 @@ function NatureTab({ co }: { co: Company }) {
 }
 
 function SocialTab({ co }: { co: Company }) {
-  const social = co.materialIssues.filter((i) => i.category === "Social");
-  const gov = co.materialIssues.filter((i) => i.category === "Governance");
+  const social = [...co.materialIssues].filter((i) => i.category === "Social").sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4));
+  const gov = [...co.materialIssues].filter((i) => i.category === "Governance").sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4));
   const bc = co.boardComposition;
   return (
     <div className="space-y-6">
@@ -1277,7 +1277,7 @@ function SocialTab({ co }: { co: Company }) {
             label="ESG Committee"
             value={bc.esgCommittee ? "Established" : "None"}
             note={bc.esgCommittee ? "Board-level ESG oversight in place" : "No ESG Committee — gap for a company of this risk profile"}
-            status={bc.esgCommittee ? "ok" : "warn"}
+            status={bc.esgCommittee ? "ok" : "gap"}
           />
         </div>
       </div>
@@ -1294,7 +1294,7 @@ function SocialTab({ co }: { co: Company }) {
         const jtChecks = [
           { item: "Workforce transition plan documented", pass: co.materialIssues.some(i => i.issue.toLowerCase().includes("just transition") || i.issue.toLowerCase().includes("workforce")), note: "ILO Just Transition Guidelines" },
           { item: "Community impact assessment completed", pass: co.materialIssues.some(i => i.category === "Social" && (i.issue.toLowerCase().includes("communit") || i.issue.toLowerCase().includes("social") || i.issue.toLowerCase().includes("labour") || i.issue.toLowerCase().includes("smallholder"))) || co.engagement.some(e => e.notes && (e.notes.toLowerCase().includes("communit") || e.notes.toLowerCase().includes("social plan"))), note: "UNGP community consultation" },
-          { item: "Reskilling/retraining programmes funded", pass: co.engagement.some(e => e.topic.toLowerCase().includes("transition") || e.topic.toLowerCase().includes("just")), note: "JETP social safeguards requirement" },
+          { item: "Reskilling/retraining programmes funded", pass: co.engagement.some(e => e.notes && (e.notes.toLowerCase().includes("reskill") || e.notes.toLowerCase().includes("retrain") || e.notes.toLowerCase().includes("workforce") || e.notes.toLowerCase().includes("programme"))), note: "JETP social safeguards requirement" },
           { item: "Social plan covers downstream supply chain", pass: co.engagement.some(e => e.notes && (e.notes.toLowerCase().includes("worker") || e.notes.toLowerCase().includes("transition") || e.notes.toLowerCase().includes("social"))), note: "IFC Performance Standards" },
           { item: "Just transition disclosure in annual report", pass: co.materialIssues.some(i => i.issue.toLowerCase().includes("just transition")) || co.engagement.some(e => e.notes && e.notes.toLowerCase().includes("just transition")), note: "Transition Finance framework" },
         ];
