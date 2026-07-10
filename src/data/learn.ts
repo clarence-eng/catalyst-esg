@@ -202,7 +202,7 @@ export const frameworks: FrameworkCard[] = [
     aseanContext:
       "GRI is widely adopted across ASEAN markets. Increasingly used alongside ISSB — EU CSRD and some ASEAN regulators require double materiality (GRI) plus financial materiality (ISSB).",
     url: "https://www.globalreporting.org",
-    temasekRelevance: "Medium",
+    temasekRelevance: "High",
   },
   {
     id: "jetp",
