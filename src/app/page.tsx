@@ -159,7 +159,7 @@ export default function OverviewPage() {
             </thead>
             <tbody>
               {companies.map((co) => (
-                <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-50 transition-colors">
+                <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors cursor-pointer">
                   <td className="px-6 py-4">
                     <Link href={`/scout/${co.slug}`} className="font-medium text-gray-900 text-sm hover:text-purple-700 transition-colors">{co.name}</Link>
                     <div className="text-xs text-gray-500">{co.country}</div>
@@ -305,7 +305,7 @@ function ESGDimensionHeatmap({ companies }: { companies: Array<{ name: string; s
 
 function ScoreBar({ value }: { value: number }) {
   const color =
-    value >= 70 ? "bg-emerald-500" : value >= 50 ? "bg-amber-500" : value >= 35 ? "bg-orange-500" : "bg-red-500";
+    value >= 70 ? "bg-emerald-500" : value >= 55 ? "bg-amber-500" : value >= 40 ? "bg-orange-500" : "bg-red-500";
   return (
     <div className="flex items-center gap-2">
       <div className="w-14 h-1.5 bg-gray-200 rounded-full overflow-hidden">
@@ -506,7 +506,7 @@ function PCARFinancedEmissionsTable({ companies, totalActive }: { companies: Com
           </thead>
           <tbody>
             {rows.map(({ co, stake, estimatedEmissions, score }) => (
-              <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-50 transition-colors">
+              <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors cursor-pointer">
                 <td className="px-6 py-3 text-sm font-medium text-gray-900">{co.name}</td>
                 <td className="px-4 py-3 text-xs text-gray-600">{co.sector}</td>
                 <td className="px-4 py-3 text-xs text-gray-600 text-right">{stake.toFixed(1)}%</td>
