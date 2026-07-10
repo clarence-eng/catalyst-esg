@@ -111,7 +111,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       if (!listIsOrdered && listBuffer.length > 0) flushList();
       listIsOrdered = true;
       const numMatch = line.match(/^(\d+)\.\s+/);
-      listBuffer.push({ text: line.replace(/^\d+\.\s+/, ""), num: numMatch ? parseInt(numMatch[1]) : undefined });
+      listBuffer.push({ text: line.replace(/^\d+\.\s+/, ""), num: numMatch ? parseInt(numMatch[1], 10) : undefined });
       continue;
     }
 
