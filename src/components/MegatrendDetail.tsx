@@ -134,7 +134,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
           </div>
 
           {/* AI Thematic Brief Generator */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <div className="bg-white rounded-xl border border-gray-200 p-5" aria-live="polite" aria-atomic="false">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 className="text-sm font-semibold text-gray-900">AI Thematic Brief</h3>

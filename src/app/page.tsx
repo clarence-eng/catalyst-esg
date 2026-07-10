@@ -99,7 +99,7 @@ export default function OverviewPage() {
         subtitle="ESG investment intelligence across your active portfolio — climate, nature, and social."
       >
         <div className="flex items-center gap-2 text-xs text-gray-600 bg-gray-100 rounded-lg px-3 py-2 border border-gray-200">
-          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
           S${(totalActive / 1000).toFixed(1)}B active
           {pipelineCount > 0 && (
             <span className="flex items-center gap-1 text-blue-700 ml-1">
@@ -197,7 +197,7 @@ export default function OverviewPage() {
                     <TransitionRiskDot level={co.climateRisk.transition} />
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <Link href={`/scout/${co.slug}`} className="text-xs text-purple-700 hover:text-purple-800">
+                    <Link href={`/scout/${co.slug}`} className="text-xs text-purple-700 hover:text-purple-800" aria-label={`View ${co.name} ESG profile`}>
                       View →
                     </Link>
                   </td>
@@ -348,7 +348,7 @@ function ParisPathwayWidget({ companies }: { companies: { pathwayAlignment: stri
       {total > 0 ? (
         <>
           {/* Stacked bar */}
-          <div className="w-full h-4 rounded-full overflow-hidden flex mb-4">
+          <div role="img" aria-label="Paris Pathway alignment stacked bar" className="w-full h-4 rounded-full overflow-hidden flex mb-4">
             {tiers.map(tier => {
               const tierAUM = tier.companies.reduce((s, c) => s + c.investmentValue, 0);
               const pct = (tierAUM / total) * 100;

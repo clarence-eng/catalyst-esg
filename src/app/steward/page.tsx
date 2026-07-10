@@ -357,7 +357,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
           </div>
 
           {/* ESG Action Plan Generator — Active companies only */}
-          {!isPipeline && <div>
+          {!isPipeline && <div aria-live="polite" aria-atomic="false">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 className="text-sm font-semibold text-gray-900">ESG Action Plan</h3>

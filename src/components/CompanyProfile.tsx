@@ -723,7 +723,7 @@ function OverviewTab({
         {/* Score Trend */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-3">Score Trend (E/S/G)</h3>
-          <div role="img" aria-label={`Historical E/S/G score trend for ${co.name}`}>
+          <div role="img" aria-label={`Historical E/S/G score trend for ${co.name}. Latest: Environmental ${co.esgScore.environmental}, Social ${co.esgScore.social}, Governance ${co.esgScore.governance}`}>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={co.historicalScores}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
