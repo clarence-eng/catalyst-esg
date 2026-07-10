@@ -51,7 +51,7 @@ export function ScoreRing({ score, size = 80, label }: { score: number; size?: n
   const radius = (size - 8) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = (score / 100) * circumference;
-  const color = score >= 70 ? "#10b981" : score >= 50 ? "#f59e0b" : score >= 35 ? "#f97316" : "#ef4444";
+  const color = score >= 70 ? "#10b981" : score >= 55 ? "#f59e0b" : score >= 40 ? "#f97316" : "#ef4444";
 
   return (
     <div className="flex flex-col items-center gap-1">

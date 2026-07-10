@@ -59,7 +59,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
   // Escape HTML first, then apply safe markdown-to-HTML transforms
   function renderInline(s: string): string {
     return escapeHtml(s)
-      .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-gray-900 font-semibold">$1</strong>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong class="text-gray-900 font-semibold">$1</strong>')
       .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-gray-800">$1</em>');
   }
 

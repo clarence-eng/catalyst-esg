@@ -10,7 +10,7 @@ type StatusFilter = "All" | "Active" | "Pipeline";
 const MEGATREND_COLORS: Record<string, string> = {
   "Climate Transition": "text-emerald-700",
   "Nature & Biodiversity": "text-green-700",
-  "Just Transition & Inclusive Growth": "text-orange-600",
+  "Just Transition & Inclusive Growth": "text-orange-700",
   "AI & Digital Ethics": "text-blue-700",
   "Longer Lifespans": "text-indigo-700",
 };
