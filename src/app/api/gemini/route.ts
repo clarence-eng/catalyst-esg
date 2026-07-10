@@ -192,7 +192,7 @@ Format: Numbered list within each section. Investment-grade language. Singapore/
     } catch {
       return NextResponse.json({ error: "No content returned from AI (response may have been filtered)" }, { status: 502 });
     }
-    if (!text) {
+    if (!text?.trim()) {
       return NextResponse.json({ error: "No content returned from AI (response may have been filtered)" }, { status: 502 });
     }
     return NextResponse.json({ text });

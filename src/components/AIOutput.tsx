@@ -71,7 +71,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
 
     // Quarter headers: only match action-plan structural labels like "Q1 (Months 1-3):" or "Q1:"
     // Requires either bare "Q1:" or "Q1 (..." form — NOT "Q1 Arbitrary Text:"
-    if (/^(Q[1-4]\s*\([^)]*\)\s*:|Q[1-4]\s*:)\s*$/i.test(line)) {
+    if (/^(Q[1-4]\s*\([^)]*\)\s*:|Q[1-4]\s*:)/i.test(line) && !/^Q[1-4]\s+[A-Z][^:]*:/i.test(line)) {
       flushList();
       elements.push(
         <div key={key++} className="text-sm font-semibold text-emerald-700 mt-5 mb-2 border-b border-emerald-600/20 pb-1">
@@ -85,7 +85,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
     // Exclude lines like "**foo** and **bar**" that start AND end with ** but have inner ** pairs
     // Also exclude long prose lines that happen to be fully bolded (> 60 chars inner content)
     const isSingleBoldWrap = line.startsWith("**") && line.endsWith("**") && line.length > 4 &&
-      line.slice(2, -2).indexOf("**") === -1 && line.slice(2, -2).length <= 80;
+      line.slice(2, -2).indexOf("**") === -1 && line.slice(2, -2).length <= 160;
     if (isSingleBoldWrap || line.startsWith("### ")) {
       flushList();
       const content = line.replace(/^###\s*/, "").replace(/^\*\*|\*\*$/g, "");

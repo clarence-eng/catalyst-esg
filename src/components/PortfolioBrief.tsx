@@ -28,7 +28,10 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
           context: { portfolioSummary },
         }),
       });
-      if (!res.ok) throw new Error(`Request failed: ${res.status} ${res.statusText}`);
+      if (!res.ok) {
+        const msg = res.status === 429 ? "API quota exceeded — please try again in a moment" : `Request failed: ${res.status} ${res.statusText}`;
+        throw new Error(msg);
+      }
       let data: { error?: string; text?: string };
       try { data = await res.json(); } catch { throw new Error(`Request failed: ${res.status} (unexpected response format)`); }
       if (data.error) throw new Error(data.error);

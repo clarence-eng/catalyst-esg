@@ -221,11 +221,14 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
           },
         }),
       });
-      if (!res.ok) throw new Error(`Request failed: ${res.status} ${res.statusText}`);
+      if (!res.ok) {
+        const msg = res.status === 429 ? "API quota exceeded — please try again in a moment" : `Request failed: ${res.status} ${res.statusText}`;
+        throw new Error(msg);
+      }
       let data: { error?: string; text?: string };
       try { data = await res.json(); } catch { throw new Error(`Request failed: ${res.status} (unexpected response format)`); }
       if (data.error) throw new Error(data.error);
-      if (!data.text) throw new Error("No content received from AI");
+      if (!data.text?.trim()) throw new Error("No content received from AI");
       setPlan(data.text);
       setPlanGeneratedAt(new Date());
     } catch (e: unknown) {
