@@ -41,7 +41,8 @@ export default function LearnPage() {
       cs.title.toLowerCase().includes(q) ||
       cs.summary.toLowerCase().includes(q) ||
       cs.outcome.toLowerCase().includes(q) ||
-      cs.lessonLearned.toLowerCase().includes(q)
+      cs.lessonLearned.toLowerCase().includes(q) ||
+      cs.frameworks.some(f => f.toLowerCase().includes(q))
     );
   });
 

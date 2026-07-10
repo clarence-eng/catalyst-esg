@@ -410,7 +410,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
 
   if (cat.includes("banking") || cat.includes("commercial bank")) return [
     { kpi: "Green & Transition Finance Ratio", value: `${co.greenRevenuePct}%`, unit: "of total lending", benchmark: "Singapore target: 10%+ by 2025" },
-    { kpi: "Carbon-Intensive Sector Exposure", value: co.materialIssues.some(i => i.issue.includes("Financed Emissions")) ? "High — disclosed" : "Moderate", unit: "of loan book", benchmark: "PCAF required for Scope 3 Cat. 15" },
+    { kpi: "Carbon-Intensive Sector Exposure", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("financed emissions")) ? "High — disclosed" : "Moderate", unit: "of loan book", benchmark: "PCAF required for Scope 3 Cat. 15" },
     { kpi: "ESG Screening Coverage", value: co.natureRisk.overall === "Low" ? ">80% of new loans" : "Partial (<50%)", unit: "of new origination", benchmark: "MAS best practice: 100%" },
     { kpi: "Financial Inclusion Score", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("inclusion")) ? "Active programmes" : "Not reported", unit: "", benchmark: "OJK mandate for Indonesian banks" },
   ];
