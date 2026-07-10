@@ -273,7 +273,7 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
   {
     id: "tnfd-adoption",
     title: "TNFD Nature-related Disclosures (v1.0)",
-    jurisdiction: "Global (voluntary, adopted by 320+ companies)",
+    jurisdiction: "Global (voluntary, adopted by 500+ companies)",
     effectiveDate: "September 2023",
     status: "In Force",
     category: "Nature",
