@@ -223,7 +223,7 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
       "Singapore-Asia Taxonomy defines what counts as 'green' for regulatory capital treatment. FAST-P creates blended finance co-investment opportunities with MAS for ASEAN clean energy deals.",
     relevantSectors: ["Banking", "Energy", "Infrastructure", "Real Estate"],
     urgency: "High",
-    portfolioImpact: ["nusantara-bank", "cloudmesh-technologies"],
+    portfolioImpact: ["nusantara-bank", "cloudmesh-technologies", "medilink-health"],
   },
   {
     id: "eudr-2025",
@@ -283,7 +283,7 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
       "Companies adopting TNFD early gain advantage in nature-sensitive supply chains and access to nature-positive financing. Non-adopters face growing investor scrutiny.",
     relevantSectors: ["Agriculture", "Mining", "Real Estate", "Banking", "Consumer Goods"],
     urgency: "Medium",
-    portfolioImpact: ["greenharvest-agri", "nusantara-bank", "asiapower-energy"],
+    portfolioImpact: ["greenharvest-agri", "nusantara-bank", "asiapower-energy", "seaport-logistics"],
   },
   {
     id: "malaysia-bursa-sustainability",
