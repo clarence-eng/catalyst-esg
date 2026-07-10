@@ -126,9 +126,9 @@ export default function SignalPage() {
                       "text-blue-700 bg-blue-100"
                     }`}>{r.urgency}</span>
                   </div>
-                  <div className="text-xs text-gray-500">{r.jurisdiction} · {r.category}</div>
+                  <div className="text-xs text-gray-600">{r.jurisdiction} · {r.category}</div>
                 </div>
-                <div className="flex-shrink-0 text-xs text-gray-500">
+                <div className="flex-shrink-0 text-xs text-gray-600">
                   {r.portfolioImpact?.length ? `${r.portfolioImpact.length} co${r.portfolioImpact.length > 1 ? "s" : ""}` : ""}
                 </div>
               </div>
@@ -144,7 +144,7 @@ export default function SignalPage() {
           <table className="w-full text-xs min-w-[700px]">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
-                <th scope="col" className="text-left px-4 py-3 text-gray-500 font-medium w-36">Company</th>
+                <th scope="col" className="text-left px-4 py-3 text-gray-600 font-medium w-36">Company</th>
                 {megatrends.map(t => (
                   <th key={t.slug} scope="col" className="text-center px-2 py-3 text-gray-600 font-medium w-28">{t.title.split(" ")[0]}</th>
                 ))}

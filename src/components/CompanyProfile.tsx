@@ -1428,7 +1428,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
                       <span className="text-xs text-gray-600 bg-gray-100 px-2 py-0.5 rounded">{e.type}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-500">{formatDate(e.date)}</span>
+                      <span className="text-xs text-gray-600">{formatDate(e.date)}</span>
                       <span className={`text-xs px-2 py-0.5 rounded border ${
                         e.status === "Completed" ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
                         e.status === "Planned" ? "text-blue-700 bg-blue-50 border-blue-300" :

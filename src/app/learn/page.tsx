@@ -291,8 +291,8 @@ function FrameworkDetailCard({ framework: f }: { framework: (typeof frameworks)[
       </div>
 
       <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
-        <div className="text-xs text-gray-500 font-medium mb-1">ASEAN Context</div>
-        <p className="text-xs text-gray-500 leading-relaxed">{f.aseanContext}</p>
+        <div className="text-xs text-gray-600 font-medium mb-1">ASEAN Context</div>
+        <p className="text-xs text-gray-600 leading-relaxed">{f.aseanContext}</p>
       </div>
     </div>
   );

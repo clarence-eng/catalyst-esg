@@ -161,8 +161,8 @@ export default function AboutPage() {
                   {co.portfolioStatus === "Pipeline" && <GitMerge className="w-3 h-3 text-blue-700" />}
                   <span className="font-medium text-gray-900">{co.name}</span>
                 </div>
-                <div className="text-gray-500">{co.sector}, {co.country}</div>
-                <div className="text-gray-500 mt-0.5">{companyWhy[co.slug] ?? ""}</div>
+                <div className="text-gray-600">{co.sector}, {co.country}</div>
+                <div className="text-gray-600 mt-0.5">{companyWhy[co.slug] ?? ""}</div>
               </div>
             ))}
           </div>
@@ -171,7 +171,7 @@ export default function AboutPage() {
 
       {/* Disclaimer — candidate context */}
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6">
-        <p className="text-xs text-gray-500 leading-relaxed">
+        <p className="text-xs text-gray-600 leading-relaxed">
           Catalyst is a candidate portfolio project for Temasek&apos;s ESG Investment Management team. It is not an official Temasek product.
           All portfolio company data is mock and for demonstration purposes only.
           AI features use Google Gemini 2.5 Flash (free tier) and require a personal API key in <code className="text-gray-600 bg-gray-100 px-1 rounded">.env.local</code>.
