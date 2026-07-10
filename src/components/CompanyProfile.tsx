@@ -795,7 +795,7 @@ function ClimateTab({ co }: { co: Company }) {
     {
       pillar: "Strategy",
       desc: "Climate-related risks/opportunities, scenario analysis, financial planning",
-      status: co.climateRisk.transitionDetails.length >= 3 ? "Adopted" as const :
+      status: co.climateRisk.transitionDetails.length >= 2 && co.climateRisk.physicalDetails.length > 0 ? "Adopted" as const :
               co.climateRisk.transitionDetails.length >= 1 ? "Partial" as const : "Gap" as const,
     },
     {
@@ -817,7 +817,7 @@ function ClimateTab({ co }: { co: Company }) {
     { item: "Climate scenario analysis (≥2 scenarios)", status: co.climateRisk.transitionDetails.length >= 2 ? "✓" : co.climateRisk.transitionDetails.length >= 1 ? "Partial" : "✗", pass: co.climateRisk.transitionDetails.length >= 2 },
     { item: "Physical risk quantification", status: co.climateRisk.physicalDetails.length > 0 ? "✓" : "✗", pass: co.climateRisk.physicalDetails.length > 0 },
     { item: "Scope 1+2 emissions disclosed", status: co.carbonIntensity > 0 ? "✓" : "✗", pass: co.carbonIntensity > 0 },
-    { item: "Scope 3 assessment / financed emissions", status: co.materialIssues.some(i => i.issue.toLowerCase().includes("financed") || (i.issue.toLowerCase().includes("scope 3") || i.issue.toLowerCase().includes("financed emissions"))) ? "Partial" : "✗", pass: co.materialIssues.some(i => !i.opportunity && (i.issue.toLowerCase().includes("financed") || i.issue.toLowerCase().includes("scope 3"))) },
+    { item: "Scope 3 assessment / financed emissions", status: co.materialIssues.some(i => { const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }) ? "Partial" : "✗", pass: co.materialIssues.some(i => { if (i.opportunity) return false; const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }) },
     { item: "Climate-related targets set", status: co.netZeroCommitment !== "None" ? "✓" : "✗", pass: co.netZeroCommitment !== "None" },
     { item: "SBTi-validated or equivalent pathway", status: co.netZeroCommitment === "SBTi Targets Set" ? "✓" : co.netZeroCommitment === "SBTi Committed" ? "In Progress" : "✗", pass: co.netZeroCommitment === "SBTi Targets Set" },
   ];
@@ -908,7 +908,7 @@ function ClimateTab({ co }: { co: Company }) {
         {(() => {
           const milestones = [
             { year: "2024", label: "Baseline", event: `Current: ${co.carbonIntensity} tCO₂e/$M, ESG Score ${co.esgScore.overall}`, status: "done" },
-            { year: "2025", label: "Near-term", event: co.netZeroCommitment === "SBTi Committed" ? "SBTi near-term target submission (committed)" : co.netZeroCommitment === "SBTi Targets Set" ? "SBTi near-term targets validated ✓" : "No near-term target set", status: co.netZeroCommitment === "SBTi Targets Set" || co.netZeroCommitment === "SBTi Committed" ? "done" : co.netZeroCommitment !== "None" ? "planned" : "gap" },
+            { year: "2025", label: "Near-term", event: co.netZeroCommitment === "SBTi Committed" ? "SBTi near-term target submission (committed)" : co.netZeroCommitment === "SBTi Targets Set" ? "SBTi near-term targets validated ✓" : "No near-term target set — deadline passed", status: co.netZeroCommitment === "SBTi Targets Set" || co.netZeroCommitment === "SBTi Committed" ? "done" : co.netZeroCommitment !== "None" ? "planned" : "missed" },
             { year: "2026", label: "Engagement", event: co.engagement.filter(e => e.status === "Planned").slice(0,1).map(e => `Planned: ${e.topic}`).join("") || "No planned engagements", status: co.engagement.some(e => e.status === "Planned") ? "upcoming" : "gap" },
             { year: "2030", label: "SBTi Target", event: co.netZeroCommitment === "SBTi Targets Set" ? "42% Scope 1+2 reduction (validated SBTi)" : co.netZeroCommitment === "SBTi Committed" ? "42% reduction target (pending validation)" : `Target needed — current pathway: ${co.climateRisk.pathwayAlignment}`, status: co.netZeroCommitment !== "None" ? (co.netZeroCommitment === "SBTi Targets Set" ? "committed" : "planned") : "gap" },
             { year: "2050", label: "Net Zero", event: co.netZeroCommitment !== "None" ? "Net zero by 2050 (committed)" : "No net zero commitment", status: co.netZeroCommitment !== "None" ? "committed" : "gap" },
@@ -925,6 +925,7 @@ function ClimateTab({ co }: { co: Company }) {
                       m.status === "upcoming" ? "bg-blue-600 text-white" :
                       m.status === "committed" ? "bg-purple-600 text-white" :
                       m.status === "planned" ? "bg-amber-600 text-white" :
+                      m.status === "missed" ? "bg-red-500 text-white" :
                       "bg-gray-300 text-gray-600"
                     }`}>{m.year.slice(-2)}</div>
                     <div className="text-xs font-semibold text-gray-700 mt-2">{m.year}</div>
@@ -1280,11 +1281,11 @@ function SocialTab({ co }: { co: Company }) {
         if (!showJustTransition) return null;
 
         const jtChecks = [
-          { item: "Workforce transition plan documented", pass: co.materialIssues.some(i => i.issue.includes("Just Transition") || i.issue.includes("workforce")), note: "ILO Just Transition Guidelines" },
+          { item: "Workforce transition plan documented", pass: co.materialIssues.some(i => i.issue.toLowerCase().includes("just transition") || i.issue.toLowerCase().includes("workforce")), note: "ILO Just Transition Guidelines" },
           { item: "Community impact assessment completed", pass: co.materialIssues.some(i => i.category === "Social" && i.issue.includes("Communit")), note: "UNGP community consultation" },
           { item: "Reskilling/retraining programmes funded", pass: co.engagement.some(e => e.topic.toLowerCase().includes("transition") || e.topic.toLowerCase().includes("just")), note: "JETP social safeguards requirement" },
           { item: "Social plan covers downstream supply chain", pass: co.engagement.some(e => e.notes && (e.notes.toLowerCase().includes("worker") || e.notes.toLowerCase().includes("transition") || e.notes.toLowerCase().includes("social"))), note: "IFC Performance Standards" },
-          { item: "Just transition disclosure in annual report", pass: co.netZeroCommitment !== "None", note: "Transition Finance framework" },
+          { item: "Just transition disclosure in annual report", pass: co.materialIssues.some(i => i.issue.toLowerCase().includes("just transition")) || co.engagement.some(e => e.notes && e.notes.toLowerCase().includes("just transition")), note: "Transition Finance framework" },
         ];
 
         const passCount = jtChecks.filter(c => c.pass).length;
