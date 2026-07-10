@@ -341,20 +341,20 @@ export const companies: Company[] = [
           "EUDR enforcement creates immediate compliance risk for palm oil clients and by extension credit quality of ~S$1.4B in loans.",
       },
       {
-        category: "Social",
-        issue: "Financial Inclusion",
-        severity: "Low",
-        opportunity: true,
-        detail:
-          "40% of Indonesia remains unbanked. Digital banking expansion aligns with OJK inclusion mandate and Temasek's inclusive growth thesis.",
-      },
-      {
         category: "Governance",
         issue: "Anti-Corruption Controls",
         severity: "Medium",
         opportunity: false,
         detail:
           "Two regulatory notices from OJK on KYC compliance in 2022-2023. Remediation plan in progress.",
+      },
+      {
+        category: "Social",
+        issue: "Financial Inclusion",
+        severity: "Low",
+        opportunity: true,
+        detail:
+          "40% of Indonesia remains unbanked. Digital banking expansion aligns with OJK inclusion mandate and Temasek's inclusive growth thesis.",
       },
       {
         category: "Environmental",
@@ -529,20 +529,20 @@ export const companies: Company[] = [
           "Handling data for MAS-regulated financial institutions; one security incident in 2023. ISO 27001 certified but SOC 2 Type II pending.",
       },
       {
-        category: "Social",
-        issue: "Digital Skills & Workforce",
-        severity: "Low",
-        opportunity: true,
-        detail:
-          "SkillsFuture alignment and tech talent pipeline are value-creation levers for Singapore-based operations.",
-      },
-      {
         category: "Governance",
         issue: "AI Ethics & Responsible AI",
         severity: "Medium",
         opportunity: false,
         detail:
           "AI product lines lack published responsible AI policy. MAS FEAT Principles apply to financial sector clients using AI tools.",
+      },
+      {
+        category: "Social",
+        issue: "Digital Skills & Workforce",
+        severity: "Low",
+        opportunity: true,
+        detail:
+          "SkillsFuture alignment and tech talent pipeline are value-creation levers for Singapore-based operations.",
       },
       {
         category: "Environmental",
@@ -714,22 +714,6 @@ export const companies: Company[] = [
           "Migrant worker housing standards flagged in 2023 RSPO audit. Remediation in progress. Smallholder inclusion programme covers only 30% of supply base.",
       },
       {
-        category: "Environmental",
-        issue: "Biodiversity Net Gain",
-        severity: "Low",
-        opportunity: true,
-        detail:
-          "Biodiversity corridors and HCV area management could generate verified biodiversity credits under emerging frameworks (SBTN, Article 6).",
-      },
-      {
-        category: "Social",
-        issue: "Smallholder Sustainability Uplift",
-        severity: "Low",
-        opportunity: true,
-        detail:
-          "Extending RSPO certification to independent smallholders in supply base creates market access to premium sustainability-linked buyers.",
-      },
-      {
         category: "Governance",
         issue: "NDPE Policy Independent Oversight",
         severity: "Medium",
@@ -744,6 +728,22 @@ export const companies: Company[] = [
         opportunity: false,
         detail:
           "Board independence at 38% (3 of 8 directors) is the lowest across the active portfolio and below the 50% best-practice threshold. Combined CEO-Chair role adds concentration risk. Given two Critical ESG issues involving European buyer compliance, strong board oversight is essential. Pre-condition for any DFI co-investment typically includes ≥50% independent directors.",
+      },
+      {
+        category: "Environmental",
+        issue: "Biodiversity Net Gain",
+        severity: "Low",
+        opportunity: true,
+        detail:
+          "Biodiversity corridors and HCV area management could generate verified biodiversity credits under emerging frameworks (SBTN, Article 6).",
+      },
+      {
+        category: "Social",
+        issue: "Smallholder Sustainability Uplift",
+        severity: "Low",
+        opportunity: true,
+        detail:
+          "Extending RSPO certification to independent smallholders in supply base creates market access to premium sustainability-linked buyers.",
       },
     ],
     valueUplift: [
@@ -1088,6 +1088,14 @@ export const companies: Company[] = [
           "AI triage models trained primarily on Singapore patient cohort. Limited validation for Southeast Asian patient demographics, language diversity, and disease prevalence patterns. MAS FEAT Principles apply to AI components in financial products; MOH AI in Healthcare Framework relevant.",
       },
       {
+        category: "Governance",
+        issue: "Board & Governance Maturity",
+        severity: "Medium",
+        opportunity: false,
+        detail:
+          "Founder-led board with 2 of 5 directors classified as independent. Pre-IPO governance enhancement required: audit committee, ESG committee, whistleblower policy, and board diversity targets should be conditions of investment.",
+      },
+      {
         category: "Social",
         issue: "Health Access & Inclusion",
         severity: "Low",
@@ -1102,14 +1110,6 @@ export const companies: Company[] = [
         opportunity: true,
         detail:
           "Cloud-first architecture enables rapid migration to low-carbon cloud providers. Singapore I-REC pathway available. Potential to market as 'carbon-neutral telehealth' — premium differentiator in European-funded global health programmes.",
-      },
-      {
-        category: "Governance",
-        issue: "Board & Governance Maturity",
-        severity: "Medium",
-        opportunity: false,
-        detail:
-          "Founder-led board with 2 of 5 directors classified as independent. Pre-IPO governance enhancement required: audit committee, ESG committee, whistleblower policy, and board diversity targets should be conditions of investment.",
       },
     ],
     valueUplift: [

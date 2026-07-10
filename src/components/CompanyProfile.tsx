@@ -588,7 +588,7 @@ function OverviewTab({
               <div className="space-y-2">
                 {greenwashChecks.map((check, i) => (
                   <div key={i} className={`flex items-start gap-2 p-2 rounded-lg ${check.concern ? "bg-red-50 border border-red-100" : "bg-gray-50 border border-gray-100"}`}>
-                    <span className={`flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 ${check.concern ? "bg-red-500 text-white" : "bg-emerald-500 text-white"}`}>
+                    <span className={`flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 ${check.concern ? "bg-red-600 text-white" : "bg-emerald-600 text-white"}`}>
                       {check.concern ? "✗" : "✓"}
                     </span>
                     <div className="flex-1 min-w-0">
@@ -921,7 +921,7 @@ function ClimateTab({ co }: { co: Company }) {
                       m.status === "done" ? "bg-emerald-600 text-white" :
                       m.status === "upcoming" ? "bg-blue-600 text-white" :
                       m.status === "committed" ? "bg-purple-600 text-white" :
-                      m.status === "planned" ? "bg-amber-500 text-white" :
+                      m.status === "planned" ? "bg-amber-600 text-white" :
                       "bg-gray-300 text-gray-600"
                     }`}>{m.year.slice(-2)}</div>
                     <div className="text-xs font-semibold text-gray-700 mt-2">{m.year}</div>
@@ -1302,7 +1302,7 @@ function SocialTab({ co }: { co: Company }) {
             <div className="space-y-2">
               {jtChecks.map((check, i) => (
                 <div key={i} className={`flex items-start gap-2 p-2 rounded-lg ${check.pass ? "bg-gray-50 border border-gray-100" : "bg-red-50 border border-red-100"}`}>
-                  <span className={`flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 ${check.pass ? "bg-emerald-500 text-white" : "bg-red-500 text-white"}`}>
+                  <span className={`flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 ${check.pass ? "bg-emerald-600 text-white" : "bg-red-600 text-white"}`}>
                     {check.pass ? "✓" : "✗"}
                   </span>
                   <div className="flex-1 min-w-0">
