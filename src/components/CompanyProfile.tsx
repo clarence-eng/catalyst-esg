@@ -289,7 +289,7 @@ function getASEANTaxonomy(co: Company): { activity: string; tier: TaxonomyTier; 
     return all.filter(a => a.pct > 0);
   }
   if (sector.includes("marine") || sector.includes("transport")) return [
-    { activity: `Shipping (transition via ${co.netZeroCommitment !== "None" ? "SBTi pathway" : "IMO CII"})`, tier: "Tier 2", pct: 100 },
+    { activity: co.netZeroCommitment !== "None" ? `Shipping (SBTi/IMO aligned pathway)` : `Shipping (IMO CII compliance only)`, tier: (co.netZeroCommitment !== "None" ? "Tier 2" : "Not classified") as TaxonomyTier, pct: 100 },
   ];
   if (sector.includes("agriculture")) {
     const all: { activity: string; tier: TaxonomyTier; pct: number }[] = [
@@ -404,8 +404,8 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
 
   if (cat.includes("marine") || cat.includes("shipping")) return [
     { kpi: "Carbon Intensity", value: co.carbonIntensity.toString(), unit: "tCO₂e/$M revenue", benchmark: "Industry median: ~280", note: "IMO CII compliance critical" },
-    { kpi: "Fuel Mix (HFO %)", value: `~${100 - co.greenRevenuePct}%`, unit: "of fuel", benchmark: "IMO 2030 target: <50%", note: "Decarbonisation driver" },
-    { kpi: "Port Environmental Rating", value: co.natureRisk.overall === "Low" ? "ECA Compliant" : "Needs Review", unit: "", benchmark: "Industry: 70% compliant" },
+    { kpi: "Fuel Mix (HFO %)", value: co.netZeroCommitment !== "None" ? "Reduction committed" : co.climateRisk.transition === "Critical" || co.climateRisk.transition === "High" ? "Predominantly HFO (high carbon)" : "Partial transition underway", unit: "", benchmark: "IMO 2030 target: <50% HFO", note: "Decarbonisation driver" },
+    { kpi: "IMO ECA Compliance Status", value: co.climateRisk.physicalDetails.length > 0 ? "Monitoring in place" : "Not formally disclosed", unit: "", benchmark: "Industry: 70% compliant" },
     { kpi: "Near-miss Safety Incidents", value: "Not disclosed", unit: "per year", benchmark: "ISM Code required", note: co.materialIssues.some(i => i.issue.toLowerCase().includes("safety")) ? "Material issue" : undefined },
   ];
 
@@ -562,8 +562,8 @@ function OverviewTab({
             },
             {
               label: "ESG maturity consistent with ESG score",
-              concern: co.maturity === "Leading" && co.esgScore.overall < 65,
-              note: co.maturity === "Leading" && co.esgScore.overall < 65 ? `'Leading' maturity with score ${co.esgScore.overall} may overstate progress` : null,
+              concern: (co.maturity === "Leading" || co.maturity === "Advanced") && co.esgScore.overall < 55,
+              note: (co.maturity === "Leading" || co.maturity === "Advanced") && co.esgScore.overall < 55 ? `'${co.maturity}' maturity claim with score ${co.esgScore.overall} may overstate progress` : null,
             },
             {
               label: "No overdue Critical engagements",
