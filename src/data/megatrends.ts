@@ -223,7 +223,7 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
       "Singapore-Asia Taxonomy defines what counts as 'green' for regulatory capital treatment. FAST-P creates blended finance co-investment opportunities with MAS for ASEAN clean energy deals.",
     relevantSectors: ["Banking", "Energy", "Infrastructure", "Real Estate"],
     urgency: "High",
-    portfolioImpact: ["nusantara-bank", "cloudmesh-technologies"],
+    portfolioImpact: ["nusantara-bank"],
   },
   {
     id: "eudr-2025",
