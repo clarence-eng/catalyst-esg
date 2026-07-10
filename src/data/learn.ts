@@ -102,7 +102,7 @@ export const frameworks: FrameworkCard[] = [
     name: "SASB",
     fullName: "Sustainability Accounting Standards Board Standards",
     category: "Reporting",
-    status: "Voluntary",
+    status: "Mandatory",
     adoptionYear: "2018",
     description:
       "SASB Standards (now maintained by ISSB/IFRS Foundation) identify the subset of ESG issues most likely to be financially material for 77 specific industries. They provide the sector-specific materiality toolkit used within ISSB S1.",
