@@ -1,0 +1,130 @@
+/**
+ * Fetches all companies from Supabase and converts to the Company type.
+ * Falls back to empty array if Supabase is unavailable.
+ */
+
+import { supabase, type DbCompany, type DbEngagement, type DbMaterialIssue } from "./supabase";
+import type { Company } from "@/data/companies";
+
+function dbToCompany(
+  co: DbCompany,
+  engagements: DbEngagement[],
+  issues: DbMaterialIssue[]
+): Company {
+  return {
+    slug: co.slug,
+    name: co.name,
+    sector: co.sector,
+    country: co.country,
+    region: co.region,
+    description: co.description,
+    portfolioStatus: co.portfolio_status as Company["portfolioStatus"],
+    maturity: co.maturity as Company["maturity"],
+    investmentValue: co.investment_value,
+    carbonIntensity: co.carbon_intensity,
+    greenRevenuePct: co.green_revenue_pct,
+    esgScore: {
+      overall: co.esg_overall,
+      environmental: co.esg_environmental,
+      social: co.esg_social,
+      governance: co.esg_governance,
+      rating: co.esg_rating as Company["esgScore"]["rating"],
+    },
+    climateRisk: {
+      transition: co.transition_risk as Company["climateRisk"]["transition"],
+      physical: co.physical_risk as Company["climateRisk"]["physical"],
+      pathwayAlignment: co.pathway_alignment as Company["climateRisk"]["pathwayAlignment"],
+      transitionDetails: [],
+      physicalDetails: [],
+    },
+    natureRisk: {
+      overall: co.nature_risk as Company["natureRisk"]["overall"],
+      biodiversityExposure: false,
+      waterStress: false,
+      deforestationRisk: false,
+      tnfdAligned: false,
+      details: [],
+      tnfdPillars: [
+        { pillar: "Governance", status: "Gap" },
+        { pillar: "Strategy", status: "Gap" },
+        { pillar: "Risk & Impact Mgmt", status: "Gap" },
+        { pillar: "Metrics & Targets", status: "Gap" },
+      ],
+    },
+    netZeroCommitment: co.net_zero_commitment as Company["netZeroCommitment"],
+    sasbCategory: co.sasb_category,
+    temasekMegatrend: co.temasek_megatrend as Company["temasekMegatrend"],
+    lastUpdated: co.last_updated,
+    // Map engagements
+    engagement: engagements
+      .filter(e => e.company_slug === co.slug)
+      .sort((a, b) => b.date.localeCompare(a.date))
+      .map(e => ({
+        date: e.date,
+        type: e.type as Company["engagement"][0]["type"],
+        topic: e.topic,
+        status: e.status as Company["engagement"][0]["status"],
+        notes: e.notes,
+      })),
+    // Map material issues
+    materialIssues: issues
+      .filter(i => i.company_slug === co.slug)
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map(i => ({
+        category: i.category as Company["materialIssues"][0]["category"],
+        issue: i.issue,
+        severity: i.severity as Company["materialIssues"][0]["severity"],
+        opportunity: i.opportunity,
+        detail: i.detail,
+      })),
+    // Defaults for complex fields not stored in DB
+    historicalScores: [],
+    boardComposition: {
+      boardSize: 8,
+      independentPct: 50,
+      womenPct: 25,
+      ceoChairSplit: true,
+      auditCommittee: true,
+      esgCommittee: false,
+    },
+    valueUplift: [],
+    sdgAlignment: [],
+    icRecommendation: undefined,
+  };
+}
+
+let cachedCompanies: Company[] | null = null;
+let cacheTime = 0;
+const CACHE_TTL = 30_000; // 30 second cache
+
+export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
+  // Return cache if fresh
+  if (cachedCompanies && Date.now() - cacheTime < CACHE_TTL) {
+    return cachedCompanies;
+  }
+
+  try {
+    const [{ data: cos }, { data: engs }, { data: mis }] = await Promise.all([
+      supabase.from("companies").select("*").order("created_at"),
+      supabase.from("engagements").select("*").order("date", { ascending: false }),
+      supabase.from("material_issues").select("*").order("sort_order"),
+    ]);
+
+    if (!cos || cos.length === 0) return [];
+
+    const companies = (cos as DbCompany[]).map(co =>
+      dbToCompany(co, (engs || []) as DbEngagement[], (mis || []) as DbMaterialIssue[])
+    );
+
+    cachedCompanies = companies;
+    cacheTime = Date.now();
+    return companies;
+  } catch {
+    return [];
+  }
+}
+
+export function clearCompanyCache() {
+  cachedCompanies = null;
+  cacheTime = 0;
+}

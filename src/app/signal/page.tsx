@@ -1,15 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { megatrends, regulatoryUpdates } from "@/data/megatrends";
-import { companies } from "@/data/companies";
+import { useCompanies } from "@/lib/useCompanies";
+import { companies as staticCompanies } from "@/data/companies";
 import { PageHeader } from "@/components/ui-elements";
 import { ArrowRight, AlertCircle } from "lucide-react";
-
-const companyNameMap = Object.fromEntries(companies.map((c) => [c.slug, c.name]));
-// Active companies only — must match Portfolio Exposure Matrix which also filters to Active
-const activePortfolioSlugs = new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug));
-const pipelinePortfolioSlugs = new Set(companies.filter(c => c.portfolioStatus === "Pipeline").map(c => c.slug));
 
 const allJurisdictions = ["All", ...new Set(regulatoryUpdates.map((r) => {
   const j = r.jurisdiction.split(" /")[0].trim();
@@ -38,8 +34,13 @@ const megatrendUrgencyMap: Record<string, string> = {
 };
 
 export default function SignalPage() {
+  const { companies } = useCompanies();
   const [jurisdictionFilter, setJurisdictionFilter] = useState("All");
   const [categoryFilter, setCategoryFilter] = useState("All");
+
+  const companyNameMap = useMemo(() => Object.fromEntries(companies.map((c) => [c.slug, c.name])), [companies]);
+  const activePortfolioSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug)), [companies]);
+  const pipelinePortfolioSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Pipeline").map(c => c.slug)), [companies]);
 
   const filteredUpdates = regulatoryUpdates.filter((r) => {
     const primaryJurisdiction = r.jurisdiction.split(" /")[0].trim();
@@ -257,7 +258,7 @@ export default function SignalPage() {
   );
 }
 
-function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] }) {
+function RegUpdateCard({ update: r, companyNameMap = Object.fromEntries(staticCompanies.map(c=>[c.slug,c.name])), pipelinePortfolioSlugs = new Set(staticCompanies.filter(c=>c.portfolioStatus==="Pipeline").map(c=>c.slug)) }: { update: (typeof regulatoryUpdates)[0]; companyNameMap?: Record<string,string>; pipelinePortfolioSlugs?: Set<string> }) {
   const statusColors: Record<string, string> = {
     "In Force": "text-emerald-700 bg-emerald-50 border-emerald-300",
     "Effective 2026": "text-blue-700 bg-blue-50 border-blue-300",

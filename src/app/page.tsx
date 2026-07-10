@@ -1,5 +1,6 @@
+"use client";
 import Link from "next/link";
-import { companies } from "@/data/companies";
+import { useCompanies } from "@/lib/useCompanies";
 import type { Company } from "@/data/companies";
 import { megatrends } from "@/data/megatrends";
 import { RatingBadge, MaturityBadge, PageHeader, StatCard } from "@/components/ui-elements";
@@ -26,6 +27,7 @@ const overviewUrgencyMap: Record<string, string> = {
 };
 
 export default function OverviewPage() {
+  const { companies } = useCompanies();
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const pipelineCount = companies.filter((c) => c.portfolioStatus === "Pipeline").length;
 

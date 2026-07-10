@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { companies } from "@/data/companies";
+import { useCompanies } from "@/lib/useCompanies";
 import { RatingBadge, MaturityBadge, PageHeader, RiskBadge } from "@/components/ui-elements";
 import { Search, ArrowRight, GitMerge } from "lucide-react";
 
@@ -15,12 +15,13 @@ const MEGATREND_COLORS: Record<string, string> = {
   "Longer Lifespans": "text-indigo-700",
 };
 
-const ACTIVE_COUNT = companies.filter((c) => c.portfolioStatus === "Active").length;
-const PIPELINE_COUNT = companies.filter((c) => c.portfolioStatus === "Pipeline").length;
-
 export default function ScoutPage() {
+  const { companies } = useCompanies();
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
+
+  const ACTIVE_COUNT = companies.filter((c) => c.portfolioStatus === "Active").length;
+  const PIPELINE_COUNT = companies.filter((c) => c.portfolioStatus === "Pipeline").length;
 
   const filtered = companies.filter((c) => {
     const matchesStatus = statusFilter === "All" || c.portfolioStatus === statusFilter;

@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { supabase, type DbCompany, type DbEngagement, type DbMaterialIssue } from "@/lib/supabase";
-import { Plus, Trash2, Edit3, Save, X, ChevronDown, ChevronUp, Lock, LogOut, Building2, Users, AlertCircle } from "lucide-react";
+import { clearCache } from "@/lib/useCompanies";
+import { Plus, Trash2, Edit3, Save, X, ChevronDown, ChevronUp, Lock, LogOut, Building2, Users, AlertCircle, CheckCircle } from "lucide-react";
 
 // ─── Auth ───────────────────────────────────────────────────────────────────
 function useAdminAuth() {
@@ -283,11 +284,11 @@ export default function AdminPage() {
     if (co.id) {
       const { error } = await supabase.from("companies").update(co).eq("id", co.id);
       if (error) showToast("Error: " + error.message);
-      else { showToast("Company updated ✓"); setEditing(null); loadCompanies(); }
+      else { showToast("Company updated ✓"); setEditing(null); clearCache(); loadCompanies(); }
     } else {
       const { error } = await supabase.from("companies").insert(co);
       if (error) showToast("Error: " + error.message);
-      else { showToast("Company added ✓"); setAdding(false); loadCompanies(); }
+      else { showToast("Company added ✓"); setAdding(false); clearCache(); loadCompanies(); }
     }
     setSaving(false);
   };
@@ -352,10 +353,10 @@ export default function AdminPage() {
       </div>
 
       <div className="max-w-6xl mx-auto px-8 py-8">
-        {/* Add banner */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-5 py-3 mb-6 flex items-start gap-3">
-          <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0"/>
-          <p className="text-xs text-amber-800">Companies added here are stored in Supabase but <strong>the main app pages still use the demo TypeScript data</strong>. After adding companies here, a developer needs to connect the app pages to read from Supabase. The admin panel itself is fully functional for data entry.</p>
+        {/* Connection banner */}
+        <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-5 py-3 mb-6 flex items-start gap-3">
+          <CheckCircle className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0"/>
+          <p className="text-xs text-emerald-800"><strong>Live integration active.</strong> Companies, engagements, and material issues added here appear in the Scout, Steward, Signal, and Overview pages automatically. Changes take up to 30 seconds to propagate.</p>
         </div>
 
         <div className="flex items-center justify-between mb-6">

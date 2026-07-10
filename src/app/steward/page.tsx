@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import { companies } from "@/data/companies";
+import { useCompanies } from "@/lib/useCompanies";
+import type { Company } from "@/data/companies";
 import { RatingBadge, MaturityBadge, RiskBadge, PageHeader } from "@/components/ui-elements";
 import { Loader2, FileText, CheckCircle, Clock, ChevronDown, ChevronUp, Copy, GitMerge, AlertCircle } from "lucide-react";
 import { AIOutput } from "@/components/AIOutput";
@@ -10,6 +11,7 @@ import { formatRelativeTime, formatDate } from "@/lib/utils";
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
 export default function StewardPage() {
+  const { companies } = useCompanies();
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const pipelineCompanies = companies.filter((c) => c.portfolioStatus === "Pipeline");
   const [view, setView] = useState<"cards" | "calendar">("cards");
@@ -162,7 +164,7 @@ export default function StewardPage() {
   );
 }
 
-function getEscalationLevel(co: (typeof companies)[0]): { level: number; label: string; color: string } {
+function getEscalationLevel(co: Company): { level: number; label: string; color: string } {
   const overdueCount = co.engagement.filter(e => e.status === "Overdue").length;
   const hasCritical = co.materialIssues.some(i => i.severity === "Critical" && !i.opportunity);
   const totalEngagements = co.engagement.length;
@@ -174,7 +176,7 @@ function getEscalationLevel(co: (typeof companies)[0]): { level: number; label: 
   return { level: 0, label: "Active Monitoring", color: "text-blue-700 bg-blue-50 border-blue-300" };
 }
 
-function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof companies)[0]; isPipeline?: boolean }) {
+function PortfolioCard({ company: co, isPipeline = false }: { company: Company; isPipeline?: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const [plan, setPlan] = useState("");
   const [planLoading, setPlanLoading] = useState(false);
