@@ -85,9 +85,9 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
             <p className="text-gray-600 text-sm mb-3">{t.subtitle}</p>
             <p className="text-sm text-gray-700 leading-relaxed max-w-3xl">{t.summary}</p>
           </div>
-          <div className="text-right ml-6 flex-shrink-0">
+          <div className="text-right ml-6 flex-shrink-0 max-w-[160px]">
             <div className="text-xs text-gray-500 mb-1">Temasek Megatrend</div>
-            <div className={`text-sm font-medium ${colorTextMap[t.color] ?? "text-gray-600"}`}>{t.temasekAlignment}</div>
+            <div className={`text-sm font-medium leading-tight ${colorTextMap[t.color] ?? "text-gray-600"}`}>{t.temasekAlignment}</div>
           </div>
         </div>
       </div>

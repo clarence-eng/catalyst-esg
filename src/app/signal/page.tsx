@@ -90,7 +90,7 @@ export default function SignalPage() {
                     : <span className="text-gray-500">No high-exposure active cos</span>
                   }
                 </div>
-                <div className={`text-xs ${megatrendTextMap[t.color] ?? "text-gray-600"}`}>{t.temasekAlignment}</div>
+                <div className={`text-xs truncate max-w-[120px] ${megatrendTextMap[t.color] ?? "text-gray-600"}`}>{t.temasekAlignment}</div>
               </div>
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {t.frameworks.slice(0, 3).map((f) => (

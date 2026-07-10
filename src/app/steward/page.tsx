@@ -357,7 +357,11 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
           </div>
 
           {/* ESG Action Plan Generator — Active companies only */}
-          {!isPipeline && <div aria-live="polite" aria-atomic="false">
+          {isPipeline ? (
+            <div className="text-xs text-gray-500 border border-dashed border-gray-200 rounded-lg p-4 text-center">
+              ESG Action Plan available after investment close. IC conditions precedent tracked in engagement history above.
+            </div>
+          ) : <div aria-live="polite" aria-atomic="false">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 className="text-sm font-semibold text-gray-900">ESG Action Plan</h3>
