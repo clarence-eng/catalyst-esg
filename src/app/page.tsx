@@ -159,7 +159,7 @@ export default function OverviewPage() {
             </thead>
             <tbody>
               {companies.map((co) => (
-                <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors cursor-pointer">
+                <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors">
                   <td className="px-6 py-4">
                     <Link href={`/scout/${co.slug}`} className="font-medium text-gray-900 text-sm hover:text-purple-700 transition-colors">{co.name}</Link>
                     <div className="text-xs text-gray-500">{co.country}</div>
@@ -480,7 +480,7 @@ function PCARFinancedEmissionsTable({ companies, totalActive }: { companies: Com
 
   const rows = companies.map(co => {
     const stake = totalActive > 0 ? (co.investmentValue / totalActive) * 100 : 0;
-    const estimatedEmissions = totalActive > 0 ? Math.round((co.investmentValue / totalActive) * co.carbonIntensity * 2.5) : 0;
+    const estimatedEmissions = totalActive > 0 ? Math.round((co.investmentValue / totalActive) * co.carbonIntensity * 2500) : 0;
     const score = pcafScore(co.netZeroCommitment);
     return { co, stake, estimatedEmissions, score };
   });
@@ -506,7 +506,7 @@ function PCARFinancedEmissionsTable({ companies, totalActive }: { companies: Com
           </thead>
           <tbody>
             {rows.map(({ co, stake, estimatedEmissions, score }) => (
-              <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors cursor-pointer">
+              <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors">
                 <td className="px-6 py-3 text-sm font-medium text-gray-900">{co.name}</td>
                 <td className="px-4 py-3 text-xs text-gray-600">{co.sector}</td>
                 <td className="px-4 py-3 text-xs text-gray-600 text-right">{stake.toFixed(1)}%</td>
@@ -533,7 +533,7 @@ function PCARFinancedEmissionsTable({ companies, totalActive }: { companies: Com
       </div>
       <div className="px-6 py-3 border-t border-gray-100">
         <p className="text-xs text-gray-500 italic">
-          Estimated using simplified proxy: (investment stake × carbon intensity × S$2.5B assumed revenue proxy). For illustration only — full PCAF calculation requires enterprise value and verified absolute Scope 1+2+3 emissions per PCAF Global Standard v2 (2020).
+          Estimated using simplified proxy: (investment stake % × carbon intensity × S$2,500M assumed portfolio revenue). For illustration only — full PCAF calculation requires enterprise value and verified absolute Scope 1+2+3 emissions per PCAF Global Standard v2 (2020).
         </p>
       </div>
     </div>
