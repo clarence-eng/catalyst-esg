@@ -31,7 +31,7 @@ export const megatrends: Megatrend[] = [
     slug: "climate-transition",
     title: "Climate Transition",
     subtitle: "Net Zero & Physical Climate Risk",
-    temasekAlignment: "Stewardship & Sustainability",
+    temasekAlignment: "Sustainable Living",
     urgency: "Immediate",
     color: "emerald",
     summary:
@@ -163,7 +163,7 @@ export const megatrends: Megatrend[] = [
     slug: "longer-lifespans",
     title: "Longer Lifespans",
     subtitle: "Ageing Populations & Health Equity in Asia",
-    temasekAlignment: "Longer Lifespans",
+    temasekAlignment: "Longer Lifespans & Healthcare Innovation",
     urgency: "Long-term",
     color: "purple",
     summary:
