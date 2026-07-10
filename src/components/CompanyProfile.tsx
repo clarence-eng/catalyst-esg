@@ -412,7 +412,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
     { kpi: "Green & Transition Finance Ratio", value: `${co.greenRevenuePct}%`, unit: "of total lending", benchmark: "Singapore target: 10%+ by 2025" },
     { kpi: "Carbon-Intensive Sector Exposure", value: co.materialIssues.some(i => i.issue.includes("Financed Emissions")) ? "High — disclosed" : "Moderate", unit: "of loan book", benchmark: "PCAF required for Scope 3 Cat. 15" },
     { kpi: "ESG Screening Coverage", value: co.natureRisk.overall === "Low" ? ">80% of new loans" : "Partial (<50%)", unit: "of new origination", benchmark: "MAS best practice: 100%" },
-    { kpi: "Financial Inclusion Score", value: co.materialIssues.some(i => i.issue.includes("Inclusion")) ? "Active programmes" : "Not reported", unit: "", benchmark: "OJK mandate for Indonesian banks" },
+    { kpi: "Financial Inclusion Score", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("inclusion")) ? "Active programmes" : "Not reported", unit: "", benchmark: "OJK mandate for Indonesian banks" },
   ];
 
   if (cat.includes("agriculture") || cat.includes("agri")) return [
@@ -425,7 +425,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
   if (cat.includes("electric util") || cat.includes("power")) return [
     { kpi: "Carbon Intensity (Generation)", value: `${co.carbonIntensity} tCO₂e/$M`, unit: "revenue", benchmark: "IEA ASEAN 2030: <500 tCO₂e/$M" },
     { kpi: "Renewable Capacity Share", value: `${co.greenRevenuePct}%`, unit: "of total installed", benchmark: "Indonesia NDC: 23% RE by 2025" },
-    { kpi: "Just Transition Plan", value: co.materialIssues.some(i => i.issue.includes("Just Transition")) ? "In development" : "Not initiated", unit: "", benchmark: "JETP ETM requirement" },
+    { kpi: "Just Transition Plan", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("just transition")) ? "In development" : "Not initiated", unit: "", benchmark: "JETP ETM requirement" },
     { kpi: "Coal Phase-out Target", value: co.netZeroCommitment !== "None" ? "Committed" : "Not committed", unit: "", benchmark: "Indonesia 2040 coal exit target" },
   ];
 
@@ -1007,7 +1007,7 @@ function ClimateTab({ co }: { co: Company }) {
             <div className="text-xs font-medium text-gray-700 mb-2">Transition Milestones</div>
             {[
               { milestone: "JETP ETM Feasibility Study", status: co.engagement.some(e => e.topic.toLowerCase().includes("jetp") || e.topic.toLowerCase().includes("etm")) ? "In Progress" : "Not Initiated", color: "amber" },
-              { milestone: "Just Transition Social Plan", status: co.materialIssues.some(i => i.issue.includes("Just Transition")) ? "Scoped" : "Pending", color: co.materialIssues.some(i => i.issue.includes("Just Transition")) ? "blue" : "red" },
+              { milestone: "Just Transition Social Plan", status: co.materialIssues.some(i => i.issue.toLowerCase().includes("just transition")) ? "Scoped" : "Pending", color: co.materialIssues.some(i => i.issue.toLowerCase().includes("just transition")) ? "blue" : "red" },
               { milestone: "Renewable Replacement Pipeline", status: `${co.greenRevenuePct}% green revenue — target: 40% by 2030`, color: co.greenRevenuePct >= 20 ? "emerald" : "amber" },
               { milestone: "Green Bond Framework", status: co.engagement.some(e => e.topic.toLowerCase().includes("bond")) ? "Under development" : "Not initiated", color: co.engagement.some(e => e.topic.toLowerCase().includes("bond")) ? "blue" : "gray" },
             ].map((m, i) => (
@@ -1282,7 +1282,7 @@ function SocialTab({ co }: { co: Company }) {
 
         const jtChecks = [
           { item: "Workforce transition plan documented", pass: co.materialIssues.some(i => i.issue.toLowerCase().includes("just transition") || i.issue.toLowerCase().includes("workforce")), note: "ILO Just Transition Guidelines" },
-          { item: "Community impact assessment completed", pass: co.materialIssues.some(i => i.category === "Social" && i.issue.includes("Communit")), note: "UNGP community consultation" },
+          { item: "Community impact assessment completed", pass: co.materialIssues.some(i => i.category === "Social" && (i.issue.toLowerCase().includes("communit") || i.issue.toLowerCase().includes("social") || i.issue.toLowerCase().includes("labour") || i.issue.toLowerCase().includes("smallholder"))) || co.engagement.some(e => e.notes && (e.notes.toLowerCase().includes("communit") || e.notes.toLowerCase().includes("social plan"))), note: "UNGP community consultation" },
           { item: "Reskilling/retraining programmes funded", pass: co.engagement.some(e => e.topic.toLowerCase().includes("transition") || e.topic.toLowerCase().includes("just")), note: "JETP social safeguards requirement" },
           { item: "Social plan covers downstream supply chain", pass: co.engagement.some(e => e.notes && (e.notes.toLowerCase().includes("worker") || e.notes.toLowerCase().includes("transition") || e.notes.toLowerCase().includes("social"))), note: "IFC Performance Standards" },
           { item: "Just transition disclosure in annual report", pass: co.materialIssues.some(i => i.issue.toLowerCase().includes("just transition")) || co.engagement.some(e => e.notes && e.notes.toLowerCase().includes("just transition")), note: "Transition Finance framework" },
