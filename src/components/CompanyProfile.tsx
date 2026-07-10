@@ -1520,11 +1520,14 @@ function SDGBadge({ sdg, label }: { sdg: number; label: string }) {
     14: "bg-[#0A97D9]",
     15: "bg-[#56C02B]",
   };
+  // Light-colored SDG backgrounds need dark text for WCAG contrast
+  const darkTextSdgs = new Set([2, 7, 9, 15]);
   const bg = sdgColors[sdg] ?? "bg-slate-600";
+  const textClass = darkTextSdgs.has(sdg) ? "text-gray-900" : "text-white";
   return (
     <div className={`flex items-center gap-1 ${bg} rounded px-1.5 py-0.5`} title={`SDG ${sdg}: ${label}`}>
-      <span className="text-white text-[10px] font-bold leading-none">{sdg}</span>
-      <span className="text-white text-[9px] leading-none opacity-90 hidden sm:inline">{label}</span>
+      <span className={`${textClass} text-[10px] font-bold leading-none`}>{sdg}</span>
+      <span className={`${textClass} text-[9px] leading-none opacity-90 hidden sm:inline`}>{label}</span>
     </div>
   );
 }
