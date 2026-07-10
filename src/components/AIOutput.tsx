@@ -60,7 +60,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
   function renderInline(s: string): string {
     return escapeHtml(s)
       .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-gray-900 font-semibold">$1</strong>')
-      .replace(/\*([^*]+)\*/g, '<em class="text-gray-800">$1</em>');
+      .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-gray-800">$1</em>');
   }
 
   for (const line of lines) {
@@ -70,8 +70,8 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
     }
 
     // Quarter headers: only match action-plan structural labels like "Q1 (Months 1-3):" or "Q1:"
-    // The colon must be at the END of the line (no content after it on the same line)
-    if (/^(Q[1-4][\s(][^:]*:|Q[1-4]:)\s*$/i.test(line)) {
+    // Requires either bare "Q1:" or "Q1 (..." form — NOT "Q1 Arbitrary Text:"
+    if (/^(Q[1-4]\s*\([^)]*\)\s*:|Q[1-4]\s*:)\s*$/i.test(line)) {
       flushList();
       elements.push(
         <div key={key++} className="text-sm font-semibold text-emerald-700 mt-5 mb-2 border-b border-emerald-600/20 pb-1">
