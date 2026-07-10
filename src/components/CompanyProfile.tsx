@@ -288,8 +288,8 @@ function getASEANTaxonomy(co: Company): { activity: string; tier: TaxonomyTier; 
     ];
     return all.filter(a => a.pct > 0);
   }
-  if (sector.includes("marine") || sector.includes("transport")) return [
-    { activity: co.netZeroCommitment !== "None" ? `Shipping (SBTi/IMO aligned pathway)` : `Shipping (IMO CII compliance only)`, tier: (co.netZeroCommitment !== "None" ? "Tier 2" : "Not classified") as TaxonomyTier, pct: 100 },
+  if (sector.includes("marine") || sector.includes("shipping")) return [
+    { activity: co.netZeroCommitment === "SBTi Targets Set" ? "Shipping (SBTi-validated pathway)" : co.netZeroCommitment !== "None" ? "Shipping (transition commitment, pending validation)" : "Shipping (IMO CII compliance only)", tier: (co.netZeroCommitment !== "None" ? "Tier 2" : "Not classified") as TaxonomyTier, pct: 100 },
   ];
   if (sector.includes("agriculture")) {
     const all: { activity: string; tier: TaxonomyTier; pct: number }[] = [
@@ -403,9 +403,9 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
   const cat = co.sasbCategory.toLowerCase();
 
   if (cat.includes("marine") || cat.includes("shipping")) return [
-    { kpi: "Carbon Intensity", value: co.carbonIntensity.toString(), unit: "tCO₂e/$M revenue", benchmark: "Industry median: ~280", note: "IMO CII compliance critical" },
-    { kpi: "Fuel Mix (HFO %)", value: co.netZeroCommitment !== "None" ? "Reduction committed" : co.climateRisk.transition === "Critical" || co.climateRisk.transition === "High" ? "Predominantly HFO (high carbon)" : "Partial transition underway", unit: "", benchmark: "IMO 2030 target: <50% HFO", note: "Decarbonisation driver" },
-    { kpi: "IMO ECA Compliance Status", value: co.climateRisk.physicalDetails.length > 0 ? "Monitoring in place" : "Not formally disclosed", unit: "", benchmark: "Industry: 70% compliant" },
+    { kpi: "Carbon Intensity", value: co.carbonIntensity.toString(), unit: "tCO₂e/$M revenue", benchmark: "Industry median: ~280", note: "Revenue-normalised; IMO AER uses gCO₂/dwt·nm" },
+    { kpi: "Fuel Mix Transition Status", value: co.netZeroCommitment !== "None" ? "Decarbonisation committed" : co.climateRisk.transition === "Critical" || co.climateRisk.transition === "High" ? "Predominantly HFO (high carbon)" : "Partial transition underway", unit: "", benchmark: "IMO 2030 target: <50% HFO", note: "Decarbonisation driver" },
+    { kpi: "IMO ECA Compliance Status", value: co.engagement.some(e => e.notes && (e.notes.toLowerCase().includes("eca") || e.notes.toLowerCase().includes("emission control") || e.notes.toLowerCase().includes("imo") || e.notes.toLowerCase().includes("cii"))) ? "Monitored — engagement record" : co.netZeroCommitment !== "None" ? "In scope — under transition plan" : "Not formally disclosed", unit: "", benchmark: "Industry: 70% compliant" },
     { kpi: "Near-miss Safety Incidents", value: "Not disclosed", unit: "per year", benchmark: "ISM Code required", note: co.materialIssues.some(i => i.issue.toLowerCase().includes("safety")) ? "Material issue" : undefined },
   ];
 
@@ -785,7 +785,7 @@ function getScope3Categories(co: Company): { label: string; pct: number; color: 
     { label: "Cat 4: Upstream transport", pct: 15, color: "bg-amber-400", note: "Supply chain logistics" },
     { label: "Cat 15: Investments", pct: 10, color: "bg-purple-400", note: "Smallholder suppliers" },
   ];
-  if (sector.includes("marine") || sector.includes("transport")) return [
+  if (sector.includes("marine") || sector.includes("shipping")) return [
     { label: "Cat 11: Use of sold products", pct: 72, color: "bg-red-600", note: "Vessel fuel combustion" },
     { label: "Cat 1: Purchased goods", pct: 15, color: "bg-orange-400", note: "Vessel construction" },
     { label: "Cat 4: Upstream transport", pct: 8, color: "bg-amber-400", note: "Port operations" },
