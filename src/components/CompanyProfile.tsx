@@ -859,7 +859,7 @@ function ClimateTab({ co }: { co: Company }) {
               ? "text-emerald-700 bg-emerald-50 border-emerald-300"
               : status === "Partial"
               ? "text-amber-700 bg-amber-50 border-amber-300"
-              : "text-gray-500 bg-gray-100 border-gray-200";
+              : "text-gray-600 bg-gray-100 border-gray-200";
             const dotColor = status === "Adopted" ? "bg-emerald-500" : status === "Partial" ? "bg-amber-500" : "bg-slate-600";
             return (
               <div key={pillar} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
@@ -887,7 +887,7 @@ function ClimateTab({ co }: { co: Company }) {
         <div className="space-y-2">
           {issbChecks.map(({ item, status, pass }) => {
             const isPartial = status === "Partial" || status === "In Progress";
-            const iconColor = pass ? "text-emerald-600" : isPartial ? "text-amber-500" : "text-red-600";
+            const iconColor = pass ? "text-emerald-600" : isPartial ? "text-amber-700" : "text-red-600";
             const rowBg = pass ? "bg-emerald-50 border-emerald-200" : isPartial ? "bg-amber-50 border-amber-200" : "bg-gray-50 border-gray-200";
             return (
               <div key={item} className={`flex items-center gap-3 p-2.5 rounded-lg border ${rowBg}`}>
@@ -1159,7 +1159,7 @@ function NatureTab({ co }: { co: Company }) {
               ? "text-emerald-700 bg-emerald-50 border-emerald-300"
               : status === "Partial"
               ? "text-amber-700 bg-amber-50 border-amber-300"
-              : "text-gray-500 bg-gray-100 border-gray-200";
+              : "text-gray-600 bg-gray-100 border-gray-200";
             const dotColor = status === "Adopted" ? "bg-emerald-500" : status === "Partial" ? "bg-amber-500" : "bg-slate-600";
             return (
               <div key={pillar} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
@@ -1425,7 +1425,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-gray-900">{e.topic}</span>
-                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{e.type}</span>
+                      <span className="text-xs text-gray-600 bg-gray-100 px-2 py-0.5 rounded">{e.type}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-gray-500">{formatDate(e.date)}</span>

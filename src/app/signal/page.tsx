@@ -89,7 +89,7 @@ export default function SignalPage() {
               </div>
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {t.frameworks.slice(0, 3).map((f) => (
-                  <span key={f} className="text-xs text-gray-500 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
+                  <span key={f} className="text-xs text-gray-600 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
                     {f}
                   </span>
                 ))}
@@ -299,7 +299,7 @@ function RegUpdateCard({ update: r }: { update: (typeof regulatoryUpdates)[0] })
           </div>
           <div className="flex flex-wrap gap-1.5 mt-2">
             {r.relevantSectors.map((s) => (
-              <span key={s} className="text-xs text-gray-500 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
+              <span key={s} className="text-xs text-gray-600 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
                 {s}
               </span>
             ))}

@@ -231,7 +231,7 @@ function CaseStudyCard({ study: cs }: { study: (typeof caseStudies)[0] }) {
       </div>
       <div className="flex flex-wrap gap-1 mt-2">
         {cs.frameworks.map((fw) => (
-          <span key={fw} className="text-xs text-gray-500 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded">{fw}</span>
+          <span key={fw} className="text-xs text-gray-600 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded">{fw}</span>
         ))}
       </div>
     </div>

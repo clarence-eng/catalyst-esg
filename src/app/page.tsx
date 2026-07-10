@@ -98,7 +98,7 @@ export default function OverviewPage() {
         title="Portfolio Overview"
         subtitle="ESG investment intelligence across your active portfolio — climate, nature, and social."
       >
-        <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-100 rounded-lg px-3 py-2 border border-gray-200">
+        <div className="flex items-center gap-2 text-xs text-gray-600 bg-gray-100 rounded-lg px-3 py-2 border border-gray-200">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           S${(totalActive / 1000).toFixed(1)}B active
           {pipelineCount > 0 && (

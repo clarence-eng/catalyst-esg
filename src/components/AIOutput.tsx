@@ -33,7 +33,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
           <ol key={key++} className="list-none space-y-1 my-2">
             {listBuffer.map((item, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
-                <span className="text-emerald-500 mt-0.5 flex-shrink-0 font-medium w-4 text-right">{item.num ?? i + 1}.</span>
+                <span className="text-emerald-700 mt-0.5 flex-shrink-0 font-medium w-4 text-right">{item.num ?? i + 1}.</span>
                 <span dangerouslySetInnerHTML={{ __html: renderInline(item.text) }} />
               </li>
             ))}
@@ -44,7 +44,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
           <ul key={key++} className="list-none space-y-1 my-2">
             {listBuffer.map((item, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
-                <span className="text-emerald-500 mt-0.5 flex-shrink-0">·</span>
+                <span className="text-emerald-700 mt-0.5 flex-shrink-0">·</span>
                 <span dangerouslySetInnerHTML={{ __html: renderInline(item.text) }} />
               </li>
             ))}
@@ -74,7 +74,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
     if (/^(Q[1-4][\s(][^:]*:|Q[1-4]:)\s*$/i.test(line)) {
       flushList();
       elements.push(
-        <div key={key++} className="text-sm font-semibold text-emerald-400 mt-5 mb-2 border-b border-emerald-600/20 pb-1">
+        <div key={key++} className="text-sm font-semibold text-emerald-700 mt-5 mb-2 border-b border-emerald-600/20 pb-1">
           {line.replace(/^\*\*|\*\*$/g, "")}
         </div>
       );

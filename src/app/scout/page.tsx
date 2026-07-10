@@ -153,7 +153,7 @@ export default function ScoutPage() {
                     }
                     return null;
                   })()}
-                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{co.country}</span>
+                  <span className="text-xs text-gray-600 bg-gray-100 px-2 py-0.5 rounded">{co.country}</span>
                 </div>
                 <p className="text-xs text-gray-600 mb-3 leading-relaxed max-w-3xl">{co.description}</p>
                 <div className="flex items-center gap-6">
