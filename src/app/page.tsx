@@ -268,11 +268,11 @@ function ESGDimensionHeatmap({ companies }: { companies: Array<{ name: string; s
         <table className="w-full text-xs">
           <thead>
             <tr className="text-gray-500 font-medium">
-              <th className="text-left pb-3 pr-4 w-40">Company</th>
-              <th className="text-center pb-3 px-3 w-24">Environmental</th>
-              <th className="text-center pb-3 px-3 w-24">Social</th>
-              <th className="text-center pb-3 px-3 w-24">Governance</th>
-              <th className="text-center pb-3 px-3 w-24">Overall</th>
+              <th scope="col" className="text-left pb-3 pr-4 w-40">Company</th>
+              <th scope="col" className="text-center pb-3 px-3 w-24">Environmental</th>
+              <th scope="col" className="text-center pb-3 px-3 w-24">Social</th>
+              <th scope="col" className="text-center pb-3 px-3 w-24">Governance</th>
+              <th scope="col" className="text-center pb-3 px-3 w-24">Overall</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
@@ -411,7 +411,12 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
       <h2 className="text-sm font-semibold text-gray-900 mb-1">Portfolio ESG Change — Q2 2026 vs Q1 2026</h2>
-      <p className="text-xs text-gray-500 mb-4">Average (E+S+G)/3 score delta per company, sorted by absolute change</p>
+      <p className="text-xs text-gray-500 mb-4">
+        Average (E+S+G)/3 score delta per company, sorted by absolute change
+        {rows.length < companies.length && (
+          <span className="ml-1 text-amber-600">· {companies.length - rows.length} company(ies) excluded (missing Q1/Q2 2026 data)</span>
+        )}
+      </p>
       <div className="space-y-2.5">
         {rows.map(({ name, delta }) => {
           const barPct = (Math.abs(delta) / maxAbs) * 100;

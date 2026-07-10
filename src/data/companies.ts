@@ -923,20 +923,20 @@ export const companies: Company[] = [
           "Published 2030 renewables target (40% of capacity) lacks interim milestones and capital allocation detail. Investor scrutiny growing.",
       },
       {
-        category: "Environmental",
-        issue: "Renewable Energy Pipeline",
-        severity: "Low",
-        opportunity: true,
-        detail:
-          "800MW geothermal pipeline in Sumatra is world-class resource. Indonesia holds 40% of global geothermal potential. Geothermal is anchor asset for credible transition.",
-      },
-      {
         category: "Governance",
         issue: "ESG Oversight Gap",
         severity: "Medium",
         opportunity: false,
         detail:
           "No board-level ESG committee despite holding Critical transition risk and two Critical material issues. Board-level ESG oversight is standard practice for energy transition companies and is required by most DFI co-investors including ADB and IFC. Required for credible JETP ETM application and green bond issuance.",
+      },
+      {
+        category: "Environmental",
+        issue: "Renewable Energy Pipeline",
+        severity: "Low",
+        opportunity: true,
+        detail:
+          "800MW geothermal pipeline in Sumatra is world-class resource. Indonesia holds 40% of global geothermal potential. Geothermal is anchor asset for credible transition.",
       },
     ],
     valueUplift: [

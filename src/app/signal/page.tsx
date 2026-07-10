@@ -103,7 +103,7 @@ export default function SignalPage() {
       <div className="mb-8">
         <h2 className="text-sm font-semibold text-gray-900 mb-2">Compliance Deadline Calendar</h2>
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          {regulatoryUpdates
+          {[...regulatoryUpdates]
             .sort((a, b) => {
               const urgencyOrder = { High: 0, Medium: 1, Low: 2 };
               return (urgencyOrder[a.urgency as keyof typeof urgencyOrder] ?? 3) - (urgencyOrder[b.urgency as keyof typeof urgencyOrder] ?? 3);
@@ -140,13 +140,13 @@ export default function SignalPage() {
       <div className="mb-8">
         <h2 className="text-sm font-semibold text-gray-900 mb-2">Portfolio Exposure Matrix</h2>
         <p className="text-xs text-gray-500 mb-4">High/Medium exposure by portfolio company × megatrend</p>
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <table className="w-full text-xs">
+        <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
+          <table className="w-full text-xs min-w-[700px]">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="text-left px-4 py-3 text-gray-500 font-medium w-36">Company</th>
+                <th scope="col" className="text-left px-4 py-3 text-gray-500 font-medium w-36">Company</th>
                 {megatrends.map(t => (
-                  <th key={t.slug} className="text-center px-2 py-3 text-gray-600 font-medium w-28">{t.title.split(" ")[0]}</th>
+                  <th key={t.slug} scope="col" className="text-center px-2 py-3 text-gray-600 font-medium w-28">{t.title.split(" ")[0]}</th>
                 ))}
               </tr>
             </thead>
@@ -194,7 +194,7 @@ export default function SignalPage() {
               aria-pressed={jurisdictionFilter === j}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 jurisdictionFilter === j
-                  ? "bg-[#4B2580]/15 text-purple-700 border-purple-500/40"
+                  ? "bg-purple-700/15 text-purple-700 border-purple-500/40"
                   : "text-gray-600 border-gray-200 hover:text-gray-800"
               }`}
             >
@@ -211,7 +211,7 @@ export default function SignalPage() {
               aria-pressed={categoryFilter === c}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 categoryFilter === c
-                  ? "bg-[#4B2580]/15 text-purple-700 border-purple-500/40"
+                  ? "bg-purple-700/15 text-purple-700 border-purple-500/40"
                   : "text-gray-600 border-gray-200 hover:text-gray-800"
               }`}
             >

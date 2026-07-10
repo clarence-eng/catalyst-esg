@@ -62,7 +62,7 @@ export default function ScoutPage() {
               className={`text-xs px-3 py-1.5 rounded-md transition-colors font-medium ${
                 statusFilter === s
                   ? s === "Pipeline"
-                    ? "bg-blue-600/20 text-blue-400 border border-blue-500/30"
+                    ? "bg-blue-50 text-blue-700 border border-blue-300"
                     : "bg-[#4B2580]/15 text-purple-700 border border-purple-500/40"
                   : "text-gray-600 hover:text-gray-800"
               }`}

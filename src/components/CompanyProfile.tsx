@@ -24,7 +24,7 @@ const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2
 const MEGATREND_COLORS: Record<string, string> = {
   "Climate Transition": "text-emerald-700",
   "Nature & Biodiversity": "text-green-700",
-  "Just Transition & Inclusive Growth": "text-orange-600",
+  "Just Transition & Inclusive Growth": "text-orange-700",
   "AI & Digital Ethics": "text-blue-700",
   "Longer Lifespans": "text-indigo-700",
 };
@@ -305,7 +305,7 @@ function getASEANTaxonomy(co: Company): { activity: string; tier: TaxonomyTier; 
     ];
     return all.filter(a => a.pct > 0);
   }
-  if (sector.includes("technology") || sector.includes("digital")) return [
+  if (sector.includes("technology") || sector.includes("digital") || sector.includes("cloud") || sector.includes("saas") || sector.includes("software")) return [
     { activity: "Cloud/Digital Infrastructure", tier: (co.greenRevenuePct > 20 ? "Tier 1" : "Tier 2") as TaxonomyTier, pct: 100 },
   ];
   if (sector.includes("health")) return [
@@ -657,7 +657,7 @@ function OverviewTab({
             </button>
           </div>
           {memoError && (
-            <div role="alert" className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-3">
+            <div role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-lg p-3 mb-3">
               {memoError}
             </div>
           )}
@@ -814,7 +814,7 @@ function ClimateTab({ co }: { co: Company }) {
     { item: "Climate scenario analysis (≥2 scenarios)", status: co.climateRisk.transitionDetails.length >= 2 ? "✓" : "Partial", pass: co.climateRisk.transitionDetails.length >= 2 },
     { item: "Physical risk quantification", status: co.climateRisk.physicalDetails.length > 0 ? "✓" : "✗", pass: co.climateRisk.physicalDetails.length > 0 },
     { item: "Scope 1+2 emissions disclosed", status: co.carbonIntensity > 0 ? "✓" : "✗", pass: co.carbonIntensity > 0 },
-    { item: "Scope 3 assessment / financed emissions", status: co.materialIssues.some(i => i.issue.toLowerCase().includes("emission") || i.issue.toLowerCase().includes("financed")) ? "Partial" : "✗", pass: co.sector.toLowerCase().includes("bank") && co.materialIssues.some(i => i.issue.toLowerCase().includes("emission")) },
+    { item: "Scope 3 assessment / financed emissions", status: co.materialIssues.some(i => i.issue.toLowerCase().includes("emission") || i.issue.toLowerCase().includes("financed")) ? "Partial" : "✗", pass: co.materialIssues.some(i => !i.opportunity && (i.issue.toLowerCase().includes("emission") || i.issue.toLowerCase().includes("financed"))) },
     { item: "Climate-related targets set", status: co.netZeroCommitment !== "None" ? "✓" : "✗", pass: co.netZeroCommitment !== "None" },
     { item: "SBTi-validated or equivalent pathway", status: co.netZeroCommitment === "SBTi Targets Set" ? "✓" : co.netZeroCommitment === "SBTi Committed" ? "In Progress" : "✗", pass: co.netZeroCommitment === "SBTi Targets Set" },
   ];
@@ -913,7 +913,7 @@ function ClimateTab({ co }: { co: Company }) {
           return (
             <div className="relative">
               {/* Connecting line */}
-              <div className="absolute top-4 left-0 right-0 h-0.5 bg-gray-200 mx-8" />
+              <div className="absolute top-4 left-0 right-0 h-0.5 bg-gray-200 mx-8 pointer-events-none" />
               <div className="flex justify-between relative">
                 {milestones.map((m, i) => (
                   <div key={i} className="flex flex-col items-center w-36 text-center">
@@ -1280,7 +1280,7 @@ function SocialTab({ co }: { co: Company }) {
           { item: "Workforce transition plan documented", pass: co.materialIssues.some(i => i.issue.includes("Just Transition") || i.issue.includes("workforce")), note: "ILO Just Transition Guidelines" },
           { item: "Community impact assessment completed", pass: co.materialIssues.some(i => i.category === "Social" && i.issue.includes("Communit")), note: "UNGP community consultation" },
           { item: "Reskilling/retraining programmes funded", pass: co.engagement.some(e => e.topic.toLowerCase().includes("transition") || e.topic.toLowerCase().includes("just")), note: "JETP social safeguards requirement" },
-          { item: "Social plan covers downstream supply chain", pass: co.engagement.length > 3, note: "IFC Performance Standards" },
+          { item: "Social plan covers downstream supply chain", pass: co.engagement.some(e => e.notes && (e.notes.toLowerCase().includes("worker") || e.notes.toLowerCase().includes("transition") || e.notes.toLowerCase().includes("social"))), note: "IFC Performance Standards" },
           { item: "Just transition disclosure in annual report", pass: co.netZeroCommitment !== "None", note: "Transition Finance framework" },
         ];
 

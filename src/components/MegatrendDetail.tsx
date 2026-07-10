@@ -16,7 +16,7 @@ const colorMap: Record<string, string> = {
 const colorTextMap: Record<string, string> = {
   emerald: "text-emerald-700",
   green: "text-green-700",
-  orange: "text-orange-600",
+  orange: "text-orange-700",
   blue: "text-blue-700",
   purple: "text-purple-700",
 };
@@ -151,7 +151,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
               </button>
             </div>
             {error && (
-              <div role="alert" className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-3">
+              <div role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-lg p-3 mb-3">
                 {error}
               </div>
             )}

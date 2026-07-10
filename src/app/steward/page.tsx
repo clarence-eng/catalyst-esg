@@ -94,7 +94,7 @@ export default function StewardPage() {
                       <div className={`text-xs font-semibold px-2 py-1 rounded ${
                         e.status === "Overdue"
                           ? "bg-red-50 text-red-700 border border-red-300"
-                          : "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                          : "bg-blue-50 text-blue-700 border border-blue-300"
                       }`}>
                         {formatDate(e.date)}
                       </div>
@@ -144,7 +144,7 @@ export default function StewardPage() {
         <div className="mt-8">
           <div className="flex items-center gap-3 mb-4">
             <h2 className="text-sm font-semibold text-gray-900">Pipeline — Pre-Investment ESG Due Diligence</h2>
-            <span className="flex items-center gap-1 text-xs text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 rounded-full">
+            <span className="flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-300 px-2.5 py-1 rounded-full">
               <GitMerge className="w-3 h-3" /> {pipelineCompanies.length} under evaluation
             </span>
           </div>
@@ -371,7 +371,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
               </button>
             </div>
             {planError && (
-              <div role="alert" className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-3">
+              <div role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-lg p-3 mb-3">
                 {planError}
               </div>
             )}
