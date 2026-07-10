@@ -82,7 +82,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         .slice(0, 3)
         .map((i) => `${i.issue} (${i.severity})`)
         .join(", ");
-      const topUplift = co.valueUplift.slice(0, 2).map((u) => u.area).join(", ");
+      const topUplift = [...co.valueUplift].sort((a, b) => ({ High: 0, Medium: 1, Low: 2 }[a.potential] ?? 3) - ({ High: 0, Medium: 1, Low: 2 }[b.potential] ?? 3)).slice(0, 2).map((u) => u.area).join(", ");
       const res = await fetch("/api/gemini", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -434,7 +434,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
     { kpi: "Patient Safety Incidents", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("safety") || i.issue.toLowerCase().includes("patient")) ? "Material concern" : "No disclosed incidents", unit: "last 12 months", benchmark: "SASB HC-DY-250a.1" },
     { kpi: "Data Privacy & Patient Data", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("data") || i.issue.toLowerCase().includes("privacy")) ? "Material concern" : "No disclosed breaches", unit: "", benchmark: "PDPA/PDPL/HIPAA compliance" },
     { kpi: "Care Access Coverage", value: `${co.greenRevenuePct > 20 ? ">20%" : "≤20%"}`, unit: "of target population served", benchmark: "OJK inclusion mandate" },
-    { kpi: "AI Clinical Safety Policy", value: co.boardComposition.esgCommittee ? "Board-approved" : "Under development", unit: "", benchmark: "MOH AI in Healthcare / MAS FEAT" },
+    { kpi: "AI Clinical Safety Policy", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("ai") || i.issue.toLowerCase().includes("algorithm") || i.issue.toLowerCase().includes("clinical")) ? "Under development (AI safety gap active)" : co.boardComposition.esgCommittee ? "Board-level oversight in place" : "Not in place", unit: "", benchmark: "MOH AI in Healthcare / MAS FEAT" },
   ];
 
   if (cat.includes("technology") || cat.includes("software")) return [
