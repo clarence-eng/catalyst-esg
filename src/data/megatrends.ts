@@ -313,7 +313,7 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
       "Creates policy tailwinds for green building, clean energy, urban mobility, and circular economy investments in Singapore. Aligns government procurement with sustainable suppliers.",
     relevantSectors: ["Real Estate", "Energy", "Transport", "Construction", "Technology"],
     urgency: "Low",
-    portfolioImpact: ["cloudmesh-technologies", "seaport-logistics", "asiapower-energy"],
+    portfolioImpact: ["cloudmesh-technologies", "seaport-logistics"],
   },
   {
     id: "pdpa-asean-digital",
