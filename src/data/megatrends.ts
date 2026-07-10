@@ -163,7 +163,7 @@ export const megatrends: Megatrend[] = [
     slug: "longer-lifespans",
     title: "Longer Lifespans",
     subtitle: "Ageing Populations & Health Equity in Asia",
-    temasekAlignment: "Longer Lifespans & Healthcare Innovation",
+    temasekAlignment: "Healthcare & Inclusive Access",
     urgency: "Long-term",
     color: "purple",
     summary:
