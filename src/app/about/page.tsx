@@ -29,7 +29,7 @@ const modules = [
     color: "text-blue-700",
     bg: "bg-blue-600/10 border-blue-600/20",
     description:
-      "Full ESG due diligence: company profiles with 5 tabs — Overview (SASB KPIs, ASEAN taxonomy, greenwashing check, ESG credibility score, IC Recommendation), Climate (TCFD grid, ISSB S2 scorecard, Paris pathway), Nature (TNFD LEAP tracker), Social & Governance (just transition readiness), Engagement (pre-engagement AI question pack).",
+      "Full ESG due diligence: company profiles with 5 tabs — Overview (SASB KPIs, ASEAN taxonomy, greenwashing check, ESG credibility score, IC Recommendation + AI ESG Memo), Climate (TCFD grid, ISSB S2 scorecard, Paris pathway), Nature (TNFD LEAP tracker), Social & Governance (just transition readiness), Engagement (pre-engagement AI question pack). PCAF financed emissions in Overview tab.",
   },
   {
     href: "/steward",
