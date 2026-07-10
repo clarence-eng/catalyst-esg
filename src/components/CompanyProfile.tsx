@@ -439,9 +439,9 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
 
   if (cat.includes("technology") || cat.includes("software")) return [
     { kpi: "Data Centre PUE", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("energy") && i.severity !== "Low") ? "1.40–1.60 (improvement needed)" : "≤1.40 (efficient)", unit: "", benchmark: "BCA Green Mark: ≤1.35" },
-    { kpi: "Renewable Energy %", value: `${co.greenRevenuePct}%`, unit: "of electricity use", benchmark: "Singapore MAS: 100% RE target" },
+    { kpi: "Renewable Energy Status", value: co.netZeroCommitment !== "None" ? "RE target committed" : co.materialIssues.some(i => i.issue.toLowerCase().includes("renewable")) ? "RE procurement in progress" : "Not formally committed", unit: "", benchmark: "Singapore MAS: 100% RE target" },
     { kpi: "Data Privacy Incidents", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("data") || i.issue.toLowerCase().includes("privacy")) ? "Material concern" : "No disclosed breaches", unit: "last 12 months", benchmark: "PDPA/PDPL zero-tolerance" },
-    { kpi: "AI Ethics Policy", value: co.boardComposition.esgCommittee ? "Board-approved policy" : "Under development", unit: "", benchmark: "MAS FEAT Principles" },
+    { kpi: "AI Ethics Policy", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("ai ethics") || i.issue.toLowerCase().includes("responsible ai")) ? "Under development (gap flagged)" : co.boardComposition.esgCommittee ? "ESG committee — policy scope TBC" : "Not in place", unit: "", benchmark: "MAS FEAT Principles" },
   ];
 
   return [
