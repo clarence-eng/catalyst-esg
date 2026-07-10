@@ -1,12 +1,25 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getCompanyBySlug, companies } from "@/data/companies";
+import { getCompanyBySlug, companies as staticCompanies } from "@/data/companies";
+import { fetchCompaniesFromSupabase } from "@/lib/fetchCompanies";
 import { CompanyProfile } from "@/components/CompanyProfile";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
 export async function generateStaticParams() {
-  return companies.map((c) => ({ slug: c.slug }));
+  return staticCompanies.map((c) => ({ slug: c.slug }));
+}
+
+async function getCompany(slug: string) {
+  // Try Supabase first
+  try {
+    const dbCompanies = await fetchCompaniesFromSupabase();
+    if (dbCompanies.length > 0) {
+      return dbCompanies.find(c => c.slug === slug) || null;
+    }
+  } catch { /* fall through */ }
+  // Fall back to static data
+  return getCompanyBySlug(slug) || null;
 }
 
 export async function generateMetadata({
@@ -15,7 +28,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const company = getCompanyBySlug(slug);
+  const company = await getCompany(slug);
   if (!company) return { title: "Company Not Found" };
   return {
     title: `${company.name} — Catalyst ESG`,
@@ -29,7 +42,7 @@ export default async function CompanyPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const company = getCompanyBySlug(slug);
+  const company = await getCompany(slug);
   if (!company) notFound();
 
   return (

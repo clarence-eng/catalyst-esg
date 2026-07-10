@@ -297,6 +297,7 @@ export default function AdminPage() {
     if (!confirm(`Delete ${name}? This also deletes all engagements and material issues.`)) return;
     await supabase.from("companies").delete().eq("id", id);
     showToast(`${name} deleted`);
+    clearCache();
     loadCompanies();
   };
 
