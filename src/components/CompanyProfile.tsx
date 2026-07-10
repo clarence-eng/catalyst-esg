@@ -616,10 +616,10 @@ function OverviewTab({
               <table className="w-full text-xs">
                 <thead>
                   <tr className="border-b border-gray-200">
-                    <th className="text-left font-medium text-gray-500 pb-2 pr-3">KPI</th>
-                    <th className="text-left font-medium text-gray-500 pb-2 pr-3">Value</th>
-                    <th className="text-left font-medium text-gray-500 pb-2 pr-3">Benchmark</th>
-                    <th className="text-left font-medium text-gray-500 pb-2">Note</th>
+                    <th scope="col" className="text-left font-medium text-gray-500 pb-2 pr-3">KPI</th>
+                    <th scope="col" className="text-left font-medium text-gray-500 pb-2 pr-3">Value</th>
+                    <th scope="col" className="text-left font-medium text-gray-500 pb-2 pr-3">Benchmark</th>
+                    <th scope="col" className="text-left font-medium text-gray-500 pb-2">Note</th>
                   </tr>
                 </thead>
                 <tbody>
