@@ -31,7 +31,7 @@ export const frameworks: FrameworkCard[] = [
   {
     id: "tcfd",
     name: "TCFD",
-    fullName: "Task Force on Climate-related Financial Disclosures",
+    fullName: "Task Force on Climate-related Financial Disclosures (disbanded Oct 2023 — absorbed into ISSB S2)",
     category: "Climate",
     status: "Voluntary",
     adoptionYear: "2017",
