@@ -343,7 +343,7 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
       "ASEAN industrial exporters to the EU face rising embedded carbon costs, creating pressure on high-carbon production processes. SeaPort's EU-bound cargo flows will face freight rate pressure as cargo owners internalise CBAM costs. Companies with EU trade exposure that haven't decarbonised their production face both direct cost and margin risk.",
     relevantSectors: ["Marine Transport", "Industrials", "Manufacturing", "Energy"],
     urgency: "Medium",
-    portfolioImpact: ["seaport-logistics", "asiapower-energy"],
+    portfolioImpact: ["seaport-logistics"],
   },
 ];
 
