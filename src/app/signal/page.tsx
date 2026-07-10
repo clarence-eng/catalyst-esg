@@ -7,8 +7,8 @@ import { PageHeader } from "@/components/ui-elements";
 import { ArrowRight, AlertCircle } from "lucide-react";
 
 const companyNameMap = Object.fromEntries(companies.map((c) => [c.slug, c.name]));
-// Include all portfolio companies (Active + Pipeline) in exposure counts
-const portfolioSlugs = new Set(companies.map(c => c.slug));
+// Active companies only — must match Portfolio Exposure Matrix which also filters to Active
+const activePortfolioSlugs = new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug));
 
 const allJurisdictions = ["All", ...new Set(regulatoryUpdates.map((r) => {
   const j = r.jurisdiction.split(" /")[0].trim();
@@ -41,10 +41,11 @@ export default function SignalPage() {
   const [categoryFilter, setCategoryFilter] = useState("All");
 
   const filteredUpdates = regulatoryUpdates.filter((r) => {
+    const primaryJurisdiction = r.jurisdiction.split(" /")[0].trim();
     const matchJ = jurisdictionFilter === "All" ||
       (jurisdictionFilter === "Global"
-        ? r.jurisdiction.startsWith("Global")
-        : r.jurisdiction.includes(jurisdictionFilter));
+        ? primaryJurisdiction.startsWith("Global")
+        : primaryJurisdiction === jurisdictionFilter);
     const matchC = categoryFilter === "All" || r.category === categoryFilter;
     return matchJ && matchC;
   });
@@ -64,7 +65,7 @@ export default function SignalPage() {
       <h2 className="text-sm font-semibold text-gray-900 mb-4">ESG Megatrends</h2>
       <div className="grid grid-cols-3 gap-4 mb-10">
         {megatrends.map((t) => {
-          const exposureSummary = t.portfolioExposure.filter((p) => p.exposure === "High" && portfolioSlugs.has(p.slug)).length;
+          const exposureSummary = t.portfolioExposure.filter((p) => p.exposure === "High" && activePortfolioSlugs.has(p.slug)).length;
 
           return (
             <Link
