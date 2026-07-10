@@ -77,7 +77,7 @@ export function Navigation() {
                 >
                   {label}
                 </div>
-                <div className="text-xs text-gray-500 mt-0.5">{desc}</div>
+                <div className="text-xs text-gray-600 mt-0.5">{desc}</div>
               </div>
             </Link>
           );

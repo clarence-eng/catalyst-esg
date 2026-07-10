@@ -185,7 +185,7 @@ export default function AboutPage() {
           {stack.map((s) => (
             <div key={s.name} className="bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5">
               <span className="text-xs text-gray-900 font-medium">{s.name}</span>
-              <span className="text-xs text-gray-500 ml-1.5">{s.role}</span>
+              <span className="text-xs text-gray-600 ml-1.5">{s.role}</span>
             </div>
           ))}
         </div>
