@@ -19,6 +19,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
     if (loading) return;
     setLoading(true);
     setError("");
+    setBrief("");
     try {
       const res = await fetch("/api/gemini", {
         method: "POST",

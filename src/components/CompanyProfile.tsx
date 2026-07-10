@@ -75,6 +75,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
     if (memoLoading) return;
     setMemoLoading(true);
     setMemoError("");
+    setMemo("");
     try {
       const topIssues = [...co.materialIssues]
         .filter((i) => !i.opportunity)

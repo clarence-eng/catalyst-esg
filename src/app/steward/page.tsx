@@ -189,6 +189,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
     if (planLoading) return;
     setPlanLoading(true);
     setPlanError("");
+    setPlan("");
     try {
       const topIssues = [...co.materialIssues]
         .filter((i) => !i.opportunity)
