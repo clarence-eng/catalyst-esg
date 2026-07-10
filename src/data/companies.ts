@@ -1052,7 +1052,7 @@ export const companies: Company[] = [
         "Cloud infrastructure emissions (Scope 2) immaterial relative to healthcare impact value",
         "No significant regulatory climate risk for digital health sector",
       ],
-      pathwayAlignment: "1.5°C",
+      pathwayAlignment: "2°C",
     },
     natureRisk: {
       overall: "Low",
