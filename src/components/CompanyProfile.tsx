@@ -1114,7 +1114,9 @@ function NatureTab({ co }: { co: Company }) {
         </div>
         {leapStage === 4 && (
           <p className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 mt-4">
-            All LEAP phases complete — company is TNFD-aligned and ready to report.
+            {co.natureRisk.tnfdAligned
+              ? "All LEAP phases complete — company is formally TNFD-aligned and ready to report."
+              : "All LEAP phases complete — company is ready for TNFD disclosure. Formal TNFD alignment declaration pending."}
           </p>
         )}
         {leapStage === 0 && (
