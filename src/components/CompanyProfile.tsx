@@ -294,7 +294,7 @@ function getASEANTaxonomy(co: Company): { activity: string; tier: TaxonomyTier; 
   if (sector.includes("agriculture")) {
     const all: { activity: string; tier: TaxonomyTier; pct: number }[] = [
       { activity: "Certified Sustainable Agri (RSPO/EUDR-compliant)", tier: "Tier 1", pct: co.greenRevenuePct },
-      { activity: "Conventional Agriculture", tier: "Tier 2", pct: 100 - co.greenRevenuePct },
+      { activity: "Conventional Agriculture (non-certified)", tier: "Not classified" as TaxonomyTier, pct: 100 - co.greenRevenuePct },
     ];
     return all.filter(a => a.pct > 0);
   }

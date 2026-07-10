@@ -200,6 +200,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
         co.climateRisk.transition !== "Low" && "Climate transition strategy and emissions pathway",
         co.natureRisk.overall !== "Low" && "Nature risk and TNFD assessment",
         !co.natureRisk.tnfdAligned && "TNFD adoption",
+        co.netZeroCommitment === "None" && "No net zero commitment — ISSB S2 readiness gap",
         // Only flag green revenue gap for non-utilities — for electric utilities the priority is coal phase-out, not green revenue growth
         co.greenRevenuePct < 20 && !co.sector.includes("Electric Utilit") && "Green revenue development",
       ]
