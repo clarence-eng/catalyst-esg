@@ -485,6 +485,9 @@ function OverviewTab({
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-4">Material ESG Issues</h3>
           <div className="space-y-3">
+            {co.materialIssues.length === 0 && (
+              <p className="text-xs text-gray-500 py-2">No material issues identified.</p>
+            )}
             {co.materialIssues.map((issue) => (
               <div key={issue.issue} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
                 <div className="flex-shrink-0 mt-0.5">
