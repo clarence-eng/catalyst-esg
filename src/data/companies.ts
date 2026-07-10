@@ -477,7 +477,7 @@ export const companies: Company[] = [
       environmental: 63,
       social: 74,
       governance: 78,
-      rating: "AA",
+      rating: "A",
     },
     maturity: "Advanced",
     climateRisk: {
@@ -854,7 +854,7 @@ export const companies: Company[] = [
       environmental: 32,
       social: 55,
       governance: 52,
-      rating: "B",
+      rating: "BB",
     },
     maturity: "Developing",
     climateRisk: {
