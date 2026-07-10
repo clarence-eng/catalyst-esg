@@ -67,7 +67,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
       { subject: "Social", score: co.esgScore.social },
       { subject: "Governance", score: co.esgScore.governance },
       { subject: climateResLabel, score: climateResScore },
-      { subject: "Nature Resilience", score: Math.max(0, 100 - (co.natureRisk.overall === "Critical" ? 100 : co.natureRisk.overall === "High" ? 70 : co.natureRisk.overall === "Medium" ? 40 : 0)) },
+      { subject: "Nature Resilience", score: Math.max(5, 100 - (co.natureRisk.overall === "Critical" ? 100 : co.natureRisk.overall === "High" ? 70 : co.natureRisk.overall === "Medium" ? 40 : 0)) },
     ];
   }, [co.esgScore.environmental, co.esgScore.social, co.esgScore.governance, co.climateRisk.transition, co.climateRisk.physical, co.climateRisk.pathwayAlignment, co.natureRisk.overall]);
 
@@ -430,7 +430,14 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
     { kpi: "Coal Phase-out Target", value: co.netZeroCommitment !== "None" ? "Committed" : "Not committed", unit: "", benchmark: "Indonesia 2040 coal exit target" },
   ];
 
-  if (cat.includes("technology") || cat.includes("software") || cat.includes("health care")) return [
+  if (cat.includes("health care") || cat.includes("health delivery") || cat.includes("telehealth")) return [
+    { kpi: "Patient Safety Incidents", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("safety") || i.issue.toLowerCase().includes("patient")) ? "Material concern" : "No disclosed incidents", unit: "last 12 months", benchmark: "SASB HC-DY-250a.1" },
+    { kpi: "Data Privacy & Patient Data", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("data") || i.issue.toLowerCase().includes("privacy")) ? "Material concern" : "No disclosed breaches", unit: "", benchmark: "PDPA/PDPL/HIPAA compliance" },
+    { kpi: "Care Access Coverage", value: `${co.greenRevenuePct > 20 ? ">20%" : "≤20%"}`, unit: "of target population served", benchmark: "OJK inclusion mandate" },
+    { kpi: "AI Clinical Safety Policy", value: co.boardComposition.esgCommittee ? "Board-approved" : "Under development", unit: "", benchmark: "MOH AI in Healthcare / MAS FEAT" },
+  ];
+
+  if (cat.includes("technology") || cat.includes("software")) return [
     { kpi: "Data Centre PUE", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("energy") && i.severity !== "Low") ? "1.40–1.60 (improvement needed)" : "≤1.40 (efficient)", unit: "", benchmark: "BCA Green Mark: ≤1.35" },
     { kpi: "Renewable Energy %", value: `${co.greenRevenuePct}%`, unit: "of electricity use", benchmark: "Singapore MAS: 100% RE target" },
     { kpi: "Data Privacy Incidents", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("data") || i.issue.toLowerCase().includes("privacy")) ? "Material concern" : "No disclosed breaches", unit: "last 12 months", benchmark: "PDPA/PDPL zero-tolerance" },
@@ -544,7 +551,7 @@ function OverviewTab({
         {(() => {
           const greenwashChecks = [
             {
-              label: "Net Zero pledge without validated SBTi targets",
+              label: "Net Zero pledge backed by validated SBTi targets (or none made)",
               concern: co.netZeroCommitment === "Net Zero Pledged",
               note: co.netZeroCommitment === "Net Zero Pledged" ? "Net Zero Pledged without science-based validation — credibility risk" : null,
             },
@@ -1060,6 +1067,7 @@ function NatureTab({ co }: { co: Company }) {
   const leapStage =
     co.natureRisk.tnfdAligned ? 4 :
     co.natureRisk.tnfdPillars?.some(p => p.pillar === "Metrics & Targets" && (p.status === "Partial" || p.status === "Adopted")) ? 3 :
+    co.natureRisk.tnfdPillars?.some(p => p.pillar === "Risk & Impact Mgmt" && (p.status === "Partial" || p.status === "Adopted")) ? 3 :
     co.natureRisk.tnfdPillars?.some(p => p.pillar === "Strategy" && (p.status === "Partial" || p.status === "Adopted")) ? 2 :
     (co.natureRisk.biodiversityExposure || co.natureRisk.waterStress || co.natureRisk.deforestationRisk) ? 1 : 0;
 
