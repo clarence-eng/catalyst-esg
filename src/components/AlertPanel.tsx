@@ -67,16 +67,21 @@ function generateAlerts(companies: Company[]): Alert[] {
   alerts.sort((a, b) => a.severity - b.severity);
 
   // Ensure at least 1 severity-2 and 1 severity-3 alert appear if they exist,
-  // even when severity-1 alerts fill all slots — reserve 2 slots for operational signals
+  // even when severity-1 alerts fill most slots — reserve slots for lower-severity signals
   const sev1 = alerts.filter(a => a.severity === 1);
   const sev2 = alerts.filter(a => a.severity === 2);
   const sev3 = alerts.filter(a => a.severity === 3);
-  const result = [
-    ...sev1.slice(0, 10),
-    ...sev2.slice(0, Math.max(1, 12 - Math.min(sev1.length, 10))),
-    ...sev3.slice(0, Math.max(1, 12 - Math.min(sev1.length, 10) - Math.min(sev2.length, 1))),
-  ].slice(0, 12);
-  return result;
+  // Reserve slots: 1 for sev2 (if any), 1 for sev3 (if any), rest for sev1
+  const reserved = (sev2.length > 0 ? 1 : 0) + (sev3.length > 0 ? 1 : 0);
+  const sev1Take = Math.min(sev1.length, 12 - reserved);
+  const remaining1 = 12 - sev1Take;
+  const sev2Take = Math.min(sev2.length, remaining1 - (sev3.length > 0 ? 1 : 0));
+  const sev3Take = Math.min(sev3.length, 12 - sev1Take - sev2Take);
+  return [
+    ...sev1.slice(0, sev1Take),
+    ...sev2.slice(0, sev2Take),
+    ...sev3.slice(0, sev3Take),
+  ];
 }
 
 export function AlertPanel({ companies }: { companies: Company[] }) {
