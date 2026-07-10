@@ -99,7 +99,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                 <div key={stat.label} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
                   <div className="text-lg font-bold text-gray-900 mb-0.5">{stat.value}</div>
                   <div className="text-xs text-gray-600 mb-1">{stat.label}</div>
-                  <div className="text-xs text-gray-500">Source: {stat.source}</div>
+                  <div className="text-xs text-gray-600">Source: {stat.source}</div>
                 </div>
               ))}
             </div>

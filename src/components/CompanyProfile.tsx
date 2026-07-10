@@ -386,7 +386,7 @@ function ASEANTaxonomyCard({ co }: { co: Company }) {
           <div key={i} className="flex items-center justify-between py-1.5 px-3 rounded-lg bg-gray-50 border border-gray-100">
             <span className="text-xs text-gray-700 flex-1 min-w-0 mr-3 truncate">{a.activity}</span>
             <div className="flex items-center gap-2 flex-shrink-0">
-              <span className="text-xs text-gray-500">{a.pct}%</span>
+              <span className="text-xs text-gray-600">{a.pct}%</span>
               <span className={`text-xs px-2 py-0.5 rounded border font-medium ${tierBadgeClass[a.tier]}`}>
                 {a.tier}
               </span>
@@ -629,8 +629,8 @@ function OverviewTab({
                       <td className="py-2 pr-3 text-gray-900 font-medium">
                         {row.value}{row.unit ? <span className="text-gray-500 font-normal ml-1">{row.unit}</span> : null}
                       </td>
-                      <td className="py-2 pr-3 text-gray-500">{row.benchmark}</td>
-                      <td className="py-2 text-gray-500 italic">{row.note ?? ""}</td>
+                      <td className="py-2 pr-3 text-gray-600">{row.benchmark}</td>
+                      <td className="py-2 text-gray-600 italic">{row.note ?? ""}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -866,7 +866,7 @@ function ClimateTab({ co }: { co: Company }) {
                 <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${dotColor}`} />
                 <div>
                   <div className="text-sm font-medium text-gray-900">{pillar}</div>
-                  <div className="text-xs text-gray-500">{desc}</div>
+                  <div className="text-xs text-gray-600">{desc}</div>
                 </div>
                 <span className={`ml-auto text-xs px-2 py-0.5 rounded border flex-shrink-0 ${statusStyle}`}>{status}</span>
               </div>
@@ -986,16 +986,16 @@ function ClimateTab({ co }: { co: Company }) {
           </div>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-              <div className="text-xs text-gray-500 mb-1">JETP Eligibility</div>
+              <div className="text-xs text-gray-600 mb-1">JETP Eligibility</div>
               <div className="text-sm font-semibold text-gray-900">{co.country === "Indonesia" ? "Indonesia JETP ($20B committed)" : co.country === "Philippines" ? "Philippines JETP" : "Not applicable"}</div>
-              <div className="text-xs text-gray-500 mt-1">ADB-facilitated, Temasek FAST-P aligned</div>
+              <div className="text-xs text-gray-600 mt-1">ADB-facilitated, Temasek FAST-P aligned</div>
             </div>
             <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-              <div className="text-xs text-gray-500 mb-1">ETM Coal Retirement Potential</div>
+              <div className="text-xs text-gray-600 mb-1">ETM Coal Retirement Potential</div>
               <div className={`text-sm font-semibold ${co.climateRisk.transition === "Critical" ? "text-red-700" : "text-amber-700"}`}>
                 {co.climateRisk.transition === "Critical" ? "High priority — S$2.8B at risk" : "Medium priority"}
               </div>
-              <div className="text-xs text-gray-500 mt-1">Early retirement via blended finance</div>
+              <div className="text-xs text-gray-600 mt-1">Early retirement via blended finance</div>
             </div>
           </div>
           {/* JETP milestones derived from engagement */}
@@ -1166,7 +1166,7 @@ function NatureTab({ co }: { co: Company }) {
                 <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${dotColor}`} />
                 <div>
                   <div className="text-sm font-medium text-gray-900">{pillar}</div>
-                  <div className="text-xs text-gray-500">{TNFD_PILLAR_DESCS[pillar] ?? ""}</div>
+                  <div className="text-xs text-gray-600">{TNFD_PILLAR_DESCS[pillar] ?? ""}</div>
                 </div>
                 <span className={`ml-auto text-xs px-2 py-0.5 rounded border flex-shrink-0 ${statusStyle}`}>{status}</span>
               </div>
@@ -1307,7 +1307,7 @@ function SocialTab({ co }: { co: Company }) {
                   </span>
                   <div className="flex-1 min-w-0">
                     <span className={`text-xs font-medium ${check.pass ? "text-gray-700" : "text-red-800"}`}>{check.item}</span>
-                    <p className="text-xs text-gray-500 mt-0.5">{check.note}</p>
+                    <p className="text-xs text-gray-600 mt-0.5">{check.note}</p>
                   </div>
                 </div>
               ))}

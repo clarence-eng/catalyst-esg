@@ -257,7 +257,7 @@ function FrameworkDetailCard({ framework: f }: { framework: (typeof frameworks)[
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-base font-bold text-gray-900">{f.name}</span>
-            <span className="text-xs text-gray-500">{f.adoptionYear}</span>
+            <span className="text-xs text-gray-600">{f.adoptionYear}</span>
           </div>
           <p className="text-xs text-gray-600">{f.fullName}</p>
         </div>
