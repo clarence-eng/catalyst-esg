@@ -326,7 +326,7 @@ export const caseStudies: CaseStudy[] = [
     company: "Bank OCBC NISP (Indonesia)",
     sector: "Commercial Banking",
     region: "Southeast Asia",
-    theme: "Climate Transition",
+    theme: "Sustainable Finance",
     summary:
       "An Indonesian commercial bank implemented PCAF methodology for its corporate lending book to disclose Scope 3 Category 15 financed emissions for the first time, enabling identification of high-carbon concentration risk and development of a credible net zero lending commitment.",
     outcome:
