@@ -116,7 +116,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
       let data: { error?: string; text?: string };
       try { data = await res.json(); } catch { throw new Error(`Request failed: ${res.status} (unexpected response format)`); }
       if (data.error) throw new Error(data.error);
-      if (!data.text) throw new Error("No content received from AI");
+      if (!data.text?.trim()) throw new Error("No content received from AI");
       setMemo(data.text);
       setMemoGeneratedAt(new Date());
     } catch (e: unknown) {
@@ -130,6 +130,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
     if (questionsLoading) return;
     setQuestionsLoading(true);
     setQuestionsError("");
+    setQuestions("");
     try {
       const topIssues = [...co.materialIssues]
         .filter((i) => !i.opportunity)
@@ -159,7 +160,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
       let data: { error?: string; text?: string };
       try { data = await res.json(); } catch { throw new Error(`Request failed: ${res.status}`); }
       if (data.error) throw new Error(data.error);
-      if (!data.text) throw new Error("No content received from AI");
+      if (!data.text?.trim()) throw new Error("No content received from AI");
       setQuestions(data.text);
       setQuestionsGeneratedAt(new Date());
     } catch (e: unknown) {
@@ -1430,8 +1431,8 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
         <div className="relative">
           <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-100" />
           <div className="space-y-4">
-            {[...co.engagement].sort((a, b) => a.date > b.date ? -1 : a.date < b.date ? 1 : 0).map((e) => (
-              <div key={`${e.date}-${e.type}-${e.topic}`} className="relative pl-10">
+            {[...co.engagement].sort((a, b) => a.date > b.date ? -1 : a.date < b.date ? 1 : 0).map((e, idx) => (
+              <div key={`${e.date}-${e.type}-${e.topic}-${idx}`} className="relative pl-10">
                 <div className={`absolute left-4 top-1.5 w-2 h-2 rounded-full -translate-x-1/2 ${
                   e.status === "Completed" ? "bg-emerald-500" :
                   e.status === "Planned" ? "bg-blue-500" : "bg-red-500"
