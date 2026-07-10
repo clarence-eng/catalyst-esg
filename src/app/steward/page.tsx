@@ -356,8 +356,8 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
             </div>
           </div>
 
-          {/* ESG Action Plan Generator */}
-          <div>
+          {/* ESG Action Plan Generator — Active companies only */}
+          {!isPipeline && <div>
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 className="text-sm font-semibold text-gray-900">ESG Action Plan</h3>
@@ -407,7 +407,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: (typeof c
                 <div className="text-gray-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
               </div>
             )}
-          </div>
+          </div>}
         </div>
       )}
     </div>

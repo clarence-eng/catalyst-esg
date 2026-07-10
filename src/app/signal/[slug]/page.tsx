@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getMegatrendBySlug, megatrends } from "@/data/megatrends";
 import { MegatrendDetail } from "@/components/MegatrendDetail";
@@ -6,6 +7,20 @@ import { ChevronLeft } from "lucide-react";
 
 export async function generateStaticParams() {
   return megatrends.map((m) => ({ slug: m.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const trend = getMegatrendBySlug(slug);
+  if (!trend) return { title: "Megatrend Not Found" };
+  return {
+    title: `${trend.title} — Catalyst Signal`,
+    description: trend.summary.slice(0, 160),
+  };
 }
 
 export default async function MegatrendPage({

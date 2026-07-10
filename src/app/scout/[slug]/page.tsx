@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCompanyBySlug, companies } from "@/data/companies";
 import { CompanyProfile } from "@/components/CompanyProfile";
@@ -6,6 +7,20 @@ import { ChevronLeft } from "lucide-react";
 
 export async function generateStaticParams() {
   return companies.map((c) => ({ slug: c.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const company = getCompanyBySlug(slug);
+  if (!company) return { title: "Company Not Found" };
+  return {
+    title: `${company.name} — Catalyst ESG`,
+    description: `ESG profile for ${company.name}: ${company.esgScore.rating} rating, ${company.maturity} maturity. ${company.description.slice(0, 120)}`,
+  };
 }
 
 export default async function CompanyPage({

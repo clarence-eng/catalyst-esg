@@ -50,7 +50,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
             portfolioExposure: t.portfolioExposure
               .filter((p) => p.exposure === "High" || p.exposure === "Medium")
               .map((p) => `${p.name} (${p.exposure} exposure)`)
-              .join(", "),
+              .join(", ") || "No High/Medium exposure companies",
           },
         }),
       });
