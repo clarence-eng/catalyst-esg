@@ -30,7 +30,7 @@ const riskColor: Record<string, string> = {
 const riskTextColor: Record<string, string> = {
   Critical: "#b91c1c",
   High: "#c2410c",
-  Medium: "#b45309",
+  Medium: "#92400e",
   Low: "#047857",
 };
 
