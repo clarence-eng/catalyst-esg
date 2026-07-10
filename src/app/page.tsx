@@ -211,7 +211,7 @@ export default function OverviewPage() {
       </div>
 
       {/* Portfolio ESG Brief — below table */}
-      <RiskHeatmap />
+      <RiskHeatmap companies={companies} />
       <ESGDimensionHeatmap companies={companies} />
       <PCARFinancedEmissionsTable companies={activeCompanies} totalActive={totalActive} />
       <PortfolioBrief portfolioSummary={portfolioSummary} companyNames={activeCompanies.map(c => c.name)} />

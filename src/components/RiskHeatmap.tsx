@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { companies } from "@/data/companies";
-import type { RiskLevel } from "@/data/companies";
+import { companies as staticCompanies } from "@/data/companies";
+import type { RiskLevel, Company } from "@/data/companies";
 
 const RISK_COLUMNS = [
   { key: "physical", label: "Physical Risk" },
@@ -11,7 +11,7 @@ const RISK_COLUMNS = [
 
 type RiskColumnKey = (typeof RISK_COLUMNS)[number]["key"];
 
-function deriveGovernanceRisk(co: (typeof companies)[0]): RiskLevel {
+function deriveGovernanceRisk(co: Company): RiskLevel {
   const govIssues = co.materialIssues.filter((i) => i.category === "Governance" && !i.opportunity);
   const hasCritical = govIssues.some((i) => i.severity === "Critical");
   const hasHigh = govIssues.some((i) => i.severity === "High");
@@ -22,7 +22,7 @@ function deriveGovernanceRisk(co: (typeof companies)[0]): RiskLevel {
   return "Low";
 }
 
-function getRiskForColumn(co: (typeof companies)[0], colKey: RiskColumnKey): RiskLevel {
+function getRiskForColumn(co: Company, colKey: RiskColumnKey): RiskLevel {
   if (colKey === "physical") return co.climateRisk.physical;
   if (colKey === "transition") return co.climateRisk.transition;
   if (colKey === "nature") return co.natureRisk.overall;
@@ -43,7 +43,7 @@ function RiskCell({ level }: { level: RiskLevel }) {
   );
 }
 
-export function RiskHeatmap() {
+export function RiskHeatmap({ companies = staticCompanies }: { companies?: Company[] }) {
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
 
   return (

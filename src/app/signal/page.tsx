@@ -233,19 +233,19 @@ export default function SignalPage() {
         {highUrgency.length > 0 && (
           <>
             <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-1">High Priority</div>
-            {highUrgency.map((r) => <RegUpdateCard key={r.id} update={r} />)}
+            {highUrgency.map((r) => <RegUpdateCard key={r.id} update={r} companyNameMap={companyNameMap} pipelinePortfolioSlugs={pipelinePortfolioSlugs} />)}
           </>
         )}
         {mediumUrgency.length > 0 && (
           <>
             <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-1 pt-4">Monitor</div>
-            {mediumUrgency.map((r) => <RegUpdateCard key={r.id} update={r} />)}
+            {mediumUrgency.map((r) => <RegUpdateCard key={r.id} update={r} companyNameMap={companyNameMap} pipelinePortfolioSlugs={pipelinePortfolioSlugs} />)}
           </>
         )}
         {lowUrgency.length > 0 && (
           <>
             <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-1 pt-4">Policy Tailwinds</div>
-            {lowUrgency.map((r) => <RegUpdateCard key={r.id} update={r} />)}
+            {lowUrgency.map((r) => <RegUpdateCard key={r.id} update={r} companyNameMap={companyNameMap} pipelinePortfolioSlugs={pipelinePortfolioSlugs} />)}
           </>
         )}
         {filteredUpdates.length === 0 && (

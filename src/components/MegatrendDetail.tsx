@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { type Megatrend } from "@/data/megatrends";
 import { companies } from "@/data/companies";
@@ -7,8 +7,7 @@ import { Loader2, FileText, TrendingUp, AlertTriangle, Copy } from "lucide-react
 import { AIOutput } from "@/components/AIOutput";
 import { formatRelativeTime } from "@/lib/utils";
 
-const pipelineSlugs = new Set(companies.filter(c => c.portfolioStatus === "Pipeline").map(c => c.slug));
-const activeSlugs = new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug));
+
 
 const colorMap: Record<string, string> = {
   emerald: "border-emerald-600/20 bg-emerald-600/5",
@@ -31,6 +30,8 @@ const urgencyMap: Record<string, string> = {
 };
 
 export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
+  const pipelineSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Pipeline").map(c => c.slug)), []);
+  const activeSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug)), []);
   const [brief, setBrief] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

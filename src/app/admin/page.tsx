@@ -166,13 +166,13 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
   const saveEng = async (e: Partial<DbEngagement>) => {
     if (e.id) await supabase.from("engagements").update(e).eq("id", e.id);
     else await supabase.from("engagements").insert(e);
-    setAddEng(false); setEditEng(null); loadDetail();
+    setAddEng(false); setEditEng(null); clearCache(); loadDetail();
   };
   const delEng = async (id: string) => { await supabase.from("engagements").delete().eq("id", id); loadDetail(); };
   const saveIssue = async (i: Partial<DbMaterialIssue>) => {
     if (i.id) await supabase.from("material_issues").update(i).eq("id", i.id);
     else await supabase.from("material_issues").insert({ ...i, sort_order: issues.length });
-    setAddIssue(false); setEditIssue(null); loadDetail();
+    setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();
   };
   const delIssue = async (id: string) => { await supabase.from("material_issues").delete().eq("id", id); loadDetail(); };
 
@@ -295,7 +295,8 @@ export default function AdminPage() {
 
   const deleteCompany = async (id: string, name: string) => {
     if (!confirm(`Delete ${name}? This also deletes all engagements and material issues.`)) return;
-    await supabase.from("companies").delete().eq("id", id);
+    const { error } = await supabase.from("companies").delete().eq("id", id);
+    if (error) { showToast("Error deleting: " + error.message); return; }
     showToast(`${name} deleted`);
     clearCache();
     loadCompanies();

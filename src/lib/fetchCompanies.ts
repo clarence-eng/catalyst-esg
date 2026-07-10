@@ -77,8 +77,11 @@ function dbToCompany(
         opportunity: i.opportunity,
         detail: i.detail,
       })),
-    // Defaults for complex fields not stored in DB
-    historicalScores: [],
+    // historicalScores: auto-generate 2 periods so charts don't silently break
+    historicalScores: [
+      { period: "Q1 2026", e: co.esg_environmental, s: co.esg_social, g: co.esg_governance },
+      { period: "Q2 2026", e: co.esg_environmental, s: co.esg_social, g: co.esg_governance },
+    ],
     boardComposition: {
       boardSize: 8,
       independentPct: 50,
@@ -104,11 +107,18 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
   }
 
   try {
-    const [{ data: cos }, { data: engs }, { data: mis }] = await Promise.all([
+    const [
+      { data: cos, error: cosErr },
+      { data: engs, error: engsErr },
+      { data: mis, error: misErr }
+    ] = await Promise.all([
       supabase.from("companies").select("*").order("created_at"),
       supabase.from("engagements").select("*").order("date", { ascending: false }),
       supabase.from("material_issues").select("*").order("sort_order"),
     ]);
+    if (cosErr) console.warn("[Supabase] companies error:", cosErr.message);
+    if (engsErr) console.warn("[Supabase] engagements error:", engsErr.message);
+    if (misErr) console.warn("[Supabase] material_issues error:", misErr.message);
 
     if (!cos || cos.length === 0) return [];
 

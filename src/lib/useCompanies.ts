@@ -9,6 +9,7 @@ export function useCompanies() {
   const [companies, setCompanies] = useState<Company[]>(staticCompanies);
   const [loading, setLoading] = useState(false);
   const [source, setSource] = useState<"static" | "supabase">("static");
+  const [liveDataError, setLiveDataError] = useState(false);
 
   useEffect(() => {
     // Use cache if available
@@ -28,11 +29,11 @@ export function useCompanies() {
           setSource(src);
         }
       })
-      .catch(() => {/* keep static */})
+      .catch(() => { setLiveDataError(true); })
       .finally(() => setLoading(false));
   }, []);
 
-  return { companies, loading, source };
+  return { companies, loading, source, liveDataError };
 }
 
 export function clearCache() {
