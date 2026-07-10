@@ -420,19 +420,20 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
       <div className="space-y-2.5">
         {rows.map(({ name, delta }) => {
           const barPct = (Math.abs(delta) / maxAbs) * 100;
-          const isPositive = delta >= 0;
+          const isPositive = delta > 0;
+          const isNeutral = delta === 0;
           return (
             <div key={name} className="flex items-center gap-3">
               <span className="text-xs text-gray-700 w-44 flex-shrink-0 truncate">{name}</span>
               <div className="flex-1 flex items-center gap-2">
                 <div className="flex-1 h-4 bg-gray-100 rounded-sm overflow-hidden">
                   <div
-                    className={`h-full rounded-sm ${isPositive ? "bg-emerald-500" : "bg-red-500"}`}
+                    className={`h-full rounded-sm ${isPositive ? "bg-emerald-500" : isNeutral ? "bg-gray-400" : "bg-red-500"}`}
                     style={{ width: `${barPct}%` }}
                   />
                 </div>
-                <span className={`text-xs font-semibold w-10 text-right flex-shrink-0 ${isPositive ? "text-emerald-700" : "text-red-700"}`}>
-                  {isPositive ? "+" : ""}{delta}
+                <span className={`text-xs font-semibold w-10 text-right flex-shrink-0 ${isPositive ? "text-emerald-700" : isNeutral ? "text-gray-500" : "text-red-700"}`}>
+                  {isPositive ? "+" : ""}{delta.toFixed(1)}
                 </span>
               </div>
             </div>
@@ -445,6 +446,9 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
         </div>
         <div className="flex items-center gap-1.5 text-xs text-gray-500">
           <div className="w-2.5 h-2.5 rounded-sm bg-red-500" /> Declined
+        </div>
+        <div className="flex items-center gap-1.5 text-xs text-gray-500">
+          <div className="w-2.5 h-2.5 rounded-sm bg-gray-400" /> Unchanged
         </div>
       </div>
     </div>
@@ -521,7 +525,7 @@ function PCARFinancedEmissionsTable({ companies, totalActive }: { companies: Com
       </div>
       <div className="px-6 py-3 border-t border-gray-100">
         <p className="text-xs text-gray-500 italic">
-          Estimated using simplified proxy methodology. Full PCAF calculation requires enterprise value and verified absolute Scope 1+2+3 emissions per PCAF Global Standard v2 (2020).
+          Estimated using simplified proxy: (investment stake × carbon intensity × S$2.5B assumed revenue proxy). For illustration only — full PCAF calculation requires enterprise value and verified absolute Scope 1+2+3 emissions per PCAF Global Standard v2 (2020).
         </p>
       </div>
     </div>
