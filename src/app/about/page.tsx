@@ -20,7 +20,7 @@ const modules = [
     color: "text-purple-700",
     bg: "bg-purple-600/10 border-purple-600/20",
     description:
-      "Portfolio ESG health dashboard. Investment-weighted KPIs, Paris Pathway alignment widget, PCAF financed emissions table, E/S/G trajectory chart, portfolio bubble chart, risk matrix, alert panel with Critical issues, company table, and AI Portfolio ESG Brief.",
+      "Portfolio ESG health dashboard. Investment-weighted KPIs, Paris Pathway alignment widget, ESG Attribution delta chart, E/S/G trajectory chart, portfolio bubble chart, risk matrix, alert panel with Critical issues, company table, and AI Portfolio ESG Brief. (PCAF financed emissions table in Scout company profiles.)",
   },
   {
     href: "/scout",
@@ -62,7 +62,7 @@ const modules = [
 
 const aiFeatures = [
   { name: "IC Memo ESG Section", location: "Scout → Company Profile → Overview tab", description: "3-paragraph investment-grade ESG section for an IC memo, structured as Risk Summary / Value Uplift / Engagement Priorities." },
-  { name: "ESG Action Plan", location: "Steward → Company card (expanded)", description: "12-month quarterly ESG engagement roadmap with specific KPIs and framework references." },
+  { name: "ESG Action Plan", location: "Steward → Active company card (expanded)", description: "12-month quarterly ESG engagement roadmap with specific KPIs and framework references. Available for Active portfolio companies only." },
   { name: "Pre-Engagement Question Pack", location: "Scout → Company Profile → Engagement tab", description: "12 tailored due diligence questions in 4 sections (Climate/Net Zero, Nature/Supply Chain, Social/Governance, Regulatory readiness) — specific to the company's ESG profile and overdue engagements." },
   { name: "Thematic Brief", location: "Signal → Megatrend detail page", description: "600-word investment-grade thematic brief across four structured sections (Why Now / Risks / Opportunities / Portfolio Implications)." },
   { name: "Portfolio ESG Brief", location: "Overview → below company table", description: "Quarterly portfolio-level ESG health summary covering aggregate trajectory, key risks, and value creation highlights across all active holdings." },
