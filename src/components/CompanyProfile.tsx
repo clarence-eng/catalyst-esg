@@ -382,8 +382,8 @@ function ASEANTaxonomyCard({ co }: { co: Company }) {
 
       {/* Activity rows */}
       <div className="space-y-2">
-        {activities.map((a, i) => (
-          <div key={i} className="flex items-center justify-between py-1.5 px-3 rounded-lg bg-gray-50 border border-gray-100">
+        {activities.map((a) => (
+          <div key={`${a.activity}-${a.tier}`} className="flex items-center justify-between py-1.5 px-3 rounded-lg bg-gray-50 border border-gray-100">
             <span className="text-xs text-gray-700 flex-1 min-w-0 mr-3 truncate">{a.activity}</span>
             <div className="flex items-center gap-2 flex-shrink-0">
               <span className="text-xs text-gray-600">{a.pct}%</span>
