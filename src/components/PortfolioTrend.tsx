@@ -16,7 +16,7 @@ interface TrendPoint {
   g: number;
 }
 
-export function PortfolioTrend({ data, activeCount = 5 }: { data: TrendPoint[]; activeCount?: number }) {
+export function PortfolioTrend({ data, activeCount }: { data: TrendPoint[]; activeCount: number }) {
   if (data.length < 2) return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6 flex items-center justify-center h-32">
       <p className="text-xs text-gray-500">Insufficient historical data to display trend</p>

@@ -1,5 +1,6 @@
 export function formatRelativeTime(date: Date): string {
   const secs = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (secs < 0) return "just now";
   if (secs < 60) return "just now";
   const mins = Math.floor(secs / 60);
   if (mins < 60) return `${mins} minute${mins === 1 ? "" : "s"} ago`;

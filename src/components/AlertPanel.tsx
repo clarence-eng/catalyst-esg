@@ -46,8 +46,8 @@ function generateAlerts(companies: Company[]): Alert[] {
   // 3. Declining E score (last < second-to-last) — sort by period to ensure chronological order
   for (const co of activeCompanies) {
     const scores = [...co.historicalScores].sort((a, b) => {
-      const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) || ["", "0", "9999"]).slice(1).map(Number);
-      const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) || ["", "0", "9999"]).slice(1).map(Number);
+      const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) || ["", "0", "0"]).slice(1).map(Number);
+      const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) || ["", "0", "0"]).slice(1).map(Number);
       return ay !== by ? ay - by : aq - bq;
     });
     if (scores.length >= 2) {
@@ -66,8 +66,7 @@ function generateAlerts(companies: Company[]): Alert[] {
   // Sort by severity (lowest number = highest severity first)
   alerts.sort((a, b) => a.severity - b.severity);
 
-  // Limit to 12 most urgent alerts — ensures all Critical issues AND all overdue
-  // engagement alerts can appear simultaneously (current max: 5 Critical + 5 overdue = 10)
+  // Limit to 12 most urgent alerts (sorted severity-1 first, then 2, then 3)
   return alerts.slice(0, 12);
 }
 

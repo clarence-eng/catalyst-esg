@@ -75,7 +75,7 @@ export function ScoreRing({ score, size = 80, label }: { score: number; size?: n
           y={size / 2}
           dominantBaseline="middle"
           textAnchor="middle"
-          style={{ transform: `rotate(90deg)`, transformOrigin: `${size / 2}px ${size / 2}px`, fill: "#1f2937", fontSize: size > 60 ? "16px" : "12px", fontWeight: "700" }}
+          style={{ transform: `rotate(90deg)`, transformOrigin: `${size / 2}px ${size / 2}px`, transformBox: "fill-box", fill: "#1f2937", fontSize: size > 60 ? "16px" : "12px", fontWeight: "700" }}
         >
           {score}
         </text>
