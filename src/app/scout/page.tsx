@@ -121,8 +121,8 @@ export default function ScoutPage() {
                   <MaturityBadge level={co.maturity} />
                   {(() => {
                     const scores = [...co.historicalScores].sort((a, b) => {
-                      const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) || ["","0","9999"]).slice(1).map(Number);
-                      const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) || ["","0","9999"]).slice(1).map(Number);
+                      const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
+                      const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
                       return ay !== by ? ay - by : aq - bq;
                     });
                     const last = scores[scores.length - 1];
