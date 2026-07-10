@@ -53,7 +53,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
         </div>
         <button
           onClick={generate}
-          disabled={loading}
+          disabled={loading || !portfolioSummary.trim()}
           aria-busy={loading}
           className="flex items-center gap-2 text-sm bg-[#4B2580] hover:bg-[#3D1A6E] disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
         >
@@ -62,7 +62,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
         </button>
       </div>
       {error && (
-        <div role="alert" className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-3">
+        <div role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-lg p-3 mb-3">
           {error}
         </div>
       )}

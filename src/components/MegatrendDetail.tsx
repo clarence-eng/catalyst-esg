@@ -173,7 +173,11 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
             {brief && (
               <div className="mt-3 flex items-center">
                 <button
-                  onClick={() => navigator.clipboard?.writeText(brief)?.catch(() => {})}
+                  onClick={() => {
+                    const date = new Date().toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" });
+                    const header = `CATALYST ESG INTELLIGENCE\nThematic Brief: ${t.title}\nPrepared: ${date}\n${"─".repeat(60)}\n\n`;
+                    navigator.clipboard?.writeText(header + brief)?.catch(() => {});
+                  }}
                   className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                 >
                   <Copy className="w-3 h-3" />
