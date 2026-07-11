@@ -380,12 +380,17 @@ export default function AdminPage() {
   const activeCount = companies.filter(c => c.portfolio_status === "Active").length;
   const pipelineCount = companies.filter(c => c.portfolio_status === "Pipeline").length;
 
-  const filteredAdminCompanies = adminSearch.trim()
-    ? companies.filter(co => co.name.toLowerCase().includes(adminSearch.toLowerCase()) || co.sector.toLowerCase().includes(adminSearch.toLowerCase()))
+  const adminSearchTrimmed = adminSearch.trim().toLowerCase();
+  const filteredAdminCompanies = adminSearchTrimmed
+    ? companies.filter(co => co.name.toLowerCase().includes(adminSearchTrimmed) || co.sector.toLowerCase().includes(adminSearchTrimmed))
     : companies;
   const sortedAdminCompanies = [...filteredAdminCompanies].sort((a, b) => {
     if (adminSort === "name") return a.name.localeCompare(b.name);
-    if (adminSort === "esg") return b.esg_overall - a.esg_overall;
+    if (adminSort === "esg") {
+      const av = a.esg_overall ?? 0;
+      const bv = b.esg_overall ?? 0;
+      return bv - av;
+    }
     return 0;
   });
 
