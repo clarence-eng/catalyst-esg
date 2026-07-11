@@ -47,7 +47,8 @@ export function RatingBadge({ rating }: { rating: ESGRating }) {
   );
 }
 
-export function ScoreRing({ score, size = 80, label }: { score: number; size?: number; label?: string }) {
+export function ScoreRing({ score: rawScore, size = 80, label }: { score: number; size?: number; label?: string }) {
+  const score = Math.max(0, Math.min(100, rawScore));
   const radius = (size - 8) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = (score / 100) * circumference;

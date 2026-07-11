@@ -208,7 +208,7 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
       "Listed portfolio companies must report climate risks, opportunities, and metrics under ISSB S1/S2. Unlisted portfolio companies should prepare voluntarily to avoid disclosure readiness gap at IPO.",
     relevantSectors: ["All listed companies", "Financial Services", "Energy", "Real Estate"],
     urgency: "High",
-    portfolioImpact: ["seaport-logistics", "cloudmesh-technologies"],
+    portfolioImpact: ["seaport-logistics", "cloudmesh-technologies", "medilink-health"],
   },
   {
     id: "mas-gfap-2-0",
@@ -223,7 +223,7 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
       "Singapore-Asia Taxonomy defines what counts as 'green' for regulatory capital treatment. FAST-P creates blended finance co-investment opportunities with MAS for ASEAN clean energy deals.",
     relevantSectors: ["Banking", "Energy", "Infrastructure", "Real Estate"],
     urgency: "High",
-    portfolioImpact: ["nusantara-bank"],
+    portfolioImpact: ["nusantara-bank", "seaport-logistics", "cloudmesh-technologies"],
   },
   {
     id: "eudr-2025",
