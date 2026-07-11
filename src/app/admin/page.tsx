@@ -316,7 +316,7 @@ export default function AdminPage() {
         </div>
         <div className="space-y-4">
           <div>
-            <label className="text-xs font-medium text-gray-700">Admin Password <span className="text-gray-400 font-normal">(set in Vercel env vars)</span></label>
+            <label className="text-xs font-medium text-gray-700">Admin Password <span className="text-gray-500 font-normal">(set in Vercel env vars)</span></label>
             <input type="password" value={auth.pw} onChange={e => auth.setPw(e.target.value)}
               onKeyDown={e => e.key === "Enter" && auth.check()}
               placeholder="Enter password" autoFocus
