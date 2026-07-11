@@ -16,6 +16,7 @@ export function useCompanies() {
     if (cachedResult) {
       setCompanies(cachedResult.companies);
       setSource(cachedResult.source);
+      if (cachedResult.source === "static") setLiveDataError(true);
       return;
     }
 
