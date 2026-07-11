@@ -667,7 +667,7 @@ export const companies: Company[] = [
         "Carbon pricing under Malaysia's voluntary carbon market will affect peatland management costs",
         "Consumer boycott risk from palm oil controversies in European retail channels",
       ],
-      pathwayAlignment: "1.5°C",
+      pathwayAlignment: "2°C",
     },
     natureRisk: {
       overall: "Critical",

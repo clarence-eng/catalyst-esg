@@ -502,7 +502,3 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
   }
 }
 
-export function clearCompanyCache() {
-  cachedCompanies = null;
-  cacheTime = 0;
-}

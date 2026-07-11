@@ -150,7 +150,7 @@ export default function OverviewPage() {
           </Link>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[800px]">
             <thead>
               <tr className="border-b border-gray-200">
                 <th scope="col" className="text-left text-xs text-gray-500 font-medium px-6 py-3">Company</th>
