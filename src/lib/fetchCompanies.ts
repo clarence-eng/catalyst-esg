@@ -440,11 +440,20 @@ function dbToCompany(
         opportunity: i.opportunity,
         detail: i.detail,
       })),
-    // historicalScores: use enrichment (10 periods) or derive 2-period from current scores
-    historicalScores: enrichment?.historicalScores ?? [
-      { period: "Q1 2026", e: Math.max(0, co.esg_environmental - 2), s: Math.max(0, co.esg_social - 1), g: Math.max(0, co.esg_governance - 2) },
-      { period: "Q2 2026", e: co.esg_environmental, s: co.esg_social, g: co.esg_governance },
-    ],
+    // historicalScores: use enrichment for history, but always sync the final period
+    // to live Supabase scores so there's no discontinuity between chart and score card
+    historicalScores: (() => {
+      const base = enrichment?.historicalScores ?? [
+        { period: "Q1 2026", e: Math.max(0, co.esg_environmental - 2), s: Math.max(0, co.esg_social - 1), g: Math.max(0, co.esg_governance - 2) },
+      ];
+      // Always ensure the last period reflects the authoritative live DB values
+      const withoutLast = base.length > 1 ? base.slice(0, -1) : base.slice(0, -1);
+      const lastPeriod = base[base.length - 1]?.period ?? "Q2 2026";
+      return [
+        ...withoutLast,
+        { period: lastPeriod, e: co.esg_environmental, s: co.esg_social, g: co.esg_governance },
+      ];
+    })(),
     boardComposition: enrichment?.boardComposition ?? {
       boardSize: 8,
       independentPct: co.esg_governance >= 65 ? 56 : co.esg_governance >= 50 ? 44 : 38,

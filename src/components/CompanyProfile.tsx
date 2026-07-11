@@ -786,10 +786,10 @@ function OverviewTab({
           <h3 className="text-sm font-semibold text-gray-900 mb-4">ESG Score Context</h3>
           <div className="space-y-3">
             {[
-              { label: "Environmental", score: co.esgScore.environmental, benchmark: 55, portfolioAvg: 51 },
-              { label: "Social", score: co.esgScore.social, benchmark: 60, portfolioAvg: 64 },
-              { label: "Governance", score: co.esgScore.governance, benchmark: 60, portfolioAvg: 65 },
-            ].map(({ label, score, benchmark: _benchmark, portfolioAvg }) => {
+              { label: "Environmental", score: co.esgScore.environmental, portfolioAvg: 50 },
+              { label: "Social", score: co.esgScore.social, portfolioAvg: 66 },
+              { label: "Governance", score: co.esgScore.governance, portfolioAvg: 64 },
+            ].map(({ label, score, portfolioAvg }) => {
               const vsPortfolio = score - portfolioAvg;
               return (
                 <div key={label}>
