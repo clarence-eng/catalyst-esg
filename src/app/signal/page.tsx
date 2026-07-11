@@ -34,7 +34,7 @@ const megatrendUrgencyMap: Record<string, string> = {
 };
 
 export default function SignalPage() {
-  const { companies } = useCompanies();
+  const { companies, liveDataError } = useCompanies();
   const [jurisdictionFilter, setJurisdictionFilter] = useState("All");
   const [categoryFilter, setCategoryFilter] = useState("All");
 
@@ -62,6 +62,13 @@ export default function SignalPage() {
         title="Signal"
         subtitle="ESG megatrend intelligence and regulatory radar — thematic research for investment decisions and portfolio management."
       />
+
+      {liveDataError && (
+        <div role="alert" aria-live="polite" className="bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg px-4 py-2.5 mb-4 flex items-center gap-2">
+          <span aria-hidden="true">⚠</span>
+          <span>Using demo data — live portfolio database unavailable. Portfolio exposure data may not reflect current holdings.</span>
+        </div>
+      )}
 
       {/* Megatrend Cards */}
       <h2 className="text-sm font-semibold text-gray-900 mb-4">ESG Megatrends</h2>

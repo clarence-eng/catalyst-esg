@@ -33,11 +33,12 @@ function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; onSave: (c: Partial<DbCompany>) => void; onCancel: () => void }) {
-  const [co, setCo] = useState({ ...initial });
-  const set = (k: string, v: unknown) => setCo(p => ({ ...p, [k]: v }));
-
-  const F = ({ label, k, type = "text", opts }: { label: string; k: string; type?: string; opts?: string[] }) => (
+// Hoisted outside CoForm to prevent unmount/remount on every state update
+function CoField({ label, k, type = "text", opts, co, set }: {
+  label: string; k: string; type?: string; opts?: string[];
+  co: Partial<DbCompany>; set: (k: string, v: unknown) => void;
+}) {
+  return (
     <div className="flex flex-col gap-1">
       <label className="text-xs font-medium text-gray-700">{label}</label>
       {opts ? (
@@ -49,10 +50,16 @@ function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; on
         <input type={type} value={(co as Record<string,unknown>)[k] as string || ""}
           onChange={e => { const v = type === "number" ? (e.target.value === '' ? 0 : parseFloat(e.target.value) || 0) : e.target.value; set(k, v); if (k === "name" && !co.id) set("slug", slugify(e.target.value)); }}
           readOnly={k === "slug" && !!co.id}
-          className={`border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none ${k === "slug" && co.id ? "bg-gray-50 text-gray-500 cursor-not-allowed" : "focus:border-purple-400"}`} />
+          className={`border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none ${k === "slug" && co.id ? "bg-gray-50 text-gray-600 cursor-not-allowed" : "focus:border-purple-400"}`} />
       )}
     </div>
   );
+}
+
+function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; onSave: (c: Partial<DbCompany>) => void; onCancel: () => void }) {
+  const [co, setCo] = useState({ ...initial });
+  const set = useCallback((k: string, v: unknown) => setCo(p => ({ ...p, [k]: v })), []);
+  const F = (props: Omit<Parameters<typeof CoField>[0], "co" | "set">) => <CoField {...props} co={co} set={set} />;
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-6 space-y-4">

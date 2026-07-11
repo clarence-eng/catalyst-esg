@@ -74,6 +74,7 @@ const stack = [
   { name: "Tailwind CSS v4", role: "Styling" },
   { name: "Recharts", role: "Data visualisation" },
   { name: "Google Gemini 2.5 Flash", role: "AI generation (free tier)" },
+  { name: "Supabase (PostgreSQL)", role: "Live portfolio database" },
   { name: "Lucide React", role: "Icons" },
   { name: "Vercel", role: "Deployment" },
 ];
