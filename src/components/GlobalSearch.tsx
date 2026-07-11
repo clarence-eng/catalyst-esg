@@ -6,7 +6,7 @@ import { frameworks } from "@/data/learn";
 import { Search, X, Building2, BookOpen } from "lucide-react";
 
 export function GlobalSearch() {
-  const { companies } = useCompanies();
+  const { companies, loading } = useCompanies();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -45,7 +45,7 @@ export function GlobalSearch() {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4" onClick={() => setOpen(false)}>
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4" data-modal="search" onClick={() => setOpen(false)}>
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
       <div className="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden" onClick={e => e.stopPropagation()}>
         {/* Search input */}
@@ -94,7 +94,7 @@ export function GlobalSearch() {
               <div>
                 <div className="px-4 pt-3 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Frameworks</div>
                 {matchedFrameworks.map(f => (
-                  <button key={f.id} type="button" onClick={() => { router.push("/learn"); setOpen(false); }}
+                  <button key={f.id} type="button" onClick={() => { router.push(`/learn?q=${encodeURIComponent(query)}`); setOpen(false); }}
                     className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-left">
                     <BookOpen className="w-4 h-4 text-gray-400 flex-shrink-0" />
                     <div className="min-w-0">
@@ -110,7 +110,11 @@ export function GlobalSearch() {
 
         {query.length < 2 && (
           <div className="px-4 py-6 text-center">
-            <p className="text-sm text-gray-400">Type 2+ characters to search companies and frameworks</p>
+            {loading ? (
+              <p className="text-sm text-gray-400">Loading companies…</p>
+            ) : (
+              <p className="text-sm text-gray-400">Type 2+ characters to search companies and frameworks</p>
+            )}
             <p className="text-xs text-gray-300 mt-1">Press <kbd className="bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded text-[10px] font-mono">Esc</kbd> to close</p>
           </div>
         )}

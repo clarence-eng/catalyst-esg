@@ -210,9 +210,10 @@ export default function OverviewPage() {
           <h2 className="text-sm font-semibold text-gray-900 mb-1">Carbon Intensity by Company</h2>
           <p className="text-xs text-gray-500 mb-4">tCO₂e per S$M revenue — lower is better · IEA ASEAN 2030 target: &lt;500 tCO₂e/$M</p>
           <div className="space-y-2.5">
-            {[...activeCompanies].sort((a, b) => b.carbonIntensity - a.carbonIntensity).map(co => {
-              const maxIntensity = Math.max(...activeCompanies.map(c => c.carbonIntensity));
-              const pct = Math.min((co.carbonIntensity / Math.max(maxIntensity, 1)) * 100, 100);
+            {(() => {
+              const maxIntensity = Math.max(...activeCompanies.map(c => c.carbonIntensity), 1);
+              return [...activeCompanies].sort((a, b) => b.carbonIntensity - a.carbonIntensity).map(co => {
+              const pct = Math.min((co.carbonIntensity / maxIntensity) * 100, 100);
               const isHighEmitter = co.carbonIntensity > 500;
               const color = co.carbonIntensity < 100 ? "bg-emerald-500" : co.carbonIntensity < 500 ? "bg-amber-500" : "bg-red-500";
               return (
@@ -230,7 +231,8 @@ export default function OverviewPage() {
                   </span>
                 </div>
               );
-            })}
+            });
+            })()}
           </div>
           {activeCompanies.some(c => c.carbonIntensity > 500) && (
             <p className="text-[10px] text-gray-400 mt-3">│ = IEA ASEAN 2030 benchmark (500 tCO₂e/$M)</p>
@@ -375,7 +377,7 @@ export default function OverviewPage() {
               {activeCompanies.map(co => (
                 <tr key={co.slug} className="border-b border-gray-50 hover:bg-gray-50/50">
                   <td className="py-2 pr-4 font-medium text-gray-800 truncate max-w-[160px]">
-                    <a href={`/scout/${co.slug}`} className="hover:text-purple-700 transition-colors">{co.name}</a>
+                    <Link href={`/scout/${co.slug}`} className="hover:text-purple-700 transition-colors">{co.name}</Link>
                   </td>
                   {megatrends.map(t => {
                     const exposure = t.portfolioExposure.find(p => p.slug === co.slug);

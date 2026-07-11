@@ -24,7 +24,7 @@ export function ComparisonDrawer({ companies, onRemove, onClear }: Props) {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 sm:left-64 right-0 z-40 bg-white border-t-2 border-purple-600/30 shadow-2xl">
+    <div className="fixed bottom-0 left-0 sm:left-64 right-0 z-40 bg-white border-t-2 border-purple-600/30 shadow-2xl" data-modal="comparison">
       <div className="px-6 py-3 flex items-center justify-between border-b border-gray-100">
         <div className="flex items-center gap-2">
           <BarChart3 className="w-4 h-4 text-purple-700" />

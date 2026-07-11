@@ -116,7 +116,10 @@ export function Navigation() {
           {theme === 'light' ? <Moon className="w-3 h-3" /> : <Sun className="w-3 h-3" />}
           <span>{theme === 'light' ? 'Dark mode' : 'Light mode'}</span>
         </button>
-        <div className="text-[10px] text-gray-400 flex items-center gap-1 mt-2 px-2"><kbd className="bg-gray-100 px-1 rounded font-mono">⌘K</kbd><span>Search</span></div>
+        <div className="text-[10px] text-gray-400 flex items-center gap-1 mt-2 px-2">
+          <kbd className="bg-gray-100 px-1 rounded font-mono">{typeof window !== "undefined" && navigator.platform.toLowerCase().includes("win") ? "Ctrl+K" : "⌘K"}</kbd>
+          <span>Search</span>
+        </div>
         <div className="text-[10px] text-gray-400 flex items-center gap-1 px-2">
           <kbd className="bg-gray-100 px-1 rounded font-mono text-gray-500">?</kbd>
           <span>Shortcuts</span>
