@@ -1,9 +1,26 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+// Lazy singleton — deferred until first use so missing env vars throw inside
+// a route handler (where the error is caught) rather than at module load time
+// (which would crash the entire serverless function before any catch fires).
+let _client: SupabaseClient | null = null;
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export function getSupabaseClient(): SupabaseClient {
+  if (_client) return _client;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) throw new Error("Supabase env vars not configured (NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY)");
+  _client = createClient(url, key);
+  return _client;
+}
+
+// Convenience proxy — same API as before for code that imports `supabase` directly.
+// Callers inside try/catch (route handlers, fetchCompaniesFromSupabase) are safe.
+export const supabase = new Proxy({} as SupabaseClient, {
+  get(_t, prop) {
+    return (getSupabaseClient() as unknown as Record<string, unknown>)[prop as string];
+  },
+});
 
 export type DbCompany = {
   id: string;
