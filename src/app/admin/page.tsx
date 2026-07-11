@@ -224,7 +224,7 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
                   <button type="button" onClick={() => delEng(e.id)} className="text-gray-400 hover:text-red-600"><Trash2 className="w-3 h-3"/></button>
                 </div>
               ))}
-              {engagements.length === 0 && !addEng && <p className="text-xs text-gray-400 italic">No engagements yet</p>}
+              {engagements.length === 0 && !addEng && <p className="text-xs text-gray-500 italic">No engagements yet</p>}
             </div>
           </div>
 
@@ -248,7 +248,7 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
                   <button type="button" onClick={() => delIssue(i.id)} className="text-gray-400 hover:text-red-600"><Trash2 className="w-3 h-3"/></button>
                 </div>
               ))}
-              {issues.length === 0 && !addIssue && <p className="text-xs text-gray-400 italic">No material issues yet</p>}
+              {issues.length === 0 && !addIssue && <p className="text-xs text-gray-500 italic">No material issues yet</p>}
             </div>
           </div>
         </div>
@@ -385,7 +385,7 @@ export default function AdminPage() {
               <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-2xl">
                 <Building2 className="w-12 h-12 text-gray-300 mx-auto mb-3"/>
                 <p className="text-gray-500 font-medium">No companies yet</p>
-                <p className="text-sm text-gray-400 mt-1">Click "Add Company" to add your first portfolio company</p>
+                <p className="text-sm text-gray-500 mt-1">Click "Add Company" to add your first portfolio company</p>
               </div>
             )}
           </div>

@@ -16,7 +16,7 @@ const MEGATREND_COLORS: Record<string, string> = {
 };
 
 export default function ScoutPage() {
-  const { companies } = useCompanies();
+  const { companies, liveDataError } = useCompanies();
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
 
