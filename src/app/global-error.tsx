@@ -28,6 +28,8 @@ export default function GlobalError({
               <button
                 type="button"
                 onClick={reset}
+                onMouseEnter={e => { (e.target as HTMLButtonElement).style.background = "#3D1A6E"; }}
+                onMouseLeave={e => { (e.target as HTMLButtonElement).style.background = "#4B2580"; }}
                 style={{ background: "#4B2580", color: "white", fontSize: "14px", padding: "10px 20px", borderRadius: "8px", border: "none", cursor: "pointer" }}
               >
                 Try again
