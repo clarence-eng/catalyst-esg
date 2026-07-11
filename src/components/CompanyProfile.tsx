@@ -534,7 +534,7 @@ function OverviewTab({
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-4">Value Uplift Opportunities</h3>
           <div className="space-y-3">
-            {co.valueUplift.map((v) => (
+            {co.valueUplift.length > 0 ? co.valueUplift.map((v) => (
               <div key={v.area} className="p-3 rounded-lg bg-emerald-600/5 border border-emerald-600/15">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-sm font-medium text-gray-900">{v.area}</span>
@@ -546,7 +546,9 @@ function OverviewTab({
                 </div>
                 <p className="text-xs text-gray-600 leading-relaxed">{v.description}</p>
               </div>
-            ))}
+            )) : (
+              <p className="text-xs text-gray-500 italic">No value uplift opportunities identified. Add via the admin panel or enrichment data.</p>
+            )}
           </div>
         </div>
 
