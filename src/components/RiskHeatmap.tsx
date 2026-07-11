@@ -56,7 +56,7 @@ export function RiskHeatmap({ companies = staticCompanies }: { companies?: Compa
         <table className="w-full" aria-label="Risk matrix — material risk exposure across active portfolio companies">
           <thead>
             <tr>
-              <th scope="col" className="text-left text-xs text-gray-500 font-medium pb-3 pr-4 w-40">Company</th>
+              <th scope="col" className="text-left text-xs text-gray-500 font-medium pb-3 pr-4 w-40 min-w-[160px]">Company</th>
               {RISK_COLUMNS.map((col) => (
                 <th scope="col" key={col.key} className="text-center text-xs text-gray-500 font-medium pb-3 px-2">
                   {col.label}
@@ -67,10 +67,11 @@ export function RiskHeatmap({ companies = staticCompanies }: { companies?: Compa
           <tbody className="divide-y divide-gray-100">
             {activeCompanies.map((co) => (
               <tr key={co.slug} className="hover:bg-gray-50 transition-colors">
-                <th scope="row" className="py-2.5 pr-4 text-left font-normal">
+                <th scope="row" className="py-2.5 pr-4 text-left font-normal w-40 min-w-[160px]">
                   <Link
                     href={`/scout/${co.slug}`}
-                    className="text-xs font-medium text-gray-900 hover:text-purple-700 transition-colors"
+                    className="text-xs font-medium text-gray-900 hover:text-purple-700 transition-colors block truncate max-w-[156px]"
+                    title={co.name}
                   >
                     {co.name}
                   </Link>
