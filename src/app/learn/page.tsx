@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { frameworks, caseStudies } from "@/data/learn";
 import { PageHeader } from "@/components/ui-elements";
 import { ExternalLink, ChevronRight, ChevronDown, ChevronUp, Search } from "lucide-react";
@@ -141,15 +141,21 @@ export default function LearnPage() {
 
 function Highlight({ text, query }: { text: string; query: string }) {
   if (!query || query.length < 2) return <>{text}</>;
-  const idx = text.toLowerCase().indexOf(query.toLowerCase());
-  if (idx === -1) return <>{text}</>;
-  return (
-    <>
-      {text.slice(0, idx)}
-      <mark className="bg-yellow-200 text-yellow-900 rounded-sm px-0.5">{text.slice(idx, idx + query.length)}</mark>
-      {text.slice(idx + query.length)}
-    </>
-  );
+  const lower = text.toLowerCase();
+  const qLower = query.toLowerCase();
+  if (!lower.includes(qLower)) return <>{text}</>;
+  // Highlight all occurrences, not just the first
+  const parts: React.ReactNode[] = [];
+  let pos = 0;
+  let matchIdx = lower.indexOf(qLower);
+  while (matchIdx !== -1) {
+    if (matchIdx > pos) parts.push(text.slice(pos, matchIdx));
+    parts.push(<mark key={matchIdx} className="bg-yellow-200 text-yellow-900 rounded-sm px-0.5">{text.slice(matchIdx, matchIdx + query.length)}</mark>);
+    pos = matchIdx + query.length;
+    matchIdx = lower.indexOf(qLower, pos);
+  }
+  if (pos < text.length) parts.push(text.slice(pos));
+  return <>{parts}</>;
 }
 
 function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[0]; query: string }) {
@@ -220,6 +226,9 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
                   </li>
                 ))}
               </ul>
+              {f.keyRequirements.length > 3 && (
+                <p className="text-[10px] text-gray-400 mt-1 pl-5">+{f.keyRequirements.length - 3} more — see full framework documentation</p>
+              )}
             </div>
           )}
         </div>
