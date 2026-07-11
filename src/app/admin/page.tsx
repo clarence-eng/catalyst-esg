@@ -54,7 +54,10 @@ function CoField({ label, k, type = "text", opts, co, set }: {
         <input type={type} value={((co as Record<string,unknown>)[k] ?? "") as string}
           onChange={e => { const v = type === "number" ? (e.target.value === '' ? 0 : parseFloat(e.target.value) || 0) : e.target.value; set(k, v); if (k === "name" && !co.id) set("slug", slugify(e.target.value)); }}
           readOnly={k === "slug" && !!co.id}
-          {...(type === "number" && k.startsWith("esg_") ? { min: 0, max: 100 } : {})}
+          {...(type === "number" && k.startsWith("esg_") ? { min: 0, max: 100 } :
+               type === "number" && k === "green_revenue_pct" ? { min: 0, max: 100 } :
+               type === "number" && k === "carbon_intensity" ? { min: 0 } :
+               type === "number" && k === "investment_value" ? { min: 0 } : {})}
           className={`border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none ${k === "slug" && co.id ? "bg-gray-50 text-gray-600 cursor-not-allowed" : "focus:border-purple-400"}`} />
       )}
     </div>
@@ -299,7 +302,7 @@ export default function AdminPage() {
   useEffect(() => { if (auth.authed) loadCompanies(); }, [auth.authed, loadCompanies]);
 
   const saveCompany = async (co: Partial<DbCompany>) => {
-    if (!co.name?.trim() || !co.slug?.trim() || !co.sector?.trim() || !co.country?.trim()) return showToast("Name, slug, sector, and country are required");
+    if (!co.name?.trim() || !co.slug?.trim() || !co.sector?.trim() || !co.country?.trim() || !co.description?.trim()) return showToast("Name, slug, sector, country, and description are required");
     setSaving(true);
     if (co.id) {
       const { id: coId, created_at: _ccat, ...coFields } = co as Required<typeof co>;
