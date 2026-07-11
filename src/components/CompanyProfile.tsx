@@ -578,8 +578,8 @@ function OverviewTab({
             },
             {
               label: "TNFD assessment consistent with nature risk level",
-              concern: co.natureRisk.overall === "Critical" && !co.natureRisk.tnfdAligned && !co.natureRisk.tnfdPillars?.some(p => p.status === "Adopted"),
-              note: co.natureRisk.overall === "Critical" && !co.natureRisk.tnfdAligned && !co.natureRisk.tnfdPillars?.some(p => p.status === "Adopted") ? "Critical nature risk without TNFD assessment initiated" : null,
+              concern: co.natureRisk.overall === "Critical" && !co.natureRisk.tnfdAligned && !co.natureRisk.tnfdPillars?.some(p => p.status === "Adopted" || p.status === "Partial"),
+              note: co.natureRisk.overall === "Critical" && !co.natureRisk.tnfdAligned && !co.natureRisk.tnfdPillars?.some(p => p.status === "Adopted" || p.status === "Partial") ? "Critical nature risk with no TNFD assessment initiated" : null,
             },
             {
               label: "Green revenue credibly defined",
@@ -811,8 +811,8 @@ function ClimateTab({ co }: { co: Company }) {
     {
       pillar: "Strategy",
       desc: "Climate-related risks/opportunities, scenario analysis, financial planning",
-      status: co.climateRisk.transitionDetails.length >= 2 && co.climateRisk.physicalDetails.length > 0 ? "Adopted" as const :
-              co.climateRisk.transitionDetails.length >= 1 ? "Partial" as const : "Gap" as const,
+      status: (co.climateRisk.pathwayAlignment !== "Not assessed" && co.netZeroCommitment !== "None") ? "Adopted" as const :
+              co.climateRisk.pathwayAlignment !== "Not assessed" ? "Partial" as const : "Gap" as const,
     },
     {
       pillar: "Risk Management",
@@ -830,7 +830,7 @@ function ClimateTab({ co }: { co: Company }) {
 
   const issbChecks = [
     { item: "Board climate oversight documented", status: co.boardComposition.esgCommittee ? "✓" : "✗", pass: co.boardComposition.esgCommittee },
-    { item: "Climate scenario analysis (≥2 scenarios)", status: co.climateRisk.transitionDetails.length >= 2 ? "✓" : co.climateRisk.transitionDetails.length >= 1 ? "Partial" : "✗", pass: co.climateRisk.transitionDetails.length >= 2 },
+    { item: "Climate scenario analysis (≥2 scenarios)", status: (co.climateRisk.pathwayAlignment !== "Not assessed" && co.netZeroCommitment !== "None") ? "✓" : co.climateRisk.pathwayAlignment !== "Not assessed" ? "Partial" : "✗", pass: co.climateRisk.pathwayAlignment !== "Not assessed" && co.netZeroCommitment !== "None" },
     { item: "Physical risk quantification", status: co.climateRisk.physicalDetails.length > 0 ? "✓" : "✗", pass: co.climateRisk.physicalDetails.length > 0 },
     { item: "Scope 1+2 emissions disclosed", status: co.carbonIntensity > 0 ? "✓" : "✗", pass: co.carbonIntensity > 0 },
     { item: "Scope 3 assessment / financed emissions", status: co.materialIssues.some(i => { if (i.opportunity) return false; const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }) ? "✓" : "✗", pass: co.materialIssues.some(i => { if (i.opportunity) return false; const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }) },
@@ -924,7 +924,7 @@ function ClimateTab({ co }: { co: Company }) {
         {(() => {
           const milestones = [
             { year: "2024", label: "Baseline", event: `Current: ${co.carbonIntensity} tCO₂e/$M, ESG Score ${co.esgScore.overall}`, status: "done" },
-            { year: "2025", label: "Near-term", event: co.netZeroCommitment === "SBTi Committed" ? "SBTi near-term target submission (committed)" : co.netZeroCommitment === "SBTi Targets Set" ? "SBTi near-term targets validated ✓" : "No near-term target set — deadline passed", status: co.netZeroCommitment === "SBTi Targets Set" ? "done" : co.netZeroCommitment === "SBTi Committed" ? "planned" : co.netZeroCommitment !== "None" ? "planned" : "missed" },
+            { year: "2025", label: "Near-term", event: co.netZeroCommitment === "SBTi Committed" ? "SBTi near-term target submission (committed, deadline passed)" : co.netZeroCommitment === "SBTi Targets Set" ? "SBTi near-term targets validated ✓" : "SBTi near-term target not set — submission deadline passed", status: co.netZeroCommitment === "SBTi Targets Set" ? "done" : "missed" },
             { year: "2026", label: "Engagement", event: [...co.engagement].filter(e => e.status === "Planned").sort((a, b) => a.date < b.date ? -1 : 1).slice(0,1).map(e => `Planned: ${e.topic}`).join("") || "No planned engagements", status: co.engagement.some(e => e.status === "Planned") ? "upcoming" : "gap" },
             { year: "2030", label: "SBTi Target", event: co.netZeroCommitment === "SBTi Targets Set" ? "42% Scope 1+2 reduction (validated SBTi)" : co.netZeroCommitment === "SBTi Committed" ? "42% reduction target (pending validation)" : `Target needed — current pathway: ${co.climateRisk.pathwayAlignment}`, status: co.netZeroCommitment !== "None" ? (co.netZeroCommitment === "SBTi Targets Set" ? "committed" : "planned") : "gap" },
             { year: "2050", label: "Net Zero", event: co.netZeroCommitment !== "None" ? "Net zero by 2050 (committed)" : "No net zero commitment", status: co.netZeroCommitment !== "None" ? "committed" : "gap" },
