@@ -61,7 +61,12 @@ export function PortfolioTrend({ data, activeCount }: { data: TrendPoint[]; acti
             dataKey="period"
             tick={{ fill: "#64748b", fontSize: 9 }}
             tickLine={false}
-            interval="preserveStartEnd"
+            interval={1}
+            tickFormatter={(v: string) => {
+              // Show "Q1'24" style for compactness on 10-point chart
+              const m = v.match(/Q(\d) (\d{4})/);
+              return m ? `Q${m[1]}'${m[2].slice(2)}` : v;
+            }}
           />
           <YAxis
             domain={["auto", "auto"]}
