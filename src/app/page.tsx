@@ -72,6 +72,13 @@ export default function OverviewPage() {
     };
   });
 
+  const lastTrend = portfolioTrend[portfolioTrend.length - 1];
+  const prevTrend = portfolioTrend[portfolioTrend.length - 2];
+  const eDelta = lastTrend && prevTrend ? lastTrend.e - prevTrend.e : 0;
+  const sDelta = lastTrend && prevTrend ? lastTrend.s - prevTrend.s : 0;
+  const gDelta = lastTrend && prevTrend ? lastTrend.g - prevTrend.g : 0;
+  const avgDelta = lastTrend && prevTrend ? Math.round(((lastTrend.e + lastTrend.s + lastTrend.g) - (prevTrend.e + prevTrend.s + prevTrend.g)) / 3) : 0;
+
   const portfolioSummary = activeCompanies.map((c) => {
     const topIssue = [...c.materialIssues]
       .filter((i) => !i.opportunity)
@@ -162,7 +169,14 @@ export default function OverviewPage() {
 
       {/* KPI Row — scoped to Active portfolio */}
       <div className="grid grid-cols-5 gap-4 mb-6">
-        <StatCard label="Portfolio ESG Score" value={avgScore} sub="Active companies · investment-weighted" color="green" />
+        <div>
+          <StatCard label="Portfolio ESG Score" value={avgScore} sub="Active companies · investment-weighted" color="green" />
+          {avgDelta !== 0 && (
+            <span className={`text-xs font-medium px-2 py-0.5 rounded border mt-1 inline-block ${
+              avgDelta > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200" : "text-red-700 bg-red-50 border-red-200"
+            }`}>{avgDelta > 0 ? `↑ +${avgDelta}` : `↓ ${avgDelta}`} vs last quarter</span>
+          )}
+        </div>
         <StatCard label="Transition Risk Flags" value={highRisk} sub="High or Critical exposure" color="amber" />
         <StatCard label="Avg Carbon Intensity" value={`${avgCarbonIntensity}`} sub="tCO₂e/$M revenue · ex-utilities weighted avg" color="default" />
         <StatCard label="Overdue Engagements" value={overdueCount} sub="Requires immediate follow-up" color="red" />

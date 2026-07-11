@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/Navigation";
 import { GlobalSearch } from "@/components/GlobalSearch";
+import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body className="bg-[#F5F5F7] text-gray-800 min-h-screen">
         <Navigation />
         <GlobalSearch />
+        <KeyboardShortcuts />
         <main className="ml-64 min-h-screen">{children}</main>
       </body>
     </html>

@@ -16,6 +16,14 @@ const MEGATREND_COLORS: Record<string, string> = {
   "Longer Lifespans": "text-indigo-700",
 };
 
+const MEGATREND_SLUGS: Record<string, string> = {
+  "Climate Transition": "climate-transition",
+  "Nature & Biodiversity": "nature-biodiversity",
+  "Just Transition & Inclusive Growth": "just-transition",
+  "AI & Digital Ethics": "ai-digital-ethics",
+  "Longer Lifespans": "longer-lifespans",
+};
+
 export default function ScoutPage() {
   const { companies, loading, liveDataError } = useCompanies();
   const [query, setQuery] = useState("");
@@ -202,7 +210,13 @@ export default function ScoutPage() {
                     <span className="text-gray-700">{co.sasbCategory}</span>
                   </div>
                   <div className="text-xs text-gray-500">
-                    Megatrend: <span className={MEGATREND_COLORS[co.temasekMegatrend] ?? "text-gray-600"}>{co.temasekMegatrend}</span>
+                    Megatrend: <Link href={`/signal/${MEGATREND_SLUGS[co.temasekMegatrend] ?? "climate-transition"}`}
+                      className={`text-xs ${MEGATREND_COLORS[co.temasekMegatrend] ?? "text-gray-600"} hover:underline`}
+                      onClick={e => e.stopPropagation()}
+                      title={`View ${co.temasekMegatrend} megatrend signal`}
+                    >
+                      {co.temasekMegatrend}
+                    </Link>
                   </div>
                   {/* Green Revenue bar */}
                   <div className="flex items-center gap-2">
@@ -224,7 +238,8 @@ export default function ScoutPage() {
                   </div>
                   {(() => {
                     const lastEng = co.engagement.filter(e => e.status === "Completed").sort((a,b) => b.date.localeCompare(a.date))[0];
-                    const daysSince = lastEng ? Math.floor((Date.now() - new Date(lastEng.date).getTime()) / (1000*60*60*24)) : null;
+                    // Parse as local midnight (date-only ISO strings are UTC by default — causes 8h skew in SGT)
+                    const daysSince = lastEng ? (() => { const [y,m,d] = lastEng.date.split("-").map(Number); return Math.floor((Date.now() - new Date(y, m-1, d).getTime()) / (1000*60*60*24)); })() : null;
                     if (!daysSince) return null;
                     return (
                       <span className={`text-[10px] px-2 py-0.5 rounded border ${

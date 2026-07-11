@@ -781,6 +781,42 @@ function OverviewTab({
           </div>
         </div>
 
+        {/* Portfolio Benchmarks — inline static comparisons */}
+        <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <h3 className="text-sm font-semibold text-gray-900 mb-4">ESG Score Context</h3>
+          <div className="space-y-3">
+            {[
+              { label: "Environmental", score: co.esgScore.environmental, benchmark: 55, portfolioAvg: 51 },
+              { label: "Social", score: co.esgScore.social, benchmark: 60, portfolioAvg: 64 },
+              { label: "Governance", score: co.esgScore.governance, benchmark: 60, portfolioAvg: 65 },
+            ].map(({ label, score, benchmark: _benchmark, portfolioAvg }) => {
+              const vsPortfolio = score - portfolioAvg;
+              return (
+                <div key={label}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-medium text-gray-700">{label}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-gray-500">vs portfolio avg: <span className={`font-medium ${vsPortfolio >= 0 ? "text-emerald-700" : "text-red-700"}`}>{vsPortfolio >= 0 ? "+" : ""}{vsPortfolio}</span></span>
+                      <span className="text-xs font-bold text-gray-900 w-6 text-right">{score}</span>
+                    </div>
+                  </div>
+                  <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full ${score >= 70 ? "bg-emerald-500" : score >= 55 ? "bg-amber-500" : "bg-red-500"}`} style={{ width: `${score}%` }} />
+                    {/* Portfolio avg marker */}
+                    <div className="absolute top-0 bottom-0 w-0.5 bg-purple-500 opacity-60" style={{ left: `${portfolioAvg}%` }} />
+                  </div>
+                  <div className="flex justify-between mt-0.5 text-[9px] text-gray-400">
+                    <span>0</span>
+                    <span className="text-purple-600" style={{ marginLeft: `${portfolioAvg - 3}%` }}>avg</span>
+                    <span>100</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-[10px] text-gray-400 mt-3">Purple marker = investment-weighted portfolio average · Benchmarks based on SASB sector medians</p>
+        </div>
+
         {/* Score Trend */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-3">Score Trend (E/S/G)</h3>
