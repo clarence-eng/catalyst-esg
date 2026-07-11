@@ -78,16 +78,16 @@ function dbToCompany(
       transition: co.transition_risk as Company["climateRisk"]["transition"],
       physical: co.physical_risk as Company["climateRisk"]["physical"],
       pathwayAlignment: co.pathway_alignment as Company["climateRisk"]["pathwayAlignment"],
-      transitionDetails,
-      physicalDetails,
+      transitionDetails: staticRef?.climateRisk.transitionDetails.length ? staticRef.climateRisk.transitionDetails : transitionDetails,
+      physicalDetails: staticRef?.climateRisk.physicalDetails.length ? staticRef.climateRisk.physicalDetails : physicalDetails,
     },
     natureRisk: {
       overall: co.nature_risk as Company["natureRisk"]["overall"],
-      biodiversityExposure: isHighNature && (isAgri || isMarine),
-      waterStress: isHighNature && isAgri,
-      deforestationRisk: isAgri && isHighNature,
-      tnfdAligned: false,
-      details: isHighNature ? [
+      biodiversityExposure: staticRef?.natureRisk.biodiversityExposure ?? (isHighNature && (isAgri || isMarine)),
+      waterStress: staticRef?.natureRisk.waterStress ?? (isHighNature && isAgri),
+      deforestationRisk: staticRef?.natureRisk.deforestationRisk ?? (isAgri && isHighNature),
+      tnfdAligned: staticRef?.natureRisk.tnfdAligned ?? false,
+      details: staticRef?.natureRisk.details.length ? staticRef.natureRisk.details : isHighNature ? [
         `Nature risk level: ${co.nature_risk}. TNFD assessment recommended.`,
       ] : [],
       tnfdPillars: staticRef?.natureRisk.tnfdPillars || [
