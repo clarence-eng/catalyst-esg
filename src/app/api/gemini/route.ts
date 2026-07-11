@@ -17,8 +17,7 @@ function sanitizeBlock(value: unknown, maxLen = 5000): string {
   return String(value)
     .slice(0, maxLen)
     .replace(/[<>]/g, "")
-    .replace(/\r\n/g, "\n")
-    .replace(/\n{3,}/g, "\n\n");
+    .replace(/[\r\n]+/g, " ");
 }
 
 function validateContext(type: GenerationType, ctx: Record<string, unknown>): boolean {
@@ -41,6 +40,20 @@ function validateContext(type: GenerationType, ctx: Record<string, unknown>): bo
 }
 
 export async function POST(req: NextRequest) {
+  // Restrict to same-origin requests — blocks external quota-abuse scripting
+  const origin = req.headers.get("origin") ?? "";
+  const referer = req.headers.get("referer") ?? "";
+  const host = req.headers.get("host") ?? "";
+  const allowedOrigins = [
+    `https://${host}`,
+    "http://localhost:3000",
+    "http://localhost:3001",
+  ];
+  const sameOrigin = allowedOrigins.some(o => origin.startsWith(o) || referer.startsWith(o));
+  if (origin && !sameOrigin) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   if (!process.env.GEMINI_API_KEY) {
     return NextResponse.json(
       { error: "Gemini API key not configured. Add GEMINI_API_KEY to .env.local" },
