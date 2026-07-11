@@ -282,6 +282,14 @@ export default function SignalPage() {
             No regulations match the selected filters
           </div>
         )}
+        {filteredUpdates.length > 0 && urgencyView !== "all" && (() => {
+          const bucket = urgencyView === "high" ? highUrgency : urgencyView === "medium" ? mediumUrgency : lowUrgency;
+          return bucket.length === 0 ? (
+            <div className="text-xs text-gray-500 text-center py-8 border border-dashed border-gray-200 rounded-lg">
+              No {urgencyView} urgency regulations match the current filters
+            </div>
+          ) : null;
+        })()}
       </div>
     </div>
   );

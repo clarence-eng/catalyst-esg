@@ -210,7 +210,18 @@ export function CompanyProfile({ company: co }: { company: Company }) {
               <span>·</span>
               <span>Temasek Megatrend: <span className={MEGATREND_COLORS[co.temasekMegatrend] ?? "text-gray-600"}>{co.temasekMegatrend}</span></span>
               <span>·</span>
-              <span>Last updated: {formatDate(co.lastUpdated)}</span>
+              {(() => {
+                  const updatedDate = new Date(co.lastUpdated);
+                  const daysSince = Math.floor((Date.now() - updatedDate.getTime()) / (1000 * 60 * 60 * 24));
+                  const isStale = daysSince > 90;
+                  return (
+                    <span className={`text-xs ${isStale ? "text-amber-600" : "text-gray-500"}`} title={isStale ? `Data is ${daysSince} days old — consider requesting an update` : undefined}>
+                      {isStale && <span className="mr-1">⚠</span>}
+                      Updated {formatDate(co.lastUpdated)}
+                      {isStale && <span className="ml-1 text-[10px] bg-amber-50 border border-amber-200 px-1 rounded text-amber-700">stale</span>}
+                    </span>
+                  );
+                })()}
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -703,6 +714,36 @@ function OverviewTab({
                 >
                   <Copy className="w-3 h-3" />
                   Copy to clipboard
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const win = window.open("", "_blank", "width=800,height=600");
+                    if (!win) return;
+                    win.document.write(`<!DOCTYPE html><html><head><title>IC Memo — ${co.name}</title><style>
+      body { font-family: Georgia, serif; max-width: 700px; margin: 40px auto; line-height: 1.7; color: #1a1a1a; }
+      h1 { font-size: 18px; font-weight: bold; margin-bottom: 4px; }
+      .meta { color: #666; font-size: 13px; margin-bottom: 24px; border-bottom: 1px solid #ddd; padding-bottom: 12px; }
+      .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-left: 8px;
+        background: ${["AAA","AA","A"].includes(co.esgScore.rating) ? "#d1fae5" : ["BBB","BB"].includes(co.esgScore.rating) ? "#fef3c7" : "#fee2e2"};
+        color: ${["AAA","AA","A"].includes(co.esgScore.rating) ? "#065f46" : ["BBB","BB"].includes(co.esgScore.rating) ? "#92400e" : "#991b1b"}; }
+      .content { white-space: pre-wrap; font-size: 14px; }
+      @media print { body { margin: 20px; } }
+    </style></head><body>
+      <h1>${co.name}<span class="badge">${co.esgScore.rating}</span></h1>
+      <div class="meta">${co.sector} · ${co.country} · ESG ${co.esgScore.overall}/100 · Generated ${new Date().toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" })}</div>
+      <div class="content">${memo.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+    </body></html>`);
+                    win.document.close();
+                    win.print();
+                  }}
+                  className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors ml-4"
+                  aria-label="Export memo as PDF"
+                >
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Export PDF
                 </button>
                 <span className="text-xs text-gray-500 ml-auto">
                   {memoGeneratedAt ? `Generated ${formatRelativeTime(memoGeneratedAt)}` : ""}

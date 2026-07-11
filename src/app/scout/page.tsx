@@ -244,6 +244,28 @@ export default function ScoutPage() {
                   );
                 })()}
                 <ESGScoreSet e={co.esgScore.environmental} s={co.esgScore.social} g={co.esgScore.governance} />
+                {(() => {
+                  const scores = [...co.historicalScores].sort((a, b) => {
+                    const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
+                    const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
+                    return ay !== by ? ay - by : aq - bq;
+                  }).slice(-6);
+                  if (scores.length < 2) return null;
+                  const avgs = scores.map(s => (s.e + s.s + s.g) / 3);
+                  const min = Math.min(...avgs); const max = Math.max(...avgs);
+                  const range = Math.max(max - min, 1);
+                  const W = 48; const H = 20;
+                  const pts = avgs.map((v, i) => `${(i / (avgs.length - 1)) * W},${H - ((v - min) / range) * H}`).join(" ");
+                  const trend = avgs[avgs.length - 1] > avgs[0];
+                  return (
+                    <div className="flex-shrink-0" title={`6-period ESG trend: ${avgs.map(v => v.toFixed(1)).join(" → ")}`}>
+                      <svg width={W} height={H} className="overflow-visible">
+                        <polyline points={pts} fill="none" stroke={trend ? "#10b981" : "#ef4444"} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+                        <circle cx={(avgs.length - 1) / (avgs.length - 1) * W} cy={H - ((avgs[avgs.length-1] - min) / range) * H} r={2.5} fill={trend ? "#10b981" : "#ef4444"} />
+                      </svg>
+                    </div>
+                  );
+                })()}
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-gray-500 w-20">Physical Risk</span>

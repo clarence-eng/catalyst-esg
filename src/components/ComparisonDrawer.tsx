@@ -13,18 +13,18 @@ export function ComparisonDrawer({ companies, onRemove, onClear }: Props) {
   if (companies.length === 0) return null;
 
   const metrics = [
-    { label: "ESG Score", fn: (c: Company) => c.esgScore.overall, unit: "/100", color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
-    { label: "Environmental", fn: (c: Company) => c.esgScore.environmental, unit: "", color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
-    { label: "Social", fn: (c: Company) => c.esgScore.social, unit: "", color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
-    { label: "Governance", fn: (c: Company) => c.esgScore.governance, unit: "", color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
-    { label: "Carbon Intensity", fn: (c: Company) => c.carbonIntensity, unit: " tCO₂/$M", color: (v: number) => v < 100 ? "text-emerald-700" : v < 500 ? "text-amber-700" : "text-red-700" },
-    { label: "Green Revenue", fn: (c: Company) => c.greenRevenuePct, unit: "%", color: (v: number) => v >= 30 ? "text-emerald-700" : v >= 10 ? "text-amber-700" : "text-red-700" },
-    { label: "Transition Risk", fn: (c: Company) => c.climateRisk.transition, unit: "", color: () => "text-gray-700" },
-    { label: "Nature Risk", fn: (c: Company) => c.natureRisk.overall, unit: "", color: () => "text-gray-700" },
+    { label: "ESG Score", fn: (c: Company) => c.esgScore.overall, unit: "/100", lowerIsBetter: false, color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
+    { label: "Environmental", fn: (c: Company) => c.esgScore.environmental, unit: "", lowerIsBetter: false, color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
+    { label: "Social", fn: (c: Company) => c.esgScore.social, unit: "", lowerIsBetter: false, color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
+    { label: "Governance", fn: (c: Company) => c.esgScore.governance, unit: "", lowerIsBetter: false, color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
+    { label: "Carbon Intensity", fn: (c: Company) => c.carbonIntensity, unit: " tCO₂/$M", lowerIsBetter: true, color: (v: number) => v < 100 ? "text-emerald-700" : v < 500 ? "text-amber-700" : "text-red-700" },
+    { label: "Green Revenue", fn: (c: Company) => c.greenRevenuePct, unit: "%", lowerIsBetter: false, color: (v: number) => v >= 30 ? "text-emerald-700" : v >= 10 ? "text-amber-700" : "text-red-700" },
+    { label: "Transition Risk", fn: (c: Company) => c.climateRisk.transition, unit: "", lowerIsBetter: false, color: () => "text-gray-700" },
+    { label: "Nature Risk", fn: (c: Company) => c.natureRisk.overall, unit: "", lowerIsBetter: false, color: () => "text-gray-700" },
   ];
 
   return (
-    <div className="fixed bottom-0 left-64 right-0 z-40 bg-white border-t-2 border-purple-600/30 shadow-2xl">
+    <div className="fixed bottom-0 left-0 sm:left-64 right-0 z-40 bg-white border-t-2 border-purple-600/30 shadow-2xl">
       <div className="px-6 py-3 flex items-center justify-between border-b border-gray-100">
         <div className="flex items-center gap-2">
           <BarChart3 className="w-4 h-4 text-purple-700" />
@@ -55,7 +55,7 @@ export function ComparisonDrawer({ companies, onRemove, onClear }: Props) {
             {metrics.map(m => {
               const values = companies.map(c => m.fn(c));
               const numVals = values.filter(v => typeof v === "number") as number[];
-              const best = numVals.length ? Math.max(...numVals) : null;
+              const best = numVals.length > 1 ? (m.lowerIsBetter ? Math.min(...numVals) : Math.max(...numVals)) : null;
               return (
                 <tr key={m.label} className="border-b border-gray-50 hover:bg-gray-50/50">
                   <td className="px-4 py-2 text-gray-500 font-medium">{m.label}</td>

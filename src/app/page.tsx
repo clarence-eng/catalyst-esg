@@ -181,6 +181,40 @@ export default function OverviewPage() {
       {/* Portfolio ESG Trend */}
       <PortfolioTrend data={portfolioTrend} activeCount={activeCompanies.length} />
 
+      {/* Carbon Intensity Comparison */}
+      {activeCompanies.length > 0 && (
+        <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
+          <h2 className="text-sm font-semibold text-gray-900 mb-1">Carbon Intensity by Company</h2>
+          <p className="text-xs text-gray-500 mb-4">tCO₂e per S$M revenue — lower is better · IEA ASEAN 2030 target: &lt;500 tCO₂e/$M</p>
+          <div className="space-y-2.5">
+            {[...activeCompanies].sort((a, b) => b.carbonIntensity - a.carbonIntensity).map(co => {
+              const maxIntensity = Math.max(...activeCompanies.map(c => c.carbonIntensity));
+              const pct = Math.min((co.carbonIntensity / Math.max(maxIntensity, 1)) * 100, 100);
+              const isHighEmitter = co.carbonIntensity > 500;
+              const color = co.carbonIntensity < 100 ? "bg-emerald-500" : co.carbonIntensity < 500 ? "bg-amber-500" : "bg-red-500";
+              return (
+                <div key={co.slug} className="flex items-center gap-3">
+                  <span className="text-xs text-gray-700 w-36 flex-shrink-0 truncate" title={co.name}>{co.name}</span>
+                  <div className="flex-1 h-5 bg-gray-100 rounded-sm overflow-hidden relative">
+                    <div className={`h-full rounded-sm ${color} transition-all`} style={{ width: `${pct}%` }} />
+                    {/* IEA benchmark line at 500/max */}
+                    {maxIntensity > 500 && (
+                      <div className="absolute top-0 bottom-0 w-px bg-gray-400 opacity-60" style={{ left: `${Math.min((500 / maxIntensity) * 100, 100)}%` }} />
+                    )}
+                  </div>
+                  <span className={`text-xs font-medium w-20 text-right flex-shrink-0 ${isHighEmitter ? "text-red-700" : "text-gray-700"}`}>
+                    {co.carbonIntensity.toLocaleString()} tCO₂/$M
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          {activeCompanies.some(c => c.carbonIntensity > 500) && (
+            <p className="text-[10px] text-gray-400 mt-3">│ = IEA ASEAN 2030 benchmark (500 tCO₂e/$M)</p>
+          )}
+        </div>
+      )}
+
       {/* Portfolio Positioning Bubble Chart */}
       <PortfolioBubbleChart data={bubbleData} />
 
@@ -296,6 +330,49 @@ export default function OverviewPage() {
         </Link>
       </div>
       )}
+
+      {/* Megatrend × Company Exposure Matrix */}
+      <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
+        <h2 className="text-sm font-semibold text-gray-900 mb-1">Megatrend Exposure Matrix</h2>
+        <p className="text-xs text-gray-500 mb-4">Active portfolio × ESG megatrend · High = direct material exposure</p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs min-w-[500px]">
+            <thead>
+              <tr className="border-b border-gray-100">
+                <th className="text-left pb-2 pr-4 text-gray-500 font-medium w-40">Company</th>
+                {megatrends.map(t => (
+                  <th key={t.slug} className="text-center pb-2 px-2 text-gray-500 font-medium max-w-[80px]">
+                    <span className="block truncate text-[10px]">{t.title.split(" ")[0]}</span>
+                    <span className="block truncate text-[10px]">{t.title.split(" ").slice(1, 3).join(" ")}</span>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {activeCompanies.map(co => (
+                <tr key={co.slug} className="border-b border-gray-50 hover:bg-gray-50/50">
+                  <td className="py-2 pr-4 font-medium text-gray-800 truncate max-w-[160px]">
+                    <a href={`/scout/${co.slug}`} className="hover:text-purple-700 transition-colors">{co.name}</a>
+                  </td>
+                  {megatrends.map(t => {
+                    const exposure = t.portfolioExposure.find(p => p.slug === co.slug);
+                    const level = exposure?.exposure ?? "Low";
+                    const cellStyle = level === "High" ? "bg-red-100 text-red-700 border border-red-200" :
+                      level === "Medium" ? "bg-amber-50 text-amber-700 border border-amber-200" :
+                      "bg-gray-50 text-gray-400 border border-gray-100";
+                    return (
+                      <td key={t.slug} className="py-2 px-2 text-center">
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${cellStyle}`}>{level[0]}</span>
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-[10px] text-gray-400 mt-2">H = High · M = Medium · L = Low exposure</p>
+      </div>
     </div>
   );
 }
