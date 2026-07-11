@@ -1,0 +1,80 @@
+"use client";
+import { type Company } from "@/data/companies";
+import { X, BarChart3 } from "lucide-react";
+import Link from "next/link";
+
+interface Props {
+  companies: Company[];
+  onRemove: (slug: string) => void;
+  onClear: () => void;
+}
+
+export function ComparisonDrawer({ companies, onRemove, onClear }: Props) {
+  if (companies.length === 0) return null;
+
+  const metrics = [
+    { label: "ESG Score", fn: (c: Company) => c.esgScore.overall, unit: "/100", color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
+    { label: "Environmental", fn: (c: Company) => c.esgScore.environmental, unit: "", color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
+    { label: "Social", fn: (c: Company) => c.esgScore.social, unit: "", color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
+    { label: "Governance", fn: (c: Company) => c.esgScore.governance, unit: "", color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
+    { label: "Carbon Intensity", fn: (c: Company) => c.carbonIntensity, unit: " tCO₂/$M", color: (v: number) => v < 100 ? "text-emerald-700" : v < 500 ? "text-amber-700" : "text-red-700" },
+    { label: "Green Revenue", fn: (c: Company) => c.greenRevenuePct, unit: "%", color: (v: number) => v >= 30 ? "text-emerald-700" : v >= 10 ? "text-amber-700" : "text-red-700" },
+    { label: "Transition Risk", fn: (c: Company) => c.climateRisk.transition, unit: "", color: () => "text-gray-700" },
+    { label: "Nature Risk", fn: (c: Company) => c.natureRisk.overall, unit: "", color: () => "text-gray-700" },
+  ];
+
+  return (
+    <div className="fixed bottom-0 left-64 right-0 z-40 bg-white border-t-2 border-purple-600/30 shadow-2xl">
+      <div className="px-6 py-3 flex items-center justify-between border-b border-gray-100">
+        <div className="flex items-center gap-2">
+          <BarChart3 className="w-4 h-4 text-purple-700" />
+          <span className="text-sm font-semibold text-gray-900">Comparing {companies.length} companies</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <button type="button" onClick={onClear} className="text-xs text-gray-500 hover:text-gray-700 px-3 py-1 border border-gray-200 rounded-lg hover:bg-gray-50">Clear all</button>
+          <button type="button" onClick={onClear} className="text-gray-400 hover:text-gray-600"><X className="w-4 h-4" /></button>
+        </div>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="border-b border-gray-100">
+              <th className="text-left px-4 py-2 text-gray-500 font-medium w-36">Metric</th>
+              {companies.map(c => (
+                <th key={c.slug} className="px-4 py-2 min-w-[140px]">
+                  <div className="flex items-center justify-between gap-2">
+                    <Link href={`/scout/${c.slug}`} className="font-semibold text-gray-900 hover:text-purple-700 truncate max-w-[100px]">{c.name}</Link>
+                    <button type="button" onClick={() => onRemove(c.slug)} className="text-gray-300 hover:text-gray-500 flex-shrink-0"><X className="w-3 h-3" /></button>
+                  </div>
+                  <div className="text-gray-400 font-normal truncate">{c.sector.split(" ")[0]}</div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {metrics.map(m => {
+              const values = companies.map(c => m.fn(c));
+              const numVals = values.filter(v => typeof v === "number") as number[];
+              const best = numVals.length ? Math.max(...numVals) : null;
+              return (
+                <tr key={m.label} className="border-b border-gray-50 hover:bg-gray-50/50">
+                  <td className="px-4 py-2 text-gray-500 font-medium">{m.label}</td>
+                  {companies.map((c, i) => {
+                    const v = values[i];
+                    const isBest = typeof v === "number" && v === best && numVals.length > 1;
+                    return (
+                      <td key={c.slug} className={`px-4 py-2 font-semibold ${m.color(v as number)}`}>
+                        {v}{m.unit}
+                        {isBest && <span className="ml-1 text-[9px] text-emerald-600 bg-emerald-50 px-1 rounded">best</span>}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}

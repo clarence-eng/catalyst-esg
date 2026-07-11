@@ -118,6 +118,14 @@ export default function OverviewPage() {
       </PageHeader>
 
       {/* Portfolio Health Bar */}
+      {activeCompanies.length === 0 ? (
+        <div className="mb-6 rounded-xl px-6 py-4 border bg-gray-50 border-gray-200 flex items-center justify-between">
+          <div>
+            <div className="text-xs font-medium text-gray-600 mb-0.5">Portfolio ESG Health</div>
+            <div className="text-sm text-gray-400 italic">No active companies — add companies via the admin panel</div>
+          </div>
+        </div>
+      ) : (
       <div className={`mb-6 rounded-xl px-6 py-4 border flex items-center justify-between ${
         avgScore >= 70 ? "bg-emerald-50 border-emerald-200" :
         avgScore >= 55 ? "bg-amber-50 border-amber-200" :
@@ -150,6 +158,7 @@ export default function OverviewPage() {
           <div className="text-[10px] text-gray-400 mt-1">{activeCompanies.length} active companies</div>
         </div>
       </div>
+      )}
 
       {/* KPI Row — scoped to Active portfolio */}
       <div className="grid grid-cols-5 gap-4 mb-6">

@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, LayoutDashboard, Users, Radio, BookOpen, Info } from "lucide-react";
+import { Search, LayoutDashboard, Users, Radio, BookOpen, Info, Moon, Sun } from "lucide-react";
 import { useCompanies } from "@/lib/useCompanies";
+import { useTheme } from "@/lib/useTheme";
 
 const navItems = [
   { href: "/", icon: LayoutDashboard, label: "Overview", desc: "Portfolio dashboard" },
@@ -17,6 +18,7 @@ const TEMASEK_PURPLE = "#4B2580";
 
 export function Navigation() {
   const pathname = usePathname();
+  const { theme, toggle } = useTheme();
   const { companies } = useCompanies();
   const overdueCount = companies
     .filter(c => c.portfolioStatus === "Active")
@@ -105,6 +107,15 @@ export function Navigation() {
           <Info className="w-3 h-3" />
           About this demo
         </Link>
+        <button
+          type="button"
+          onClick={toggle}
+          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded-lg hover:bg-gray-100 transition-colors w-full mt-1"
+        >
+          {theme === 'light' ? <Moon className="w-3 h-3" /> : <Sun className="w-3 h-3" />}
+          <span>{theme === 'light' ? 'Dark mode' : 'Light mode'}</span>
+        </button>
         <div className="text-[10px] text-gray-400 flex items-center gap-1 mt-2 px-2"><kbd className="bg-gray-100 px-1 rounded font-mono">⌘K</kbd><span>Search</span></div>
         <div className="text-xs text-gray-500 leading-relaxed">
           Temasek ESG Investment Intelligence

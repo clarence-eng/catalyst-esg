@@ -37,6 +37,7 @@ export default function SignalPage() {
   const { companies, liveDataError } = useCompanies();
   const [jurisdictionFilter, setJurisdictionFilter] = useState("All");
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [urgencyView, setUrgencyView] = useState<"all"|"high"|"medium"|"low">("all");
 
   const companyNameMap = useMemo(() => Object.fromEntries(companies.map((c) => [c.slug, c.name])), [companies]);
   const activePortfolioSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug)), [companies]);
@@ -241,19 +242,36 @@ export default function SignalPage() {
       </div>
 
       <div className="space-y-3 mb-8">
-        {highUrgency.length > 0 && (
+        {/* Urgency filter tabs */}
+        <div className="flex items-center gap-2 mb-4">
+          {[
+            { key: "all", label: "All Regulations", count: filteredUpdates.length },
+            { key: "high", label: "High", count: highUrgency.length, color: "text-red-700 bg-red-50 border-red-200" },
+            { key: "medium", label: "Medium", count: mediumUrgency.length, color: "text-amber-700 bg-amber-50 border-amber-200" },
+            { key: "low", label: "Low", count: lowUrgency.length, color: "text-blue-700 bg-blue-50 border-blue-200" },
+          ].map(tab => (
+            <button key={tab.key} type="button"
+              onClick={() => setUrgencyView(tab.key as typeof urgencyView)}
+              className={`text-xs px-3 py-1 rounded-full border font-medium transition-colors ${
+                urgencyView === tab.key ? (tab.color ?? "bg-[#4B2580]/10 border-purple-500/30 text-purple-700") : "text-gray-600 border-gray-200 hover:border-gray-300"
+              }`}>
+              {tab.label} {tab.count > 0 && <span className="ml-1 opacity-70">({tab.count})</span>}
+            </button>
+          ))}
+        </div>
+        {(urgencyView === "all" || urgencyView === "high") && highUrgency.length > 0 && (
           <>
             <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-1">High Priority</div>
             {highUrgency.map((r) => <RegUpdateCard key={r.id} update={r} companyNameMap={companyNameMap} pipelinePortfolioSlugs={pipelinePortfolioSlugs} activePortfolioSlugs={activePortfolioSlugs} />)}
           </>
         )}
-        {mediumUrgency.length > 0 && (
+        {(urgencyView === "all" || urgencyView === "medium") && mediumUrgency.length > 0 && (
           <>
             <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-1 pt-4">Monitor</div>
             {mediumUrgency.map((r) => <RegUpdateCard key={r.id} update={r} companyNameMap={companyNameMap} pipelinePortfolioSlugs={pipelinePortfolioSlugs} activePortfolioSlugs={activePortfolioSlugs} />)}
           </>
         )}
-        {lowUrgency.length > 0 && (
+        {(urgencyView === "all" || urgencyView === "low") && lowUrgency.length > 0 && (
           <>
             <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-1 pt-4">Policy Tailwinds</div>
             {lowUrgency.map((r) => <RegUpdateCard key={r.id} update={r} companyNameMap={companyNameMap} pipelinePortfolioSlugs={pipelinePortfolioSlugs} activePortfolioSlugs={activePortfolioSlugs} />)}

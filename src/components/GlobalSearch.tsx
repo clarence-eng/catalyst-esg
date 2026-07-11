@@ -1,11 +1,12 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { companies } from "@/data/companies";
+import { useCompanies } from "@/lib/useCompanies";
 import { frameworks } from "@/data/learn";
 import { Search, X, Building2, BookOpen } from "lucide-react";
 
 export function GlobalSearch() {
+  const { companies } = useCompanies();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -13,7 +14,11 @@ export function GlobalSearch() {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      // Don't hijack Cmd+K when user is typing in a form input
+      const target = e.target as HTMLElement;
+      const isInput = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement || target.contentEditable === "true";
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        if (isInput) return;
         e.preventDefault();
         setOpen(o => !o);
       }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCompanies } from "@/lib/useCompanies";
 import { RatingBadge, MaturityBadge, PageHeader, RiskBadge } from "@/components/ui-elements";
 import { Search, ArrowRight, GitMerge } from "lucide-react";
+import { ComparisonDrawer } from "@/components/ComparisonDrawer";
 
 type StatusFilter = "All" | "Active" | "Pipeline";
 
@@ -19,6 +20,7 @@ export default function ScoutPage() {
   const { companies, loading, liveDataError } = useCompanies();
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
+  const [compareSet, setCompareSet] = useState<Set<string>>(new Set());
 
   if (loading && companies.length === 0) {
     return (
@@ -232,7 +234,10 @@ export default function ScoutPage() {
                     ? "text-amber-700"
                     : "text-red-700";
                   return (
-                    <div className={`flex flex-col items-center justify-center w-14 h-14 rounded-full border-2 flex-shrink-0 ${ringClass}`}>
+                    <div
+                      className={`flex flex-col items-center justify-center w-14 h-14 rounded-full border-2 flex-shrink-0 ${ringClass}`}
+                      title={`E: ${co.esgScore.environmental} | S: ${co.esgScore.social} | G: ${co.esgScore.governance}`}
+                    >
                       <span className={`text-lg font-bold leading-none ${textClass}`}>{score}</span>
                       <span className="text-[8px] text-gray-500 leading-none mt-0.5">ESG</span>
                     </div>
@@ -253,12 +258,36 @@ export default function ScoutPage() {
                     <RiskBadge level={co.natureRisk.overall} />
                   </div>
                 </div>
+                <button
+                  type="button"
+                  aria-label={compareSet.has(co.slug) ? "Remove from comparison" : "Add to comparison"}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setCompareSet(prev => {
+                      const next = new Set(prev);
+                      if (next.has(co.slug)) next.delete(co.slug);
+                      else if (next.size < 3) next.add(co.slug);
+                      return next;
+                    });
+                  }}
+                  className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                    compareSet.has(co.slug) ? "bg-purple-600 border-purple-600 text-white" : "border-gray-300 hover:border-purple-400"
+                  }`}
+                >
+                  {compareSet.has(co.slug) && <span className="text-[10px] font-bold">✓</span>}
+                </button>
                 <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-gray-600 transition-colors" />
               </div>
             </div>
           </Link>
         ))}
       </div>
+      <ComparisonDrawer
+        companies={companies.filter(c => compareSet.has(c.slug))}
+        onRemove={(slug) => setCompareSet(prev => { const next = new Set(prev); next.delete(slug); return next; })}
+        onClear={() => setCompareSet(new Set())}
+      />
     </div>
   );
 }

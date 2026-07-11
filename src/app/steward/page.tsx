@@ -201,6 +201,11 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
   const plannedCount = co.engagement.filter((e) => e.status === "Planned").length;
   const overdueCount = co.engagement.filter((e) => e.status === "Overdue").length;
 
+  const total = completedCount + plannedCount + overdueCount;
+  const completionPct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+  const radius = 16; const circ = 2 * Math.PI * radius;
+  const filled = (completionPct / 100) * circ;
+
   async function generateActionPlan() {
     if (planLoading) return;
     setPlanLoading(true);
@@ -306,6 +311,17 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
               <ESGMini label="E" value={co.esgScore.environmental} />
               <ESGMini label="S" value={co.esgScore.social} />
               <ESGMini label="G" value={co.esgScore.governance} />
+            </div>
+            <div className="flex flex-col items-center" title={`${completionPct}% of engagements completed`}>
+              <svg width="44" height="44" className="-rotate-90">
+                <circle cx="22" cy="22" r={radius} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth={5} />
+                {total > 0 && <circle cx="22" cy="22" r={radius} fill="none"
+                  stroke={overdueCount > 0 ? "#f97316" : "#10b981"}
+                  strokeWidth={5}
+                  strokeDasharray={`${filled} ${circ}`}
+                  strokeLinecap="round" />}
+              </svg>
+              <span className="-mt-[34px] text-[10px] font-bold text-gray-700">{completionPct}%</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 text-xs">
