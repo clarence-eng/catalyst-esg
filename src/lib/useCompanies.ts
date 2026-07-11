@@ -33,6 +33,9 @@ export function useCompanies() {
           setSource(src);
           // Show error if we fell back to static despite requesting live data
           if (src === "static") setLiveDataError(true);
+        } else {
+          // Empty companies array (API error or empty DB) — treat as live data failure
+          setLiveDataError(true);
         }
       })
       .catch(() => { setLiveDataError(true); })

@@ -2,7 +2,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase, type DbCompany, type DbEngagement, type DbMaterialIssue } from "@/lib/supabase";
 import { clearCache } from "@/lib/useCompanies";
-import { clearCompanyCache } from "@/lib/fetchCompanies";
 import { Plus, Trash2, Edit3, Save, X, ChevronDown, ChevronUp, Lock, LogOut, Building2, Users, AlertCircle, CheckCircle } from "lucide-react";
 
 // ─── Auth ───────────────────────────────────────────────────────────────────
@@ -48,7 +47,7 @@ function CoField({ label, k, type = "text", opts, co, set }: {
           {opts.map(o => <option key={o}>{o}</option>)}
         </select>
       ) : (
-        <input type={type} value={(co as Record<string,unknown>)[k] as string || ""}
+        <input type={type} value={((co as Record<string,unknown>)[k] ?? "") as string}
           onChange={e => { const v = type === "number" ? (e.target.value === '' ? 0 : parseFloat(e.target.value) || 0) : e.target.value; set(k, v); if (k === "name" && !co.id) set("slug", slugify(e.target.value)); }}
           readOnly={k === "slug" && !!co.id}
           className={`border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none ${k === "slug" && co.id ? "bg-gray-50 text-gray-600 cursor-not-allowed" : "focus:border-purple-400"}`} />
@@ -184,7 +183,7 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
     const { id: issId, company_slug: _ic, created_at: _icat, ...issFields } = i as Required<typeof i>;
     const { error: issErr } = issId
       ? await supabase.from("material_issues").update(issFields).eq("id", issId)
-      : await supabase.from("material_issues").insert({ ...i, sort_order: issues.length, company_slug: co.slug });
+      : await supabase.from("material_issues").insert({ ...i, sort_order: issues.length > 0 ? Math.max(...issues.map(x => x.sort_order ?? 0)) + 1 : 0, company_slug: co.slug });
     if (issErr) { alert("Error saving issue: " + issErr.message); return; }
     setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();
   };
@@ -299,25 +298,26 @@ export default function AdminPage() {
       const { id: coId, created_at: _ccat, ...coFields } = co as Required<typeof co>;
       const { error } = await supabase.from("companies").update(coFields).eq("id", coId);
       if (error) showToast("Error: " + error.message);
-      else { showToast("Company updated ✓"); setEditing(null); clearCache(); clearCompanyCache(); loadCompanies(); }
+      else { showToast("Company updated ✓"); setEditing(null); clearCache(); loadCompanies(); }
     } else {
       const { error } = await supabase.from("companies").insert(co);
       if (error) showToast("Error: " + error.message);
-      else { showToast("Company added ✓"); setAdding(false); clearCache(); clearCompanyCache(); loadCompanies(); }
+      else { showToast("Company added ✓"); setAdding(false); clearCache(); loadCompanies(); }
     }
     setSaving(false);
   };
 
   const deleteCompany = async (id: string, slug: string, name: string) => {
     if (!confirm(`Delete ${name}? This also deletes all engagements and material issues.`)) return;
-    // Delete sub-rows first (no DB CASCADE configured)
-    await supabase.from("engagements").delete().eq("company_slug", slug);
-    await supabase.from("material_issues").delete().eq("company_slug", slug);
+    // Delete sub-rows first (no DB CASCADE configured); report errors before touching parent
+    const { error: engDelErr } = await supabase.from("engagements").delete().eq("company_slug", slug);
+    if (engDelErr) { showToast("Error deleting engagements: " + engDelErr.message); return; }
+    const { error: miDelErr } = await supabase.from("material_issues").delete().eq("company_slug", slug);
+    if (miDelErr) { showToast("Error deleting issues: " + miDelErr.message); return; }
     const { error } = await supabase.from("companies").delete().eq("id", id);
     if (error) { showToast("Error deleting: " + error.message); return; }
     showToast(`${name} deleted`);
     clearCache();
-    clearCompanyCache();
     loadCompanies();
   };
 
