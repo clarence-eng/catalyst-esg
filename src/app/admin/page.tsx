@@ -18,16 +18,20 @@ function useAdminAuth() {
 }
 
 // ─── Company Form ────────────────────────────────────────────────────────────
-const EMPTY_CO: Partial<DbCompany> = {
-  name: "", slug: "", sector: "", country: "", region: "Southeast Asia",
-  description: "", portfolio_status: "Active", maturity: "Developing",
-  investment_value: 100, carbon_intensity: 50, green_revenue_pct: 10,
-  esg_overall: 55, esg_environmental: 55, esg_social: 55, esg_governance: 55,
-  esg_rating: "BBB", transition_risk: "Medium", physical_risk: "Medium",
-  pathway_alignment: "Not assessed", nature_risk: "Medium",
-  net_zero_commitment: "None", sasb_category: "", temasek_megatrend: "Climate Transition",
-  last_updated: new Date().toISOString().split("T")[0],
-};
+function todayISO() { return new Date().toISOString().split("T")[0]; }
+
+function makeEmptyCo(): Partial<DbCompany> {
+  return {
+    name: "", slug: "", sector: "", country: "", region: "Southeast Asia",
+    description: "", portfolio_status: "Active", maturity: "Developing",
+    investment_value: 100, carbon_intensity: 50, green_revenue_pct: 10,
+    esg_overall: 55, esg_environmental: 55, esg_social: 55, esg_governance: 55,
+    esg_rating: "BBB", transition_risk: "Medium", physical_risk: "Medium",
+    pathway_alignment: "Not assessed", nature_risk: "Medium",
+    net_zero_commitment: "None", sasb_category: "", temasek_megatrend: "Climate Transition",
+    last_updated: todayISO(),
+  };
+}
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -107,7 +111,9 @@ function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; on
 }
 
 // ─── Engagement Form ─────────────────────────────────────────────────────────
-const EMPTY_ENG: Partial<DbEngagement> = { date: new Date().toISOString().split("T")[0], type: "Meeting", topic: "", status: "Planned", notes: "" };
+function makeEmptyEng(): Partial<DbEngagement> {
+  return { date: todayISO(), type: "Meeting", topic: "", status: "Planned", notes: "" };
+}
 function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: string; initial: Partial<DbEngagement>; onSave: (e: Partial<DbEngagement>) => void; onCancel: () => void }) {
   const [eng, setEng] = useState({ ...initial });
   const set = (k: string, v: string) => setEng(p => ({ ...p, [k]: v }));
@@ -224,7 +230,7 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
               <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Engagements ({engagements.length})</h4>
               <button type="button" onClick={() => setAddEng(true)} className="flex items-center gap-1 text-xs text-purple-700 hover:text-purple-900"><Plus className="w-3 h-3"/> Add</button>
             </div>
-            {addEng && <div className="mb-3"><EngForm companySlug={co.slug} initial={EMPTY_ENG} onSave={saveEng} onCancel={() => setAddEng(false)}/></div>}
+            {addEng && <div className="mb-3"><EngForm companySlug={co.slug} initial={makeEmptyEng()} onSave={saveEng} onCancel={() => setAddEng(false)}/></div>}
             <div className="space-y-2">
               {engagements.map(e => editEng?.id === e.id ? (
                 <EngForm key={e.id} companySlug={co.slug} initial={e} onSave={saveEng} onCancel={() => setEditEng(null)}/>
@@ -387,7 +393,7 @@ export default function AdminPage() {
 
         {adding && (
           <div className="mb-6">
-            <CoForm initial={EMPTY_CO} onSave={saveCompany} onCancel={() => setAdding(false)} />
+            <CoForm initial={makeEmptyCo()} onSave={saveCompany} onCancel={() => setAdding(false)} />
           </div>
         )}
 
