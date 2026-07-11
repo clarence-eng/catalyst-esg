@@ -117,6 +117,40 @@ export default function OverviewPage() {
         </div>
       </PageHeader>
 
+      {/* Portfolio Health Bar */}
+      <div className={`mb-6 rounded-xl px-6 py-4 border flex items-center justify-between ${
+        avgScore >= 70 ? "bg-emerald-50 border-emerald-200" :
+        avgScore >= 55 ? "bg-amber-50 border-amber-200" :
+        "bg-red-50 border-red-200"
+      }`}>
+        <div>
+          <div className="text-xs font-medium text-gray-600 mb-0.5">Portfolio ESG Health</div>
+          <div className={`text-2xl font-bold ${
+            avgScore >= 70 ? "text-emerald-700" : avgScore >= 55 ? "text-amber-700" : "text-red-700"
+          }`}>{avgScore}<span className="text-sm font-normal text-gray-500">/100</span></div>
+        </div>
+        <div className="flex-1 mx-8">
+          <div className="h-3 bg-white/60 rounded-full overflow-hidden border border-white/40">
+            <div className={`h-full rounded-full transition-all ${
+              avgScore >= 70 ? "bg-emerald-500" : avgScore >= 55 ? "bg-amber-500" : "bg-red-500"
+            }`} style={{ width: `${avgScore}%` }} />
+          </div>
+          <div className="flex justify-between mt-1 text-[10px] text-gray-400">
+            <span>0</span><span>50</span><span>100</span>
+          </div>
+        </div>
+        <div className="text-right">
+          <div className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
+            avgScore >= 70 ? "text-emerald-700 bg-emerald-100 border-emerald-300" :
+            avgScore >= 55 ? "text-amber-700 bg-amber-100 border-amber-300" :
+            "text-red-700 bg-red-100 border-red-300"
+          }`}>
+            {avgScore >= 70 ? "Strong" : avgScore >= 55 ? "Developing" : "Needs Attention"}
+          </div>
+          <div className="text-[10px] text-gray-400 mt-1">{activeCompanies.length} active companies</div>
+        </div>
+      </div>
+
       {/* KPI Row — scoped to Active portfolio */}
       <div className="grid grid-cols-5 gap-4 mb-6">
         <StatCard label="Portfolio ESG Score" value={avgScore} sub="Active companies · investment-weighted" color="green" />

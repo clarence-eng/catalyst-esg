@@ -1207,7 +1207,14 @@ function NatureTab({ co }: { co: Company }) {
                   <div className="text-sm font-medium text-gray-900">{pillar}</div>
                   <div className="text-xs text-gray-600">{TNFD_PILLAR_DESCS[pillar] ?? ""}</div>
                 </div>
-                <span className={`ml-auto text-xs px-2 py-0.5 rounded border flex-shrink-0 ${statusStyle}`}>{status}</span>
+                <span className={`ml-auto text-xs px-2 py-0.5 rounded border flex-shrink-0 ${statusStyle}`}>
+                  <span className={`mr-1 text-xs ${
+                    status === "Adopted" ? "text-emerald-500" :
+                    status === "Partial" ? "text-amber-500" :
+                    "text-gray-300"
+                  }`}>{status === "Gap" ? "○" : "●"}</span>
+                  {status}
+                </span>
               </div>
             );
           })}

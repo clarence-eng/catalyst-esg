@@ -16,9 +16,29 @@ const MEGATREND_COLORS: Record<string, string> = {
 };
 
 export default function ScoutPage() {
-  const { companies, liveDataError } = useCompanies();
+  const { companies, loading, liveDataError } = useCompanies();
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
+
+  if (loading && companies.length === 0) {
+    return (
+      <div className="p-8">
+        <div className="h-8 w-48 bg-gray-200 rounded-lg animate-pulse mb-6" />
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="bg-white border border-gray-200 rounded-xl p-5 mb-4 animate-pulse">
+            <div className="flex justify-between">
+              <div className="space-y-2 flex-1">
+                <div className="h-4 w-48 bg-gray-200 rounded" />
+                <div className="h-3 w-96 bg-gray-100 rounded" />
+                <div className="h-3 w-72 bg-gray-100 rounded" />
+              </div>
+              <div className="h-16 w-24 bg-gray-100 rounded ml-4" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   const ACTIVE_COUNT = companies.filter((c) => c.portfolioStatus === "Active").length;
   const PIPELINE_COUNT = companies.filter((c) => c.portfolioStatus === "Pipeline").length;
@@ -199,6 +219,25 @@ export default function ScoutPage() {
                 )}
               </div>
               <div className="flex items-center gap-6 ml-6 flex-shrink-0">
+                {(() => {
+                  const score = co.esgScore.overall;
+                  const ringClass = score >= 70
+                    ? "border-emerald-500 bg-emerald-50"
+                    : score >= 55
+                    ? "border-amber-500 bg-amber-50"
+                    : "border-red-500 bg-red-50";
+                  const textClass = score >= 70
+                    ? "text-emerald-700"
+                    : score >= 55
+                    ? "text-amber-700"
+                    : "text-red-700";
+                  return (
+                    <div className={`flex flex-col items-center justify-center w-14 h-14 rounded-full border-2 flex-shrink-0 ${ringClass}`}>
+                      <span className={`text-lg font-bold leading-none ${textClass}`}>{score}</span>
+                      <span className="text-[8px] text-gray-500 leading-none mt-0.5">ESG</span>
+                    </div>
+                  );
+                })()}
                 <ESGScoreSet e={co.esgScore.environmental} s={co.esgScore.social} g={co.esgScore.governance} />
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">

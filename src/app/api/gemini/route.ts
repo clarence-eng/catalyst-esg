@@ -43,20 +43,18 @@ function validateContext(type: GenerationType, ctx: Record<string, unknown>): bo
 
 export async function POST(req: NextRequest) {
   // Restrict to same-origin requests — blocks external quota-abuse scripting.
-  // Use env-configured allowed origins (NOT the attacker-controllable Host header).
+  // Use explicit allowlist (NOT the attacker-controllable Host header, NOT prefix matches).
   const origin = req.headers.get("origin") ?? "";
   const referer = req.headers.get("referer") ?? "";
-  const allowedOrigins = [
-    // Vercel production deployment
-    "https://catalyst-neon-eight.vercel.app",
-    // Any Vercel preview deployment for this project
-    "https://catalyst-",
-    // Local development
-    "http://localhost:3000",
-    "http://localhost:3001",
-  ];
+  // Exact domain allowlist — no prefix matching to prevent subdomain bypass attacks
+  const isAllowed = (s: string) =>
+    s === "https://catalyst-neon-eight.vercel.app" ||
+    s.startsWith("https://catalyst-neon-eight-") && s.endsWith(".vercel.app") ||
+    s === "http://localhost:3000" ||
+    s === "http://localhost:3001" ||
+    s.startsWith("http://localhost:");
   const hasSourceHeader = origin !== "" || referer !== "";
-  const sameOrigin = allowedOrigins.some(o => origin.startsWith(o) || referer.startsWith(o));
+  const sameOrigin = isAllowed(origin) || isAllowed(referer);
   if (!hasSourceHeader || !sameOrigin) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

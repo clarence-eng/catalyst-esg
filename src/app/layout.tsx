@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/Navigation";
+import { GlobalSearch } from "@/components/GlobalSearch";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body className="bg-[#F5F5F7] text-gray-800 min-h-screen">
         <Navigation />
+        <GlobalSearch />
         <main className="ml-64 min-h-screen">{children}</main>
       </body>
     </html>

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search, LayoutDashboard, Users, Radio, BookOpen, Info } from "lucide-react";
+import { useCompanies } from "@/lib/useCompanies";
 
 const navItems = [
   { href: "/", icon: LayoutDashboard, label: "Overview", desc: "Portfolio dashboard" },
@@ -16,6 +17,10 @@ const TEMASEK_PURPLE = "#4B2580";
 
 export function Navigation() {
   const pathname = usePathname();
+  const { companies } = useCompanies();
+  const overdueCount = companies
+    .filter(c => c.portfolioStatus === "Active")
+    .reduce((s, c) => s + c.engagement.filter(e => e.status === "Overdue").length, 0);
 
   return (
     <aside className="fixed left-0 top-0 h-full w-64 bg-[#F9F8FA] border-r border-gray-200 flex flex-col z-50 text-gray-800">
@@ -79,6 +84,11 @@ export function Navigation() {
                 </div>
                 <div className="text-xs text-gray-600 mt-0.5">{desc}</div>
               </div>
+              {label === "Steward" && overdueCount > 0 && (
+                <span className="ml-auto text-[10px] font-bold bg-orange-500 text-white rounded-full px-1.5 py-0.5 min-w-[18px] text-center">
+                  {overdueCount}
+                </span>
+              )}
             </Link>
           );
         })}
@@ -95,6 +105,7 @@ export function Navigation() {
           <Info className="w-3 h-3" />
           About this demo
         </Link>
+        <div className="text-[10px] text-gray-400 flex items-center gap-1 mt-2 px-2"><kbd className="bg-gray-100 px-1 rounded font-mono">⌘K</kbd><span>Search</span></div>
         <div className="text-xs text-gray-500 leading-relaxed">
           Temasek ESG Investment Intelligence
         </div>
