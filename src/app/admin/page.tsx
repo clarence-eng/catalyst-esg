@@ -217,7 +217,12 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
             <span className="text-xs text-gray-500">{co.country}</span>
           </div>
           <div className="flex items-center gap-4 text-xs text-gray-500">
-            <span>ESG <strong className="text-gray-900">{co.esg_overall}</strong></span>
+            <span className="flex items-center gap-1.5">
+              <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                co.esg_overall >= 70 ? "bg-emerald-500" : co.esg_overall >= 55 ? "bg-amber-500" : "bg-red-500"
+              }`} />
+              ESG <strong className="text-gray-900">{co.esg_overall}</strong>
+            </span>
             <span>Rating <strong className="text-gray-900">{co.esg_rating}</strong></span>
             <span>Transition <strong className={riskColor}>{co.transition_risk}</strong></span>
             <span>S${co.investment_value}M</span>
@@ -293,6 +298,8 @@ export default function AdminPage() {
   const [editing, setEditing] = useState<DbCompany | null>(null);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState("");
+  const [adminSearch, setAdminSearch] = useState("");
+  const [adminSort, setAdminSort] = useState<"name"|"esg"|"recent">("recent");
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(""), 3000); };
 
@@ -373,6 +380,15 @@ export default function AdminPage() {
   const activeCount = companies.filter(c => c.portfolio_status === "Active").length;
   const pipelineCount = companies.filter(c => c.portfolio_status === "Pipeline").length;
 
+  const filteredAdminCompanies = adminSearch.trim()
+    ? companies.filter(co => co.name.toLowerCase().includes(adminSearch.toLowerCase()) || co.sector.toLowerCase().includes(adminSearch.toLowerCase()))
+    : companies;
+  const sortedAdminCompanies = [...filteredAdminCompanies].sort((a, b) => {
+    if (adminSort === "name") return a.name.localeCompare(b.name);
+    if (adminSort === "esg") return b.esg_overall - a.esg_overall;
+    return 0;
+  });
+
   return (
     <div className="min-h-screen bg-[#F5F5F7]">
       {/* Header */}
@@ -406,6 +422,39 @@ export default function AdminPage() {
           <button type="button" onClick={() => { setAdding(true); setEditing(null); }} className="flex items-center gap-2 bg-[#4B2580] hover:bg-[#3D1A6E] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"><Plus className="w-4 h-4"/> Add Company</button>
         </div>
 
+        <div className="mb-4">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                value={adminSearch}
+                onChange={e => setAdminSearch(e.target.value)}
+                placeholder="Filter by name or sector..."
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400 pl-8"
+              />
+              <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            {adminSearch && <button type="button" onClick={() => setAdminSearch("")} className="text-xs text-gray-500 hover:text-gray-700">Clear</button>}
+            <div className="flex items-center gap-1">
+              {([{key:"recent",label:"Recent"},{key:"name",label:"A–Z"},{key:"esg",label:"ESG Score"}] as {key:"recent"|"name"|"esg"; label:string}[]).map(opt => (
+                <button
+                  key={opt.key}
+                  type="button"
+                  onClick={() => setAdminSort(opt.key)}
+                  className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${adminSort === opt.key ? "bg-[#4B2580] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          {filteredAdminCompanies.length === 0 && adminSearch && (
+            <div className="text-center py-8 text-gray-500 text-sm">No companies match &ldquo;{adminSearch}&rdquo;</div>
+          )}
+        </div>
+
         {adding && (
           <div className="mb-6">
             <CoForm initial={makeEmptyCo()} onSave={saveCompany} onCancel={() => setAdding(false)} />
@@ -416,12 +465,12 @@ export default function AdminPage() {
           <div className="text-center py-12 text-gray-500 text-sm">Loading portfolio data…</div>
         ) : (
           <div className="space-y-3">
-            {companies.map(co => editing?.id === co.id ? (
+            {sortedAdminCompanies.map(co => editing?.id === co.id ? (
               <CoForm key={co.id} initial={editing} onSave={saveCompany} onCancel={() => setEditing(null)} />
             ) : (
               <CompanyRow key={co.id} co={co} onEdit={() => { setEditing(co); setAdding(false); }} onDelete={() => deleteCompany(co.id, co.slug, co.name)} />
             ))}
-            {companies.length === 0 && !adding && (
+            {sortedAdminCompanies.length === 0 && !adding && !adminSearch && (
               <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-2xl">
                 <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-3"/>
                 <p className="text-gray-500 font-medium">No companies yet</p>

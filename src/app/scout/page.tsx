@@ -186,6 +186,17 @@ export default function ScoutPage() {
                   <span className="text-xs text-gray-600 bg-gray-100 px-2 py-0.5 rounded">{co.country}</span>
                 </div>
                 <p className="text-xs text-gray-600 mb-3 leading-relaxed max-w-3xl">{co.description}</p>
+                {co.engagement.filter(e => e.status === "Overdue").length > 0 && (
+                  <div className="flex items-center gap-2 mb-2 bg-orange-50 border border-orange-200 rounded-lg px-3 py-1.5">
+                    <span className="text-orange-600 text-xs">⚠</span>
+                    <span className="text-xs text-orange-700 font-medium">
+                      {co.engagement.filter(e => e.status === "Overdue").length} overdue engagement{co.engagement.filter(e => e.status === "Overdue").length > 1 ? "s" : ""}
+                    </span>
+                    <span className="text-xs text-orange-600 ml-1">
+                      — {co.engagement.filter(e => e.status === "Overdue").slice(0, 2).map(e => e.topic).join(", ")}
+                    </span>
+                  </div>
+                )}
                 <div className="flex items-center gap-6">
                   <div className="text-xs text-gray-500">
                     <span className="text-gray-700">{co.sasbCategory}</span>
@@ -211,6 +222,20 @@ export default function ScoutPage() {
                   <div className="text-xs text-gray-500">
                     Carbon Intensity: <span className="text-gray-700">{co.carbonIntensity} tCO₂e/$M</span>
                   </div>
+                  {(() => {
+                    const lastEng = co.engagement.filter(e => e.status === "Completed").sort((a,b) => b.date.localeCompare(a.date))[0];
+                    const daysSince = lastEng ? Math.floor((Date.now() - new Date(lastEng.date).getTime()) / (1000*60*60*24)) : null;
+                    if (!daysSince) return null;
+                    return (
+                      <span className={`text-[10px] px-2 py-0.5 rounded border ${
+                        daysSince < 90 ? "text-emerald-700 bg-emerald-50 border-emerald-200" :
+                        daysSince < 180 ? "text-amber-700 bg-amber-50 border-amber-200" :
+                        "text-red-700 bg-red-50 border-red-200"
+                      }`} title={`Last completed engagement: ${lastEng?.date}`}>
+                        Last engaged: {daysSince < 30 ? `${daysSince}d ago` : daysSince < 365 ? `${Math.floor(daysSince/30)}mo ago` : `${Math.floor(daysSince/365)}y ago`}
+                      </span>
+                    );
+                  })()}
                 </div>
                 {co.sdgAlignment.length > 0 && (
                   <div className="flex items-center gap-1.5 mt-2.5">

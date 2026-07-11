@@ -4,6 +4,8 @@ import type { Company } from "@/data/companies";
 import { companies as staticCompanies } from "@/data/companies";
 
 let cachedResult: { companies: Company[]; source: "static" | "supabase" } | null = null;
+// In-flight promise deduplication — all concurrent mounts share one fetch
+let inFlight: Promise<void> | null = null;
 
 export function useCompanies() {
   const [companies, setCompanies] = useState<Company[]>(staticCompanies);
@@ -20,8 +22,24 @@ export function useCompanies() {
       return;
     }
 
+    // If another mount is already fetching, attach to its promise instead of firing a new request
+    if (inFlight) {
+      inFlight.then(() => {
+        if (cachedResult) {
+          setCompanies(cachedResult.companies);
+          setSource(cachedResult.source);
+          if (cachedResult.source === "static") setLiveDataError(true);
+        } else {
+          setLiveDataError(true);
+        }
+        setLoading(false);
+      });
+      setLoading(true);
+      return;
+    }
+
     setLoading(true);
-    fetch("/api/companies")
+    inFlight = fetch("/api/companies")
       .then(r => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
@@ -31,15 +49,13 @@ export function useCompanies() {
           cachedResult = { companies: cos, source: src };
           setCompanies(cos);
           setSource(src);
-          // Show error if we fell back to static despite requesting live data
           if (src === "static") setLiveDataError(true);
         } else {
-          // Empty companies array (API error or empty DB) — treat as live data failure
           setLiveDataError(true);
         }
       })
       .catch(() => { setLiveDataError(true); })
-      .finally(() => setLoading(false));
+      .finally(() => { setLoading(false); inFlight = null; });
   }, []);
 
   return { companies, loading, source, liveDataError };
@@ -47,4 +63,5 @@ export function useCompanies() {
 
 export function clearCache() {
   cachedResult = null;
+  inFlight = null;
 }

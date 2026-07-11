@@ -211,7 +211,9 @@ export function CompanyProfile({ company: co }: { company: Company }) {
               <span>Temasek Megatrend: <span className={MEGATREND_COLORS[co.temasekMegatrend] ?? "text-gray-600"}>{co.temasekMegatrend}</span></span>
               <span>·</span>
               {(() => {
-                  const updatedDate = new Date(co.lastUpdated);
+                  // Parse as local midnight to avoid UTC offset skew (date-only ISO strings parse as UTC)
+                  const [y, mo, d] = co.lastUpdated.split("-").map(Number);
+                  const updatedDate = new Date(y, mo - 1, d);
                   const daysSince = Math.floor((Date.now() - updatedDate.getTime()) / (1000 * 60 * 60 * 24));
                   const isStale = daysSince > 90;
                   return (

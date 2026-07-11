@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { frameworks, caseStudies } from "@/data/learn";
 import { PageHeader } from "@/components/ui-elements";
-import { ExternalLink, ChevronRight, Search } from "lucide-react";
+import { ExternalLink, ChevronRight, ChevronDown, ChevronUp, Search } from "lucide-react";
 
 type FrameworkFilter = "All" | "Climate" | "Nature" | "Cross-cutting" | "Reporting" | "Social";
 
@@ -46,8 +46,6 @@ export default function LearnPage() {
       cs.frameworks.some(f => f.toLowerCase().includes(q))
     );
   });
-
-  const deepDiveFrameworks = filteredFrameworks.filter((f) => f.temasekRelevance === "High");
 
   const filterCategories: FrameworkFilter[] = ["All", "Climate", "Nature", "Reporting", "Cross-cutting", "Social"];
 
@@ -113,11 +111,10 @@ export default function LearnPage() {
             <p className="text-xs text-gray-500 py-4">No frameworks in this category or search.</p>
           )}
 
-          {deepDiveFrameworks.length > 0 && (
+          {filteredFrameworks.length > 0 && (
           <div className="mb-2">
-            <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-2">High Relevance to Temasek Portfolio</div>
             <div className="space-y-2">
-              {deepDiveFrameworks.map((f) => <FrameworkRow key={f.id} framework={f} />)}
+              {filteredFrameworks.map((f) => <FrameworkRow key={f.id} framework={f} query={q} />)}
             </div>
           </div>
           )}
@@ -138,22 +135,26 @@ export default function LearnPage() {
         </div>
       </div>
 
-      {/* Framework Detail Cards */}
-      {deepDiveFrameworks.length > 0 && (
-      <div className="mt-10">
-        <h2 className="text-sm font-semibold text-gray-900 mb-4">Framework Deep Dives</h2>
-        <div className="grid grid-cols-2 gap-4">
-          {deepDiveFrameworks.map((f) => (
-            <FrameworkDetailCard key={f.id} framework={f} />
-          ))}
-        </div>
-      </div>
-      )}
     </div>
   );
 }
 
-function FrameworkRow({ framework: f }: { framework: (typeof frameworks)[0] }) {
+function Highlight({ text, query }: { text: string; query: string }) {
+  if (!query || query.length < 2) return <>{text}</>;
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className="bg-yellow-200 text-yellow-900 rounded-sm px-0.5">{text.slice(idx, idx + query.length)}</mark>
+      {text.slice(idx + query.length)}
+    </>
+  );
+}
+
+function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[0]; query: string }) {
+  const [expanded, setExpanded] = useState(false);
+
   const categoryColors: Record<string, string> = {
     Climate: "text-emerald-700",
     Nature: "text-green-700",
@@ -168,30 +169,61 @@ function FrameworkRow({ framework: f }: { framework: (typeof frameworks)[0] }) {
   };
 
   return (
-    <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:border-gray-200 transition-colors">
-      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-base font-bold ${categoryColors[f.category] ?? "text-gray-600"} bg-gray-100`}>
-        {f.name.charAt(0)}
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-0.5">
-          <span className="text-sm font-medium text-gray-900 truncate">{f.name}</span>
-          <span className={`text-xs px-1.5 py-0.5 rounded border flex-shrink-0 ${statusStyles[f.status] ?? "text-gray-600 bg-gray-100 border-gray-200"}`}>{f.status}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className={`text-xs font-medium ${categoryColors[f.category] ?? "text-gray-600"}`}>{f.category}</span>
-          <span className="text-xs text-gray-500">·</span>
-          <span className="text-xs text-gray-500 truncate">{f.fullName}</span>
-        </div>
-      </div>
-      <a
-        href={f.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`Open ${f.name} website`}
-        className="text-gray-500 hover:text-gray-700 transition-colors flex-shrink-0"
+    <div className="bg-white rounded-lg border border-gray-200 transition-colors">
+      <div
+        className="flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-50 transition-colors rounded-lg"
+        onClick={() => setExpanded((e) => !e)}
+        role="button"
+        aria-expanded={expanded}
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setExpanded((v) => !v); }}
       >
-        <ExternalLink className="w-3.5 h-3.5" />
-      </a>
+        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-base font-bold ${categoryColors[f.category] ?? "text-gray-600"} bg-gray-100`}>
+          {f.name.charAt(0)}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-0.5">
+            <span className="text-sm font-medium text-gray-900 truncate"><Highlight text={f.name} query={query} /></span>
+            <span className={`text-xs px-1.5 py-0.5 rounded border flex-shrink-0 ${statusStyles[f.status] ?? "text-gray-600 bg-gray-100 border-gray-200"}`}>{f.status}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className={`text-xs font-medium ${categoryColors[f.category] ?? "text-gray-600"}`}>{f.category}</span>
+            <span className="text-xs text-gray-500">·</span>
+            <span className="text-xs text-gray-500 truncate">{f.fullName}</span>
+          </div>
+        </div>
+        <a
+          href={f.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Open ${f.name} website`}
+          className="text-gray-500 hover:text-gray-700 transition-colors flex-shrink-0"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <ExternalLink className="w-3.5 h-3.5" />
+        </a>
+        <span className="text-gray-400 flex-shrink-0">
+          {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </span>
+      </div>
+      {expanded && (
+        <div className="px-3 pb-3 border-t border-gray-100">
+          <p className="text-xs text-gray-600 leading-relaxed mt-2 mb-2">{f.description}</p>
+          {f.keyRequirements.length > 0 && (
+            <div>
+              <div className="text-xs text-gray-500 font-medium mb-1">Key Requirements</div>
+              <ul className="space-y-1">
+                {f.keyRequirements.slice(0, 3).map((req) => (
+                  <li key={req} className="flex items-start gap-2 text-xs text-gray-600">
+                    <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0 text-gray-500" />
+                    {req}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -231,60 +263,3 @@ function CaseStudyCard({ study: cs }: { study: (typeof caseStudies)[0] }) {
   );
 }
 
-function FrameworkDetailCard({ framework: f }: { framework: (typeof frameworks)[0] }) {
-  const categoryColors: Record<string, string> = {
-    Climate: "border-emerald-600/20 bg-emerald-600/5",
-    Nature: "border-green-600/20 bg-green-600/5",
-    "Cross-cutting": "border-purple-600/20 bg-purple-600/5",
-    Reporting: "border-amber-500/20 bg-amber-500/5",
-    Social: "border-blue-600/20 bg-blue-600/5",
-  };
-
-  return (
-    <div className={`rounded-xl border p-5 ${categoryColors[f.category] ?? "border-gray-200 bg-gray-50"}`}>
-      <div className="flex items-start justify-between mb-3">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-base font-bold text-gray-900">{f.name}</span>
-            <span className="text-xs text-gray-600">{f.adoptionYear}</span>
-          </div>
-          <p className="text-xs text-gray-600">{f.fullName}</p>
-        </div>
-        <a
-          href={f.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Open ${f.name} website`}
-          className="flex items-center gap-1 text-xs text-gray-600 hover:text-gray-800 transition-colors flex-shrink-0"
-        >
-          <ExternalLink className="w-3.5 h-3.5" />
-        </a>
-      </div>
-      <p className="text-xs text-gray-700 leading-relaxed mb-3">{f.description}</p>
-
-      {f.keyRequirements.length > 0 && (
-      <div className="mb-3">
-        <div className="text-xs text-gray-500 font-medium mb-1.5">Key Requirements</div>
-        <ul className="space-y-1">
-          {f.keyRequirements.map((req) => (
-            <li key={req} className="flex items-start gap-2 text-xs text-gray-600">
-              <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0 text-gray-500" />
-              {req}
-            </li>
-          ))}
-        </ul>
-      </div>
-      )}
-
-      <div className="mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-        <div className="text-xs text-gray-600 font-medium mb-1">Investment Relevance</div>
-        <p className="text-xs text-gray-600 leading-relaxed">{f.investmentRelevance}</p>
-      </div>
-
-      <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
-        <div className="text-xs text-gray-600 font-medium mb-1">ASEAN Context</div>
-        <p className="text-xs text-gray-600 leading-relaxed">{f.aseanContext}</p>
-      </div>
-    </div>
-  );
-}
