@@ -40,7 +40,9 @@ function validateContext(type: GenerationType, ctx: Record<string, unknown>): bo
 }
 
 export async function POST(req: NextRequest) {
-  // Restrict to same-origin requests — blocks external quota-abuse scripting
+  // Restrict to same-origin requests — blocks external quota-abuse scripting.
+  // Require at least one of Origin or Referer header; reject if neither present
+  // (headless scripts commonly omit both; browsers always send at least one).
   const origin = req.headers.get("origin") ?? "";
   const referer = req.headers.get("referer") ?? "";
   const host = req.headers.get("host") ?? "";
@@ -49,8 +51,9 @@ export async function POST(req: NextRequest) {
     "http://localhost:3000",
     "http://localhost:3001",
   ];
+  const hasSourceHeader = origin !== "" || referer !== "";
   const sameOrigin = allowedOrigins.some(o => origin.startsWith(o) || referer.startsWith(o));
-  if (origin && !sameOrigin) {
+  if (!hasSourceHeader || !sameOrigin) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

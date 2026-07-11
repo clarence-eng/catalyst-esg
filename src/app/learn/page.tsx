@@ -20,7 +20,8 @@ export default function LearnPage() {
       f.name.toLowerCase().includes(q) ||
       f.fullName.toLowerCase().includes(q) ||
       f.description.toLowerCase().includes(q) ||
-      f.aseanContext.toLowerCase().includes(q)
+      f.aseanContext.toLowerCase().includes(q) ||
+      f.status.toLowerCase().includes(q)
     );
   });
 
@@ -46,9 +47,7 @@ export default function LearnPage() {
     );
   });
 
-  const highRelevance = filteredFrameworks.filter((f) => f.temasekRelevance === "High");
-  const medRelevance = filteredFrameworks.filter((f) => f.temasekRelevance === "Medium");
-  const deepDiveFrameworks = highRelevance; // high-relevance frameworks that also match search/filter
+  const deepDiveFrameworks = filteredFrameworks.filter((f) => f.temasekRelevance === "High");
 
   const filterCategories: FrameworkFilter[] = ["All", "Climate", "Nature", "Reporting", "Cross-cutting", "Social"];
 
@@ -114,26 +113,13 @@ export default function LearnPage() {
             <p className="text-xs text-gray-500 py-4">No frameworks in this category or search.</p>
           )}
 
-          {filteredFrameworks.length > 0 && highRelevance.length === 0 && medRelevance.length === 0 && (
-            <p className="text-xs text-gray-500 py-4">No High or Reference relevance frameworks in this category.</p>
-          )}
-
-          {highRelevance.length > 0 && (
+          {deepDiveFrameworks.length > 0 && (
           <div className="mb-2">
             <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-2">High Relevance to Temasek Portfolio</div>
             <div className="space-y-2">
-              {highRelevance.map((f) => <FrameworkRow key={f.id} framework={f} />)}
+              {deepDiveFrameworks.map((f) => <FrameworkRow key={f.id} framework={f} />)}
             </div>
           </div>
-          )}
-
-          {medRelevance.length > 0 && (
-            <div className="mt-4">
-              <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-2 pt-2">Reference</div>
-              <div className="space-y-2">
-                {medRelevance.map((f) => <FrameworkRow key={f.id} framework={f} />)}
-              </div>
-            </div>
           )}
         </div>
 
