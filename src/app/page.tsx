@@ -97,8 +97,9 @@ export default function OverviewPage() {
   return (
     <div className="p-8">
       {liveDataError && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 mb-4 text-xs text-amber-800 flex items-center gap-2">
-          <span>⚠</span> Using demo data — live portfolio database unavailable. Check Supabase connection.
+        <div role="alert" aria-live="polite" className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 mb-4 text-xs text-amber-800 flex items-center gap-2">
+          <span aria-hidden="true">⚠</span>
+          <span>Using demo data — live portfolio database unavailable. Check Supabase connection.</span>
         </div>
       )}
       <PageHeader
