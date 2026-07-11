@@ -189,8 +189,8 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
   const [planError, setPlanError] = useState("");
   const [planGeneratedAt, setPlanGeneratedAt] = useState<Date | null>(null);
 
-  // Invalidate cached plan when key company data changes (e.g., admin update)
-  const planKey = `${co.slug}:${co.esgScore.overall}:${co.maturity}`;
+  // Invalidate cached plan when any key company data changes (e.g., admin update)
+  const planKey = `${co.slug}:${co.esgScore.overall}:${co.maturity}:${co.climateRisk.transition}:${co.natureRisk.overall}:${co.netZeroCommitment}:${co.greenRevenuePct}`;
   const prevKeyRef = useState(planKey);
   if (prevKeyRef[0] !== planKey) {
     prevKeyRef[1](planKey);

@@ -215,11 +215,11 @@ Format: Numbered list within each section. Investment-grade language. Singapore/
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
     const safe = message.length > 200 ? message.slice(0, 200) + "…" : message;
-    // Detect specific API error types to return appropriate HTTP status codes
+    // Detect specific API error types; only flag as auth (400) on explicit key errors
     const isRateLimit = /\b429\b/.test(message) || message.toLowerCase().includes("quota") || message.toLowerCase().includes("exhausted") || message.toLowerCase().includes("rate limit");
     const isOverload = /\b503\b/.test(message) || message.toLowerCase().includes("unavailable") || message.toLowerCase().includes("overloaded");
-    const isAuthError = /\b400\b/.test(message) || message.toLowerCase().includes("api_key_invalid") || message.toLowerCase().includes("invalid api key");
-    const status = isRateLimit ? 429 : isOverload ? 503 : isAuthError ? 400 : 500;
+    const isAuthError = message.toLowerCase().includes("api_key_invalid") || message.toLowerCase().includes("invalid api key");
+    const status = isRateLimit ? 429 : isOverload ? 503 : isAuthError ? 401 : 500;
     return NextResponse.json({ error: safe }, { status });
   }
 }
