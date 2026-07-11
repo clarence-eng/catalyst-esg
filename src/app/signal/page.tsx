@@ -244,19 +244,19 @@ export default function SignalPage() {
         {highUrgency.length > 0 && (
           <>
             <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-1">High Priority</div>
-            {highUrgency.map((r) => <RegUpdateCard key={r.id} update={r} companyNameMap={companyNameMap} pipelinePortfolioSlugs={pipelinePortfolioSlugs} />)}
+            {highUrgency.map((r) => <RegUpdateCard key={r.id} update={r} companyNameMap={companyNameMap} pipelinePortfolioSlugs={pipelinePortfolioSlugs} activePortfolioSlugs={activePortfolioSlugs} />)}
           </>
         )}
         {mediumUrgency.length > 0 && (
           <>
             <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-1 pt-4">Monitor</div>
-            {mediumUrgency.map((r) => <RegUpdateCard key={r.id} update={r} companyNameMap={companyNameMap} pipelinePortfolioSlugs={pipelinePortfolioSlugs} />)}
+            {mediumUrgency.map((r) => <RegUpdateCard key={r.id} update={r} companyNameMap={companyNameMap} pipelinePortfolioSlugs={pipelinePortfolioSlugs} activePortfolioSlugs={activePortfolioSlugs} />)}
           </>
         )}
         {lowUrgency.length > 0 && (
           <>
             <div className="text-xs text-gray-500 uppercase tracking-wider font-medium pb-1 pt-4">Policy Tailwinds</div>
-            {lowUrgency.map((r) => <RegUpdateCard key={r.id} update={r} companyNameMap={companyNameMap} pipelinePortfolioSlugs={pipelinePortfolioSlugs} />)}
+            {lowUrgency.map((r) => <RegUpdateCard key={r.id} update={r} companyNameMap={companyNameMap} pipelinePortfolioSlugs={pipelinePortfolioSlugs} activePortfolioSlugs={activePortfolioSlugs} />)}
           </>
         )}
         {filteredUpdates.length === 0 && (
@@ -269,7 +269,7 @@ export default function SignalPage() {
   );
 }
 
-function RegUpdateCard({ update: r, companyNameMap = Object.fromEntries(staticCompanies.map(c=>[c.slug,c.name])), pipelinePortfolioSlugs = new Set(staticCompanies.filter(c=>c.portfolioStatus==="Pipeline").map(c=>c.slug)) }: { update: (typeof regulatoryUpdates)[0]; companyNameMap?: Record<string,string>; pipelinePortfolioSlugs?: Set<string> }) {
+function RegUpdateCard({ update: r, companyNameMap = Object.fromEntries(staticCompanies.map(c=>[c.slug,c.name])), pipelinePortfolioSlugs = new Set(staticCompanies.filter(c=>c.portfolioStatus==="Pipeline").map(c=>c.slug)), activePortfolioSlugs = new Set(staticCompanies.filter(c=>c.portfolioStatus==="Active").map(c=>c.slug)) }: { update: (typeof regulatoryUpdates)[0]; companyNameMap?: Record<string,string>; pipelinePortfolioSlugs?: Set<string>; activePortfolioSlugs?: Set<string> }) {
   const statusColors: Record<string, string> = {
     "In Force": "text-emerald-700 bg-emerald-50 border-emerald-300",
     "Effective 2026": "text-blue-700 bg-blue-50 border-blue-300",
@@ -296,15 +296,20 @@ function RegUpdateCard({ update: r, companyNameMap = Object.fromEntries(staticCo
             <span className="text-sm font-medium text-gray-900">{r.title}</span>
             <span className={`text-xs px-2 py-0.5 rounded border ${statusColors[r.status] ?? "text-gray-600 bg-gray-100 border-gray-200"}`}>{r.status}</span>
             <span className={`text-xs font-medium ${categoryColors[r.category] ?? "text-gray-600"}`}>{r.category}</span>
-            {r.portfolioImpact && r.portfolioImpact.length > 0 && (
-              <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${
-                r.portfolioImpact.length <= 2
-                  ? "text-amber-700 bg-amber-50 border-amber-300"
-                  : "text-orange-700 bg-orange-50 border-orange-300"
-              }`}>
-                Affects {r.portfolioImpact.length} {r.portfolioImpact.length === 1 ? "company" : "companies"}
-              </span>
-            )}
+            {r.portfolioImpact && r.portfolioImpact.length > 0 && (() => {
+              const activeImpactCount = r.portfolioImpact.filter(s => activePortfolioSlugs.has(s)).length;
+              const totalImpactCount = r.portfolioImpact.length;
+              const label = activeImpactCount === 1 ? "company" : "companies";
+              return (
+                <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${
+                  activeImpactCount <= 2
+                    ? "text-amber-700 bg-amber-50 border-amber-300"
+                    : "text-orange-700 bg-orange-50 border-orange-300"
+                }`}>
+                  Affects {activeImpactCount} active {label}{totalImpactCount > activeImpactCount ? ` (+${totalImpactCount - activeImpactCount} pipeline)` : ""}
+                </span>
+              );
+            })()}
           </div>
           <div className="flex items-center gap-3 text-xs text-gray-500 mb-2">
             <span>{r.jurisdiction}</span>
