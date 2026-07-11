@@ -169,13 +169,13 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
     else await supabase.from("engagements").insert(e);
     setAddEng(false); setEditEng(null); clearCache(); loadDetail();
   };
-  const delEng = async (id: string) => { await supabase.from("engagements").delete().eq("id", id); loadDetail(); };
+  const delEng = async (id: string) => { await supabase.from("engagements").delete().eq("id", id); clearCache(); loadDetail(); };
   const saveIssue = async (i: Partial<DbMaterialIssue>) => {
     if (i.id) await supabase.from("material_issues").update(i).eq("id", i.id);
     else await supabase.from("material_issues").insert({ ...i, sort_order: issues.length });
     setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();
   };
-  const delIssue = async (id: string) => { await supabase.from("material_issues").delete().eq("id", id); loadDetail(); };
+  const delIssue = async (id: string) => { await supabase.from("material_issues").delete().eq("id", id); clearCache(); loadDetail(); };
 
   const statusColor = co.portfolio_status === "Active" ? "text-emerald-700 bg-emerald-50 border-emerald-300" : "text-blue-700 bg-blue-50 border-blue-300";
   const riskColor = { Low: "text-emerald-700", Medium: "text-amber-700", High: "text-orange-700", Critical: "text-red-700" }[co.transition_risk] || "text-gray-600";
