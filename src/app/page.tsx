@@ -83,7 +83,7 @@ export default function OverviewPage() {
       `Overdue engagements: ${c.engagement.filter(e => e.status === "Overdue").length}, Planned: ${c.engagement.filter(e => e.status === "Planned").length}, ` +
       `Top issue: ${topIssue ? `${topIssue.issue} (${topIssue.severity})` : "None"}`
     );
-  }).join("\n");
+  }).join(" || ");
 
   const bubbleData = activeCompanies.map((c) => ({
     name: c.name,

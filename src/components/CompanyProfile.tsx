@@ -82,7 +82,8 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         .slice(0, 3)
         .map((i) => `${i.issue} (${i.severity})`)
         .join(", ");
-      const topUplift = [...co.valueUplift].sort((a, b) => ({ High: 0, Medium: 1, Low: 2 }[a.potential] ?? 3) - ({ High: 0, Medium: 1, Low: 2 }[b.potential] ?? 3)).slice(0, 2).map((u) => u.area).join(", ");
+      const topUpliftRaw = [...co.valueUplift].sort((a, b) => ({ High: 0, Medium: 1, Low: 2 }[a.potential] ?? 3) - ({ High: 0, Medium: 1, Low: 2 }[b.potential] ?? 3)).slice(0, 2).map((u) => u.area).join(", ");
+      const topUplift = topUpliftRaw || "Not yet assessed — value uplift opportunities to be determined during engagement";
       const res = await fetch("/api/gemini", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -472,11 +473,11 @@ function OverviewTab({
     <div className="grid grid-cols-3 gap-6">
       {/* Left: Material Issues */}
       <div className="col-span-2 space-y-4">
-        {co.icRecommendation && (
+        {co.icRecommendation ? (
           <div className={`rounded-xl border p-4 ${
-            co.icRecommendation.verdict === "Invest Conditional" 
-              ? "border-amber-500/30 bg-amber-500/5" 
-              : co.icRecommendation.verdict === "Invest" 
+            co.icRecommendation.verdict === "Invest Conditional"
+              ? "border-amber-500/30 bg-amber-500/5"
+              : co.icRecommendation.verdict === "Invest"
               ? "border-emerald-500/30 bg-emerald-500/5"
               : "border-red-500/30 bg-red-500/5"
           }`}>
@@ -496,7 +497,11 @@ function OverviewTab({
             )}
             <p className="text-xs text-gray-500 italic">{co.icRecommendation.esgGating}</p>
           </div>
-        )}
+        ) : co.portfolioStatus === "Active" ? (
+          <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-xs text-gray-500 italic">
+            No IC ESG recommendation on file — company is an active holding. ESG conditions were agreed at investment close.
+          </div>
+        ) : null}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-4">Material ESG Issues</h3>
           <div className="space-y-3">
