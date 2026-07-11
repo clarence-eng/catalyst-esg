@@ -23,3 +23,12 @@ export function formatDate(iso: string): string {
   if (isNaN(day) || day < 1 || day > 31) return iso;
   return `${day} ${months[monthIdx]} ${y}`;
 }
+
+/** Copy text to clipboard with a window.prompt fallback for non-HTTPS contexts. */
+export function copyToClipboard(text: string): void {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).catch(() => { window.prompt("Copy manually:", text); });
+  } else {
+    window.prompt("Copy manually:", text);
+  }
+}

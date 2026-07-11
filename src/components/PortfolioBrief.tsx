@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Loader2, BarChart3, Copy } from "lucide-react";
 import { AIOutput } from "@/components/AIOutput";
-import { formatRelativeTime } from "@/lib/utils";
+import { formatRelativeTime, copyToClipboard } from "@/lib/utils";
 
 interface PortfolioBriefProps {
   portfolioSummary: string;
@@ -85,7 +85,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
                 const names = count > 0 ? companyNames.join(", ") : "Active Portfolio Companies";
                 const countLabel = count > 0 ? `${count} ` : "";
                 const header = `CATALYST ESG INTELLIGENCE\n${quarter} Portfolio ESG Brief\nPrepared: ${date}\nPortfolio: ${countLabel}Active Companies (${names})\n${"─".repeat(60)}\n\n`;
-                navigator.clipboard?.writeText(header + brief)?.catch(() => {});
+                copyToClipboard(header + brief);
               }}
               className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
             >

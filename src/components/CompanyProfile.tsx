@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 import { type Company } from "@/data/companies";
 import { RiskBadge, RatingBadge, MaturityBadge, ScoreRing } from "@/components/ui-elements";
 import { AIOutput } from "@/components/AIOutput";
-import { formatRelativeTime, formatDate } from "@/lib/utils";
+import { formatRelativeTime, formatDate, copyToClipboard } from "@/lib/utils";
 import {
   ResponsiveContainer,
   RadarChart,
@@ -223,7 +223,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
 
       {/* Tabs */}
       <div
-        className="flex items-center gap-1 border-b border-gray-200 mb-6"
+        className="flex items-center gap-1 border-b border-gray-200 mb-6 overflow-x-auto scrollbar-none"
         role="tablist"
         aria-label="Company ESG sections"
         onKeyDown={(e) => {
@@ -691,7 +691,7 @@ function OverviewTab({
               <div className="mt-3 flex items-center">
                 <button
                   type="button"
-                  onClick={() => navigator.clipboard?.writeText(memo)?.catch(() => {})}
+                  onClick={() => copyToClipboard(memo)}
                   className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                 >
                   <Copy className="w-3 h-3" />
@@ -1503,7 +1503,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
             <div className="mt-3 flex items-center">
               <button
                 type="button"
-                onClick={() => navigator.clipboard?.writeText(questions)?.catch(() => {})}
+                onClick={() => copyToClipboard(questions)}
                 className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
               >
                 <Copy className="w-3 h-3" />

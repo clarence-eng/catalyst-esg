@@ -4,7 +4,7 @@ import Link from "next/link";
 import { type Megatrend } from "@/data/megatrends";
 import { Loader2, FileText, TrendingUp, AlertTriangle, Copy } from "lucide-react";
 import { AIOutput } from "@/components/AIOutput";
-import { formatRelativeTime } from "@/lib/utils";
+import { formatRelativeTime, copyToClipboard } from "@/lib/utils";
 import { useCompanies } from "@/lib/useCompanies";
 
 
@@ -187,7 +187,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                   onClick={() => {
                     const date = new Date().toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" });
                     const header = `CATALYST ESG INTELLIGENCE\nThematic Brief: ${t.title}\nPrepared: ${date}\n${"─".repeat(60)}\n\n`;
-                    navigator.clipboard?.writeText(header + brief)?.catch(() => {});
+                    copyToClipboard(header + brief);
                   }}
                   className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                 >

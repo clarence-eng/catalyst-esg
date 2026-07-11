@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, memo } from "react";
 import { useCompanies } from "@/lib/useCompanies";
 import type { Company } from "@/data/companies";
 import { RatingBadge, MaturityBadge, RiskBadge, PageHeader } from "@/components/ui-elements";
 import { Loader2, FileText, CheckCircle, Clock, ChevronDown, ChevronUp, Copy, GitMerge, AlertCircle } from "lucide-react";
 import { AIOutput } from "@/components/AIOutput";
 import Link from "next/link";
-import { formatRelativeTime, formatDate } from "@/lib/utils";
+import { formatRelativeTime, formatDate, copyToClipboard } from "@/lib/utils";
 
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
@@ -182,7 +182,7 @@ function getEscalationLevel(co: Company): { level: number; label: string; color:
   return { level: 0, label: "Active Monitoring", color: "text-blue-700 bg-blue-50 border-blue-300" };
 }
 
-function PortfolioCard({ company: co, isPipeline = false }: { company: Company; isPipeline?: boolean }) {
+const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = false }: { company: Company; isPipeline?: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const [plan, setPlan] = useState("");
   const [planLoading, setPlanLoading] = useState(false);
@@ -402,7 +402,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: Company; 
                 <div className="mt-3 flex items-center">
                   <button
                     type="button"
-                    onClick={() => navigator.clipboard?.writeText(plan)?.catch(() => {})}
+                    onClick={() => copyToClipboard(plan)}
                     className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                   >
                     <Copy className="w-3 h-3" />
@@ -428,7 +428,7 @@ function PortfolioCard({ company: co, isPipeline = false }: { company: Company; 
       )}
     </div>
   );
-}
+});
 
 function ESGMini({ label, value }: { label: string; value: number }) {
   const color =

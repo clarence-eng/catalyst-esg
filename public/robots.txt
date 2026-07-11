@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /admin
+
+Sitemap: https://catalyst-neon-eight.vercel.app/sitemap.xml
