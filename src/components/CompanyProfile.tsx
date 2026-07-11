@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
-import { type Company } from "@/data/companies";
+import { type Company, companies as allCompanies } from "@/data/companies";
 import { RiskBadge, RatingBadge, MaturityBadge, ScoreRing } from "@/components/ui-elements";
 import { AIOutput } from "@/components/AIOutput";
 import { formatRelativeTime, formatDate, copyToClipboard } from "@/lib/utils";
@@ -785,10 +785,16 @@ function OverviewTab({
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-4">ESG Score Context</h3>
           <div className="space-y-3">
-            {[
-              { label: "Environmental", score: co.esgScore.environmental, portfolioAvg: 50 },
-              { label: "Social", score: co.esgScore.social, portfolioAvg: 66 },
-              { label: "Governance", score: co.esgScore.governance, portfolioAvg: 64 },
+            {(() => {
+              const active = allCompanies.filter(c => c.portfolioStatus === "Active");
+              const totalIV = active.reduce((s, c) => s + c.investmentValue, 0) || 1;
+              const wtdE = Math.round(active.reduce((s, c) => s + c.esgScore.environmental * c.investmentValue, 0) / totalIV);
+              const wtdS = Math.round(active.reduce((s, c) => s + c.esgScore.social * c.investmentValue, 0) / totalIV);
+              const wtdG = Math.round(active.reduce((s, c) => s + c.esgScore.governance * c.investmentValue, 0) / totalIV);
+              return [
+              { label: "Environmental", score: co.esgScore.environmental, portfolioAvg: wtdE },
+              { label: "Social", score: co.esgScore.social, portfolioAvg: wtdS },
+              { label: "Governance", score: co.esgScore.governance, portfolioAvg: wtdG },
             ].map(({ label, score, portfolioAvg }) => {
               const vsPortfolio = score - portfolioAvg;
               return (
@@ -812,9 +818,10 @@ function OverviewTab({
                   </div>
                 </div>
               );
-            })}
+            })
+            })()}
           </div>
-          <p className="text-[10px] text-gray-400 mt-3">Purple marker = investment-weighted portfolio average · Benchmarks based on SASB sector medians</p>
+          <p className="text-[10px] text-gray-400 mt-3">Purple marker = investment-weighted portfolio average (static data) · Benchmarks based on SASB sector medians</p>
         </div>
 
         {/* Score Trend */}

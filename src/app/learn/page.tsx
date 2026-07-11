@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { frameworks, caseStudies } from "@/data/learn";
 import { PageHeader } from "@/components/ui-elements";
 import { ExternalLink, ChevronRight, ChevronDown, ChevronUp, Search } from "lucide-react";
@@ -9,6 +10,13 @@ type FrameworkFilter = "All" | "Climate" | "Nature" | "Cross-cutting" | "Reporti
 export default function LearnPage() {
   const [frameworkFilter, setFrameworkFilter] = useState<FrameworkFilter>("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const searchParams = useSearchParams();
+
+  // Pre-populate search from ?q= URL parameter (e.g. from GlobalSearch navigation)
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q) setSearchQuery(q);
+  }, [searchParams]);
 
   const q = searchQuery.trim().toLowerCase();
 
@@ -39,6 +47,7 @@ export default function LearnPage() {
     if (relevantThemes && !relevantThemes.includes(cs.theme)) return false;
     if (!q) return true;
     return (
+      cs.company.toLowerCase().includes(q) ||
       cs.title.toLowerCase().includes(q) ||
       cs.summary.toLowerCase().includes(q) ||
       cs.outcome.toLowerCase().includes(q) ||

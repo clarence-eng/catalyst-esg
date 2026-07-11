@@ -174,12 +174,18 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
   const [editIssue, setEditIssue] = useState<DbMaterialIssue | null>(null);
 
   const loadDetail = useCallback(async () => {
-    const [{ data: engs }, { data: mis }] = await Promise.all([
-      supabase.from("engagements").select("*").eq("company_slug", co.slug).order("date", { ascending: false }),
-      supabase.from("material_issues").select("*").eq("company_slug", co.slug).order("sort_order"),
-    ]);
-    setEngagements(engs || []);
-    setIssues(mis || []);
+    try {
+      const [{ data: engs, error: engsErr }, { data: mis, error: misErr }] = await Promise.all([
+        supabase.from("engagements").select("*").eq("company_slug", co.slug).order("date", { ascending: false }),
+        supabase.from("material_issues").select("*").eq("company_slug", co.slug).order("sort_order"),
+      ]);
+      if (engsErr) console.warn("[Admin] engagements load error:", engsErr.message);
+      if (misErr) console.warn("[Admin] material_issues load error:", misErr.message);
+      setEngagements(engs || []);
+      setIssues(mis || []);
+    } catch {
+      // silently fall back to empty lists
+    }
   }, [co.slug]);
 
   useEffect(() => { if (expanded) loadDetail(); }, [expanded, loadDetail]);
@@ -219,9 +225,9 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
           <div className="flex items-center gap-4 text-xs text-gray-500">
             <span className="flex items-center gap-1.5">
               <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                co.esg_overall >= 70 ? "bg-emerald-500" : co.esg_overall >= 55 ? "bg-amber-500" : "bg-red-500"
+                (co.esg_overall ?? 0) >= 70 ? "bg-emerald-500" : (co.esg_overall ?? 0) >= 55 ? "bg-amber-500" : "bg-red-500"
               }`} />
-              ESG <strong className="text-gray-900">{co.esg_overall}</strong>
+              ESG <strong className="text-gray-900">{co.esg_overall ?? "—"}</strong>
             </span>
             <span>Rating <strong className="text-gray-900">{co.esg_rating}</strong></span>
             <span>Transition <strong className={riskColor}>{co.transition_risk}</strong></span>
@@ -455,7 +461,7 @@ export default function AdminPage() {
               ))}
             </div>
           </div>
-          {filteredAdminCompanies.length === 0 && adminSearch && (
+          {filteredAdminCompanies.length === 0 && adminSearchTrimmed && (
             <div className="text-center py-8 text-gray-500 text-sm">No companies match &ldquo;{adminSearch}&rdquo;</div>
           )}
         </div>
