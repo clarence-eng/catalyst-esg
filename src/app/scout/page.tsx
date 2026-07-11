@@ -243,7 +243,7 @@ export default function ScoutPage() {
                     const lastEng = co.engagement.filter(e => e.status === "Completed").sort((a,b) => b.date.localeCompare(a.date))[0];
                     // Parse as local midnight (date-only ISO strings are UTC by default — causes 8h skew in SGT)
                     const daysSince = lastEng ? (() => { const [y,m,d] = lastEng.date.split("-").map(Number); return Math.floor((Date.now() - new Date(y, m-1, d).getTime()) / (1000*60*60*24)); })() : null;
-                    if (!daysSince) return null;
+                    if (daysSince === null) return null;
                     return (
                       <span className={`text-[10px] px-2 py-0.5 rounded border ${
                         daysSince < 90 ? "text-emerald-700 bg-emerald-50 border-emerald-200" :
