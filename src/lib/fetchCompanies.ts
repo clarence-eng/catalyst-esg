@@ -31,6 +31,7 @@ type EnrichmentEntry = {
   sdgAlignment: Company["sdgAlignment"];
   valueUplift: Company["valueUplift"];
   tnfdPillars: Company["natureRisk"]["tnfdPillars"];
+  icRecommendation?: Company["icRecommendation"];
 };
 
 const ENRICHMENT: Record<string, EnrichmentEntry> = {
@@ -63,7 +64,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { period: "Q2 2025", e: 40, s: 62, g: 60 },
       { period: "Q3 2025", e: 42, s: 63, g: 61 },
       { period: "Q4 2025", e: 40, s: 60, g: 57 },
-      { period: "Q1 2026", e: 40, s: 60, g: 57 },
+      { period: "Q1 2026", e: 41, s: 61, g: 58 },
       { period: "Q2 2026", e: 41, s: 61, g: 58 },
     ],
     sdgAlignment: [
@@ -112,7 +113,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { period: "Q2 2025", e: 57, s: 69, g: 73 },
       { period: "Q3 2025", e: 56, s: 70, g: 74 },
       { period: "Q4 2025", e: 54, s: 67, g: 71 },
-      { period: "Q1 2026", e: 54, s: 67, g: 71 },
+      { period: "Q1 2026", e: 55, s: 68, g: 72 },
       { period: "Q2 2026", e: 55, s: 68, g: 72 },
     ],
     sdgAlignment: [
@@ -161,7 +162,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { period: "Q2 2025", e: 65, s: 75, g: 79 },
       { period: "Q3 2025", e: 67, s: 76, g: 80 },
       { period: "Q4 2025", e: 62, s: 73, g: 77 },
-      { period: "Q1 2026", e: 62, s: 73, g: 77 },
+      { period: "Q1 2026", e: 63, s: 74, g: 78 },
       { period: "Q2 2026", e: 63, s: 74, g: 78 },
     ],
     sdgAlignment: [
@@ -262,7 +263,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { period: "Q2 2025", e: 34, s: 56, g: 53 },
       { period: "Q3 2025", e: 36, s: 57, g: 54 },
       { period: "Q4 2025", e: 35, s: 55, g: 52 },
-      { period: "Q1 2026", e: 35, s: 55, g: 52 },
+      { period: "Q1 2026", e: 36, s: 56, g: 53 },
       { period: "Q2 2026", e: 37, s: 55, g: 52 },
     ],
     sdgAlignment: [
@@ -326,6 +327,15 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { pillar: "Risk & Impact Mgmt", status: "Gap" },
       { pillar: "Metrics & Targets", status: "Gap" },
     ],
+    icRecommendation: {
+      verdict: "Invest Conditional",
+      conditions: [
+        "Independent audit committee chair appointed (pre-close condition)",
+        "AI bias testing expanded to Indonesia and Vietnam patient cohorts",
+        "PDPA cross-border data transfer policy updated and externally audited",
+      ],
+      esgGating: "No investment to close without independent confirmation of all three ESG conditions precedent. Re-evaluate in Q4 2026.",
+    },
   },
 };
 
@@ -445,7 +455,7 @@ function dbToCompany(
     },
     valueUplift: enrichment?.valueUplift ?? [],
     sdgAlignment: enrichment?.sdgAlignment ?? [],
-    icRecommendation: undefined,
+    icRecommendation: enrichment?.icRecommendation,
   };
 }
 

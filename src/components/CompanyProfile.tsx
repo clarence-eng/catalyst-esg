@@ -811,8 +811,8 @@ function ClimateTab({ co }: { co: Company }) {
     {
       pillar: "Strategy",
       desc: "Climate-related risks/opportunities, scenario analysis, financial planning",
-      status: (co.climateRisk.pathwayAlignment !== "Not assessed" && co.netZeroCommitment !== "None") ? "Adopted" as const :
-              co.climateRisk.pathwayAlignment !== "Not assessed" ? "Partial" as const : "Gap" as const,
+      status: (co.climateRisk.pathwayAlignment === "1.5°C" || co.climateRisk.pathwayAlignment === "2°C") && co.netZeroCommitment !== "None" ? "Adopted" as const :
+              co.climateRisk.pathwayAlignment !== "Not assessed" && co.netZeroCommitment !== "None" ? "Partial" as const : "Gap" as const,
     },
     {
       pillar: "Risk Management",
@@ -830,7 +830,7 @@ function ClimateTab({ co }: { co: Company }) {
 
   const issbChecks = [
     { item: "Board climate oversight documented", status: co.boardComposition.esgCommittee ? "✓" : "✗", pass: co.boardComposition.esgCommittee },
-    { item: "Climate scenario analysis (≥2 scenarios)", status: (co.climateRisk.pathwayAlignment !== "Not assessed" && co.netZeroCommitment !== "None") ? "✓" : co.climateRisk.pathwayAlignment !== "Not assessed" ? "Partial" : "✗", pass: co.climateRisk.pathwayAlignment !== "Not assessed" && co.netZeroCommitment !== "None" },
+    { item: "Climate scenario analysis (≥2 scenarios)", status: (co.climateRisk.pathwayAlignment === "1.5°C" || co.climateRisk.pathwayAlignment === "2°C") && co.netZeroCommitment !== "None" ? "✓" : co.climateRisk.pathwayAlignment !== "Not assessed" && co.netZeroCommitment !== "None" ? "Partial" : "✗", pass: (co.climateRisk.pathwayAlignment === "1.5°C" || co.climateRisk.pathwayAlignment === "2°C") && co.netZeroCommitment !== "None" },
     { item: "Physical risk quantification", status: co.climateRisk.physicalDetails.length > 0 ? "✓" : "✗", pass: co.climateRisk.physicalDetails.length > 0 },
     { item: "Scope 1+2 emissions disclosed", status: co.carbonIntensity > 0 ? "✓" : "✗", pass: co.carbonIntensity > 0 },
     { item: "Scope 3 assessment / financed emissions", status: co.materialIssues.some(i => { if (i.opportunity) return false; const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }) ? "✓" : "✗", pass: co.materialIssues.some(i => { if (i.opportunity) return false; const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }) },
@@ -1092,7 +1092,7 @@ function NatureTab({ co }: { co: Company }) {
         <div className="flex items-start gap-0">
           {leapPhases.map(({ phase, name, desc }, index) => {
             const completed = leapStage > index;
-            const current = leapStage === index;
+            const current = leapStage > 0 && leapStage === index;
             const circleStyle = completed
               ? "bg-emerald-600 text-white border-emerald-600"
               : current

@@ -129,7 +129,7 @@ export const companies: Company[] = [
         "EU ETS expansion to shipping from 2024 increases operating costs by est. 8-12%",
         "Customer Scope 3 reduction targets creating pressure to offer low-emission freight options",
       ],
-      pathwayAlignment: "2°C",
+      pathwayAlignment: "1.5°C",
     },
     natureRisk: {
       overall: "Medium",
@@ -667,7 +667,7 @@ export const companies: Company[] = [
         "Carbon pricing under Malaysia's voluntary carbon market will affect peatland management costs",
         "Consumer boycott risk from palm oil controversies in European retail channels",
       ],
-      pathwayAlignment: "2°C",
+      pathwayAlignment: "1.5°C",
     },
     natureRisk: {
       overall: "Critical",
@@ -814,13 +814,14 @@ export const companies: Company[] = [
     lastUpdated: "2026-06-10",
     sdgAlignment: [
       { sdg: 2, label: "Zero Hunger" },
+      { sdg: 13, label: "Climate Action" },
       { sdg: 15, label: "Life on Land" },
     ],
     netZeroCommitment: "SBTi Committed",
     boardComposition: {
       boardSize: 8,
       independentPct: 38,
-      womenPct: 13,
+      womenPct: 25,
       ceoChairSplit: false,
       auditCommittee: true,
       esgCommittee: false,
@@ -834,7 +835,7 @@ export const companies: Company[] = [
       { period: "Q2 2025", e: 46, s: 63, g: 66 },
       { period: "Q3 2025", e: 50, s: 64, g: 67 },
       { period: "Q4 2025", e: 48, s: 62, g: 64 },
-      { period: "Q1 2026", e: 48, s: 62, g: 64 },
+      { period: "Q1 2026", e: 49, s: 63, g: 65 },
       { period: "Q2 2026", e: 49, s: 63, g: 65 },
     ],
   },
