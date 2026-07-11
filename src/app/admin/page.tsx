@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase, type DbCompany, type DbEngagement, type DbMaterialIssue } from "@/lib/supabase";
 import { clearCache } from "@/lib/useCompanies";
+import { clearCompanyCache } from "@/lib/fetchCompanies";
 import { Plus, Trash2, Edit3, Save, X, ChevronDown, ChevronUp, Lock, LogOut, Building2, Users, AlertCircle, CheckCircle } from "lucide-react";
 
 // ─── Auth ───────────────────────────────────────────────────────────────────
@@ -59,20 +60,19 @@ function CoField({ label, k, type = "text", opts, co, set }: {
 function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; onSave: (c: Partial<DbCompany>) => void; onCancel: () => void }) {
   const [co, setCo] = useState({ ...initial });
   const set = useCallback((k: string, v: unknown) => setCo(p => ({ ...p, [k]: v })), []);
-  const F = (props: Omit<Parameters<typeof CoField>[0], "co" | "set">) => <CoField {...props} co={co} set={set} />;
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-6 space-y-4">
       <h3 className="text-sm font-semibold text-gray-900">{initial.id ? "Edit Company" : "New Company"}</h3>
       <div className="grid grid-cols-2 gap-4">
-        <F label="Company Name *" k="name" />
-        <F label="Slug (auto-generated, read-only for edits)" k="slug" />
-        <F label="Sector *" k="sector" />
-        <F label="Country *" k="country" />
-        <F label="Region" k="region" opts={["Southeast Asia", "Asia Pacific", "South Asia", "Global"]} />
-        <F label="Portfolio Status" k="portfolio_status" opts={["Active", "Pipeline"]} />
-        <F label="Maturity" k="maturity" opts={["Leading", "Advanced", "Developing", "Lagging"]} />
-        <F label="Investment Value (S$M)" k="investment_value" type="number" />
+        <CoField label="Company Name *" k="name" co={co} set={set} />
+        <CoField label="Slug (auto-generated, read-only for edits)" k="slug" co={co} set={set} />
+        <CoField label="Sector *" k="sector" co={co} set={set} />
+        <CoField label="Country *" k="country" co={co} set={set} />
+        <CoField label="Region" k="region" opts={["Southeast Asia", "Asia Pacific", "South Asia", "Global"]} co={co} set={set} />
+        <CoField label="Portfolio Status" k="portfolio_status" opts={["Active", "Pipeline"]} co={co} set={set} />
+        <CoField label="Maturity" k="maturity" opts={["Leading", "Advanced", "Developing", "Lagging"]} co={co} set={set} />
+        <CoField label="Investment Value (S$M)" k="investment_value" type="number" co={co} set={set} />
       </div>
       <div>
         <label className="text-xs font-medium text-gray-700">Description *</label>
@@ -80,24 +80,24 @@ function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; on
           className="w-full mt-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400" />
       </div>
       <div className="grid grid-cols-4 gap-4">
-        <F label="ESG Overall" k="esg_overall" type="number" />
-        <F label="Environmental" k="esg_environmental" type="number" />
-        <F label="Social" k="esg_social" type="number" />
-        <F label="Governance" k="esg_governance" type="number" />
+        <CoField label="ESG Overall" k="esg_overall" type="number" co={co} set={set} />
+        <CoField label="Environmental" k="esg_environmental" type="number" co={co} set={set} />
+        <CoField label="Social" k="esg_social" type="number" co={co} set={set} />
+        <CoField label="Governance" k="esg_governance" type="number" co={co} set={set} />
       </div>
       <div className="grid grid-cols-3 gap-4">
-        <F label="ESG Rating" k="esg_rating" opts={["AAA","AA","A","BBB","BB","B","CCC"]} />
-        <F label="Carbon Intensity (tCO₂e/$M)" k="carbon_intensity" type="number" />
-        <F label="Green Revenue %" k="green_revenue_pct" type="number" />
+        <CoField label="ESG Rating" k="esg_rating" opts={["AAA","AA","A","BBB","BB","B","CCC"]} co={co} set={set} />
+        <CoField label="Carbon Intensity (tCO₂e/$M)" k="carbon_intensity" type="number" co={co} set={set} />
+        <CoField label="Green Revenue %" k="green_revenue_pct" type="number" co={co} set={set} />
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <F label="Transition Risk" k="transition_risk" opts={["Low","Medium","High","Critical"]} />
-        <F label="Physical Risk" k="physical_risk" opts={["Low","Medium","High","Critical"]} />
-        <F label="Nature Risk" k="nature_risk" opts={["Low","Medium","High","Critical"]} />
-        <F label="Net Zero Commitment" k="net_zero_commitment" opts={["None","Net Zero Pledged","SBTi Committed","SBTi Targets Set"]} />
-        <F label="Pathway Alignment" k="pathway_alignment" opts={["1.5°C","2°C","3°C+","Not assessed"]} />
-        <F label="Temasek Megatrend" k="temasek_megatrend" opts={["Climate Transition","Nature & Biodiversity","Just Transition & Inclusive Growth","AI & Digital Ethics","Longer Lifespans"]} />
-        <F label="SASB Category" k="sasb_category" />
+        <CoField label="Transition Risk" k="transition_risk" opts={["Low","Medium","High","Critical"]} co={co} set={set} />
+        <CoField label="Physical Risk" k="physical_risk" opts={["Low","Medium","High","Critical"]} co={co} set={set} />
+        <CoField label="Nature Risk" k="nature_risk" opts={["Low","Medium","High","Critical"]} co={co} set={set} />
+        <CoField label="Net Zero Commitment" k="net_zero_commitment" opts={["None","Net Zero Pledged","SBTi Committed","SBTi Targets Set"]} co={co} set={set} />
+        <CoField label="Pathway Alignment" k="pathway_alignment" opts={["1.5°C","2°C","3°C+","Not assessed"]} co={co} set={set} />
+        <CoField label="Temasek Megatrend" k="temasek_megatrend" opts={["Climate Transition","Nature & Biodiversity","Just Transition & Inclusive Growth","AI & Digital Ethics","Longer Lifespans"]} co={co} set={set} />
+        <CoField label="SASB Category" k="sasb_category" co={co} set={set} />
       </div>
       <div className="flex gap-2 justify-end pt-2">
         <button type="button" onClick={onCancel} className="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">Cancel</button>
@@ -123,7 +123,7 @@ function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: stri
       <div><label className="text-xs font-medium text-gray-700">Notes</label><textarea value={eng.notes||""} onChange={e=>set("notes",e.target.value)} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-3 py-1 text-xs text-gray-600 border border-gray-200 rounded hover:bg-gray-100">Cancel</button>
-        <button type="button" onClick={() => onSave({ ...eng, company_slug: companySlug })} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
+        <button type="button" onClick={() => { if (!eng.topic?.trim()) return; onSave({ ...eng, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
       </div>
     </div>
   );
@@ -144,7 +144,7 @@ function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: st
       <div><label className="text-xs font-medium text-gray-700">Detail</label><textarea value={mi.detail||""} onChange={e=>setMi(p=>({...p,detail:e.target.value}))} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-3 py-1 text-xs text-gray-600 border border-gray-200 rounded hover:bg-gray-100">Cancel</button>
-        <button type="button" onClick={() => onSave({ ...mi, company_slug: companySlug })} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
+        <button type="button" onClick={() => { if (!mi.issue?.trim()) return; onSave({ ...mi, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
       </div>
     </div>
   );
@@ -299,21 +299,25 @@ export default function AdminPage() {
       const { id: coId, created_at: _ccat, ...coFields } = co as Required<typeof co>;
       const { error } = await supabase.from("companies").update(coFields).eq("id", coId);
       if (error) showToast("Error: " + error.message);
-      else { showToast("Company updated ✓"); setEditing(null); clearCache(); loadCompanies(); }
+      else { showToast("Company updated ✓"); setEditing(null); clearCache(); clearCompanyCache(); loadCompanies(); }
     } else {
       const { error } = await supabase.from("companies").insert(co);
       if (error) showToast("Error: " + error.message);
-      else { showToast("Company added ✓"); setAdding(false); clearCache(); loadCompanies(); }
+      else { showToast("Company added ✓"); setAdding(false); clearCache(); clearCompanyCache(); loadCompanies(); }
     }
     setSaving(false);
   };
 
-  const deleteCompany = async (id: string, name: string) => {
+  const deleteCompany = async (id: string, slug: string, name: string) => {
     if (!confirm(`Delete ${name}? This also deletes all engagements and material issues.`)) return;
+    // Delete sub-rows first (no DB CASCADE configured)
+    await supabase.from("engagements").delete().eq("company_slug", slug);
+    await supabase.from("material_issues").delete().eq("company_slug", slug);
     const { error } = await supabase.from("companies").delete().eq("id", id);
     if (error) { showToast("Error deleting: " + error.message); return; }
     showToast(`${name} deleted`);
     clearCache();
+    clearCompanyCache();
     loadCompanies();
   };
 
@@ -373,7 +377,7 @@ export default function AdminPage() {
         {/* Connection banner */}
         <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-5 py-3 mb-6 flex items-start gap-3">
           <CheckCircle className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0"/>
-          <p className="text-xs text-emerald-800"><strong>Live integration active.</strong> Companies, engagements, and material issues added here appear in the Scout, Steward, Signal, and Overview pages automatically. Changes take up to 30 seconds to propagate.</p>
+          <p className="text-xs text-emerald-800"><strong>Live integration active.</strong> Companies, engagements, and material issues added here appear in the Scout, Steward, Signal, and Overview pages automatically. Changes propagate within 5 seconds.</p>
         </div>
 
         <div className="flex items-center justify-between mb-6">
@@ -394,7 +398,7 @@ export default function AdminPage() {
             {companies.map(co => editing?.id === co.id ? (
               <CoForm key={co.id} initial={editing} onSave={saveCompany} onCancel={() => setEditing(null)} />
             ) : (
-              <CompanyRow key={co.id} co={co} onEdit={() => { setEditing(co); setAdding(false); }} onDelete={() => deleteCompany(co.id, co.name)} />
+              <CompanyRow key={co.id} co={co} onEdit={() => { setEditing(co); setAdding(false); }} onDelete={() => deleteCompany(co.id, co.slug, co.name)} />
             ))}
             {companies.length === 0 && !adding && (
               <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-2xl">

@@ -58,17 +58,17 @@ export default function SignalPage() {
 
   return (
     <div className="p-8">
-      <PageHeader
-        title="Signal"
-        subtitle="ESG megatrend intelligence and regulatory radar — thematic research for investment decisions and portfolio management."
-      />
-
       {liveDataError && (
         <div role="alert" aria-live="polite" className="bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg px-4 py-2.5 mb-4 flex items-center gap-2">
           <span aria-hidden="true">⚠</span>
           <span>Using demo data — live portfolio database unavailable. Portfolio exposure data may not reflect current holdings.</span>
         </div>
       )}
+
+      <PageHeader
+        title="Signal"
+        subtitle="ESG megatrend intelligence and regulatory radar — thematic research for investment decisions and portfolio management."
+      />
 
       {/* Megatrend Cards */}
       <h2 className="text-sm font-semibold text-gray-900 mb-4">ESG Megatrends</h2>
@@ -116,7 +116,10 @@ export default function SignalPage() {
       <div className="mb-8">
         <h2 className="text-sm font-semibold text-gray-900 mb-2">Compliance Deadline Calendar</h2>
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          {[...filteredUpdates]
+          {filteredUpdates.length === 0 ? (
+            <div className="py-8 text-center text-sm text-gray-500">No regulations match the selected filters.</div>
+          ) : (
+          [...filteredUpdates]
             .sort((a, b) => {
               const urgencyOrder = { High: 0, Medium: 1, Low: 2 };
               return (urgencyOrder[a.urgency as keyof typeof urgencyOrder] ?? 3) - (urgencyOrder[b.urgency as keyof typeof urgencyOrder] ?? 3);
@@ -145,7 +148,8 @@ export default function SignalPage() {
                   {r.portfolioImpact?.length ? `${r.portfolioImpact.length} co${r.portfolioImpact.length > 1 ? "s" : ""}` : ""}
                 </div>
               </div>
-            ))}
+            ))
+          )}
         </div>
       </div>
 

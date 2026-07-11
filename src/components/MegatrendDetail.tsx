@@ -2,10 +2,10 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { type Megatrend } from "@/data/megatrends";
-import { companies } from "@/data/companies";
 import { Loader2, FileText, TrendingUp, AlertTriangle, Copy } from "lucide-react";
 import { AIOutput } from "@/components/AIOutput";
 import { formatRelativeTime } from "@/lib/utils";
+import { useCompanies } from "@/lib/useCompanies";
 
 
 
@@ -30,8 +30,9 @@ const urgencyMap: Record<string, string> = {
 };
 
 export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
-  const pipelineSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Pipeline").map(c => c.slug)), []);
-  const activeSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug)), []);
+  const { companies } = useCompanies();
+  const pipelineSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Pipeline").map(c => c.slug)), [companies]);
+  const activeSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug)), [companies]);
   const [brief, setBrief] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

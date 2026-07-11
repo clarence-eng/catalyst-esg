@@ -19,6 +19,7 @@ type EnrichmentEntry = {
     biodiversityExposure: boolean;
     waterStress: boolean;
     deforestationRisk: boolean;
+    details: string[];
   };
   climateRisk: {
     transitionDetails: string[];
@@ -28,11 +29,18 @@ type EnrichmentEntry = {
   historicalScores: Company["historicalScores"];
   sdgAlignment: Company["sdgAlignment"];
   valueUplift: Company["valueUplift"];
+  tnfdPillars: Company["natureRisk"]["tnfdPillars"];
 };
 
 const ENRICHMENT: Record<string, EnrichmentEntry> = {
   "seaport-logistics": {
-    natureRisk: { biodiversityExposure: true, waterStress: false, deforestationRisk: false },
+    natureRisk: {
+      biodiversityExposure: true, waterStress: false, deforestationRisk: false,
+      details: [
+        "Dredging operations at two port expansion sites may impact marine biodiversity",
+        "Ballast water management compliance with IMO BWM Convention required across aging fleet",
+      ],
+    },
     climateRisk: {
       transitionDetails: [
         "Fleet of 120+ vessels predominantly HFO-powered, facing IMO 2030 carbon intensity regulations",
@@ -67,10 +75,23 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { area: "Carbon-Labelled Freight", potential: "Medium", description: "Launch verified low-emission freight tier (LNG/methanol). Customer willingness-to-pay premium est. 5-8% among MNC shippers with Scope 3 targets." },
       { area: "Port Electrification", potential: "Medium", description: "Solar + shore power at Singapore terminal reduces grid electricity costs by 30% and unlocks BCA Green Mark certification." },
     ],
+    tnfdPillars: [
+      { pillar: "Governance", status: "Partial" },
+      { pillar: "Strategy", status: "Gap" },
+      { pillar: "Risk & Impact Mgmt", status: "Gap" },
+      { pillar: "Metrics & Targets", status: "Gap" },
+    ],
   },
 
   "nusantara-bank": {
-    natureRisk: { biodiversityExposure: true, waterStress: false, deforestationRisk: true },
+    natureRisk: {
+      biodiversityExposure: true, waterStress: false, deforestationRisk: true,
+      details: [
+        "Palm oil and timber sector lending (~8% of book) exposed to EUDR deforestation regulation compliance risk",
+        "No TNFD assessment conducted; forest-risk commodity exposure unquantified",
+        "ESG screening for new agriculture lending introduced in 2024 but lacks deforestation-free verification",
+      ],
+    },
     climateRisk: {
       transitionDetails: [
         "22% of corporate loan book in carbon-intensive sectors (coal, palm oil, cement)",
@@ -105,10 +126,22 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { area: "Nature-Positive Lending Policy", potential: "High", description: "Adopt TNFD-aligned forest-risk commodity policy to de-risk EUDR exposure and unlock HSBC/IFC co-lending partnerships." },
       { area: "Digital Inclusive Finance", potential: "Medium", description: "ESG-linked digital credit products for unbanked SMEs. Blended finance available via ADB Digital Finance Facility." },
     ],
+    tnfdPillars: [
+      { pillar: "Governance", status: "Partial" },
+      { pillar: "Strategy", status: "Partial" },
+      { pillar: "Risk & Impact Mgmt", status: "Gap" },
+      { pillar: "Metrics & Targets", status: "Gap" },
+    ],
   },
 
   "cloudmesh-technologies": {
-    natureRisk: { biodiversityExposure: false, waterStress: true, deforestationRisk: false },
+    natureRisk: {
+      biodiversityExposure: false, waterStress: true, deforestationRisk: false,
+      details: [
+        "Data centre water consumption for cooling is material; Singapore faces long-term freshwater constraints",
+        "Water Usage Effectiveness (WUE) metric not publicly disclosed",
+      ],
+    },
     climateRisk: {
       transitionDetails: [
         "Singapore grid still ~95% natural gas; Scope 2 emissions material until regional grid decarbonises",
@@ -142,10 +175,24 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { area: "Responsible AI Framework", potential: "Medium", description: "Publish MAS FEAT-aligned AI governance framework. Differentiator for financial services clients facing AI regulatory scrutiny." },
       { area: "Sustainability Analytics Product", potential: "High", description: "Embed carbon accounting into cloud billing dashboard. ISSB S2 reporting requirement creates $2B+ APAC market for enterprise carbon management SaaS." },
     ],
+    tnfdPillars: [
+      { pillar: "Governance", status: "Partial" },
+      { pillar: "Strategy", status: "Partial" },
+      { pillar: "Risk & Impact Mgmt", status: "Gap" },
+      { pillar: "Metrics & Targets", status: "Gap" },
+    ],
   },
 
   "greenharvest-agri": {
-    natureRisk: { biodiversityExposure: true, waterStress: true, deforestationRisk: true },
+    natureRisk: {
+      biodiversityExposure: true, waterStress: true, deforestationRisk: true,
+      details: [
+        "Operations adjacent to Maliau Basin Conservation Area (Sabah's 'Lost World'); buffer zone management is critical",
+        "High Conservation Value (HCV) assessments completed for 80% of landbank, 20% pending",
+        "TNFD LEAP assessment (phases L-A) completed Q3 2025 — one of first agribusiness companies in ASEAN to complete TNFD LEAP Risk Assessment phase. Metrics & Targets phase in progress for 2026 sustainability report",
+        "Water abstraction from shared catchments requires multi-stakeholder basin management approach",
+      ],
+    },
     climateRisk: {
       transitionDetails: [
         "EU Deforestation Regulation (EUDR) enforcement deadline 30 December 2026 requires supply chain geolocation data for EU export",
@@ -181,10 +228,22 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { area: "Biodiversity Credits", potential: "Medium", description: "HCV areas and conservation corridors adjacent to Maliau Basin could generate SBTN-aligned biodiversity credits. Nascent market but growing institutional buyer base." },
       { area: "Sustainable Commodity Premium", potential: "High", description: "RSPO P&C 2018 + EUDR compliance enables US$50-80/MT premium over conventional palm oil in European and Japanese markets." },
     ],
+    tnfdPillars: [
+      { pillar: "Governance", status: "Partial" },
+      { pillar: "Strategy", status: "Partial" },
+      { pillar: "Risk & Impact Mgmt", status: "Partial" },
+      { pillar: "Metrics & Targets", status: "Gap" },
+    ],
   },
 
   "asiapower-energy": {
-    natureRisk: { biodiversityExposure: true, waterStress: true, deforestationRisk: false },
+    natureRisk: {
+      biodiversityExposure: true, waterStress: true, deforestationRisk: false,
+      details: [
+        "Geothermal development in forested areas in Sumatra requires biodiversity offset planning",
+        "Coal ash disposal at three legacy sites requires TNFD-aligned habitat restoration assessment",
+      ],
+    },
     climateRisk: {
       transitionDetails: [
         "4.2GW coal fleet faces stranded asset risk under Indonesia's JETP 2050 net zero pathway and accelerated coal phase-out (2040 target)",
@@ -220,10 +279,21 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { area: "Geothermal Scale-Up", potential: "High", description: "800MW Sumatra geothermal pipeline + new Sulawesi prospects. Green bonds and multilateral financing available. Positions AsiaPower as ASEAN's leading geothermal developer." },
       { area: "Just Transition Plan", potential: "Medium", description: "ILO-aligned Just Transition plan for coal workforce unlocks access to IFC and European DFI co-investment. Reduces regulatory and social licence risk in coal phase-out." },
     ],
+    tnfdPillars: [
+      { pillar: "Governance", status: "Gap" },
+      { pillar: "Strategy", status: "Gap" },
+      { pillar: "Risk & Impact Mgmt", status: "Gap" },
+      { pillar: "Metrics & Targets", status: "Gap" },
+    ],
   },
 
   "medilink-health": {
-    natureRisk: { biodiversityExposure: false, waterStress: false, deforestationRisk: false },
+    natureRisk: {
+      biodiversityExposure: false, waterStress: false, deforestationRisk: false,
+      details: [
+        "Digital-only business model with no physical resource extraction dependencies",
+      ],
+    },
     climateRisk: {
       transitionDetails: [
         "Cloud infrastructure emissions (Scope 2) immaterial relative to healthcare impact value",
@@ -254,6 +324,12 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { area: "Inclusive Finance Integration", potential: "High", description: "Partner with Nusantara Bank (portfolio company) to offer embedded microinsurance and health savings products to MediLink's 40M+ patient base. Creates synergistic value across Temasek's portfolio aligned with inclusive growth mandate." },
       { area: "Responsible AI Certification", potential: "High", description: "Achieve MOH AI in Healthcare accreditation and MAS FEAT compliance across financial health products. Positions MediLink as the only certified AI health platform in ASEAN — critical differentiator for government and insurer contracts." },
       { area: "Carbon-Neutral Telehealth", potential: "Medium", description: "Achieve net zero Scope 1+2 by 2026 via I-REC + energy efficiency. Enables access to European development finance and WHO digital health partnership programmes that require ESG baseline standards." },
+    ],
+    tnfdPillars: [
+      { pillar: "Governance", status: "Gap" },
+      { pillar: "Strategy", status: "Gap" },
+      { pillar: "Risk & Impact Mgmt", status: "Gap" },
+      { pillar: "Metrics & Targets", status: "Gap" },
     ],
   },
 };
@@ -323,10 +399,10 @@ function dbToCompany(
       waterStress: enrichment?.natureRisk.waterStress ?? (isHighNature && isAgri),
       deforestationRisk: enrichment?.natureRisk.deforestationRisk ?? (isAgri && isHighNature),
       tnfdAligned: false,
-      details: isHighNature ? [
+      details: enrichment?.natureRisk.details ?? (isHighNature ? [
         `Nature risk level: ${co.nature_risk}. TNFD assessment recommended.`,
-      ] : [],
-      tnfdPillars: [
+      ] : []),
+      tnfdPillars: enrichment?.tnfdPillars ?? [
         { pillar: "Governance", status: "Gap" },
         { pillar: "Strategy", status: "Gap" },
         { pillar: "Risk & Impact Mgmt", status: "Gap" },
