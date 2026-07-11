@@ -165,14 +165,18 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
 
   const saveEng = async (e: Partial<DbEngagement>) => {
     const { id: engId, company_slug: _, created_at: __, ...engFields } = e as Required<typeof e>;
-    if (e.id) await supabase.from("engagements").update(engFields).eq("id", engId);
-    else await supabase.from("engagements").insert(e);
+    const { error: engErr } = e.id
+      ? await supabase.from("engagements").update(engFields).eq("id", engId)
+      : await supabase.from("engagements").insert({ ...e, company_slug: companySlug });
+    if (engErr) { alert("Error saving engagement: " + engErr.message); return; }
     setAddEng(false); setEditEng(null); clearCache(); loadDetail();
   };
   const delEng = async (id: string) => { await supabase.from("engagements").delete().eq("id", id); clearCache(); loadDetail(); };
   const saveIssue = async (i: Partial<DbMaterialIssue>) => {
-    if (i.id) await supabase.from("material_issues").update(i).eq("id", i.id);
-    else await supabase.from("material_issues").insert({ ...i, sort_order: issues.length });
+    const { error: issErr } = i.id
+      ? await supabase.from("material_issues").update(i).eq("id", i.id)
+      : await supabase.from("material_issues").insert({ ...i, sort_order: issues.length, company_slug: companySlug });
+    if (issErr) { alert("Error saving issue: " + issErr.message); return; }
     setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();
   };
   const delIssue = async (id: string) => { await supabase.from("material_issues").delete().eq("id", id); clearCache(); loadDetail(); };

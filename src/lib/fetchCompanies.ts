@@ -125,7 +125,7 @@ function dbToCompany(
       })),
     // historicalScores: Q2=current, Q1=prior quarter (offset to show realistic trend)
     historicalScores: staticRef?.historicalScores || [
-      { period: "Q1 2026", e: Math.max(1, co.esg_environmental - 2), s: Math.max(1, co.esg_social - 1), g: Math.max(1, co.esg_governance - 2) },
+      { period: "Q1 2026", e: Math.max(0, co.esg_environmental - 2), s: Math.max(0, co.esg_social - 1), g: Math.max(0, co.esg_governance - 2) },
       { period: "Q2 2026", e: co.esg_environmental, s: co.esg_social, g: co.esg_governance },
     ],
     boardComposition: board,
