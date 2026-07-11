@@ -446,9 +446,11 @@ function dbToCompany(
       const base = enrichment?.historicalScores ?? [
         { period: "Q1 2026", e: Math.max(0, co.esg_environmental - 2), s: Math.max(0, co.esg_social - 1), g: Math.max(0, co.esg_governance - 2) },
       ];
-      // Always ensure the last period reflects the authoritative live DB values
-      const withoutLast = base.length > 1 ? base.slice(0, -1) : base.slice(0, -1);
-      const lastPeriod = base[base.length - 1]?.period ?? "Q2 2026";
+      // Always ensure the last period reflects the authoritative live DB values.
+      // When base has >1 entries, drop the last and replace it with live values.
+      // When base has exactly 1 entry (fallback path), append Q2 with live values.
+      const withoutLast = base.length > 1 ? base.slice(0, -1) : base;
+      const lastPeriod = base.length > 1 ? (base[base.length - 1]?.period ?? "Q2 2026") : "Q2 2026";
       return [
         ...withoutLast,
         { period: lastPeriod, e: co.esg_environmental, s: co.esg_social, g: co.esg_governance },
