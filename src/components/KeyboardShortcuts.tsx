@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { X, Keyboard } from "lucide-react";
 
 const SHORTCUTS = [
@@ -16,6 +17,8 @@ const SHORTCUTS = [
 export function KeyboardShortcuts() {
   const [open, setOpen] = useState(false);
   const [gPressed, setGPressed] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -23,20 +26,38 @@ export function KeyboardShortcuts() {
       const isInput = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement;
       if (isInput) return;
 
-      if (e.key === "?" && !e.metaKey && !e.ctrlKey) { setOpen(o => !o); return; }
+      // Don't open shortcuts overlay if any other modal is already open
+      const hasOtherModal = document.querySelector("[data-modal]");
+
+      if (e.key === "?" && !e.metaKey && !e.ctrlKey) {
+        if (!hasOtherModal) setOpen(o => !o);
+        return;
+      }
       if (e.key === "Escape") { setOpen(false); setGPressed(false); return; }
 
-      // Go-to shortcuts
-      if (e.key.toLowerCase() === "g" && !gPressed) { setGPressed(true); setTimeout(() => setGPressed(false), 1500); return; }
+      // Go-to shortcuts — use client-side router.push (no full reload)
+      if (e.key.toLowerCase() === "g" && !gPressed) {
+        setGPressed(true);
+        if (timerRef.current) clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => setGPressed(false), 1500);
+        return;
+      }
       if (gPressed) {
         const nav: Record<string, string> = { o: "/", s: "/scout", t: "/steward", i: "/signal", l: "/learn" };
         const url = nav[e.key.toLowerCase()];
-        if (url) { window.location.href = url; setGPressed(false); }
+        if (url) {
+          if (timerRef.current) clearTimeout(timerRef.current);
+          router.push(url);
+          setGPressed(false);
+        }
       }
     };
     window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [gPressed]);
+    return () => {
+      window.removeEventListener("keydown", handler);
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [gPressed, router]);
 
   if (!open) return (
     <div className="fixed bottom-6 left-[280px] z-30">
@@ -50,7 +71,7 @@ export function KeyboardShortcuts() {
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={() => setOpen(false)}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center" data-modal="shortcuts" onClick={() => setOpen(false)}>
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
       <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 p-6 w-96 max-w-full mx-4" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCompanies } from "@/lib/useCompanies";
 import { RatingBadge, MaturityBadge, PageHeader, RiskBadge } from "@/components/ui-elements";
 import { Search, ArrowRight, GitMerge } from "lucide-react";
@@ -25,6 +26,7 @@ const MEGATREND_SLUGS: Record<string, string> = {
 };
 
 export default function ScoutPage() {
+  const router = useRouter();
   const { companies, loading, liveDataError } = useCompanies();
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
@@ -210,13 +212,14 @@ export default function ScoutPage() {
                     <span className="text-gray-700">{co.sasbCategory}</span>
                   </div>
                   <div className="text-xs text-gray-500">
-                    Megatrend: <Link href={`/signal/${MEGATREND_SLUGS[co.temasekMegatrend] ?? "climate-transition"}`}
+                    Megatrend: <button
+                      type="button"
                       className={`text-xs ${MEGATREND_COLORS[co.temasekMegatrend] ?? "text-gray-600"} hover:underline`}
-                      onClick={e => e.stopPropagation()}
+                      onClick={e => { e.preventDefault(); e.stopPropagation(); router.push(`/signal/${MEGATREND_SLUGS[co.temasekMegatrend] ?? "climate-transition"}`); }}
                       title={`View ${co.temasekMegatrend} megatrend signal`}
                     >
                       {co.temasekMegatrend}
-                    </Link>
+                    </button>
                   </div>
                   {/* Green Revenue bar */}
                   <div className="flex items-center gap-2">

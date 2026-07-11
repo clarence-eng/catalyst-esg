@@ -77,7 +77,7 @@ export default function OverviewPage() {
   const eDelta = lastTrend && prevTrend ? lastTrend.e - prevTrend.e : 0;
   const sDelta = lastTrend && prevTrend ? lastTrend.s - prevTrend.s : 0;
   const gDelta = lastTrend && prevTrend ? lastTrend.g - prevTrend.g : 0;
-  const avgDelta = lastTrend && prevTrend ? Math.round(((lastTrend.e + lastTrend.s + lastTrend.g) - (prevTrend.e + prevTrend.s + prevTrend.g)) / 3) : 0;
+  const avgDelta = (eDelta + sDelta + gDelta) !== 0 ? Math.round((eDelta + sDelta + gDelta) / 3) : 0;
 
   const portfolioSummary = activeCompanies.map((c) => {
     const topIssue = [...c.materialIssues]
@@ -171,10 +171,19 @@ export default function OverviewPage() {
       <div className="grid grid-cols-5 gap-4 mb-6">
         <div>
           <StatCard label="Portfolio ESG Score" value={avgScore} sub="Active companies · investment-weighted" color="green" />
-          {avgDelta !== 0 && (
-            <span className={`text-xs font-medium px-2 py-0.5 rounded border mt-1 inline-block ${
-              avgDelta > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200" : "text-red-700 bg-red-50 border-red-200"
-            }`}>{avgDelta > 0 ? `↑ +${avgDelta}` : `↓ ${avgDelta}`} vs last quarter</span>
+          {(avgDelta !== 0 || eDelta !== 0 || sDelta !== 0 || gDelta !== 0) && (
+            <div className="mt-1 flex flex-wrap gap-1">
+              {avgDelta !== 0 && (
+                <span className={`text-xs font-medium px-2 py-0.5 rounded border ${
+                  avgDelta > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200" : "text-red-700 bg-red-50 border-red-200"
+                }`}>{avgDelta > 0 ? `↑ +${avgDelta}` : `↓ ${avgDelta}`} avg</span>
+              )}
+              {[{k:"E", v:eDelta},{k:"S", v:sDelta},{k:"G", v:gDelta}].map(({k,v}) => v !== 0 && (
+                <span key={k} className={`text-[10px] px-1.5 py-0.5 rounded border ${
+                  v > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200" : "text-red-700 bg-red-50 border-red-200"
+                }`}>{k}{v > 0 ? `+${v}` : v}</span>
+              ))}
+            </div>
           )}
         </div>
         <StatCard label="Transition Risk Flags" value={highRisk} sub="High or Critical exposure" color="amber" />
