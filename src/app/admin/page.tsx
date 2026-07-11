@@ -18,7 +18,11 @@ function useAdminAuth() {
 }
 
 // ─── Company Form ────────────────────────────────────────────────────────────
-function todayISO() { return new Date().toISOString().split("T")[0]; }
+function todayISO() {
+  // Use local calendar date, not UTC — avoids showing yesterday for UTC+8 users before 8am
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
 
 function makeEmptyCo(): Partial<DbCompany> {
   return {
