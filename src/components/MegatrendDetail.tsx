@@ -227,11 +227,14 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                   <ExposureBadge level={p.exposure} />
                 </div>
               ))}
-              {t.portfolioExposure.filter(p => p.exposure === "Low" && activeSlugs.has(p.slug)).length > 0 && (
-                <div className="text-xs text-gray-500 pt-1 border-t border-gray-100">
-                  +{t.portfolioExposure.filter(p => p.exposure === "Low" && activeSlugs.has(p.slug)).length} active low-exposure companies
-                </div>
-              )}
+              {(() => {
+                const lowCount = t.portfolioExposure.filter(p => p.exposure === "Low" && activeSlugs.has(p.slug)).length;
+                return lowCount > 0 ? (
+                  <div className="text-xs text-gray-500 pt-1 border-t border-gray-100">
+                    +{lowCount} active low-exposure {lowCount === 1 ? "company" : "companies"}
+                  </div>
+                ) : null;
+              })()}
             </div>
           </div>
         </div>
