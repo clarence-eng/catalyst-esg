@@ -167,7 +167,7 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
     const { id: engId, company_slug: _, created_at: __, ...engFields } = e as Required<typeof e>;
     const { error: engErr } = e.id
       ? await supabase.from("engagements").update(engFields).eq("id", engId)
-      : await supabase.from("engagements").insert({ ...e, company_slug: companySlug });
+      : await supabase.from("engagements").insert({ ...e, company_slug: co.slug });
     if (engErr) { alert("Error saving engagement: " + engErr.message); return; }
     setAddEng(false); setEditEng(null); clearCache(); loadDetail();
   };
@@ -175,7 +175,7 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
   const saveIssue = async (i: Partial<DbMaterialIssue>) => {
     const { error: issErr } = i.id
       ? await supabase.from("material_issues").update(i).eq("id", i.id)
-      : await supabase.from("material_issues").insert({ ...i, sort_order: issues.length, company_slug: companySlug });
+      : await supabase.from("material_issues").insert({ ...i, sort_order: issues.length, company_slug: co.slug });
     if (issErr) { alert("Error saving issue: " + issErr.message); return; }
     setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();
   };
