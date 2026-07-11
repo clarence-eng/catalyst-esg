@@ -48,7 +48,8 @@ function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; on
       ) : (
         <input type={type} value={(co as Record<string,unknown>)[k] as string || ""}
           onChange={e => { const v = type === "number" ? (e.target.value === '' ? 0 : parseFloat(e.target.value) || 0) : e.target.value; set(k, v); if (k === "name" && !co.id) set("slug", slugify(e.target.value)); }}
-          className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400" />
+          readOnly={k === "slug" && !!co.id}
+          className={`border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none ${k === "slug" && co.id ? "bg-gray-50 text-gray-500 cursor-not-allowed" : "focus:border-purple-400"}`} />
       )}
     </div>
   );
@@ -58,7 +59,7 @@ function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; on
       <h3 className="text-sm font-semibold text-gray-900">{initial.id ? "Edit Company" : "New Company"}</h3>
       <div className="grid grid-cols-2 gap-4">
         <F label="Company Name *" k="name" />
-        <F label="Slug (auto)" k="slug" />
+        <F label="Slug (auto-generated, read-only for edits)" k="slug" />
         <F label="Sector *" k="sector" />
         <F label="Country *" k="country" />
         <F label="Region" k="region" opts={["Southeast Asia", "Asia Pacific", "South Asia", "Global"]} />
@@ -171,15 +172,16 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
     if (engErr) { alert("Error saving engagement: " + engErr.message); return; }
     setAddEng(false); setEditEng(null); clearCache(); loadDetail();
   };
-  const delEng = async (id: string) => { await supabase.from("engagements").delete().eq("id", id); clearCache(); loadDetail(); };
+  const delEng = async (id: string) => { const { error } = await supabase.from("engagements").delete().eq("id", id); if (error) { alert("Error deleting engagement: " + error.message); return; } clearCache(); loadDetail(); };
   const saveIssue = async (i: Partial<DbMaterialIssue>) => {
-    const { error: issErr } = i.id
-      ? await supabase.from("material_issues").update(i).eq("id", i.id)
+    const { id: issId, company_slug: _ic, created_at: _icat, ...issFields } = i as Required<typeof i>;
+    const { error: issErr } = issId
+      ? await supabase.from("material_issues").update(issFields).eq("id", issId)
       : await supabase.from("material_issues").insert({ ...i, sort_order: issues.length, company_slug: co.slug });
     if (issErr) { alert("Error saving issue: " + issErr.message); return; }
     setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();
   };
-  const delIssue = async (id: string) => { await supabase.from("material_issues").delete().eq("id", id); clearCache(); loadDetail(); };
+  const delIssue = async (id: string) => { const { error } = await supabase.from("material_issues").delete().eq("id", id); if (error) { alert("Error deleting issue: " + error.message); return; } clearCache(); loadDetail(); };
 
   const statusColor = co.portfolio_status === "Active" ? "text-emerald-700 bg-emerald-50 border-emerald-300" : "text-blue-700 bg-blue-50 border-blue-300";
   const riskColor = { Low: "text-emerald-700", Medium: "text-amber-700", High: "text-orange-700", Critical: "text-red-700" }[co.transition_risk] || "text-gray-600";
@@ -287,7 +289,8 @@ export default function AdminPage() {
     if (!co.name?.trim() || !co.slug?.trim() || !co.sector?.trim() || !co.country?.trim()) return showToast("Name, slug, sector, and country are required");
     setSaving(true);
     if (co.id) {
-      const { error } = await supabase.from("companies").update(co).eq("id", co.id);
+      const { id: coId, created_at: _ccat, ...coFields } = co as Required<typeof co>;
+      const { error } = await supabase.from("companies").update(coFields).eq("id", coId);
       if (error) showToast("Error: " + error.message);
       else { showToast("Company updated ✓"); setEditing(null); clearCache(); loadCompanies(); }
     } else {
