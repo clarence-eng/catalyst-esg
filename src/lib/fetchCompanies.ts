@@ -19,6 +19,7 @@ type EnrichmentEntry = {
     biodiversityExposure: boolean;
     waterStress: boolean;
     deforestationRisk: boolean;
+    tnfdAligned: boolean;
     details: string[];
   };
   climateRisk: {
@@ -35,8 +36,7 @@ type EnrichmentEntry = {
 const ENRICHMENT: Record<string, EnrichmentEntry> = {
   "seaport-logistics": {
     natureRisk: {
-      biodiversityExposure: true, waterStress: false, deforestationRisk: false,
-      details: [
+      biodiversityExposure: true, waterStress: false, deforestationRisk: false, tnfdAligned: false,      details: [
         "Dredging operations at two port expansion sites may impact marine biodiversity",
         "Ballast water management compliance with IMO BWM Convention required across aging fleet",
       ],
@@ -85,8 +85,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
 
   "nusantara-bank": {
     natureRisk: {
-      biodiversityExposure: true, waterStress: false, deforestationRisk: true,
-      details: [
+      biodiversityExposure: true, waterStress: false, deforestationRisk: true, tnfdAligned: false,      details: [
         "Palm oil and timber sector lending (~8% of book) exposed to EUDR deforestation regulation compliance risk",
         "No TNFD assessment conducted; forest-risk commodity exposure unquantified",
         "ESG screening for new agriculture lending introduced in 2024 but lacks deforestation-free verification",
@@ -136,8 +135,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
 
   "cloudmesh-technologies": {
     natureRisk: {
-      biodiversityExposure: false, waterStress: true, deforestationRisk: false,
-      details: [
+      biodiversityExposure: false, waterStress: true, deforestationRisk: false, tnfdAligned: false,      details: [
         "Data centre water consumption for cooling is material; Singapore faces long-term freshwater constraints",
         "Water Usage Effectiveness (WUE) metric not publicly disclosed",
       ],
@@ -185,8 +183,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
 
   "greenharvest-agri": {
     natureRisk: {
-      biodiversityExposure: true, waterStress: true, deforestationRisk: true,
-      details: [
+      biodiversityExposure: true, waterStress: true, deforestationRisk: true, tnfdAligned: false,      details: [
         "Operations adjacent to Maliau Basin Conservation Area (Sabah's 'Lost World'); buffer zone management is critical",
         "High Conservation Value (HCV) assessments completed for 80% of landbank, 20% pending",
         "TNFD LEAP assessment (phases L-A) completed Q3 2025 — one of first agribusiness companies in ASEAN to complete TNFD LEAP Risk Assessment phase. Metrics & Targets phase in progress for 2026 sustainability report",
@@ -238,8 +235,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
 
   "asiapower-energy": {
     natureRisk: {
-      biodiversityExposure: true, waterStress: true, deforestationRisk: false,
-      details: [
+      biodiversityExposure: true, waterStress: true, deforestationRisk: false, tnfdAligned: false,      details: [
         "Geothermal development in forested areas in Sumatra requires biodiversity offset planning",
         "Coal ash disposal at three legacy sites requires TNFD-aligned habitat restoration assessment",
       ],
@@ -289,8 +285,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
 
   "medilink-health": {
     natureRisk: {
-      biodiversityExposure: false, waterStress: false, deforestationRisk: false,
-      details: [
+      biodiversityExposure: false, waterStress: false, deforestationRisk: false, tnfdAligned: false,      details: [
         "Digital-only business model with no physical resource extraction dependencies",
       ],
     },
@@ -398,7 +393,7 @@ function dbToCompany(
       biodiversityExposure: enrichment?.natureRisk.biodiversityExposure ?? (isHighNature && (isAgri || isMarine)),
       waterStress: enrichment?.natureRisk.waterStress ?? (isHighNature && isAgri),
       deforestationRisk: enrichment?.natureRisk.deforestationRisk ?? (isAgri && isHighNature),
-      tnfdAligned: false,
+      tnfdAligned: enrichment?.natureRisk.tnfdAligned ?? false,
       details: enrichment?.natureRisk.details ?? (isHighNature ? [
         `Nature risk level: ${co.nature_risk}. TNFD assessment recommended.`,
       ] : []),

@@ -359,7 +359,7 @@ export default function AdminPage() {
         <div className="flex items-center justify-between max-w-6xl mx-auto">
           <div className="flex items-center gap-4">
             <div className="font-bold text-lg" style={{fontFamily:"Georgia,serif",color:"#4B2580",letterSpacing:"0.12em"}}>TEMASEK</div>
-            <span className="text-gray-300">|</span>
+            <span className="text-gray-400">|</span>
             <span className="text-sm font-semibold text-gray-900">Portfolio Admin</span>
             <div className="flex items-center gap-3 text-xs">
               <span className="flex items-center gap-1 text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full"><Building2 className="w-3 h-3"/>{activeCount} Active</span>
@@ -402,7 +402,7 @@ export default function AdminPage() {
             ))}
             {companies.length === 0 && !adding && (
               <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-2xl">
-                <Building2 className="w-12 h-12 text-gray-300 mx-auto mb-3"/>
+                <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-3"/>
                 <p className="text-gray-500 font-medium">No companies yet</p>
                 <p className="text-sm text-gray-500 mt-1">Click "Add Company" to add your first portfolio company</p>
               </div>

@@ -183,7 +183,7 @@ export default function SignalPage() {
                             exposure.exposure === "Medium" ? "text-amber-700 bg-amber-50 border-amber-300" :
                             "text-emerald-700 bg-emerald-50 border-emerald-300"
                           }`}>{exposure.exposure}</span>
-                        ) : <span className="text-gray-300">—</span>}
+                        ) : <span className="text-gray-400">—</span>}
                       </td>
                     );
                   })}
