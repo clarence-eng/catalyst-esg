@@ -5,7 +5,7 @@
 
 import { supabase, type DbCompany, type DbEngagement, type DbMaterialIssue } from "./supabase";
 import type { Company } from "@/data/companies";
-import { companies as staticCompanies, getCompanyBySlug } from "@/data/companies";
+import { getCompanyBySlug } from "@/data/companies";
 
 function dbToCompany(
   co: DbCompany,
