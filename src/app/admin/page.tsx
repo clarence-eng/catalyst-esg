@@ -298,9 +298,16 @@ export default function AdminPage() {
 
   const loadCompanies = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase.from("companies").select("*").order("created_at");
-    setCompanies((data || []) as DbCompany[]);
-    setLoading(false);
+    try {
+      const { data, error } = await supabase.from("companies").select("*").order("created_at");
+      if (error) { showToast("Database error: " + error.message); setCompanies([]); }
+      else setCompanies((data || []) as DbCompany[]);
+    } catch {
+      showToast("Database unavailable — check connection");
+      setCompanies([]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { if (auth.authed) loadCompanies(); }, [auth.authed, loadCompanies]);

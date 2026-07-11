@@ -22,7 +22,9 @@ function sanitizeBlock(value: unknown, maxLen = 5000): string {
 
 function validateContext(type: GenerationType, ctx: Record<string, unknown>): boolean {
   if (type === "deal_memo") {
-    return ["name", "sector", "country", "rating", "maturity"].every((k) => typeof ctx[k] === "string");
+    const strOk = ["name", "sector", "country", "rating", "maturity"].every((k) => typeof ctx[k] === "string");
+    const numOk = ["overallScore", "eScore", "sScore", "gScore"].every((k) => ctx[k] !== undefined && ctx[k] !== "");
+    return strOk && numOk;
   }
   if (type === "action_plan") {
     return ["name", "sector", "maturity"].every((k) => typeof ctx[k] === "string");
@@ -41,13 +43,15 @@ function validateContext(type: GenerationType, ctx: Record<string, unknown>): bo
 
 export async function POST(req: NextRequest) {
   // Restrict to same-origin requests — blocks external quota-abuse scripting.
-  // Require at least one of Origin or Referer header; reject if neither present
-  // (headless scripts commonly omit both; browsers always send at least one).
+  // Use env-configured allowed origins (NOT the attacker-controllable Host header).
   const origin = req.headers.get("origin") ?? "";
   const referer = req.headers.get("referer") ?? "";
-  const host = req.headers.get("host") ?? "";
   const allowedOrigins = [
-    `https://${host}`,
+    // Vercel production deployment
+    "https://catalyst-neon-eight.vercel.app",
+    // Any Vercel preview deployment for this project
+    "https://catalyst-",
+    // Local development
     "http://localhost:3000",
     "http://localhost:3001",
   ];
@@ -200,6 +204,7 @@ Format: Numbered list within each section. Investment-grade language. Singapore/
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
+      config: { thinkingConfig: { thinkingBudget: 0 } },
     });
 
     let text: string | undefined;

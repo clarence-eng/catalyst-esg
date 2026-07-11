@@ -30,7 +30,7 @@ const urgencyMap: Record<string, string> = {
 };
 
 export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
-  const { companies } = useCompanies();
+  const { companies, liveDataError } = useCompanies();
   const pipelineSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Pipeline").map(c => c.slug)), [companies]);
   const activeSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug)), [companies]);
   const [brief, setBrief] = useState("");
@@ -79,6 +79,12 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
 
   return (
     <div className="p-8">
+      {liveDataError && (
+        <div role="alert" aria-live="polite" className="bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg px-4 py-2.5 mb-4 flex items-center gap-2">
+          <span aria-hidden="true">⚠</span>
+          <span>Using demo data — live portfolio database unavailable. Portfolio exposure data may not reflect current holdings.</span>
+        </div>
+      )}
       {/* Header */}
       <div className={`rounded-xl border p-6 mb-8 ${colorMap[t.color] ?? "border-gray-200 bg-gray-100"}`}>
         <div className="flex items-start justify-between">

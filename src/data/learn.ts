@@ -48,7 +48,7 @@ export const frameworks: FrameworkCard[] = [
     ],
     aseanContext:
       "SGX mandated TCFD-aligned reporting from FY2022 for top 100 listed companies. MAS embedded TCFD in its Green Finance Action Plan. Indonesia, Malaysia, and Thailand are phasing in TCFD requirements through respective regulators.",
-    url: "https://www.fsb-tcfd.org",
+    url: "https://www.ifrs.org/sustainability/tcfd/",
     temasekRelevance: "High",
   },
   {
@@ -102,7 +102,7 @@ export const frameworks: FrameworkCard[] = [
     name: "SASB",
     fullName: "Sustainability Accounting Standards Board Standards",
     category: "Reporting",
-    status: "Voluntary",
+    status: "Mandatory",
     adoptionYear: "2018",
     description:
       "SASB Standards (now maintained by ISSB/IFRS Foundation) identify the subset of ESG issues most likely to be financially material for 77 specific industries. They provide the sector-specific materiality toolkit used within ISSB S1.",
@@ -275,7 +275,7 @@ export const caseStudies: CaseStudy[] = [
   {
     id: "asean-coal-retirement",
     title: "Accelerated Coal Retirement via JETP ETM: Philippines Case",
-    company: "Masinloc Power Partners",
+    company: "Illustrative ASEAN Coal IPP (composite)",
     sector: "Electric Utilities",
     region: "Southeast Asia",
     theme: "Climate Transition",
@@ -291,7 +291,7 @@ export const caseStudies: CaseStudy[] = [
   {
     id: "palm-oil-eudr",
     title: "EUDR Compliance Transformation: Palm Oil Supply Chain Traceability",
-    company: "Musim Mas Group",
+    company: "Illustrative ASEAN Palm Oil Producer (composite)",
     sector: "Agriculture",
     region: "Southeast Asia",
     theme: "Nature & Biodiversity",
@@ -307,7 +307,7 @@ export const caseStudies: CaseStudy[] = [
   {
     id: "green-cloud-singapore",
     title: "Green Data Centre Certification: From PUE 1.6 to BCA Green Mark Platinum",
-    company: "Equinix Singapore",
+    company: "Illustrative Singapore Data Centre Operator (composite)",
     sector: "Technology / Data Centres",
     region: "Singapore",
     theme: "Climate Transition",
@@ -323,7 +323,7 @@ export const caseStudies: CaseStudy[] = [
   {
     id: "financed-emissions-bank",
     title: "Financed Emissions Disclosure: PCAF Adoption at an ASEAN Bank",
-    company: "Bank OCBC NISP (Indonesia)",
+    company: "Illustrative Indonesian Commercial Bank (composite)",
     sector: "Commercial Banking",
     region: "Southeast Asia",
     theme: "Sustainable Finance",
@@ -355,7 +355,7 @@ export const caseStudies: CaseStudy[] = [
   {
     id: "jetp-just-transition",
     title: "JETP Coal Workforce Transition: Indonesia ETM Social Safeguards",
-    company: "PT PLN (Indonesia State Power Utility)",
+    company: "Illustrative Indonesian State Power Utility (composite)",
     sector: "Electric Utilities",
     region: "Southeast Asia",
     theme: "Just Transition",
