@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { frameworks, caseStudies } from "@/data/learn";
 import { PageHeader } from "@/components/ui-elements";
@@ -7,7 +7,7 @@ import { ExternalLink, ChevronRight, ChevronDown, ChevronUp, Search } from "luci
 
 type FrameworkFilter = "All" | "Climate" | "Nature" | "Cross-cutting" | "Reporting" | "Social";
 
-export default function LearnPage() {
+function LearnContent() {
   const [frameworkFilter, setFrameworkFilter] = useState<FrameworkFilter>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const searchParams = useSearchParams();
@@ -145,6 +145,14 @@ export default function LearnPage() {
       </div>
 
     </div>
+  );
+}
+
+export default function LearnPage() {
+  return (
+    <Suspense fallback={<div className="p-8"><div className="h-6 w-48 bg-gray-200 rounded animate-pulse mb-4" /></div>}>
+      <LearnContent />
+    </Suspense>
   );
 }
 
