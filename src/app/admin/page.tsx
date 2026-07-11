@@ -225,8 +225,8 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
                   <span className="text-gray-500 w-24 flex-shrink-0">{e.date}</span>
                   <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${e.status==="Completed"?"bg-emerald-50 text-emerald-700":e.status==="Overdue"?"bg-red-50 text-red-700":"bg-blue-50 text-blue-700"}`}>{e.status}</span>
                   <span className="flex-1 text-gray-700 truncate">{e.topic}</span>
-                  <button type="button" onClick={() => setEditEng(e)} className="text-gray-400 hover:text-purple-700"><Edit3 className="w-3 h-3"/></button>
-                  <button type="button" onClick={() => delEng(e.id)} className="text-gray-400 hover:text-red-600"><Trash2 className="w-3 h-3"/></button>
+                  <button type="button" onClick={() => setEditEng(e)} className="text-gray-500 hover:text-purple-700"><Edit3 className="w-3 h-3"/></button>
+                  <button type="button" onClick={() => delEng(e.id)} className="text-gray-500 hover:text-red-600"><Trash2 className="w-3 h-3"/></button>
                 </div>
               ))}
               {engagements.length === 0 && !addEng && <p className="text-xs text-gray-500 italic">No engagements yet</p>}
@@ -249,8 +249,8 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
                   <span className="text-gray-500 text-[10px]">{i.category}</span>
                   {i.opportunity && <span className="text-[10px] text-emerald-600">Opportunity</span>}
                   <span className="flex-1 text-gray-700 truncate">{i.issue}</span>
-                  <button type="button" onClick={() => setEditIssue(i)} className="text-gray-400 hover:text-purple-700"><Edit3 className="w-3 h-3"/></button>
-                  <button type="button" onClick={() => delIssue(i.id)} className="text-gray-400 hover:text-red-600"><Trash2 className="w-3 h-3"/></button>
+                  <button type="button" onClick={() => setEditIssue(i)} className="text-gray-500 hover:text-purple-700"><Edit3 className="w-3 h-3"/></button>
+                  <button type="button" onClick={() => delIssue(i.id)} className="text-gray-500 hover:text-red-600"><Trash2 className="w-3 h-3"/></button>
                 </div>
               ))}
               {issues.length === 0 && !addIssue && <p className="text-xs text-gray-500 italic">No material issues yet</p>}
