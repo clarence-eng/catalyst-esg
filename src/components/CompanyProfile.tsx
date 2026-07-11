@@ -931,7 +931,11 @@ function ClimateTab({ co }: { co: Company }) {
             { year: "2024", label: "Baseline", event: `Current: ${co.carbonIntensity} tCO₂e/$M, ESG Score ${co.esgScore.overall}`, status: "done" },
             { year: "2025", label: "Near-term", event: co.netZeroCommitment === "SBTi Committed" ? "SBTi near-term target submission (committed, deadline passed)" : co.netZeroCommitment === "SBTi Targets Set" ? "SBTi near-term targets validated ✓" : "SBTi near-term target not set — submission deadline passed", status: co.netZeroCommitment === "SBTi Targets Set" ? "done" : "missed" },
             { year: "2026", label: "Engagement", event: [...co.engagement].filter(e => e.status === "Planned").sort((a, b) => a.date < b.date ? -1 : 1).slice(0,1).map(e => `Planned: ${e.topic}`).join("") || "No planned engagements", status: co.engagement.some(e => e.status === "Planned") ? "upcoming" : "gap" },
-            { year: "2030", label: "SBTi Target", event: co.netZeroCommitment === "SBTi Targets Set" ? "42% Scope 1+2 reduction (validated SBTi)" : co.netZeroCommitment === "SBTi Committed" ? "42% reduction target (pending validation)" : `Target needed — current pathway: ${co.climateRisk.pathwayAlignment}`, status: co.netZeroCommitment !== "None" ? (co.netZeroCommitment === "SBTi Targets Set" ? "committed" : "planned") : "gap" },
+            { year: "2030", label: "SBTi Target", event: co.netZeroCommitment === "SBTi Targets Set"
+              ? (co.climateRisk.pathwayAlignment === "1.5°C" ? "50% Scope 1+2 reduction by 2030 (validated SBTi 1.5°C)" : "42% Scope 1+2 reduction by 2030 (validated SBTi WB2°C)")
+              : co.netZeroCommitment === "SBTi Committed"
+              ? (co.climateRisk.pathwayAlignment === "1.5°C" ? "50% reduction target by 2030 (pending validation)" : "~30% reduction target by 2030 (pending validation, WB2°C pathway)")
+              : `Target needed — current pathway: ${co.climateRisk.pathwayAlignment}`, status: co.netZeroCommitment !== "None" ? (co.netZeroCommitment === "SBTi Targets Set" ? "committed" : "planned") : "gap" },
             { year: "2050", label: "Net Zero", event: co.netZeroCommitment !== "None" ? "Net zero by 2050 (committed)" : "No net zero commitment", status: co.netZeroCommitment !== "None" ? "committed" : "gap" },
           ];
           return (
