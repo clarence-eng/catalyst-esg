@@ -404,8 +404,18 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
     const [bq, by] = (b.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
     return ay !== by ? ay - by : aq - bq;
   });
-  const Q1 = allPeriodsSorted[allPeriodsSorted.length - 2] ?? "Q1 2026";
-  const Q2 = allPeriodsSorted[allPeriodsSorted.length - 1] ?? "Q2 2026";
+
+  if (allPeriodsSorted.length < 2) {
+    return (
+      <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
+        <h2 className="text-sm font-semibold text-gray-900 mb-1">Portfolio ESG Attribution</h2>
+        <p className="text-xs text-gray-500">Insufficient historical data — at least two score periods required to compute attribution.</p>
+      </div>
+    );
+  }
+
+  const Q1 = allPeriodsSorted[allPeriodsSorted.length - 2];
+  const Q2 = allPeriodsSorted[allPeriodsSorted.length - 1];
 
   const rows = companies
     .map(co => {
