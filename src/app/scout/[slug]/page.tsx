@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCompanyBySlug, companies as staticCompanies } from "@/data/companies";
 import { fetchCompaniesFromSupabase } from "@/lib/fetchCompanies";
+import { cache } from "react";
 import { CompanyProfile } from "@/components/CompanyProfile";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
@@ -10,12 +11,15 @@ export async function generateStaticParams() {
   return staticCompanies.map((c) => ({ slug: c.slug }));
 }
 
+const getCompanyCached = cache(fetchCompaniesFromSupabase);
+
 async function getCompany(slug: string) {
   // Try Supabase first
   try {
-    const dbCompanies = await fetchCompaniesFromSupabase();
+    const dbCompanies = await getCompanyCached();
     if (dbCompanies.length > 0) {
-      return dbCompanies.find(c => c.slug === slug) || null;
+      // Look in Supabase, fall back to static if not found there
+      return dbCompanies.find(c => c.slug === slug) || getCompanyBySlug(slug) || null;
     }
   } catch { /* fall through */ }
   // Fall back to static data

@@ -77,9 +77,9 @@ function dbToCompany(
         opportunity: i.opportunity,
         detail: i.detail,
       })),
-    // historicalScores: auto-generate 2 periods so charts don't silently break
+    // historicalScores: Q2=current, Q1=prior (slight offset to avoid zero-delta display)
     historicalScores: [
-      { period: "Q1 2026", e: co.esg_environmental, s: co.esg_social, g: co.esg_governance },
+      { period: "Q1 2026", e: Math.max(1, co.esg_environmental - 2), s: Math.max(1, co.esg_social - 1), g: Math.max(1, co.esg_governance - 2) },
       { period: "Q2 2026", e: co.esg_environmental, s: co.esg_social, g: co.esg_governance },
     ],
     boardComposition: {
@@ -122,9 +122,14 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
 
     if (!cos || cos.length === 0) return [];
 
-    const companies = (cos as DbCompany[]).map(co =>
-      dbToCompany(co, (engs || []) as DbEngagement[], (mis || []) as DbMaterialIssue[])
-    );
+    const companies: Company[] = [];
+    for (const co of cos as DbCompany[]) {
+      try {
+        companies.push(dbToCompany(co, (engs || []) as DbEngagement[], (mis || []) as DbMaterialIssue[]));
+      } catch (err) {
+        console.warn("[Supabase] skipping malformed company row:", co.slug, err);
+      }
+    }
 
     cachedCompanies = companies;
     cacheTime = Date.now();

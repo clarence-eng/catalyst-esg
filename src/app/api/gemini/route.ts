@@ -200,7 +200,7 @@ Format: Numbered list within each section. Investment-grade language. Singapore/
     const message = err instanceof Error ? err.message : "Unknown error";
     const safe = message.length > 200 ? message.slice(0, 200) + "…" : message;
     // Detect rate-limit errors to return 429 instead of generic 500
-    const status = (message.includes("429") || message.toLowerCase().includes("quota") || message.toLowerCase().includes("exhausted")) ? 429 : 500;
+    const status = (message.includes("429") || message.toLowerCase().includes("quota") || message.toLowerCase().includes("exhausted")) ? 429 : (message.includes("503") || message.toLowerCase().includes("unavailable") || message.toLowerCase().includes("overloaded")) ? 503 : 500;
     return NextResponse.json({ error: safe }, { status });
   }
 }

@@ -47,7 +47,7 @@ function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; on
         </select>
       ) : (
         <input type={type} value={(co as Record<string,unknown>)[k] as string || ""}
-          onChange={e => { const v = type === "number" ? parseFloat(e.target.value) || 0 : e.target.value; set(k, v); if (k === "name") set("slug", slugify(e.target.value)); }}
+          onChange={e => { const v = type === "number" ? (e.target.value === '' ? 0 : parseFloat(e.target.value) || 0) : e.target.value; set(k, v); if (k === "name" && !co.id) set("slug", slugify(e.target.value)); }}
           className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400" />
       )}
     </div>
@@ -164,7 +164,8 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
   useEffect(() => { if (expanded) loadDetail(); }, [expanded, loadDetail]);
 
   const saveEng = async (e: Partial<DbEngagement>) => {
-    if (e.id) await supabase.from("engagements").update(e).eq("id", e.id);
+    const { id: engId, company_slug: _, created_at: __, ...engFields } = e as Required<typeof e>;
+    if (e.id) await supabase.from("engagements").update(engFields).eq("id", engId);
     else await supabase.from("engagements").insert(e);
     setAddEng(false); setEditEng(null); clearCache(); loadDetail();
   };
@@ -279,7 +280,7 @@ export default function AdminPage() {
   useEffect(() => { if (auth.authed) loadCompanies(); }, [auth.authed, loadCompanies]);
 
   const saveCompany = async (co: Partial<DbCompany>) => {
-    if (!co.name || !co.slug) return showToast("Name and slug are required");
+    if (!co.name?.trim() || !co.slug?.trim() || !co.sector?.trim() || !co.country?.trim()) return showToast("Name, slug, sector, and country are required");
     setSaving(true);
     if (co.id) {
       const { error } = await supabase.from("companies").update(co).eq("id", co.id);
@@ -315,7 +316,7 @@ export default function AdminPage() {
         </div>
         <div className="space-y-4">
           <div>
-            <label className="text-xs font-medium text-gray-700">Admin Password</label>
+            <label className="text-xs font-medium text-gray-700">Admin Password <span className="text-gray-400 font-normal">(set in Vercel env vars)</span></label>
             <input type="password" value={auth.pw} onChange={e => auth.setPw(e.target.value)}
               onKeyDown={e => e.key === "Enter" && auth.check()}
               placeholder="Enter password" autoFocus
