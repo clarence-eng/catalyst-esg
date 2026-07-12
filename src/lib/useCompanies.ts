@@ -26,7 +26,10 @@ export function useCompanies() {
 
     // If another mount is already fetching, attach to its promise instead of firing a new request
     if (inFlight) {
+      // Capture epoch now — reject if clearCache() fires before the promise settles
+      const subscriberEpoch = cacheEpoch;
       inFlight.then(() => {
+        if (cacheEpoch !== subscriberEpoch) return; // stale — cache was cleared mid-flight
         if (cachedResult) {
           setCompanies(cachedResult.companies);
           setSource(cachedResult.source);
