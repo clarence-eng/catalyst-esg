@@ -83,11 +83,11 @@ export function Navigation() {
               />
               <div>
                 <div
-                  className={`text-sm font-medium leading-none ${active ? "text-[#4B2580] dark:text-purple-300" : "text-gray-700"}`}
+                  className={`text-sm font-medium leading-none ${active ? "text-[#4B2580] dark:text-purple-300" : "text-gray-700 dark:text-gray-200"}`}
                 >
                   {label}
                 </div>
-                <div className="text-xs text-gray-600 mt-0.5 dark:text-gray-400">{desc}</div>
+                <div className="text-xs text-gray-600 mt-0.5 dark:text-gray-300">{desc}</div>
               </div>
               {label === "Steward" && overdueCount > 0 && (
                 <span className="ml-auto text-[10px] font-bold bg-orange-500 text-white rounded-full px-1.5 py-0.5 min-w-[18px] text-center">
@@ -104,8 +104,7 @@ export function Navigation() {
         <Link
           href="/about"
           aria-current={pathname === "/about" ? "page" : undefined}
-          className="flex items-center gap-2 text-xs mb-2 transition-colors text-gray-500 hover:text-gray-700"
-          style={pathname === "/about" ? { color: TEMASEK_PURPLE } : undefined}
+          className={`flex items-center gap-2 text-xs mb-2 transition-colors ${pathname === "/about" ? "text-[#4B2580] dark:text-purple-300" : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"}`}
         >
           <Info className="w-3 h-3" />
           About this demo
