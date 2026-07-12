@@ -154,7 +154,13 @@ export default function SignalPage() {
                   <div className="text-xs text-gray-600">{r.jurisdiction} · {r.category}</div>
                 </div>
                 <div className="flex-shrink-0 text-xs text-gray-600">
-                  {r.portfolioImpact?.length ? `${r.portfolioImpact.length} co${r.portfolioImpact.length > 1 ? "s" : ""}` : ""}
+                  {(() => {
+                    const activeCount = r.portfolioImpact?.filter(s => activePortfolioSlugs.has(s)).length ?? 0;
+                    if (!activeCount) return "";
+                    const total = r.portfolioImpact?.length ?? 0;
+                    const pipeline = total - activeCount;
+                    return `${activeCount} co${activeCount > 1 ? "s" : ""}${pipeline > 0 ? `+${pipeline}p` : ""}`;
+                  })()}
                 </div>
               </div>
             ));

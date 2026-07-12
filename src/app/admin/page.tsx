@@ -174,6 +174,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
   const [editIssue, setEditIssue] = useState<DbMaterialIssue | null>(null);
   const loadingRef = useRef(false); // prevent concurrent loadDetail fetches
   const pendingReloadRef = useRef(false); // queue a reload if one is already in flight
+  const detailLoadCount = useRef(0); // increment on each successful loadDetail to force EngForm/IssueForm remount
 
   const loadDetail = useCallback(async () => {
     if (loadingRef.current) { pendingReloadRef.current = true; return; }
@@ -192,6 +193,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
       // silently fall back to empty lists
     } finally {
       loadingRef.current = false;
+      detailLoadCount.current += 1; // force EngForm/IssueForm remount via key change
       // If a mutation fired while this fetch was in-flight, reload now
       if (pendingReloadRef.current) loadDetail();
     }
@@ -261,7 +263,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
             {addEng && <div className="mb-3"><EngForm companySlug={co.slug} initial={makeEmptyEng()} onSave={saveEng} onCancel={() => setAddEng(false)}/></div>}
             <div className="space-y-2">
               {engagements.map(e => editEng?.id === e.id ? (
-                <EngForm key={e.id} companySlug={co.slug} initial={e} onSave={saveEng} onCancel={() => setEditEng(null)}/>
+                <EngForm key={`${e.id}-${detailLoadCount.current}`} companySlug={co.slug} initial={e} onSave={saveEng} onCancel={() => setEditEng(null)}/>
               ) : (
                 <div key={e.id} className="flex items-center gap-3 text-xs bg-gray-50 rounded-lg px-3 py-2">
                   <span className="text-gray-500 w-24 flex-shrink-0">{e.date}</span>
@@ -416,7 +418,8 @@ export default function AdminPage() {
       const bv = b.esg_overall ?? 0;
       return bv - av;
     }
-    return 0;
+    // "recent" = newest first (reverse created_at order from Supabase's default ascending)
+    return (b.created_at ?? "").localeCompare(a.created_at ?? "");
   });
 
   return (

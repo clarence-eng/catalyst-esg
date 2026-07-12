@@ -503,7 +503,7 @@ function OverviewTab({
               <div className="space-y-1 mb-2">
                 {co.icRecommendation.conditions.map((c, i) => (
                   <div key={i} className="flex items-start gap-2 text-xs text-gray-700">
-                    <span className="text-amber-600 mt-0.5">◦</span>{c}
+                    <span className="text-amber-700 mt-0.5">◦</span>{c}
                   </div>
                 ))}
               </div>
@@ -812,10 +812,10 @@ function OverviewTab({
                     {/* Portfolio avg marker */}
                     <div className="absolute top-0 bottom-0 w-0.5 bg-purple-500 opacity-60" style={{ left: `${portfolioAvg}%` }} />
                   </div>
-                  <div className="flex justify-between mt-0.5 text-[9px] text-gray-400">
-                    <span>0</span>
-                    <span className="text-purple-600" style={{ marginLeft: `${portfolioAvg - 3}%` }}>avg</span>
-                    <span>100</span>
+                  <div className="relative mt-0.5 text-[9px] text-gray-400 h-3">
+                    <span className="absolute left-0">0</span>
+                    <span className="absolute text-purple-600" style={{ left: `${Math.min(Math.max(portfolioAvg, 5), 93)}%`, transform: "translateX(-50%)" }}>avg</span>
+                    <span className="absolute right-0">100</span>
                   </div>
                 </div>
               );
