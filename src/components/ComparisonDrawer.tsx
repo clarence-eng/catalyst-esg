@@ -13,10 +13,10 @@ export function ComparisonDrawer({ companies, onRemove, onClear }: Props) {
   if (companies.length === 0) return null;
 
   const metrics = [
-    { label: "ESG Score", fn: (c: Company) => c.esgScore.overall, unit: "/100", lowerIsBetter: false, color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
-    { label: "Environmental", fn: (c: Company) => c.esgScore.environmental, unit: "", lowerIsBetter: false, color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
-    { label: "Social", fn: (c: Company) => c.esgScore.social, unit: "", lowerIsBetter: false, color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
-    { label: "Governance", fn: (c: Company) => c.esgScore.governance, unit: "", lowerIsBetter: false, color: (v: number) => v >= 70 ? "text-emerald-700" : v >= 55 ? "text-amber-700" : "text-red-700" },
+    { label: "ESG Score", fn: (c: Company) => c.esgScore.overall, unit: "/100", lowerIsBetter: false, color: (v: number) => v >= 65 ? "text-emerald-700" : v >= 40 ? "text-amber-700" : "text-red-700" },
+    { label: "Environmental", fn: (c: Company) => c.esgScore.environmental, unit: "", lowerIsBetter: false, color: (v: number) => v >= 65 ? "text-emerald-700" : v >= 40 ? "text-amber-700" : "text-red-700" },
+    { label: "Social", fn: (c: Company) => c.esgScore.social, unit: "", lowerIsBetter: false, color: (v: number) => v >= 65 ? "text-emerald-700" : v >= 40 ? "text-amber-700" : "text-red-700" },
+    { label: "Governance", fn: (c: Company) => c.esgScore.governance, unit: "", lowerIsBetter: false, color: (v: number) => v >= 65 ? "text-emerald-700" : v >= 40 ? "text-amber-700" : "text-red-700" },
     { label: "Carbon Intensity", fn: (c: Company) => c.carbonIntensity, unit: " tCO₂/$M", lowerIsBetter: true, color: (v: number) => v < 100 ? "text-emerald-700" : v < 500 ? "text-amber-700" : "text-red-700" },
     { label: "Green Revenue", fn: (c: Company) => c.greenRevenuePct, unit: "%", lowerIsBetter: false, color: (v: number) => v >= 30 ? "text-emerald-700" : v >= 10 ? "text-amber-700" : "text-red-700" },
     { label: "Transition Risk", fn: (c: Company) => c.climateRisk.transition, unit: "", lowerIsBetter: false, color: () => "text-gray-700" },

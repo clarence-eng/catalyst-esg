@@ -250,7 +250,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
           <div className="flex items-center gap-4 text-xs text-gray-500">
             <span className="flex items-center gap-1.5">
               <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                (co.esg_overall ?? 0) >= 70 ? "bg-emerald-500" : (co.esg_overall ?? 0) >= 55 ? "bg-amber-500" : "bg-red-500"
+                (co.esg_overall ?? 0) >= 65 ? "bg-emerald-500" : (co.esg_overall ?? 0) >= 40 ? "bg-amber-500" : "bg-red-500"
               }`} />
               ESG <strong className="text-gray-900">{co.esg_overall ?? "—"}</strong>
             </span>

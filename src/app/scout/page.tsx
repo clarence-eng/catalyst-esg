@@ -271,14 +271,14 @@ export default function ScoutPage() {
               <div className="flex items-center gap-6 ml-6 flex-shrink-0">
                 {(() => {
                   const score = co.esgScore.overall;
-                  const ringClass = score >= 70
+                  const ringClass = score >= 65
                     ? "border-emerald-500 bg-emerald-50"
-                    : score >= 55
+                    : score >= 40
                     ? "border-amber-500 bg-amber-50"
                     : "border-red-500 bg-red-50";
-                  const textClass = score >= 70
+                  const textClass = score >= 65
                     ? "text-emerald-700"
-                    : score >= 55
+                    : score >= 40
                     ? "text-amber-700"
                     : "text-red-700";
                   return (
@@ -372,7 +372,7 @@ function ESGScoreSet({ e, s, g }: { e: number; s: number; g: number }) {
     <div className="flex flex-col gap-1.5">
       {[{ label: "E", val: e }, { label: "S", val: s }, { label: "G", val: g }].map(({ label, val }) => {
         const color =
-          val >= 70 ? "bg-emerald-500" : val >= 50 ? "bg-amber-500" : val >= 35 ? "bg-orange-500" : "bg-red-500";
+          val >= 65 ? "bg-emerald-500" : val >= 40 ? "bg-amber-500" : val >= 25 ? "bg-orange-500" : "bg-red-500";
         return (
           <div key={label} className="flex items-center gap-2">
             <span className="text-xs text-gray-500 w-3">{label}</span>

@@ -489,7 +489,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
 
 function ESGMini({ label, value }: { label: string; value: number }) {
   const color =
-    value >= 70 ? "text-emerald-700" : value >= 55 ? "text-amber-600" : value >= 40 ? "text-orange-600" : "text-red-600";
+    value >= 65 ? "text-emerald-700" : value >= 40 ? "text-amber-600" : value >= 25 ? "text-orange-600" : "text-red-600";
   return (
     <div className="text-center">
       <div className={`text-sm font-bold ${color}`}>{value}</div>

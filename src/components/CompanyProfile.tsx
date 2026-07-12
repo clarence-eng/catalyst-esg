@@ -809,7 +809,7 @@ function OverviewTab({
                     </div>
                   </div>
                   <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full ${score >= 70 ? "bg-emerald-500" : score >= 55 ? "bg-amber-500" : "bg-red-500"}`} style={{ width: `${score}%` }} />
+                    <div className={`h-full rounded-full ${score >= 65 ? "bg-emerald-500" : score >= 40 ? "bg-amber-500" : "bg-red-500"}`} style={{ width: `${score}%` }} />
                     {/* Portfolio avg marker — clamped to match label position */}
                     <div className="absolute top-0 bottom-0 w-0.5 bg-purple-500 opacity-60" style={{ left: `${Math.min(Math.max(portfolioAvg, 5), 93)}%` }} />
                   </div>

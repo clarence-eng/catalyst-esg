@@ -140,20 +140,20 @@ export default function OverviewPage() {
         </div>
       ) : (
       <div className={`mb-6 rounded-xl px-6 py-4 border flex items-center justify-between ${
-        avgScore >= 70 ? "bg-emerald-50 border-emerald-200" :
-        avgScore >= 55 ? "bg-amber-50 border-amber-200" :
+        avgScore >= 65 ? "bg-emerald-50 border-emerald-200" :
+        avgScore >= 40 ? "bg-amber-50 border-amber-200" :
         "bg-red-50 border-red-200"
       }`}>
         <div>
           <div className="text-xs font-medium text-gray-600 mb-0.5">Portfolio ESG Health</div>
           <div className={`text-2xl font-bold ${
-            avgScore >= 70 ? "text-emerald-700" : avgScore >= 55 ? "text-amber-700" : "text-red-700"
+            avgScore >= 65 ? "text-emerald-700" : avgScore >= 40 ? "text-amber-700" : "text-red-700"
           }`}>{avgScore}<span className="text-sm font-normal text-gray-500">/100</span></div>
         </div>
         <div className="flex-1 mx-8">
           <div className="h-3 bg-white/60 rounded-full overflow-hidden border border-white/40">
             <div className={`h-full rounded-full transition-all ${
-              avgScore >= 70 ? "bg-emerald-500" : avgScore >= 55 ? "bg-amber-500" : "bg-red-500"
+              avgScore >= 65 ? "bg-emerald-500" : avgScore >= 40 ? "bg-amber-500" : "bg-red-500"
             }`} style={{ width: `${avgScore}%` }} />
           </div>
           <div className="flex justify-between mt-1 text-[10px] text-gray-400">
@@ -162,11 +162,11 @@ export default function OverviewPage() {
         </div>
         <div className="text-right">
           <div className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
-            avgScore >= 70 ? "text-emerald-700 bg-emerald-100 border-emerald-300" :
-            avgScore >= 55 ? "text-amber-700 bg-amber-100 border-amber-300" :
+            avgScore >= 65 ? "text-emerald-700 bg-emerald-100 border-emerald-300" :
+            avgScore >= 40 ? "text-amber-700 bg-amber-100 border-amber-300" :
             "text-red-700 bg-red-100 border-red-300"
           }`}>
-            {avgScore >= 70 ? "Strong" : avgScore >= 55 ? "Developing" : "Needs Attention"}
+            {avgScore >= 65 ? "Strong" : avgScore >= 40 ? "Developing" : "Needs Attention"}
           </div>
           <div className="text-[10px] text-gray-400 mt-1">{activeCompanies.length} active companies</div>
         </div>
@@ -412,9 +412,9 @@ function ESGDimensionHeatmap({ companies }: { companies: Array<{ name: string; s
   const active = companies.filter(c => c.portfolioStatus === "Active");
 
   const scoreColor = (score: number) =>
-    score >= 70 ? "bg-emerald-100 text-emerald-800 font-semibold" :
-    score >= 55 ? "bg-amber-100 text-amber-800 font-semibold" :
-    score >= 40 ? "bg-orange-100 text-orange-800 font-semibold" :
+    score >= 65 ? "bg-emerald-100 text-emerald-800 font-semibold" :
+    score >= 40 ? "bg-amber-100 text-amber-800 font-semibold" :
+    score >= 25 ? "bg-orange-100 text-orange-800 font-semibold" :
     "bg-red-100 text-red-800 font-semibold";
 
   return (
@@ -464,7 +464,7 @@ function ESGDimensionHeatmap({ companies }: { companies: Array<{ name: string; s
 
 function ScoreBar({ value }: { value: number }) {
   const color =
-    value >= 70 ? "bg-emerald-500" : value >= 55 ? "bg-amber-500" : value >= 40 ? "bg-orange-500" : "bg-red-500";
+    value >= 65 ? "bg-emerald-500" : value >= 40 ? "bg-amber-500" : value >= 25 ? "bg-orange-500" : "bg-red-500";
   return (
     <div className="flex items-center gap-2">
       <div className="w-14 h-1.5 bg-gray-200 rounded-full overflow-hidden">
