@@ -32,7 +32,7 @@ export default function ScoutPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
   const [compareSet, setCompareSet] = useState<Set<string>>(new Set());
 
-  if (loading && companies.length === 0) {
+  if (loading && companies.length <= 1) {
     return (
       <div className="p-8">
         <div className="h-8 w-48 bg-gray-200 rounded-lg animate-pulse mb-6" />
@@ -196,17 +196,23 @@ export default function ScoutPage() {
                   <span className="text-xs text-gray-600 bg-gray-100 px-2 py-0.5 rounded">{co.country}</span>
                 </div>
                 <p className="text-xs text-gray-600 mb-3 leading-relaxed max-w-3xl">{co.description}</p>
-                {co.engagement.filter(e => e.status === "Overdue").length > 0 && (
-                  <div className="flex items-center gap-2 mb-2 bg-orange-50 border border-orange-200 rounded-lg px-3 py-1.5">
-                    <span className="text-orange-600 text-xs">⚠</span>
-                    <span className="text-xs text-orange-700 font-medium">
-                      {co.engagement.filter(e => e.status === "Overdue").length} overdue engagement{co.engagement.filter(e => e.status === "Overdue").length > 1 ? "s" : ""}
-                    </span>
-                    <span className="text-xs text-orange-600 ml-1">
-                      — {co.engagement.filter(e => e.status === "Overdue").slice(0, 2).map(e => e.topic).join(", ")}
-                    </span>
-                  </div>
-                )}
+                {(() => {
+                  const overdueEngs = co.engagement.filter(e => e.status === "Overdue");
+                  if (!overdueEngs.length) return null;
+                  const shownTopics = overdueEngs.slice(0, 2).map(e => e.topic).join(", ");
+                  const more = overdueEngs.length - 2;
+                  return (
+                    <div className="flex items-center gap-2 mb-2 bg-orange-50 border border-orange-200 rounded-lg px-3 py-1.5">
+                      <span className="text-orange-600 text-xs">⚠</span>
+                      <span className="text-xs text-orange-700 font-medium">
+                        {overdueEngs.length} overdue engagement{overdueEngs.length > 1 ? "s" : ""}
+                      </span>
+                      <span className="text-xs text-orange-600 ml-1">
+                        — {shownTopics}{more > 0 ? ` +${more} more` : ""}
+                      </span>
+                    </div>
+                  );
+                })()}
                 <div className="flex items-center gap-6">
                   <div className="text-xs text-gray-500">
                     <span className="text-gray-700">{co.sasbCategory}</span>
@@ -325,7 +331,9 @@ export default function ScoutPage() {
                 </div>
                 <button
                   type="button"
-                  aria-label={compareSet.has(co.slug) ? "Remove from comparison" : "Add to comparison"}
+                  aria-label={compareSet.has(co.slug) ? "Remove from comparison" : compareSet.size >= 3 ? "Max 3 companies selected" : "Add to comparison"}
+                  aria-disabled={!compareSet.has(co.slug) && compareSet.size >= 3}
+                  title={!compareSet.has(co.slug) && compareSet.size >= 3 ? "Maximum 3 companies can be compared" : undefined}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -337,7 +345,9 @@ export default function ScoutPage() {
                     });
                   }}
                   className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                    compareSet.has(co.slug) ? "bg-purple-600 border-purple-600 text-white" : "border-gray-300 hover:border-purple-400"
+                    compareSet.has(co.slug) ? "bg-purple-600 border-purple-600 text-white" :
+                    compareSet.size >= 3 ? "border-gray-200 bg-gray-50 cursor-not-allowed opacity-40" :
+                    "border-gray-300 hover:border-purple-400"
                   }`}
                 >
                   {compareSet.has(co.slug) && <span className="text-[10px] font-bold">✓</span>}

@@ -18,7 +18,12 @@ export function KeyboardShortcuts() {
   const [open, setOpen] = useState(false);
   const [gPressed, setGPressed] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Use a ref to avoid stale closure issues — handler always reads current gPressed value
+  const gPressedRef = useRef(false);
   const router = useRouter();
+
+  // Keep ref in sync with state
+  useEffect(() => { gPressedRef.current = gPressed; }, [gPressed]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -33,31 +38,38 @@ export function KeyboardShortcuts() {
         if (!hasOtherModal) setOpen(o => !o);
         return;
       }
-      if (e.key === "Escape") { setOpen(false); setGPressed(false); return; }
+      if (e.key === "Escape") { setOpen(false); setGPressed(false); gPressedRef.current = false; return; }
 
-      // Go-to shortcuts — use client-side router.push (no full reload)
-      if (e.key.toLowerCase() === "g" && !gPressed) {
+      // Go-to shortcuts — read from ref so no stale closure, no effect re-run
+      if (e.key.toLowerCase() === "g" && !gPressedRef.current) {
         setGPressed(true);
+        gPressedRef.current = true;
         if (timerRef.current) clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => setGPressed(false), 1500);
+        // Auto-reset after 1.5s — NOT cancelled by effect cleanup
+        timerRef.current = setTimeout(() => { setGPressed(false); gPressedRef.current = false; }, 1500);
         return;
       }
-      if (gPressed) {
+      if (gPressedRef.current) {
         const nav: Record<string, string> = { o: "/", s: "/scout", t: "/steward", i: "/signal", l: "/learn" };
         const url = nav[e.key.toLowerCase()];
         if (url) {
           if (timerRef.current) clearTimeout(timerRef.current);
           router.push(url);
           setGPressed(false);
+          gPressedRef.current = false;
         }
       }
     };
     window.addEventListener("keydown", handler);
     return () => {
       window.removeEventListener("keydown", handler);
-      if (timerRef.current) clearTimeout(timerRef.current);
+      // Don't clear timerRef here — let the auto-reset fire naturally
     };
-  }, [gPressed, router]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]); // Only router in deps — gPressed read via ref to avoid cleanup cancelling the timer
+
+  // Cleanup timer on unmount
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
 
   if (!open) return (
     <div className="fixed bottom-6 left-[280px] z-30">

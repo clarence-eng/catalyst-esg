@@ -113,14 +113,17 @@ export default function SignalPage() {
         })}
       </div>
 
-      {/* Regulatory Compliance Timeline */}
+      {/* Regulatory Compliance Timeline — respects urgency tab selection */}
       <div className="mb-8">
-        <h2 className="text-sm font-semibold text-gray-900 mb-2">Compliance Deadline Calendar</h2>
+        <h2 className="text-sm font-semibold text-gray-900 mb-2">
+          Compliance Deadline Calendar
+          {urgencyView !== "all" && <span className="ml-2 text-xs font-normal text-gray-400">· {urgencyView} urgency only</span>}
+        </h2>
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           {filteredUpdates.length === 0 ? (
             <div className="py-8 text-center text-sm text-gray-500">No regulations match the selected filters.</div>
           ) : (
-          [...filteredUpdates]
+          [...(urgencyView === "all" ? filteredUpdates : filteredUpdates.filter(r => r.urgency.toLowerCase() === urgencyView))]
             .sort((a, b) => {
               const urgencyOrder = { High: 0, Medium: 1, Low: 2 };
               return (urgencyOrder[a.urgency as keyof typeof urgencyOrder] ?? 3) - (urgencyOrder[b.urgency as keyof typeof urgencyOrder] ?? 3);
