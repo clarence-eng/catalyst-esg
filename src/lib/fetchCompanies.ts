@@ -389,7 +389,9 @@ function dbToCompany(
       environmental: co.esg_environmental,
       social: co.esg_social,
       governance: co.esg_governance,
-      rating: co.esg_rating as Company["esgScore"]["rating"],
+      rating: (["AAA","AA","A","BBB","BB","B","CCC"] as const).includes(co.esg_rating as Company["esgScore"]["rating"])
+        ? co.esg_rating as Company["esgScore"]["rating"]
+        : "BBB",
     },
     climateRisk: {
       transition: co.transition_risk as Company["climateRisk"]["transition"],
