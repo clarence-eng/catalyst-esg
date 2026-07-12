@@ -252,10 +252,7 @@ export default function OverviewPage() {
           </Link>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[800px]">
-            <thead>
-              <tr className="border-b border-gray-200">
-                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-6 py-3">Company</th>
+          <table className="w-full min-w-[800px]" aria-label="Active and pipeline portfolio companies">
                 <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Status</th>
                 <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Rating</th>
                 <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">E</th>
@@ -361,12 +358,12 @@ export default function OverviewPage() {
         <h2 className="text-sm font-semibold text-gray-900 mb-1">Megatrend Exposure Matrix</h2>
         <p className="text-xs text-gray-500 mb-4">Active portfolio × ESG megatrend · High = direct material exposure</p>
         <div className="overflow-x-auto">
-          <table className="w-full text-xs min-w-[500px]">
+          <table className="w-full text-xs min-w-[500px]" aria-label="Megatrend exposure matrix — active portfolio companies vs ESG megatrends">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="text-left pb-2 pr-4 text-gray-500 font-medium w-40">Company</th>
+                <th scope="col" className="text-left pb-2 pr-4 text-gray-500 font-medium w-40">Company</th>
                 {megatrends.map(t => (
-                  <th key={t.slug} className="text-center pb-2 px-2 text-gray-500 font-medium max-w-[80px]">
+                  <th key={t.slug} scope="col" className="text-center pb-2 px-2 text-gray-500 font-medium max-w-[80px]">
                     <span className="block truncate text-[10px]">{t.title.split(" ")[0]}</span>
                     <span className="block truncate text-[10px]">{t.title.split(" ").slice(1, 3).join(" ")}</span>
                   </th>
@@ -376,9 +373,9 @@ export default function OverviewPage() {
             <tbody>
               {activeCompanies.map(co => (
                 <tr key={co.slug} className="border-b border-gray-50 hover:bg-gray-50/50">
-                  <td className="py-2 pr-4 font-medium text-gray-800 truncate max-w-[160px]">
+                  <th scope="row" className="py-2 pr-4 font-medium text-gray-800 truncate max-w-[160px] text-left">
                     <Link href={`/scout/${co.slug}`} className="hover:text-purple-700 transition-colors">{co.name}</Link>
-                  </td>
+                  </th>
                   {megatrends.map(t => {
                     const exposure = t.portfolioExposure.find(p => p.slug === co.slug);
                     const level = exposure?.exposure ?? "Low";
@@ -418,7 +415,7 @@ function ESGDimensionHeatmap({ companies }: { companies: Array<{ name: string; s
         <p className="text-xs text-gray-500 mt-0.5">E/S/G scores per active company — color indicates performance level</p>
       </div>
       <div className="p-5 overflow-x-auto">
-        <table className="w-full text-xs">
+        <table className="w-full text-xs" aria-label="ESG dimension heatmap — risk exposure by company and ESG pillar">
           <thead>
             <tr className="text-gray-500 font-medium">
               <th scope="col" className="text-left pb-3 pr-4 w-40">Company</th>
