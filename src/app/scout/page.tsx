@@ -184,7 +184,7 @@ export default function ScoutPage() {
                   const more = overdueEngs.length - 2;
                   return (
                     <div className="flex items-center gap-2 mb-2 bg-orange-50 border border-orange-200 rounded-lg px-3 py-1.5">
-                      <span className="text-orange-600 text-xs">⚠</span>
+                      <span className="text-orange-600 text-xs" aria-hidden="true">⚠</span>
                       <span className="text-xs text-orange-700 font-medium">
                         {overdueEngs.length} overdue engagement{overdueEngs.length > 1 ? "s" : ""}
                       </span>
