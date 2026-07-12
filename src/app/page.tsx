@@ -72,8 +72,14 @@ export default function OverviewPage() {
     };
   });
 
-  const lastTrend = portfolioTrend[portfolioTrend.length - 1];
-  const prevTrend = portfolioTrend[portfolioTrend.length - 2];
+  // Only compute deltas from periods where ALL active companies have data
+  // to avoid composition bias (companies with fewer periods skewing the delta)
+  const fullCoverageTrend = portfolioTrend.filter((_, i) => {
+    const period = allPeriods[i];
+    return activeCompanies.every(c => c.historicalScores.some(s => s.period === period));
+  });
+  const lastTrend = fullCoverageTrend[fullCoverageTrend.length - 1];
+  const prevTrend = fullCoverageTrend[fullCoverageTrend.length - 2];
   const eDelta = lastTrend && prevTrend ? lastTrend.e - prevTrend.e : 0;
   const sDelta = lastTrend && prevTrend ? lastTrend.s - prevTrend.s : 0;
   const gDelta = lastTrend && prevTrend ? lastTrend.g - prevTrend.g : 0;
