@@ -396,7 +396,7 @@ export default function OverviewPage() {
             </tbody>
           </table>
         </div>
-        <p className="text-[10px] text-gray-400 mt-2">H = High · M = Medium · L = Low exposure</p>
+        <p className="text-[10px] text-gray-500 mt-2">H = High · M = Medium · L = Low exposure</p>
       </div>
     </div>
   );

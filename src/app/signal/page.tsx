@@ -120,11 +120,16 @@ export default function SignalPage() {
           {urgencyView !== "all" && <span className="ml-2 text-xs font-normal text-gray-400">· {urgencyView} urgency only</span>}
         </h2>
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          {filteredUpdates.length === 0 ? (
-            <div className="py-8 text-center text-sm text-gray-500">No regulations match the selected filters.</div>
-          ) : (
-          [...(urgencyView === "all" ? filteredUpdates : filteredUpdates.filter(r => r.urgency.toLowerCase() === urgencyView))]
-            .sort((a, b) => {
+          {(() => {
+            const calendarItems = urgencyView === "all" ? filteredUpdates : filteredUpdates.filter(r => r.urgency.toLowerCase() === urgencyView);
+            if (filteredUpdates.length === 0) {
+              return <div className="py-8 text-center text-sm text-gray-500">No regulations match the selected filters.</div>;
+            }
+            if (calendarItems.length === 0) {
+              return <div className="py-8 text-center text-sm text-gray-500">No {urgencyView} urgency regulations match the current filters.</div>;
+            }
+            return calendarItems
+              .sort((a, b) => {
               const urgencyOrder = { High: 0, Medium: 1, Low: 2 };
               return (urgencyOrder[a.urgency as keyof typeof urgencyOrder] ?? 3) - (urgencyOrder[b.urgency as keyof typeof urgencyOrder] ?? 3);
             })
@@ -152,8 +157,8 @@ export default function SignalPage() {
                   {r.portfolioImpact?.length ? `${r.portfolioImpact.length} co${r.portfolioImpact.length > 1 ? "s" : ""}` : ""}
                 </div>
               </div>
-            ))
-          )}
+            ));
+          })()}
         </div>
       </div>
 

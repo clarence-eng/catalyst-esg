@@ -27,30 +27,11 @@ const MEGATREND_SLUGS: Record<string, string> = {
 
 export default function ScoutPage() {
   const router = useRouter();
-  const { companies, loading, liveDataError } = useCompanies();
+  const { companies, liveDataError } = useCompanies();
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
   const [compareSet, setCompareSet] = useState<Set<string>>(new Set());
 
-  if (loading && companies.length <= 1) {
-    return (
-      <div className="p-8">
-        <div className="h-8 w-48 bg-gray-200 rounded-lg animate-pulse mb-6" />
-        {[...Array(3)].map((_, i) => (
-          <div key={i} className="bg-white border border-gray-200 rounded-xl p-5 mb-4 animate-pulse">
-            <div className="flex justify-between">
-              <div className="space-y-2 flex-1">
-                <div className="h-4 w-48 bg-gray-200 rounded" />
-                <div className="h-3 w-96 bg-gray-100 rounded" />
-                <div className="h-3 w-72 bg-gray-100 rounded" />
-              </div>
-              <div className="h-16 w-24 bg-gray-100 rounded ml-4" />
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
 
   const ACTIVE_COUNT = companies.filter((c) => c.portfolioStatus === "Active").length;
   const PIPELINE_COUNT = companies.filter((c) => c.portfolioStatus === "Pipeline").length;
@@ -308,7 +289,7 @@ export default function ScoutPage() {
                   const trend = avgs[avgs.length - 1] > avgs[0];
                   return (
                     <div className="flex-shrink-0" title={`6-period ESG trend: ${avgs.map(v => v.toFixed(1)).join(" → ")}`}>
-                      <svg width={W} height={H} className="overflow-visible">
+                      <svg width={W} height={H} className="overflow-visible" aria-hidden="true">
                         <polyline points={pts} fill="none" stroke={trend ? "#10b981" : "#ef4444"} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
                         <circle cx={(avgs.length - 1) / (avgs.length - 1) * W} cy={H - ((avgs[avgs.length-1] - min) / range) * H} r={2.5} fill={trend ? "#10b981" : "#ef4444"} />
                       </svg>
