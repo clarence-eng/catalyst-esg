@@ -98,6 +98,18 @@
 
 /* chart grid lines — dark theme: switch to white-opacity instead of black-opacity */
 .dark .recharts-cartesian-grid line { stroke: rgba(255,255,255,0.08) !important; }
+/* Recharts tooltip uses inline styles — target the element directly */
+.dark .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background-color: #1e2130 !important;
+  border-color: #2d3748 !important;
+  color: #e2e8f0 !important;
+}
+.dark .recharts-default-tooltip .recharts-tooltip-label {
+  color: #94a3b8 !important;
+}
+.dark .recharts-default-tooltip .recharts-tooltip-item {
+  color: #cbd5e1 !important;
+}
 
 @layer base {
   * {
@@ -142,4 +154,10 @@
 }
 .dark .bg-gray-50, .dark .bg-\[\#F9F8FA\], .dark .bg-\[\#F5F5F7\] {
   background-color: #151821 !important;
+}
+.dark .bg-gray-100 {
+  background-color: #1e2535 !important;
+}
+.dark .hover\:bg-gray-100:hover {
+  background-color: #1e2535 !important;
 }
