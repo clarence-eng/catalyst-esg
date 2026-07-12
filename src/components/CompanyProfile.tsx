@@ -197,7 +197,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
             </div>
             <p className="text-gray-600 text-sm max-w-2xl mb-2">{co.description}</p>
             {co.sdgAlignment.length > 0 && (
-              <div className="flex items-center gap-1.5 mb-3">
+              <div className="flex flex-wrap items-center gap-1.5 mb-3">
                 {co.sdgAlignment.map(({ sdg, label }) => (
                   <SDGBadge key={sdg} sdg={sdg} label={label} />
                 ))}
@@ -210,7 +210,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
               <span>·</span>
               <span>Temasek Megatrend: <span className={MEGATREND_COLORS[co.temasekMegatrend] ?? "text-gray-600"}>{co.temasekMegatrend}</span></span>
               <span>·</span>
-              {(() => {
+              {co.lastUpdated && (() => {
                   // Parse as local midnight to avoid UTC offset skew (date-only ISO strings parse as UTC)
                   const [y, mo, d] = co.lastUpdated.split("-").map(Number);
                   const updatedDate = new Date(y, mo - 1, d);
@@ -831,7 +831,7 @@ function OverviewTab({
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={co.historicalScores}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
-              <XAxis dataKey="period" tick={{ fill: "#64748b", fontSize: 9 }} interval="preserveStartEnd" />
+              <XAxis dataKey="period" tick={{ fill: "#64748b", fontSize: 9 }} interval={1} tickFormatter={(v: string) => { const m = v.match(/Q(\d) (\d{4})/); return m ? `Q${m[1]}'${m[2].slice(2)}` : v; }} />
               <YAxis domain={[0, 100]} tick={{ fill: "#64748b", fontSize: 9 }} width={25} />
               <Tooltip
                 contentStyle={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "8px", fontSize: 11 }}
