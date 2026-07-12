@@ -215,7 +215,7 @@ export default function SignalPage() {
         <span className="text-xs text-gray-500">
           {urgencyView === "all"
             ? `${filteredUpdates.length} of ${regulatoryUpdates.length} regulations`
-            : `${(urgencyView === "high" ? highUrgency : urgencyView === "medium" ? mediumUrgency : lowUrgency).length} of ${regulatoryUpdates.length} regulations`}
+            : `${(urgencyView === "high" ? highUrgency : urgencyView === "medium" ? mediumUrgency : lowUrgency).length} of ${filteredUpdates.length} filtered`}
         </span>
       </div>
 
