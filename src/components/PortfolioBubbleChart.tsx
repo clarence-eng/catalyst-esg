@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import {
   ScatterChart,
   Scatter,
@@ -53,6 +54,7 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
 }
 
 export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
+  const router = useRouter();
   if (data.length === 0) return null;
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
@@ -103,7 +105,15 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
           />
           <ZAxis dataKey="investmentValue" range={[80, 600]} name="Investment (S$M)" />
           <Tooltip content={<CustomTooltip />} />
-          <Scatter data={data} fillOpacity={0.75}>
+          <Scatter
+            data={data}
+            fillOpacity={0.75}
+            cursor="pointer"
+            onClick={(entry: unknown) => {
+              const pt = entry as BubblePoint;
+              if (pt?.slug) router.push(`/scout/${pt.slug}`);
+            }}
+          >
             {data.map((entry) => (
               <Cell key={entry.slug} fill={riskColor[entry.transitionRisk] ?? "#64748b"} />
             ))}
