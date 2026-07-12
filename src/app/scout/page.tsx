@@ -58,17 +58,12 @@ function loadFilter(): { query: string; statusFilter: StatusFilter } {
 export default function ScoutPage() {
   const router = useRouter();
   const { companies, liveDataError } = useCompanies();
-  const [query, setQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
-  const [compareSet, setCompareSet] = useState<Set<string>>(new Set());
-
-  // Restore filter + comparison state from sessionStorage on mount (survives detail page navigation)
-  useEffect(() => {
-    setCompareSet(loadCompareSet());
-    const { query: q, statusFilter: sf } = loadFilter();
-    setQuery(q);
-    setStatusFilter(sf);
-  }, []);
+  // Initialize directly from sessionStorage (lazy initializer) — no mount effect needed,
+  // no first-render flash, no race between persist effects and restore effect
+  const [{ query: initialQuery, statusFilter: initialStatus }] = useState(() => loadFilter());
+  const [query, setQuery] = useState(initialQuery);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>(initialStatus);
+  const [compareSet, setCompareSet] = useState<Set<string>>(() => loadCompareSet());
 
   // Persist comparison state to sessionStorage whenever it changes
   useEffect(() => {

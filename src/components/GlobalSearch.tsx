@@ -34,9 +34,11 @@ export function GlobalSearch() {
   }, [open]);
 
   const q = query.toLowerCase();
-  const matchedCompanies = q.length < 2 ? [] : companies.filter(c =>
+  const allMatchedCompanies = q.length < 2 ? [] : companies.filter(c =>
     c.name.toLowerCase().includes(q) || c.sector.toLowerCase().includes(q) || c.country.toLowerCase().includes(q)
-  ).slice(0, 5);
+  );
+  const matchedCompanies = allMatchedCompanies.slice(0, 5);
+  const extraCompanies = allMatchedCompanies.length - matchedCompanies.length;
   const matchedFrameworks = q.length < 2 ? [] : frameworks.filter(f =>
     f.name.toLowerCase().includes(q) || f.fullName.toLowerCase().includes(q) || f.description.toLowerCase().includes(q)
   ).slice(0, 4);
@@ -89,6 +91,9 @@ export function GlobalSearch() {
                     }`}>{c.esgScore.rating}</span>
                   </button>
                 ))}
+                {extraCompanies > 0 && (
+                  <div className="px-4 py-1.5 text-[10px] text-gray-400">+{extraCompanies} more — refine your search</div>
+                )}
               </div>
             )}
             {matchedFrameworks.length > 0 && (
