@@ -51,8 +51,7 @@ export async function POST(req: NextRequest) {
     s === "https://catalyst-neon-eight.vercel.app" ||
     s.startsWith("https://catalyst-neon-eight-") && s.endsWith(".vercel.app") ||
     s === "http://localhost:3000" ||
-    s === "http://localhost:3001" ||
-    s.startsWith("http://localhost:");
+    s === "http://localhost:3001";
   const hasSourceHeader = origin !== "" || referer !== "";
   const sameOrigin = isAllowed(origin) || isAllowed(referer);
   if (!hasSourceHeader || !sameOrigin) {
