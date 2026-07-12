@@ -173,10 +173,12 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
   const [editEng, setEditEng] = useState<DbEngagement | null>(null);
   const [editIssue, setEditIssue] = useState<DbMaterialIssue | null>(null);
   const loadingRef = useRef(false); // prevent concurrent loadDetail fetches
+  const pendingReloadRef = useRef(false); // queue a reload if one is already in flight
 
   const loadDetail = useCallback(async () => {
-    if (loadingRef.current) return;
+    if (loadingRef.current) { pendingReloadRef.current = true; return; }
     loadingRef.current = true;
+    pendingReloadRef.current = false;
     try {
       const [{ data: engs, error: engsErr }, { data: mis, error: misErr }] = await Promise.all([
         supabase.from("engagements").select("*").eq("company_slug", co.slug).order("date", { ascending: false }),
@@ -190,6 +192,8 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
       // silently fall back to empty lists
     } finally {
       loadingRef.current = false;
+      // If a mutation fired while this fetch was in-flight, reload now
+      if (pendingReloadRef.current) loadDetail();
     }
   }, [co.slug]);
 
