@@ -31,8 +31,9 @@ export function KeyboardShortcuts() {
       const isInput = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement;
       if (isInput) return;
 
-      // Don't open shortcuts overlay if any OTHER modal (not shortcuts itself) is already open
-      const hasOtherModal = document.querySelector("[data-modal]:not([data-modal='shortcuts'])");
+      // Don't open shortcuts overlay if a true blocking modal (search) is already open
+      // Note: ComparisonDrawer (data-modal="comparison") is a non-blocking bottom bar — don't exclude it
+      const hasOtherModal = document.querySelector("[data-modal='search']");
 
       if (e.key === "?" && !e.metaKey && !e.ctrlKey) {
         if (!hasOtherModal) setOpen(o => !o);
