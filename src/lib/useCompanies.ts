@@ -6,6 +6,8 @@ import { companies as staticCompanies } from "@/data/companies";
 let cachedResult: { companies: Company[]; source: "static" | "supabase" } | null = null;
 // In-flight promise deduplication — all concurrent mounts share one fetch
 let inFlight: Promise<void> | null = null;
+// Epoch counter — incremented on clearCache() so stale in-flight writes are rejected
+let cacheEpoch = 0;
 
 export function useCompanies() {
   const [companies, setCompanies] = useState<Company[]>(staticCompanies);
@@ -39,12 +41,16 @@ export function useCompanies() {
     }
 
     setLoading(true);
+    // Capture epoch at fetch start — reject write if clearCache() was called while in-flight
+    const epochAtStart = cacheEpoch;
     inFlight = fetch("/api/companies")
       .then(r => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
       })
       .then(({ companies: cos, source: src }: { companies: Company[]; source: "static" | "supabase" }) => {
+        // Discard result if cache was cleared after this fetch started
+        if (cacheEpoch !== epochAtStart) return;
         if (cos && cos.length > 0) {
           cachedResult = { companies: cos, source: src };
           setCompanies(cos);
@@ -64,4 +70,5 @@ export function useCompanies() {
 export function clearCache() {
   cachedResult = null;
   inFlight = null;
+  cacheEpoch++;
 }
