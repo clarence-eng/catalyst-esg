@@ -208,7 +208,7 @@ export default function OverviewPage() {
       <AlertPanel companies={companies} />
 
       {/* Portfolio ESG Trend */}
-      <PortfolioTrend data={portfolioTrend} activeCount={activeCompanies.length} />
+      <PortfolioTrend data={fullCoverageTrend} activeCount={activeCompanies.length} />
 
       {/* Carbon Intensity Comparison */}
       {activeCompanies.length > 0 && (
