@@ -62,7 +62,7 @@ export function PortfolioTrend({ data, activeCount }: { data: TrendPoint[]; acti
             dataKey="period"
             tick={{ fill: "#64748b", fontSize: 9 }}
             tickLine={false}
-            interval={1}
+            interval={0}
             tickFormatter={(v: string) => {
               // Show "Q1'24" style for compactness on 10-point chart
               const m = v.match(/Q(\d) (\d{4})/);

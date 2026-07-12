@@ -832,7 +832,7 @@ function OverviewTab({
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={co.historicalScores}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
-              <XAxis dataKey="period" tick={{ fill: "#64748b", fontSize: 9 }} interval={1} tickFormatter={(v: string) => { const m = v.match(/Q(\d) (\d{4})/); return m ? `Q${m[1]}'${m[2].slice(2)}` : v; }} />
+              <XAxis dataKey="period" tick={{ fill: "#64748b", fontSize: 9 }} interval={0} tickFormatter={(v: string) => { const m = v.match(/Q(\d) (\d{4})/); return m ? `Q${m[1]}'${m[2].slice(2)}` : v; }} />
               <YAxis domain={[0, 100]} tick={{ fill: "#64748b", fontSize: 9 }} width={25} />
               <Tooltip
                 contentStyle={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "8px", fontSize: 11 }}
