@@ -44,7 +44,7 @@ export interface ValueUplift {
 
 export interface EngagementRecord {
   date: string;
-  type: "Meeting" | "Report Review" | "Site Visit" | "Call";
+  type: "Meeting" | "Report Review" | "Site Visit" | "Call" | "Email";
   topic: string;
   status: "Completed" | "Planned" | "Overdue";
   notes: string;
