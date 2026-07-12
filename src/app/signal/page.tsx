@@ -44,11 +44,10 @@ export default function SignalPage() {
   const pipelinePortfolioSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Pipeline").map(c => c.slug)), [companies]);
 
   const filteredUpdates = regulatoryUpdates.filter((r) => {
-    const primaryJurisdiction = r.jurisdiction.split(" /")[0].trim();
     const matchJ = jurisdictionFilter === "All" ||
       (jurisdictionFilter === "Global"
-        ? primaryJurisdiction.startsWith("Global")
-        : primaryJurisdiction === jurisdictionFilter);
+        ? r.jurisdiction.startsWith("Global")
+        : r.jurisdiction.split(/\s*\/\s*/).some(j => j.trim() === jurisdictionFilter));
     const matchC = categoryFilter === "All" || r.category === categoryFilter;
     return matchJ && matchC;
   });
@@ -269,6 +268,7 @@ export default function SignalPage() {
             { key: "low", label: "Low", count: lowUrgency.length, color: "text-blue-700 bg-blue-50 border-blue-200" },
           ].map(tab => (
             <button key={tab.key} type="button"
+              aria-pressed={urgencyView === tab.key}
               onClick={() => setUrgencyView(tab.key as typeof urgencyView)}
               className={`text-xs px-3 py-1 rounded-full border font-medium transition-colors ${
                 urgencyView === tab.key ? (tab.color ?? "bg-[#4B2580]/10 border-purple-500/30 text-purple-700") : "text-gray-600 border-gray-200 hover:border-gray-300"

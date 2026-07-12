@@ -175,6 +175,8 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
   const loadingRef = useRef(false); // prevent concurrent loadDetail fetches
   const pendingReloadRef = useRef(false); // queue a reload if one is already in flight
   const detailLoadCount = useRef(0); // increment on each successful loadDetail to force EngForm/IssueForm remount
+  const savingEngRef = useRef(false); // prevent duplicate concurrent inserts
+  const savingIssueRef = useRef(false);
 
   const loadDetail = useCallback(async () => {
     if (loadingRef.current) { pendingReloadRef.current = true; return; }
@@ -202,21 +204,33 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
   useEffect(() => { if (expanded) loadDetail(); }, [expanded, loadDetail]);
 
   const saveEng = async (e: Partial<DbEngagement>) => {
-    const { id: engId, company_slug: _, created_at: __, ...engFields } = e as Required<typeof e>;
-    const { error: engErr } = e.id
-      ? await supabase.from("engagements").update(engFields).eq("id", engId)
-      : await supabase.from("engagements").insert({ ...e, company_slug: co.slug });
-    if (engErr) { showToast("Error saving engagement: " + engErr.message); return; }
-    setAddEng(false); setEditEng(null); clearCache(); loadDetail();
+    if (savingEngRef.current) return;
+    savingEngRef.current = true;
+    try {
+      const { id: engId, company_slug: _, created_at: __, ...engFields } = e as Required<typeof e>;
+      const { error: engErr } = e.id
+        ? await supabase.from("engagements").update(engFields).eq("id", engId)
+        : await supabase.from("engagements").insert({ ...e, company_slug: co.slug });
+      if (engErr) { showToast("Error saving engagement: " + engErr.message); return; }
+      setAddEng(false); setEditEng(null); clearCache(); loadDetail();
+    } finally {
+      savingEngRef.current = false;
+    }
   };
   const delEng = async (id: string) => { const { error } = await supabase.from("engagements").delete().eq("id", id); if (error) { showToast("Error deleting engagement: " + error.message); return; } clearCache(); loadDetail(); };
   const saveIssue = async (i: Partial<DbMaterialIssue>) => {
-    const { id: issId, company_slug: _ic, created_at: _icat, ...issFields } = i as Required<typeof i>;
-    const { error: issErr } = issId
-      ? await supabase.from("material_issues").update(issFields).eq("id", issId)
-      : await supabase.from("material_issues").insert({ ...i, sort_order: issues.length > 0 ? Math.max(...issues.map(x => x.sort_order ?? 0)) + 1 : 0, company_slug: co.slug });
-    if (issErr) { showToast("Error saving issue: " + issErr.message); return; }
-    setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();
+    if (savingIssueRef.current) return;
+    savingIssueRef.current = true;
+    try {
+      const { id: issId, company_slug: _ic, created_at: _icat, ...issFields } = i as Required<typeof i>;
+      const { error: issErr } = issId
+        ? await supabase.from("material_issues").update(issFields).eq("id", issId)
+        : await supabase.from("material_issues").insert({ ...i, sort_order: issues.length > 0 ? Math.max(...issues.map(x => x.sort_order ?? 0)) + 1 : 0, company_slug: co.slug });
+      if (issErr) { showToast("Error saving issue: " + issErr.message); return; }
+      setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();
+    } finally {
+      savingIssueRef.current = false;
+    }
   };
   const delIssue = async (id: string) => { const { error } = await supabase.from("material_issues").delete().eq("id", id); if (error) { showToast("Error deleting issue: " + error.message); return; } clearCache(); loadDetail(); };
 
@@ -344,17 +358,20 @@ export default function AdminPage() {
   const saveCompany = async (co: Partial<DbCompany>) => {
     if (!co.name?.trim() || !co.slug?.trim() || !co.sector?.trim() || !co.country?.trim() || !co.description?.trim()) return showToast("Name, slug, sector, country, and description are required");
     setSaving(true);
-    if (co.id) {
-      const { id: coId, created_at: _ccat, ...coFields } = co as Required<typeof co>;
-      const { error } = await supabase.from("companies").update(coFields).eq("id", coId);
-      if (error) showToast("Error: " + error.message);
-      else { showToast("Company updated ✓"); setEditing(null); clearCache(); loadCompanies(); }
-    } else {
-      const { error } = await supabase.from("companies").insert(co);
-      if (error) showToast("Error: " + error.message);
-      else { showToast("Company added ✓"); setAdding(false); clearCache(); loadCompanies(); }
+    try {
+      if (co.id) {
+        const { id: coId, created_at: _ccat, ...coFields } = co as Required<typeof co>;
+        const { error } = await supabase.from("companies").update(coFields).eq("id", coId);
+        if (error) showToast("Error: " + error.message);
+        else { showToast("Company updated ✓"); setEditing(null); clearCache(); loadCompanies(); }
+      } else {
+        const { error } = await supabase.from("companies").insert(co);
+        if (error) showToast("Error: " + error.message);
+        else { showToast("Company added ✓"); setAdding(false); clearCache(); loadCompanies(); }
+      }
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   };
 
   const deleteCompany = async (id: string, slug: string, name: string) => {
