@@ -722,7 +722,8 @@ function OverviewTab({
                   onClick={() => {
                     const win = window.open("", "_blank", "width=800,height=600");
                     if (!win) return;
-                    win.document.write(`<!DOCTYPE html><html><head><title>IC Memo — ${co.name}</title><style>
+                    const esc = (s: string) => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+                    win.document.write(`<!DOCTYPE html><html><head><title>IC Memo — ${esc(co.name)}</title><style>
       body { font-family: Georgia, serif; max-width: 700px; margin: 40px auto; line-height: 1.7; color: #1a1a1a; }
       h1 { font-size: 18px; font-weight: bold; margin-bottom: 4px; }
       .meta { color: #666; font-size: 13px; margin-bottom: 24px; border-bottom: 1px solid #ddd; padding-bottom: 12px; }
@@ -732,9 +733,9 @@ function OverviewTab({
       .content { white-space: pre-wrap; font-size: 14px; }
       @media print { body { margin: 20px; } }
     </style></head><body>
-      <h1>${co.name}<span class="badge">${co.esgScore.rating}</span></h1>
-      <div class="meta">${co.sector} · ${co.country} · ESG ${co.esgScore.overall}/100 · Generated ${new Date().toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" })}</div>
-      <div class="content">${memo.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+      <h1>${esc(co.name)}<span class="badge">${esc(co.esgScore.rating)}</span></h1>
+      <div class="meta">${esc(co.sector)} · ${esc(co.country)} · ESG ${co.esgScore.overall}/100 · Generated ${new Date().toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" })}</div>
+      <div class="content">${memo.replace(/&/g,"&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
     </body></html>`);
                     win.document.close();
                     win.print();
