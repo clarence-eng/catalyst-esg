@@ -286,12 +286,13 @@ export default function ScoutPage() {
                   const range = Math.max(max - min, 1);
                   const W = 48; const H = 20;
                   const pts = avgs.map((v, i) => `${(i / (avgs.length - 1)) * W},${H - ((v - min) / range) * H}`).join(" ");
-                  const trend = avgs[avgs.length - 1] > avgs[0];
+                  const trend = avgs[avgs.length - 1] > avgs[0] ? "up" : avgs[avgs.length - 1] < avgs[0] ? "down" : "flat";
+                  const strokeColor = trend === "up" ? "#10b981" : trend === "down" ? "#ef4444" : "#94a3b8";
                   return (
                     <div className="flex-shrink-0" title={`6-period ESG trend: ${avgs.map(v => v.toFixed(1)).join(" → ")}`}>
                       <svg width={W} height={H} className="overflow-visible" aria-hidden="true">
-                        <polyline points={pts} fill="none" stroke={trend ? "#10b981" : "#ef4444"} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
-                        <circle cx={(avgs.length - 1) / (avgs.length - 1) * W} cy={H - ((avgs[avgs.length-1] - min) / range) * H} r={2.5} fill={trend ? "#10b981" : "#ef4444"} />
+                        <polyline points={pts} fill="none" stroke={strokeColor} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+                        <circle cx={(avgs.length - 1) / (avgs.length - 1) * W} cy={H - ((avgs[avgs.length-1] - min) / range) * H} r={2.5} fill={strokeColor} />
                       </svg>
                     </div>
                   );
