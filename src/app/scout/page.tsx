@@ -36,12 +36,20 @@ function loadCompareSet(): Set<string> {
   } catch { return new Set(); }
 }
 
+const VALID_STATUS: StatusFilter[] = ["All", "Active", "Pipeline"];
+
 function loadFilter(): { query: string; statusFilter: StatusFilter } {
-  if (typeof window === "undefined") return { query: "", statusFilter: "All" };
+  const defaults = { query: "", statusFilter: "All" as StatusFilter };
+  if (typeof window === "undefined") return defaults;
   try {
     const stored = sessionStorage.getItem(FILTER_KEY);
-    return stored ? JSON.parse(stored) : { query: "", statusFilter: "All" };
-  } catch { return { query: "", statusFilter: "All" }; }
+    if (!stored) return defaults;
+    const parsed = JSON.parse(stored);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return defaults;
+    const q = typeof parsed.query === "string" ? parsed.query : "";
+    const sf = VALID_STATUS.includes(parsed.statusFilter) ? parsed.statusFilter as StatusFilter : "All";
+    return { query: q, statusFilter: sf };
+  } catch { return defaults; }
 }
 
 export default function ScoutPage() {
