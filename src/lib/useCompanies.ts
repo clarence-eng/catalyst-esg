@@ -56,7 +56,9 @@ export function useCompanies() {
     setLoading(true);
     // Capture epoch at fetch start — reject write if clearCache() was called while in-flight
     const epochAtStart = cacheEpoch;
-    inFlight = fetch("/api/companies")
+    // Capture local reference so .finally() only nulls inFlight if it's still this promise
+    let thisPromise: Promise<void>;
+    thisPromise = inFlight = fetch("/api/companies")
       .then(r => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
@@ -73,8 +75,12 @@ export function useCompanies() {
           setLiveDataError(true);
         }
       })
-      .catch(() => { setLiveDataError(true); })
-      .finally(() => { setLoading(false); inFlight = null; });
+      .catch(() => { if (cacheEpoch === epochAtStart) setLiveDataError(true); })
+      .finally(() => {
+        // Only clear loading/inFlight if this fetch wasn't superseded by a clearCache()
+        if (cacheEpoch === epochAtStart) setLoading(false);
+        if (inFlight === thisPromise) inFlight = null;
+      });
   }, []);
 
   // Re-run fetch whenever fetchTick increments (triggered by clearCache via subscriber registry)
