@@ -456,7 +456,7 @@ function ESGDimensionHeatmap({ companies }: { companies: Array<{ name: string; s
         </table>
         <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-100">
           <span className="text-xs text-gray-500 font-medium">Score legend:</span>
-          {[{ label: "≥70 Strong", cls: "bg-emerald-100 text-emerald-800" }, { label: "55–69 Adequate", cls: "bg-amber-100 text-amber-800" }, { label: "40–54 Developing", cls: "bg-orange-100 text-orange-800" }, { label: "<40 Lagging", cls: "bg-red-100 text-red-800" }].map(l => (
+          {[{ label: "≥65 Strong", cls: "bg-emerald-100 text-emerald-800" }, { label: "40–64 Developing", cls: "bg-amber-100 text-amber-800" }, { label: "25–39 Lagging", cls: "bg-orange-100 text-orange-800" }, { label: "<25 Critical", cls: "bg-red-100 text-red-800" }].map(l => (
             <span key={l.label} className={`text-xs px-2 py-0.5 rounded font-medium ${l.cls}`}>{l.label}</span>
           ))}
         </div>
