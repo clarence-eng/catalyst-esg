@@ -206,7 +206,11 @@ export default function SignalPage() {
       {/* Regulatory Radar */}
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-sm font-semibold text-gray-900">Regulatory Radar</h2>
-        <span className="text-xs text-gray-500">{filteredUpdates.length} of {regulatoryUpdates.length} regulations</span>
+        <span className="text-xs text-gray-500">
+          {urgencyView === "all"
+            ? `${filteredUpdates.length} of ${regulatoryUpdates.length} regulations`
+            : `${(urgencyView === "high" ? highUrgency : urgencyView === "medium" ? mediumUrgency : lowUrgency).length} of ${regulatoryUpdates.length} regulations`}
+        </span>
       </div>
 
       {/* Filters */}
