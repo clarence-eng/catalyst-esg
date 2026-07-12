@@ -27,7 +27,7 @@ export function Navigation() {
   // Detect modifier key on client only to avoid SSR/hydration mismatch
   const [modKey, setModKey] = useState("⌘K");
   useEffect(() => {
-    const isWin = navigator.userAgentData?.platform?.toLowerCase().includes("win") ??
+    const isWin = (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform?.toLowerCase().includes("win") ??
       navigator.platform.toLowerCase().includes("win");
     if (isWin) setModKey("Ctrl+K");
   }, []);
