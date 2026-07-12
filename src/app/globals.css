@@ -111,6 +111,15 @@
   color: #cbd5e1 !important;
 }
 
+/* Subtle scale pulse for nav hint toast — keeps text fully opaque (unlike animate-pulse which fades opacity) */
+@keyframes bounce-gentle {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+.animate-bounce-gentle {
+  animation: bounce-gentle 1.4s ease-in-out infinite;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

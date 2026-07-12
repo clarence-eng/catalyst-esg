@@ -336,7 +336,7 @@ export default function AdminPage() {
   const showToast = (msg: string) => {
     setToast(msg);
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-    toastTimerRef.current = setTimeout(() => setToast(""), 3000);
+    toastTimerRef.current = setTimeout(() => setToast(""), 5000);
   };
 
   const loadCompanies = useCallback(async () => {

@@ -151,7 +151,18 @@ export default function ScoutPage() {
       </div>
 
       {filtered.length === 0 && (
-        <div className="text-center py-12 text-gray-500 text-sm">No companies match your filters</div>
+        <div className="text-center py-12">
+          <div className="text-gray-500 text-sm mb-3">No companies match your filters</div>
+          {(query || statusFilter !== "All") && (
+            <button
+              type="button"
+              onClick={() => { setQuery(""); setStatusFilter("All"); }}
+              className="text-xs text-purple-700 border border-purple-200 bg-purple-50 hover:bg-purple-100 px-4 py-1.5 rounded-full transition-colors"
+            >
+              Clear filters
+            </button>
+          )}
+        </div>
       )}
 
       {/* Company Cards */}

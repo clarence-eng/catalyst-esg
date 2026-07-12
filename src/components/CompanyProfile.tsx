@@ -1544,7 +1544,10 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
       <div className="bg-white rounded-xl border border-gray-200 p-5">
         <h3 className="text-sm font-semibold text-gray-900 mb-4">Engagement Log</h3>
         {co.engagement.length === 0 ? (
-          <p className="text-xs text-gray-500">No engagement records yet.</p>
+          <div className="text-center py-6">
+            <p className="text-xs text-gray-500 mb-2">No engagement records yet.</p>
+            <a href="/admin" className="text-xs text-purple-700 hover:underline">Log an engagement via Admin →</a>
+          </div>
         ) : (
         <div className="relative">
           <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-100" />
