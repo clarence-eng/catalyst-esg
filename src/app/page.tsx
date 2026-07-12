@@ -547,7 +547,8 @@ function ParisPathwayWidget({ companies }: { companies: { pathwayAlignment: stri
 }
 
 function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
-  // Derive the two most recent quarters dynamically from all available period strings
+  // Use only periods where ALL companies have data to avoid composition bias
+  // (same principle as fullCoverageTrend in the avgDelta badge)
   const allPeriodsSorted = [...new Set(
     companies.flatMap(co => co.historicalScores.map(s => s.period))
   )].sort((a, b) => {
@@ -556,7 +557,12 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
     return ay !== by ? ay - by : aq - bq;
   });
 
-  if (allPeriodsSorted.length < 2) {
+  // Filter to full-coverage periods (all companies have a score entry)
+  const fullCoveragePeriods = allPeriodsSorted.filter(period =>
+    companies.every(co => co.historicalScores.some(s => s.period === period))
+  );
+
+  if (fullCoveragePeriods.length < 2) {
     return (
       <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
         <h2 className="text-sm font-semibold text-gray-900 mb-1">Portfolio ESG Attribution</h2>
@@ -565,8 +571,8 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
     );
   }
 
-  const Q1 = allPeriodsSorted[allPeriodsSorted.length - 2];
-  const Q2 = allPeriodsSorted[allPeriodsSorted.length - 1];
+  const Q1 = fullCoveragePeriods[fullCoveragePeriods.length - 2];
+  const Q2 = fullCoveragePeriods[fullCoveragePeriods.length - 1];
 
   const rows = companies
     .map(co => {
