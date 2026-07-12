@@ -164,7 +164,7 @@ function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: st
 }
 
 // ─── Company Row ──────────────────────────────────────────────────────────────
-function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => void; onDelete: () => void }) {
+function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit: () => void; onDelete: () => void; showToast: (msg: string) => void }) {
   const [expanded, setExpanded] = useState(false);
   const [engagements, setEngagements] = useState<DbEngagement[]>([]);
   const [issues, setIssues] = useState<DbMaterialIssue[]>([]);
@@ -200,19 +200,19 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
     const { error: engErr } = e.id
       ? await supabase.from("engagements").update(engFields).eq("id", engId)
       : await supabase.from("engagements").insert({ ...e, company_slug: co.slug });
-    if (engErr) { alert("Error saving engagement: " + engErr.message); return; }
+    if (engErr) { showToast("Error saving engagement: " + engErr.message); return; }
     setAddEng(false); setEditEng(null); clearCache(); loadDetail();
   };
-  const delEng = async (id: string) => { const { error } = await supabase.from("engagements").delete().eq("id", id); if (error) { alert("Error deleting engagement: " + error.message); return; } clearCache(); loadDetail(); };
+  const delEng = async (id: string) => { const { error } = await supabase.from("engagements").delete().eq("id", id); if (error) { showToast("Error deleting engagement: " + error.message); return; } clearCache(); loadDetail(); };
   const saveIssue = async (i: Partial<DbMaterialIssue>) => {
     const { id: issId, company_slug: _ic, created_at: _icat, ...issFields } = i as Required<typeof i>;
     const { error: issErr } = issId
       ? await supabase.from("material_issues").update(issFields).eq("id", issId)
       : await supabase.from("material_issues").insert({ ...i, sort_order: issues.length > 0 ? Math.max(...issues.map(x => x.sort_order ?? 0)) + 1 : 0, company_slug: co.slug });
-    if (issErr) { alert("Error saving issue: " + issErr.message); return; }
+    if (issErr) { showToast("Error saving issue: " + issErr.message); return; }
     setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();
   };
-  const delIssue = async (id: string) => { const { error } = await supabase.from("material_issues").delete().eq("id", id); if (error) { alert("Error deleting issue: " + error.message); return; } clearCache(); loadDetail(); };
+  const delIssue = async (id: string) => { const { error } = await supabase.from("material_issues").delete().eq("id", id); if (error) { showToast("Error deleting issue: " + error.message); return; } clearCache(); loadDetail(); };
 
   const statusColor = co.portfolio_status === "Active" ? "text-emerald-700 bg-emerald-50 border-emerald-300" : "text-blue-700 bg-blue-50 border-blue-300";
   const riskColor = { Low: "text-emerald-700", Medium: "text-amber-700", High: "text-orange-700", Critical: "text-red-700" }[co.transition_risk] || "text-gray-600";
@@ -494,7 +494,7 @@ export default function AdminPage() {
             {sortedAdminCompanies.map(co => editing?.id === co.id ? (
               <CoForm key={co.id} initial={editing} onSave={saveCompany} onCancel={() => setEditing(null)} />
             ) : (
-              <CompanyRow key={co.id} co={co} onEdit={() => { setEditing(co); setAdding(false); }} onDelete={() => deleteCompany(co.id, co.slug, co.name)} />
+              <CompanyRow key={co.id} co={co} onEdit={() => { setEditing(co); setAdding(false); }} onDelete={() => deleteCompany(co.id, co.slug, co.name)} showToast={showToast} />
             ))}
             {sortedAdminCompanies.length === 0 && !adding && !adminSearch && (
               <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-2xl">
