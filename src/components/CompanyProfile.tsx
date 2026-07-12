@@ -279,7 +279,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
 
       {/* Tab Content — all panels rendered, inactive ones hidden so aria-controls always resolves */}
       <div role="tabpanel" id="tabpanel-overview" aria-labelledby="tab-overview" hidden={tab !== "overview"}>
-        {tab === "overview" && <OverviewTab co={co} radarData={radarData} memo={memo} memoLoading={memoLoading} memoError={memoError} onGenerate={generateMemo} memoGeneratedAt={memoGeneratedAt} />}
+        {tab === "overview" && <OverviewTab co={co} radarData={radarData} memo={memo} memoLoading={memoLoading} memoError={memoError} onGenerate={generateMemo} memoGeneratedAt={memoGeneratedAt} onSetMemoError={setMemoError} />}
       </div>
       <div role="tabpanel" id="tabpanel-climate" aria-labelledby="tab-climate" hidden={tab !== "climate"}>
         {tab === "climate" && <ClimateTab co={co} />}
@@ -472,7 +472,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
 }
 
 function OverviewTab({
-  co, radarData, memo, memoLoading, memoError, onGenerate, memoGeneratedAt,
+  co, radarData, memo, memoLoading, memoError, onGenerate, memoGeneratedAt, onSetMemoError,
 }: {
   co: Company;
   radarData: { subject: string; score: number }[];
@@ -481,6 +481,7 @@ function OverviewTab({
   memoError: string;
   onGenerate: () => void;
   memoGeneratedAt: Date | null;
+  onSetMemoError: (msg: string) => void;
 }) {
   return (
     <div className="grid grid-cols-3 gap-6">
@@ -721,7 +722,7 @@ function OverviewTab({
                   type="button"
                   onClick={() => {
                     const win = window.open("", "_blank", "width=800,height=600");
-                    if (!win) return;
+                    if (!win) { onSetMemoError("Popup blocked — allow popups for this site and try again."); return; }
                     const esc = (s: string) => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
                     win.document.write(`<!DOCTYPE html><html><head><title>IC Memo — ${esc(co.name)}</title><style>
       body { font-family: Georgia, serif; max-width: 700px; margin: 40px auto; line-height: 1.7; color: #1a1a1a; }
