@@ -101,7 +101,7 @@ export default function StewardPage() {
                 {calendarEngagements.map((e, i) => (
                   <div key={`${e.companySlug}-${e.date}-${e.topic}-${i}`} className="flex items-center gap-4 px-5 py-3 hover:bg-gray-50 transition-colors">
                     {/* Date Badge */}
-                    <div className="w-16 flex-shrink-0 text-center">
+                    <div className="w-24 flex-shrink-0 text-center">
                       <div className={`text-xs font-semibold px-2 py-1 rounded ${
                         e.status === "Overdue"
                           ? "bg-red-50 text-red-700 border border-red-300"

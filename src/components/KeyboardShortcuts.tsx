@@ -31,8 +31,8 @@ export function KeyboardShortcuts() {
       const isInput = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement;
       if (isInput) return;
 
-      // Don't open shortcuts overlay if any other modal is already open
-      const hasOtherModal = document.querySelector("[data-modal]");
+      // Don't open shortcuts overlay if any OTHER modal (not shortcuts itself) is already open
+      const hasOtherModal = document.querySelector("[data-modal]:not([data-modal='shortcuts'])");
 
       if (e.key === "?" && !e.metaKey && !e.ctrlKey) {
         if (!hasOtherModal) setOpen(o => !o);
