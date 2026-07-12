@@ -12,10 +12,10 @@ function LearnContent() {
   const [searchQuery, setSearchQuery] = useState("");
   const searchParams = useSearchParams();
 
-  // Pre-populate search from ?q= URL parameter (e.g. from GlobalSearch navigation)
+  // Pre-populate search from ?q= URL parameter; also clear when param is removed
   useEffect(() => {
     const q = searchParams.get("q");
-    if (q) setSearchQuery(q);
+    setSearchQuery(q ?? "");
   }, [searchParams]);
 
   const q = searchQuery.trim().toLowerCase();
@@ -199,7 +199,7 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setExpanded((v) => !v); }}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded((v) => !v); } }}
       >
         <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-base font-bold ${categoryColors[f.category] ?? "text-gray-600"} bg-gray-100`}>
           {f.name.charAt(0)}
