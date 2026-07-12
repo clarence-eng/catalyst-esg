@@ -418,7 +418,9 @@ function dbToCompany(
     },
     netZeroCommitment: co.net_zero_commitment as Company["netZeroCommitment"],
     sasbCategory: co.sasb_category,
-    temasekMegatrend: co.temasek_megatrend as Company["temasekMegatrend"],
+    temasekMegatrend: (["Climate Transition","Nature & Biodiversity","Just Transition & Inclusive Growth","AI & Digital Ethics","Longer Lifespans"] as const).includes(co.temasek_megatrend as Company["temasekMegatrend"])
+      ? co.temasek_megatrend as Company["temasekMegatrend"]
+      : "Climate Transition",
     lastUpdated: co.last_updated,
     // Map engagements
     engagement: engagements
@@ -426,7 +428,9 @@ function dbToCompany(
       .sort((a, b) => b.date.localeCompare(a.date))
       .map(e => ({
         date: e.date,
-        type: e.type as Company["engagement"][0]["type"],
+        type: (["Meeting","Report Review","Site Visit","Call","Email"] as const).includes(e.type as Company["engagement"][0]["type"])
+          ? e.type as Company["engagement"][0]["type"]
+          : "Meeting",
         topic: e.topic,
         status: e.status as Company["engagement"][0]["status"],
         notes: e.notes,
