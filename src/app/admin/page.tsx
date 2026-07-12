@@ -286,7 +286,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
             {addIssue && <div className="mb-3"><IssueForm companySlug={co.slug} initial={EMPTY_MI} onSave={saveIssue} onCancel={() => setAddIssue(false)}/></div>}
             <div className="space-y-2">
               {issues.map(i => editIssue?.id === i.id ? (
-                <IssueForm key={i.id} companySlug={co.slug} initial={i} onSave={saveIssue} onCancel={() => setEditIssue(null)}/>
+                <IssueForm key={`${i.id}-${detailLoadCount.current}`} companySlug={co.slug} initial={i} onSave={saveIssue} onCancel={() => setEditIssue(null)}/>
               ) : (
                 <div key={i.id} className="flex items-center gap-3 text-xs bg-gray-50 rounded-lg px-3 py-2">
                   <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${i.severity==="Critical"?"bg-red-50 text-red-700":i.severity==="High"?"bg-orange-50 text-orange-700":i.severity==="Medium"?"bg-amber-50 text-amber-700":"bg-gray-100 text-gray-600"}`}>{i.severity}</span>
