@@ -2,7 +2,7 @@ export function formatRelativeTime(date: Date): string {
   const ms = date.getTime();
   if (isNaN(ms)) return "unknown time";
   const secs = Math.floor((Date.now() - ms) / 1000);
-  if (secs < 0) return "moments ago";
+  if (secs < 0) return "just now";
   if (secs < 60) return "just now";
   const mins = Math.floor(secs / 60);
   if (mins < 60) return `${mins} minute${mins === 1 ? "" : "s"} ago`;
