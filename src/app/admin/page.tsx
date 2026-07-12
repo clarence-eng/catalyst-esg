@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase, type DbCompany, type DbEngagement, type DbMaterialIssue } from "@/lib/supabase";
 import { clearCache } from "@/lib/useCompanies";
 import { Plus, Trash2, Edit3, Save, X, ChevronDown, ChevronUp, Lock, LogOut, Building2, Users, AlertCircle, CheckCircle } from "lucide-react";
@@ -172,8 +172,11 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
   const [addIssue, setAddIssue] = useState(false);
   const [editEng, setEditEng] = useState<DbEngagement | null>(null);
   const [editIssue, setEditIssue] = useState<DbMaterialIssue | null>(null);
+  const loadingRef = useRef(false); // prevent concurrent loadDetail fetches
 
   const loadDetail = useCallback(async () => {
+    if (loadingRef.current) return;
+    loadingRef.current = true;
     try {
       const [{ data: engs, error: engsErr }, { data: mis, error: misErr }] = await Promise.all([
         supabase.from("engagements").select("*").eq("company_slug", co.slug).order("date", { ascending: false }),
@@ -185,6 +188,8 @@ function CompanyRow({ co, onEdit, onDelete }: { co: DbCompany; onEdit: () => voi
       setIssues(mis || []);
     } catch {
       // silently fall back to empty lists
+    } finally {
+      loadingRef.current = false;
     }
   }, [co.slug]);
 
@@ -304,10 +309,15 @@ export default function AdminPage() {
   const [editing, setEditing] = useState<DbCompany | null>(null);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState("");
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [adminSearch, setAdminSearch] = useState("");
   const [adminSort, setAdminSort] = useState<"name"|"esg"|"recent">("recent");
 
-  const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(""), 3000); };
+  const showToast = (msg: string) => {
+    setToast(msg);
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = setTimeout(() => setToast(""), 3000);
+  };
 
   const loadCompanies = useCallback(async () => {
     setLoading(true);
@@ -388,7 +398,12 @@ export default function AdminPage() {
 
   const adminSearchTrimmed = adminSearch.trim().toLowerCase();
   const filteredAdminCompanies = adminSearchTrimmed
-    ? companies.filter(co => co.name.toLowerCase().includes(adminSearchTrimmed) || co.sector.toLowerCase().includes(adminSearchTrimmed))
+    ? companies.filter(co =>
+        co.name.toLowerCase().includes(adminSearchTrimmed) ||
+        co.sector.toLowerCase().includes(adminSearchTrimmed) ||
+        // Always include the company being edited to prevent losing unsaved changes
+        (editing && co.id === editing.id)
+      )
     : companies;
   const sortedAdminCompanies = [...filteredAdminCompanies].sort((a, b) => {
     if (adminSort === "name") return a.name.localeCompare(b.name);
