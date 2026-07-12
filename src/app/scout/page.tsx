@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCompanies } from "@/lib/useCompanies";
@@ -25,12 +25,30 @@ const MEGATREND_SLUGS: Record<string, string> = {
   "Longer Lifespans": "longer-lifespans",
 };
 
+const COMPARE_KEY = "catalyst_compare_set";
+
+function loadCompareSet(): Set<string> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const stored = sessionStorage.getItem(COMPARE_KEY);
+    return stored ? new Set(JSON.parse(stored) as string[]) : new Set();
+  } catch { return new Set(); }
+}
+
 export default function ScoutPage() {
   const router = useRouter();
   const { companies, liveDataError } = useCompanies();
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
   const [compareSet, setCompareSet] = useState<Set<string>>(new Set());
+
+  // Restore comparison state from sessionStorage on mount (survives detail page navigation)
+  useEffect(() => { setCompareSet(loadCompareSet()); }, []);
+
+  // Persist comparison state to sessionStorage whenever it changes
+  useEffect(() => {
+    try { sessionStorage.setItem(COMPARE_KEY, JSON.stringify([...compareSet])); } catch { /* quota exceeded */ }
+  }, [compareSet]);
 
 
   const ACTIVE_COUNT = companies.filter((c) => c.portfolioStatus === "Active").length;
