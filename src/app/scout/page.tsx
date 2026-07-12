@@ -32,7 +32,10 @@ function loadCompareSet(): Set<string> {
   if (typeof window === "undefined") return new Set();
   try {
     const stored = sessionStorage.getItem(COMPARE_KEY);
-    return stored ? new Set(JSON.parse(stored) as string[]) : new Set();
+    if (!stored) return new Set();
+    const parsed = JSON.parse(stored);
+    if (!Array.isArray(parsed)) { sessionStorage.removeItem(COMPARE_KEY); return new Set(); }
+    return new Set(parsed.filter((x): x is string => typeof x === "string"));
   } catch { return new Set(); }
 }
 
