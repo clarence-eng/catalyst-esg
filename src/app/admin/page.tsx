@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase, type DbCompany, type DbEngagement, type DbMaterialIssue } from "@/lib/supabase";
 import { clearCache } from "@/lib/useCompanies";
-import { Plus, Trash2, Edit3, Save, X, ChevronDown, ChevronUp, Lock, LogOut, Building2, Users, AlertCircle, CheckCircle } from "lucide-react";
+import { Plus, Trash2, Edit3, Save, ChevronDown, ChevronUp, Lock, LogOut, Building2, Users, CheckCircle } from "lucide-react";
 
 // ─── Auth ───────────────────────────────────────────────────────────────────
 function useAdminAuth() {
