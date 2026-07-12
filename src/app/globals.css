@@ -170,3 +170,11 @@
 .dark .hover\:bg-gray-100:hover {
   background-color: #1e2535 !important;
 }
+/* ScoreRing dark mode — SVG inline styles can't be overridden by class rules,
+   so we target the SVG elements by their class names */
+.dark .score-ring text {
+  fill: #e2e8f0 !important;
+}
+.dark .score-ring-track {
+  stroke: rgba(255,255,255,0.15) !important;
+}

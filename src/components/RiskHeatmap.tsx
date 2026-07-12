@@ -65,7 +65,11 @@ export function RiskHeatmap({ companies = staticCompanies }: { companies?: Compa
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {activeCompanies.map((co) => (
+            {activeCompanies.length === 0 ? (
+              <tr>
+                <td colSpan={RISK_COLUMNS.length + 1} className="py-8 text-center text-xs text-gray-500">No active companies to display</td>
+              </tr>
+            ) : activeCompanies.map((co) => (
               <tr key={co.slug} className="hover:bg-gray-50 transition-colors">
                 <th scope="row" className="py-2.5 pr-4 text-left font-normal w-40 min-w-[160px]">
                   <Link
