@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search, LayoutDashboard, Users, Radio, BookOpen, Info, Moon, Sun } from "lucide-react";
@@ -23,6 +24,13 @@ export function Navigation() {
   const overdueCount = companies
     .filter(c => c.portfolioStatus === "Active")
     .reduce((s, c) => s + c.engagement.filter(e => e.status === "Overdue").length, 0);
+  // Detect modifier key on client only to avoid SSR/hydration mismatch
+  const [modKey, setModKey] = useState("⌘K");
+  useEffect(() => {
+    const isWin = navigator.userAgentData?.platform?.toLowerCase().includes("win") ??
+      navigator.platform.toLowerCase().includes("win");
+    if (isWin) setModKey("Ctrl+K");
+  }, []);
 
   return (
     <aside className="fixed left-0 top-0 h-full w-64 bg-[#F9F8FA] border-r border-gray-200 flex flex-col z-50 text-gray-800">
@@ -117,7 +125,7 @@ export function Navigation() {
           <span>{theme === 'light' ? 'Dark mode' : 'Light mode'}</span>
         </button>
         <div className="text-[10px] text-gray-400 flex items-center gap-1 mt-2 px-2">
-          <kbd className="bg-gray-100 px-1 rounded font-mono">{typeof window !== "undefined" && navigator.platform.toLowerCase().includes("win") ? "Ctrl+K" : "⌘K"}</kbd>
+          <kbd className="bg-gray-100 px-1 rounded font-mono">{modKey}</kbd>
           <span>Search</span>
         </div>
         <div className="text-[10px] text-gray-400 flex items-center gap-1 px-2">
