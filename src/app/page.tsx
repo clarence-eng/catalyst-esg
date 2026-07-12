@@ -1,15 +1,18 @@
 "use client";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useCompanies } from "@/lib/useCompanies";
 import type { Company } from "@/data/companies";
 import { megatrends } from "@/data/megatrends";
 import { RatingBadge, MaturityBadge, PageHeader, StatCard } from "@/components/ui-elements";
 import { PortfolioBrief } from "@/components/PortfolioBrief";
-import { PortfolioTrend } from "@/components/PortfolioTrend";
-import { PortfolioBubbleChart } from "@/components/PortfolioBubbleChart";
 import { AlertPanel } from "@/components/AlertPanel";
 import { RiskHeatmap } from "@/components/RiskHeatmap";
 import { ArrowRight, GitMerge } from "lucide-react";
+
+// Lazy-load recharts-heavy chart components — deferred until after initial paint
+const PortfolioTrend = dynamic(() => import("@/components/PortfolioTrend").then(m => ({ default: m.PortfolioTrend })), { ssr: false });
+const PortfolioBubbleChart = dynamic(() => import("@/components/PortfolioBubbleChart").then(m => ({ default: m.PortfolioBubbleChart })), { ssr: false });
 
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
@@ -110,7 +113,7 @@ export default function OverviewPage() {
   return (
     <div className="p-8">
       {liveDataError && (
-        <div role="alert" aria-live="polite" className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 mb-4 text-xs text-amber-800 flex items-center gap-2">
+        <div role="status" aria-live="polite" className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 mb-4 text-xs text-amber-800 flex items-center gap-2">
           <span aria-hidden="true">⚠</span>
           <span>Using demo data — live portfolio database unavailable. Check Supabase connection.</span>
         </div>
