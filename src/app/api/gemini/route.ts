@@ -23,7 +23,10 @@ function sanitizeBlock(value: unknown, maxLen = 5000): string {
 function validateContext(type: GenerationType, ctx: Record<string, unknown>): boolean {
   if (type === "deal_memo") {
     const strOk = ["name", "sector", "country", "rating", "maturity"].every((k) => typeof ctx[k] === "string");
-    const numOk = ["overallScore", "eScore", "sScore", "gScore"].every((k) => ctx[k] !== undefined && ctx[k] !== null && ctx[k] !== "");
+    const numOk = ["overallScore", "eScore", "sScore", "gScore"].every((k) => {
+      const v = ctx[k];
+      return v !== undefined && v !== null && v !== "" && v !== "null" && v !== "undefined";
+    });
     return strOk && numOk;
   }
   if (type === "action_plan") {
