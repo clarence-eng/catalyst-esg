@@ -438,7 +438,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
                     type="button"
                     onClick={() => {
                       const win = window.open("", "_blank", "width=800,height=600");
-                      if (!win) return;
+                      if (!win) { setPlanError("Popup blocked — allow popups for this site and try again."); return; }
                       const esc = (s: string) => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
                       win.document.write(`<!DOCTYPE html><html><head><title>ESG Action Plan — ${esc(co.name)}</title><style>
       body { font-family: Georgia, serif; max-width: 700px; margin: 40px auto; line-height: 1.7; color: #1a1a1a; }
