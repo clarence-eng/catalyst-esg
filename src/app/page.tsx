@@ -253,6 +253,9 @@ export default function OverviewPage() {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[800px]" aria-label="Active and pipeline portfolio companies">
+            <thead>
+              <tr className="border-b border-gray-200">
+                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-6 py-3">Company</th>
                 <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Status</th>
                 <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Rating</th>
                 <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">E</th>
