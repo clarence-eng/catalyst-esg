@@ -7,10 +7,9 @@ import { companies as staticCompanies } from "@/data/companies";
 import { PageHeader } from "@/components/ui-elements";
 import { ArrowRight, AlertCircle } from "lucide-react";
 
-const allJurisdictions = ["All", ...new Set(regulatoryUpdates.map((r) => {
-  const j = r.jurisdiction.split(" /")[0].trim();
-  return j.startsWith("Global") ? "Global" : j;
-}))];
+const allJurisdictions = ["All", ...new Set(regulatoryUpdates.flatMap((r) =>
+  r.jurisdiction.split(/\s*\/\s*/).map(j => j.trim().startsWith("Global") ? "Global" : j.trim())
+))];
 const allCategories = ["All", ...new Set(regulatoryUpdates.map((r) => r.category))];
 
 const megatrendColorMap: Record<string, string> = {
