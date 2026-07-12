@@ -189,8 +189,10 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
   const [planError, setPlanError] = useState("");
   const [planGeneratedAt, setPlanGeneratedAt] = useState<Date | null>(null);
 
-  // Invalidate cached plan when any key company data changes (e.g., admin update)
-  const planKey = `${co.slug}:${co.esgScore.overall}:${co.maturity}:${co.climateRisk.transition}:${co.natureRisk.overall}:${co.netZeroCommitment}:${co.greenRevenuePct}`;
+  // Invalidate cached plan when any key company data changes — include material issue fingerprint
+  // and tnfdAligned so plan clears when issues are promoted/resolved or TNFD milestone is achieved
+  const issueFingerprint = co.materialIssues.filter(i => !i.opportunity).map(i => `${i.issue}:${i.severity}`).join("|");
+  const planKey = `${co.slug}:${co.esgScore.overall}:${co.maturity}:${co.climateRisk.transition}:${co.natureRisk.overall}:${co.natureRisk.tnfdAligned}:${co.netZeroCommitment}:${co.greenRevenuePct}:${issueFingerprint}`;
   const prevKeyRef = useState(planKey);
   if (prevKeyRef[0] !== planKey) {
     prevKeyRef[1](planKey);
@@ -216,7 +218,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
         .sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4))
         .slice(0, 3)
         .map((i) => `${i.issue} (${i.severity})`)
-        .join(", ");
+        .join(", ") || "No specific risk issues identified — focus on value creation and governance uplift";
       const keyGaps = [
         co.climateRisk.transition !== "Low" && "Climate transition strategy and emissions pathway",
         co.natureRisk.overall !== "Low" && "Nature risk and TNFD assessment",
