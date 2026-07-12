@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { Company } from "@/data/companies";
 import { companies as staticCompanies } from "@/data/companies";
 
@@ -8,14 +8,24 @@ let cachedResult: { companies: Company[]; source: "static" | "supabase" } | null
 let inFlight: Promise<void> | null = null;
 // Epoch counter — incremented on clearCache() so stale in-flight writes are rejected
 let cacheEpoch = 0;
+// Subscriber registry — notified on clearCache() so already-mounted hooks re-fetch
+const refreshCallbacks = new Set<() => void>();
 
 export function useCompanies() {
   const [companies, setCompanies] = useState<Company[]>(staticCompanies);
   const [loading, setLoading] = useState(false);
   const [source, setSource] = useState<"static" | "supabase">("static");
   const [liveDataError, setLiveDataError] = useState(false);
+  const [fetchTick, setFetchTick] = useState(0);
 
+  // Register this instance as a subscriber so clearCache() can trigger a re-fetch
   useEffect(() => {
+    const refresh = () => setFetchTick(t => t + 1);
+    refreshCallbacks.add(refresh);
+    return () => { refreshCallbacks.delete(refresh); };
+  }, []);
+
+  const doFetch = useCallback(() => {
     // Use cache if available (preserves actual source label)
     if (cachedResult) {
       setCompanies(cachedResult.companies);
@@ -67,6 +77,9 @@ export function useCompanies() {
       .finally(() => { setLoading(false); inFlight = null; });
   }, []);
 
+  // Re-run fetch whenever fetchTick increments (triggered by clearCache via subscriber registry)
+  useEffect(() => { doFetch(); }, [fetchTick, doFetch]);
+
   return { companies, loading, source, liveDataError };
 }
 
@@ -74,4 +87,6 @@ export function clearCache() {
   cachedResult = null;
   inFlight = null;
   cacheEpoch++;
+  // Notify all mounted useCompanies() instances to re-fetch
+  refreshCallbacks.forEach(cb => cb());
 }

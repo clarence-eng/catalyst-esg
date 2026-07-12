@@ -11,8 +11,14 @@ import { RiskHeatmap } from "@/components/RiskHeatmap";
 import { ArrowRight, GitMerge } from "lucide-react";
 
 // Lazy-load recharts-heavy chart components — deferred until after initial paint
-const PortfolioTrend = dynamic(() => import("@/components/PortfolioTrend").then(m => ({ default: m.PortfolioTrend })), { ssr: false });
-const PortfolioBubbleChart = dynamic(() => import("@/components/PortfolioBubbleChart").then(m => ({ default: m.PortfolioBubbleChart })), { ssr: false });
+const PortfolioTrend = dynamic(() => import("@/components/PortfolioTrend").then(m => ({ default: m.PortfolioTrend })), {
+  ssr: false,
+  loading: () => <div className="bg-white rounded-xl border border-gray-200 mb-6 h-48 animate-pulse" />,
+});
+const PortfolioBubbleChart = dynamic(() => import("@/components/PortfolioBubbleChart").then(m => ({ default: m.PortfolioBubbleChart })), {
+  ssr: false,
+  loading: () => <div className="bg-white rounded-xl border border-gray-200 mb-6 h-48 animate-pulse" />,
+});
 
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
