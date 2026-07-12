@@ -26,6 +26,7 @@ const MEGATREND_SLUGS: Record<string, string> = {
 };
 
 const COMPARE_KEY = "catalyst_compare_set";
+const FILTER_KEY = "catalyst_scout_filter";
 
 function loadCompareSet(): Set<string> {
   if (typeof window === "undefined") return new Set();
@@ -35,6 +36,14 @@ function loadCompareSet(): Set<string> {
   } catch { return new Set(); }
 }
 
+function loadFilter(): { query: string; statusFilter: StatusFilter } {
+  if (typeof window === "undefined") return { query: "", statusFilter: "All" };
+  try {
+    const stored = sessionStorage.getItem(FILTER_KEY);
+    return stored ? JSON.parse(stored) : { query: "", statusFilter: "All" };
+  } catch { return { query: "", statusFilter: "All" }; }
+}
+
 export default function ScoutPage() {
   const router = useRouter();
   const { companies, liveDataError } = useCompanies();
@@ -42,13 +51,23 @@ export default function ScoutPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
   const [compareSet, setCompareSet] = useState<Set<string>>(new Set());
 
-  // Restore comparison state from sessionStorage on mount (survives detail page navigation)
-  useEffect(() => { setCompareSet(loadCompareSet()); }, []);
+  // Restore filter + comparison state from sessionStorage on mount (survives detail page navigation)
+  useEffect(() => {
+    setCompareSet(loadCompareSet());
+    const { query: q, statusFilter: sf } = loadFilter();
+    setQuery(q);
+    setStatusFilter(sf);
+  }, []);
 
   // Persist comparison state to sessionStorage whenever it changes
   useEffect(() => {
     try { sessionStorage.setItem(COMPARE_KEY, JSON.stringify([...compareSet])); } catch { /* quota exceeded */ }
   }, [compareSet]);
+
+  // Persist filter state to sessionStorage whenever it changes
+  useEffect(() => {
+    try { sessionStorage.setItem(FILTER_KEY, JSON.stringify({ query, statusFilter })); } catch { /* quota exceeded */ }
+  }, [query, statusFilter]);
 
 
   const ACTIVE_COUNT = companies.filter((c) => c.portfolioStatus === "Active").length;
