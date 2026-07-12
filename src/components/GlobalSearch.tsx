@@ -66,7 +66,7 @@ export function GlobalSearch() {
 
         {/* Results */}
         {query.length >= 2 && (
-          <div className="max-h-80 overflow-y-auto">
+          <div className="max-h-80 overflow-y-auto" aria-live="polite" aria-atomic="true">
             {!hasResults && (
               <p className="text-sm text-gray-500 text-center py-8">No results for &ldquo;{query}&rdquo;</p>
             )}

@@ -264,7 +264,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { period: "Q3 2025", e: 36, s: 57, g: 54 },
       { period: "Q4 2025", e: 35, s: 55, g: 52 },
       { period: "Q1 2026", e: 36, s: 56, g: 53 },
-      { period: "Q2 2026", e: 37, s: 55, g: 52 },
+      { period: "Q2 2026", e: 32, s: 55, g: 52 },
     ],
     sdgAlignment: [
       { sdg: 7, label: "Clean Energy" },
@@ -310,7 +310,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { period: "Q3 2025", e: 38, s: 71, g: 53 },
       { period: "Q4 2025", e: 38, s: 71, g: 55 },
       { period: "Q1 2026", e: 39, s: 72, g: 55 },
-      { period: "Q2 2026", e: 40, s: 72, g: 56 },
+      { period: "Q2 2026", e: 58, s: 72, g: 56 },
     ],
     sdgAlignment: [
       { sdg: 3, label: "Good Health" },

@@ -39,9 +39,9 @@ export function ComparisonDrawer({ companies, onRemove, onClear }: Props) {
         <table className="w-full text-xs">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="text-left px-4 py-2 text-gray-500 font-medium w-36">Metric</th>
+              <th scope="col" className="text-left px-4 py-2 text-gray-500 font-medium w-36">Metric</th>
               {companies.map(c => (
-                <th key={c.slug} className="px-4 py-2 min-w-[140px]">
+                <th key={c.slug} scope="col" className="px-4 py-2 min-w-[140px]">
                   <div className="flex items-center justify-between gap-2">
                     <Link href={`/scout/${c.slug}`} className="font-semibold text-gray-900 hover:text-purple-700 truncate max-w-[100px]">{c.name}</Link>
                     <button type="button" onClick={() => onRemove(c.slug)} className="text-gray-300 hover:text-gray-500 flex-shrink-0"><X className="w-3 h-3" /></button>
