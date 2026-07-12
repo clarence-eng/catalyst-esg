@@ -418,8 +418,9 @@ export default function AdminPage() {
       const bv = b.esg_overall ?? 0;
       return bv - av;
     }
-    // "recent" = newest first (reverse created_at order from Supabase's default ascending)
-    return (b.created_at ?? "").localeCompare(a.created_at ?? "");
+    // "recent" = newest first; use id as tiebreaker when created_at timestamps are equal
+    const dateCmp = (b.created_at ?? "").localeCompare(a.created_at ?? "");
+    return dateCmp !== 0 ? dateCmp : (b.id ?? "").localeCompare(a.id ?? "");
   });
 
   return (

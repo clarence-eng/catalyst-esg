@@ -83,16 +83,11 @@ export function Navigation() {
               />
               <div>
                 <div
-                  className="text-sm font-medium leading-none"
-                  style={
-                    active
-                      ? { color: TEMASEK_PURPLE }
-                      : { color: "rgb(55 65 81)" }
-                  }
+                  className={`text-sm font-medium leading-none ${active ? "text-[#4B2580] dark:text-purple-300" : "text-gray-700"}`}
                 >
                   {label}
                 </div>
-                <div className="text-xs text-gray-600 mt-0.5">{desc}</div>
+                <div className="text-xs text-gray-600 mt-0.5 dark:text-gray-400">{desc}</div>
               </div>
               {label === "Steward" && overdueCount > 0 && (
                 <span className="ml-auto text-[10px] font-bold bg-orange-500 text-white rounded-full px-1.5 py-0.5 min-w-[18px] text-center">

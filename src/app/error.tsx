@@ -16,7 +16,7 @@ export default function GlobalError({
   return (
     <div className="min-h-screen bg-[#F5F5F7] flex items-center justify-center">
       <div className="bg-white rounded-2xl border border-gray-200 p-10 max-w-md w-full text-center shadow-sm">
-        <div className="text-4xl font-bold text-red-200 mb-4">⚠</div>
+        <div className="text-4xl font-bold text-red-200 mb-4" aria-hidden="true">⚠</div>
         <h1 className="text-lg font-semibold text-gray-900 mb-2">Something went wrong</h1>
         <p className="text-sm text-gray-500 mb-6">
           An unexpected error occurred. This may be a temporary connectivity issue.

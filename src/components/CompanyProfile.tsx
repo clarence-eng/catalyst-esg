@@ -218,7 +218,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
                   const isStale = daysSince > 90;
                   return (
                     <span className={`text-xs ${isStale ? "text-amber-600" : "text-gray-500"}`} title={isStale ? `Data is ${daysSince} days old — consider requesting an update` : undefined}>
-                      {isStale && <span className="mr-1">⚠</span>}
+                      {isStale && <span className="mr-1" aria-hidden="true">⚠</span>}
                       Updated {formatDate(co.lastUpdated)}
                       {isStale && <span className="ml-1 text-[10px] bg-amber-50 border border-amber-200 px-1 rounded text-amber-700">stale</span>}
                     </span>
@@ -1295,7 +1295,7 @@ function NatureTab({ co }: { co: Company }) {
                   <div className="text-xs text-gray-600">{TNFD_PILLAR_DESCS[pillar] ?? ""}</div>
                 </div>
                 <span className={`ml-auto text-xs px-2 py-0.5 rounded border flex-shrink-0 ${statusStyle}`}>
-                  <span className={`mr-1 text-xs ${
+                  <span aria-hidden="true" className={`mr-1 text-xs ${
                     status === "Adopted" ? "text-emerald-500" :
                     status === "Partial" ? "text-amber-500" :
                     "text-gray-300"

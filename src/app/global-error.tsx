@@ -19,7 +19,7 @@ export default function GlobalError({
       <body style={{ margin: 0, fontFamily: "system-ui, sans-serif", background: "#F5F5F7" }}>
         <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
           <div style={{ background: "white", borderRadius: "16px", border: "1px solid #e5e7eb", padding: "40px", maxWidth: "400px", width: "100%", textAlign: "center", boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
-            <div style={{ fontSize: "40px", color: "#fca5a5", marginBottom: "16px" }}>⚠</div>
+            <div aria-hidden="true" style={{ fontSize: "40px", color: "#fca5a5", marginBottom: "16px" }}>⚠</div>
             <h1 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", marginBottom: "8px" }}>Something went wrong</h1>
             <p style={{ fontSize: "14px", color: "#6b7280", marginBottom: "24px" }}>
               An unexpected error occurred in the application shell.
