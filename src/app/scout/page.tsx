@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCompanies } from "@/lib/useCompanies";
@@ -58,20 +58,32 @@ function loadFilter(): { query: string; statusFilter: StatusFilter } {
 export default function ScoutPage() {
   const router = useRouter();
   const { companies, liveDataError } = useCompanies();
-  // Initialize directly from sessionStorage (lazy initializer) — no mount effect needed,
-  // no first-render flash, no race between persist effects and restore effect
-  const [{ query: initialQuery, statusFilter: initialStatus }] = useState(() => loadFilter());
-  const [query, setQuery] = useState(initialQuery);
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>(initialStatus);
-  const [compareSet, setCompareSet] = useState<Set<string>>(() => loadCompareSet());
+  // Start with SSR-safe defaults to avoid hydration mismatch
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
+  const [compareSet, setCompareSet] = useState<Set<string>>(new Set());
+  // Track whether initial restore from sessionStorage has completed
+  const restoredRef = useRef(false);
 
-  // Persist comparison state to sessionStorage whenever it changes
+  // Restore from sessionStorage after hydration (client only)
   useEffect(() => {
+    const { query: q, statusFilter: sf } = loadFilter();
+    const cs = loadCompareSet();
+    setQuery(q);
+    setStatusFilter(sf);
+    setCompareSet(cs);
+    restoredRef.current = true;
+  }, []);
+
+  // Persist comparison state — only after initial restore to avoid overwriting saved values
+  useEffect(() => {
+    if (!restoredRef.current) return;
     try { sessionStorage.setItem(COMPARE_KEY, JSON.stringify([...compareSet])); } catch { /* quota exceeded */ }
   }, [compareSet]);
 
-  // Persist filter state to sessionStorage whenever it changes
+  // Persist filter state — only after initial restore
   useEffect(() => {
+    if (!restoredRef.current) return;
     try { sessionStorage.setItem(FILTER_KEY, JSON.stringify({ query, statusFilter })); } catch { /* quota exceeded */ }
   }, [query, statusFilter]);
 
