@@ -134,6 +134,8 @@
 /* Respect prefers-reduced-motion — WCAG 2.1 SC 2.3.3 */
 @media (prefers-reduced-motion: reduce) {
   .animate-bounce-gentle { animation: none; }
+  .animate-pulse { animation: none; }
+  .animate-spin { animation: none; }
 }
 
 @layer base {
@@ -268,6 +270,11 @@
 .dark .bg-\[\#4B2580\]\/10 { background-color: rgba(167,139,250,0.15) !important; }
 .dark .border-\[\#4B2580\]\/30 { border-color: rgba(167,139,250,0.3) !important; }
 .dark .text-\[\#4B2580\] { color: #a78bfa !important; }
+/* Primary action button bg-[#4B2580] — dark mode needs lighter purple for WCAG 1.4.11 (3:1 non-text contrast vs #0f1117) */
+.dark .bg-\[\#4B2580\] { background-color: #6d28d9 !important; }
+.dark .hover\:bg-\[\#3D1A6E\]:hover { background-color: #5b21b6 !important; }
+/* Focus ring visibility in dark mode — --ring defaults to #4B2580 (1.2:1 on dark bg); raise it to visible purple */
+.dark { --ring: oklch(0.7 0.15 298); }
 /* ScoreRing dark mode — SVG inline styles can't be overridden by class rules,
    so we target the SVG elements by their class names */
 .dark .score-ring text {

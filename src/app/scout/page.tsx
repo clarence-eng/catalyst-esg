@@ -128,7 +128,7 @@ export default function ScoutPage() {
 
       {/* Filters */}
       <div className="flex items-center gap-3 mb-4">
-        <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
+        <div role="group" aria-label="Filter by portfolio status" className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
           {(["All", "Active", "Pipeline"] as StatusFilter[]).map((s) => (
             <button
               type="button"
