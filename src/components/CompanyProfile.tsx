@@ -431,7 +431,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
   ];
 
   if (cat.includes("banking") || cat.includes("commercial bank")) return [
-    { kpi: "Green & Transition Finance Ratio", value: `${co.greenRevenuePct}%`, unit: "of total lending", benchmark: "Singapore target: 10%+ by 2025 (MAS Green Finance Action Plan)" },
+    { kpi: "Green & Transition Finance Ratio", value: `${co.greenRevenuePct}%`, unit: "of total lending", benchmark: "MAS Green Finance Action Plan: 10%+ (2025 milestone met; 2030 target: ≥30%)" },
     { kpi: "Financed Emissions (PCAF Scope 3 Cat.15)", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("financed")) ? "Disclosed / in progress" : "Not yet disclosed", unit: "", benchmark: "PCAF standard required", note: co.materialIssues.some(i => i.issue.toLowerCase().includes("financed")) ? "Material issue — active engagement" : undefined },
     { kpi: "Forest-Risk Commodity Exposure", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("deforestation") || i.issue.toLowerCase().includes("nature")) ? "Material exposure (EUDR risk)" : "Not material", unit: "of loan book", benchmark: "EUDR Dec 2026 / TNFD FRE metric", note: co.materialIssues.some(i => i.issue.toLowerCase().includes("deforestation") || i.issue.toLowerCase().includes("nature")) ? "Material issue" : undefined },
     { kpi: "ESG Screening Coverage", value: co.engagement.some(e => e.notes && (e.notes.toLowerCase().includes("esg screening") || e.notes.toLowerCase().includes("screening coverage"))) ? "Monitored — engagement record" : co.materialIssues.some(i => i.category === "Environmental" && !i.opportunity) ? "Partial (gaps in ESG credit criteria)" : "Not formally disclosed", unit: "of new origination", benchmark: "MAS best practice: 100%" },
@@ -447,7 +447,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
 
   if (cat.includes("electric util") || cat.includes("power")) return [
     { kpi: "Carbon Intensity (Generation)", value: `${co.carbonIntensity} tCO₂e/$M rev`, unit: "", benchmark: "IEA ASEAN 2030: <500 tCO₂e/$M rev", note: "Revenue-normalised; generation intensity (gCO₂/kWh) in material issues" },
-    { kpi: "Renewable Capacity Share", value: `${co.greenRevenuePct}%`, unit: "of total installed", benchmark: "Indonesia NDC: 23% RE by 2025 (revised 2030 target: 34%)" },
+    { kpi: "Renewable Capacity Share", value: `${co.greenRevenuePct}%`, unit: "of total installed", benchmark: "Indonesia RUEN: 34% RE by 2030 (NDC revised up from 23% 2025 baseline)" },
     { kpi: "Just Transition Plan", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("just transition")) ? "In development" : "Not initiated", unit: "", benchmark: "JETP ETM requirement" },
     { kpi: "Coal Phase-out Target", value: co.netZeroCommitment !== "None" ? "Committed" : "Not committed", unit: "", benchmark: "Indonesia 2040 coal exit target" },
   ];

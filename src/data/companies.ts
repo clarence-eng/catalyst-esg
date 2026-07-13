@@ -598,6 +598,13 @@ export const companies: Company[] = [
         notes: "Meeting missed — product team scheduling conflict. Agenda was to review carbon management SaaS roadmap for APAC enterprise, including competitive positioning vs Watershed and Persefoni. Rescheduled to Q1 2026 but not completed.",
       },
       {
+        date: "2026-04-10",
+        type: "Call",
+        topic: "I-REC Procurement Progress — End-2025 Commitment Review",
+        status: "Overdue",
+        notes: "Follow-up on CTO's January 2025 commitment to procure I-RECs for 60% of Singapore DC energy by end-2025. Status update requested. Procurement reportedly delayed to H1 2026 due to EMA certification process. Target now revised to Q3 2026. Recommend escalation to board level given Temasek's RE alignment requirements.",
+      },
+      {
         date: "2026-08-20",
         type: "Meeting",
         topic: "Responsible AI Policy Launch & Carbon Analytics Product Review",
@@ -1130,7 +1137,7 @@ export const companies: Company[] = [
         area: "Carbon-Neutral Telehealth",
         potential: "Medium",
         description:
-          "Achieve net zero Scope 1+2 by 2026 via I-REC + energy efficiency. Enables access to European development finance and WHO digital health partnership programmes that require ESG baseline standards.",
+          "Achieve net zero Scope 1+2 by 2027 via I-REC + energy efficiency (post-close commitment). Enables access to European development finance and WHO digital health partnership programmes that require ESG baseline standards.",
       },
     ],
     engagement: [
