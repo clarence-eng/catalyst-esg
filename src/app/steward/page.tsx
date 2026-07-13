@@ -37,7 +37,12 @@ export default function StewardPage() {
         .filter((e) => e.status === "Planned" || e.status === "Overdue")
         .map((e) => ({ ...e, companyName: co.name, companySlug: co.slug, isPipeline: co.portfolioStatus === "Pipeline" }))
     )
-    .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+    .sort((a, b) => {
+      // Overdue first (action required), then Planned by date ascending
+      if (a.status === "Overdue" && b.status !== "Overdue") return -1;
+      if (a.status !== "Overdue" && b.status === "Overdue") return 1;
+      return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
+    });
 
   return (
     <div className="p-8">

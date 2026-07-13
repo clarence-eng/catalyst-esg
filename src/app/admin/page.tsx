@@ -52,13 +52,14 @@ function CoField({ label, k, type = "text", opts, co, set, required: isRequired 
       <label htmlFor={fieldId} className="text-xs font-medium text-gray-700">{label}</label>
       {opts ? (
         <select id={fieldId} aria-required={isRequired} value={(co as Record<string,unknown>)[k] as string || ""} onChange={e => set(k, e.target.value)}
-          className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400">
+          className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/30">
           {opts.map(o => <option key={o}>{o}</option>)}
         </select>
       ) : (
         <input id={fieldId} aria-required={isRequired} type={type} value={((co as Record<string,unknown>)[k] ?? "") as string}
           onChange={e => { const v = type === "number" ? (e.target.value === '' ? 0 : parseFloat(e.target.value) || 0) : e.target.value; set(k, v); if (k === "name" && !co.id) set("slug", slugify(e.target.value)); }}
           readOnly={k === "slug" && !!co.id}
+          aria-readonly={k === "slug" && !!co.id || undefined}
           {...(type === "number" && k.startsWith("esg_") ? { min: 0, max: 100 } :
                type === "number" && k === "green_revenue_pct" ? { min: 0, max: 100 } :
                type === "number" && k === "carbon_intensity" ? { min: 0 } :
@@ -89,7 +90,7 @@ function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; on
       <div>
         <label htmlFor="co-description" className="text-xs font-medium text-gray-700">Description *</label>
         <textarea id="co-description" aria-required="true" value={co.description || ""} onChange={e => set("description", e.target.value)} rows={3}
-          className="w-full mt-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400" />
+          className="w-full mt-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/30" />
       </div>
       <div className="grid grid-cols-4 gap-4">
         <CoField label="ESG Overall" k="esg_overall" type="number" co={co} set={set} />
@@ -332,14 +333,16 @@ export default function AdminPage() {
   const [editing, setEditing] = useState<DbCompany | null>(null);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState("");
+  const [toastIsError, setToastIsError] = useState(false);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [adminSearch, setAdminSearch] = useState("");
   const [adminSort, setAdminSort] = useState<"name"|"esg"|"recent">("recent");
 
-  const showToast = (msg: string) => {
+  const showToast = (msg: string, isError = false) => {
     setToast(msg);
+    setToastIsError(isError);
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-    toastTimerRef.current = setTimeout(() => setToast(""), 5000);
+    toastTimerRef.current = setTimeout(() => { setToast(""); setToastIsError(false); }, 5000);
   };
 
   const loadCompanies = useCallback(async () => {
@@ -359,13 +362,13 @@ export default function AdminPage() {
   useEffect(() => { if (auth.authed) loadCompanies(); }, [auth.authed, loadCompanies]);
 
   const saveCompany = async (co: Partial<DbCompany>) => {
-    if (!co.name?.trim() || !co.slug?.trim() || !co.sector?.trim() || !co.country?.trim() || !co.description?.trim()) return showToast("Name, slug, sector, country, and description are required");
-    if (!/^[a-z0-9-]+$/.test(co.slug.trim())) return showToast("Slug must be lowercase alphanumeric with hyphens only (e.g. my-company)");
+    if (!co.name?.trim() || !co.slug?.trim() || !co.sector?.trim() || !co.country?.trim() || !co.description?.trim()) return showToast("Name, slug, sector, country, and description are required", true);
+    if (!/^[a-z0-9-]+$/.test(co.slug.trim())) return showToast("Slug must be lowercase alphanumeric with hyphens only (e.g. my-company)", true);
     const e = co.esg_environmental ?? 0, s = co.esg_social ?? 0, g = co.esg_governance ?? 0, ov = co.esg_overall ?? 0;
-    if ([e,s,g,ov].some(v => v < 0 || v > 100)) return showToast("ESG scores must be between 0 and 100");
-    if ((co.green_revenue_pct ?? 0) < 0 || (co.green_revenue_pct ?? 0) > 100) return showToast("Green revenue % must be between 0 and 100");
-    if ((co.carbon_intensity ?? 0) < 0) return showToast("Carbon intensity must be 0 or greater");
-    if ((co.investment_value ?? 0) < 0) return showToast("Investment value must be 0 or greater");
+    if ([e,s,g,ov].some(v => v < 0 || v > 100)) return showToast("ESG scores must be between 0 and 100", true);
+    if ((co.green_revenue_pct ?? 0) < 0 || (co.green_revenue_pct ?? 0) > 100) return showToast("Green revenue % must be between 0 and 100", true);
+    if ((co.carbon_intensity ?? 0) < 0) return showToast("Carbon intensity must be 0 or greater", true);
+    if ((co.investment_value ?? 0) < 0) return showToast("Investment value must be 0 or greater", true);
     setSaving(true);
     try {
       if (co.id) {
@@ -493,7 +496,7 @@ export default function AdminPage() {
                 onChange={e => setAdminSearch(e.target.value)}
                 placeholder="Filter by name or sector..."
                 aria-label="Filter companies by name or sector"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400 pl-8"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/30 pl-8"
               />
               <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -546,7 +549,7 @@ export default function AdminPage() {
       </div>
 
       {toast && (
-        <div role="status" aria-live="polite" aria-atomic="true" className="fixed bottom-6 right-6 bg-gray-900 text-white text-sm px-4 py-3 rounded-xl shadow-lg">
+        <div role={toastIsError ? "alert" : "status"} aria-live={toastIsError ? "assertive" : "polite"} aria-atomic="true" className="fixed bottom-6 right-6 bg-gray-900 text-white text-sm px-4 py-3 rounded-xl shadow-lg">
           {toast}
         </div>
       )}

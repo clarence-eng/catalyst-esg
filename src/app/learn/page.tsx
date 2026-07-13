@@ -75,7 +75,7 @@ function LearnContent() {
           onChange={(e) => setSearchQuery(e.target.value)}
           aria-label="Search ESG frameworks and case studies"
           placeholder="Search frameworks and case studies..."
-          className="w-full bg-white border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-gray-700 text-sm placeholder:text-gray-500 focus:outline-none focus:border-purple-600/40 transition-colors"
+          className="w-full bg-white border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-gray-700 text-sm placeholder:text-gray-500 focus:outline-none focus:border-purple-600/40 focus:ring-2 focus:ring-purple-400/40 transition-colors"
         />
         {searchQuery && (
           <button
