@@ -368,7 +368,11 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
             <h3 className="text-sm font-semibold text-gray-900 mb-3">Engagement History</h3>
             <div className="space-y-2">
               {[...co.engagement].sort((a, b) => {
-                // Sort chronologically descending (most recent first) so history reads naturally
+                // Overdue first (action required), then Planned (upcoming), then Completed (history)
+                const statusPriority = { Overdue: 0, Planned: 1, Completed: 2 };
+                const sp = (statusPriority[a.status] ?? 2) - (statusPriority[b.status] ?? 2);
+                if (sp !== 0) return sp;
+                // Within same status: most recent first
                 return a.date > b.date ? -1 : a.date < b.date ? 1 : 0;
               }).map((e, i) => (
                 <div key={`${e.date}-${e.topic}-${i}`} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
