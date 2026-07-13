@@ -209,17 +209,27 @@
 /* Badge text colors stay readable on dark badge backgrounds */
 .dark .text-emerald-700 { color: #34d399 !important; }
 .dark .text-emerald-800 { color: #6ee7b7 !important; }
+.dark .text-emerald-600 { color: #34d399 !important; }
 .dark .text-amber-700   { color: #fbbf24 !important; }
 .dark .text-amber-800   { color: #fcd34d !important; }
+.dark .text-amber-600   { color: #fbbf24 !important; }
 .dark .text-red-700     { color: #f87171 !important; }
 .dark .text-red-800     { color: #fca5a5 !important; }
+.dark .text-red-600     { color: #f87171 !important; }
 .dark .text-blue-700    { color: #60a5fa !important; }
 .dark .text-blue-800    { color: #93c5fd !important; }
+.dark .text-blue-600    { color: #60a5fa !important; }
 .dark .text-orange-700  { color: #fb923c !important; }
 .dark .text-orange-800  { color: #fdba74 !important; }
+.dark .text-orange-600  { color: #fb923c !important; }
 .dark .text-purple-700  { color: #a78bfa !important; }
 .dark .text-purple-600  { color: #c4b5fd !important; }
+.dark .text-indigo-700  { color: #a5b4fc !important; }
+.dark .text-indigo-600  { color: #a5b4fc !important; }
+.dark .text-teal-700    { color: #2dd4bf !important; }
+.dark .text-teal-600    { color: #2dd4bf !important; }
 .dark .text-green-700   { color: #4ade80 !important; }
+.dark .text-green-600   { color: #4ade80 !important; }
 /* Alert/status banners */
 .dark .border-emerald-200 { border-color: #065f46 !important; }
 .dark .border-amber-200   { border-color: #78350f !important; }
