@@ -54,7 +54,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
             temasekAlignment: t.temasekAlignment,
             frameworks: t.frameworks.join(", "),
             portfolioExposure: t.portfolioExposure
-              .filter((p) => p.exposure === "High" || p.exposure === "Medium")
+              .filter((p) => (p.exposure === "High" || p.exposure === "Medium") && (activeSlugs.has(p.slug) || pipelineSlugs.has(p.slug)))
               .map((p) => `${p.name} (${p.exposure} exposure)`)
               .join(", ") || "No High/Medium exposure companies",
           },
