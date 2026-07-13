@@ -51,7 +51,7 @@ export default function RootLayout({
         <Navigation />
         <GlobalSearch />
         <KeyboardShortcuts />
-        <main id="main-content" className="ml-64 min-h-screen">{children}</main>
+        <main id="main-content" tabIndex={-1} className="ml-64 min-h-screen">{children}</main>
       </body>
     </html>
   );

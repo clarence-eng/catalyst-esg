@@ -46,16 +46,17 @@ function CoField({ label, k, type = "text", opts, co, set }: {
   label: string; k: string; type?: string; opts?: string[];
   co: Partial<DbCompany>; set: (k: string, v: unknown) => void;
 }) {
+  const fieldId = `cofield-${k}`;
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-xs font-medium text-gray-700">{label}</label>
+      <label htmlFor={fieldId} className="text-xs font-medium text-gray-700">{label}</label>
       {opts ? (
-        <select value={(co as Record<string,unknown>)[k] as string || ""} onChange={e => set(k, e.target.value)}
+        <select id={fieldId} value={(co as Record<string,unknown>)[k] as string || ""} onChange={e => set(k, e.target.value)}
           className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400">
           {opts.map(o => <option key={o}>{o}</option>)}
         </select>
       ) : (
-        <input type={type} value={((co as Record<string,unknown>)[k] ?? "") as string}
+        <input id={fieldId} type={type} value={((co as Record<string,unknown>)[k] ?? "") as string}
           onChange={e => { const v = type === "number" ? (e.target.value === '' ? 0 : parseFloat(e.target.value) || 0) : e.target.value; set(k, v); if (k === "name" && !co.id) set("slug", slugify(e.target.value)); }}
           readOnly={k === "slug" && !!co.id}
           {...(type === "number" && k.startsWith("esg_") ? { min: 0, max: 100 } :
@@ -86,8 +87,8 @@ function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; on
         <CoField label="Investment Value (S$M)" k="investment_value" type="number" co={co} set={set} />
       </div>
       <div>
-        <label className="text-xs font-medium text-gray-700">Description *</label>
-        <textarea value={co.description || ""} onChange={e => set("description", e.target.value)} rows={3}
+        <label htmlFor="co-description" className="text-xs font-medium text-gray-700">Description *</label>
+        <textarea id="co-description" value={co.description || ""} onChange={e => set("description", e.target.value)} rows={3}
           className="w-full mt-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400" />
       </div>
       <div className="grid grid-cols-4 gap-4">
@@ -128,12 +129,12 @@ function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: stri
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
       <div className="grid grid-cols-3 gap-3">
-        <div><label className="text-xs font-medium text-gray-700">Date</label><input type="date" value={eng.date||""} onChange={e=>set("date",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
-        <div><label className="text-xs font-medium text-gray-700">Type</label><select value={eng.type||""} onChange={e=>set("type",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"><option>Meeting</option><option>Call</option><option>Email</option><option>Site Visit</option></select></div>
-        <div><label className="text-xs font-medium text-gray-700">Status</label><select value={eng.status||""} onChange={e=>set("status",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"><option>Planned</option><option>Completed</option><option>Overdue</option></select></div>
+        <div><label htmlFor="eng-date" className="text-xs font-medium text-gray-700">Date</label><input id="eng-date" type="date" value={eng.date||""} onChange={e=>set("date",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
+        <div><label htmlFor="eng-type" className="text-xs font-medium text-gray-700">Type</label><select id="eng-type" value={eng.type||""} onChange={e=>set("type",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"><option>Meeting</option><option>Call</option><option>Email</option><option>Site Visit</option></select></div>
+        <div><label htmlFor="eng-status" className="text-xs font-medium text-gray-700">Status</label><select id="eng-status" value={eng.status||""} onChange={e=>set("status",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"><option>Planned</option><option>Completed</option><option>Overdue</option></select></div>
       </div>
-      <div><label className="text-xs font-medium text-gray-700">Topic</label><input type="text" value={eng.topic||""} onChange={e=>set("topic",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
-      <div><label className="text-xs font-medium text-gray-700">Notes</label><textarea value={eng.notes||""} onChange={e=>set("notes",e.target.value)} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
+      <div><label htmlFor="eng-topic" className="text-xs font-medium text-gray-700">Topic</label><input id="eng-topic" type="text" value={eng.topic||""} onChange={e=>set("topic",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
+      <div><label htmlFor="eng-notes" className="text-xs font-medium text-gray-700">Notes</label><textarea id="eng-notes" value={eng.notes||""} onChange={e=>set("notes",e.target.value)} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-3 py-1 text-xs text-gray-600 border border-gray-200 rounded hover:bg-gray-100">Cancel</button>
         <button type="button" onClick={() => { if (!eng.topic?.trim()) return; onSave({ ...eng, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
@@ -154,7 +155,7 @@ function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: st
         <div><label className="text-xs font-medium text-gray-700">Category</label><select value={mi.category||""} onChange={e=>setMi(p=>({...p,category:e.target.value as "Environmental"|"Social"|"Governance"}))} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"><option>Environmental</option><option>Social</option><option>Governance</option></select></div>
       </div>
       <div className="flex items-center gap-2"><input type="checkbox" checked={mi.opportunity||false} onChange={e=>setMi(p=>({...p,opportunity:e.target.checked}))} id="opp"/><label htmlFor="opp" className="text-xs text-gray-700">Mark as Opportunity (not risk)</label></div>
-      <div><label className="text-xs font-medium text-gray-700">Detail</label><textarea value={mi.detail||""} onChange={e=>setMi(p=>({...p,detail:e.target.value}))} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
+      <div><label htmlFor="issue-detail" className="text-xs font-medium text-gray-700">Detail</label><textarea id="issue-detail" value={mi.detail||""} onChange={e=>setMi(p=>({...p,detail:e.target.value}))} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-3 py-1 text-xs text-gray-600 border border-gray-200 rounded hover:bg-gray-100">Cancel</button>
         <button type="button" onClick={() => { if (!mi.issue?.trim()) return; onSave({ ...mi, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
@@ -492,6 +493,7 @@ export default function AdminPage() {
                 value={adminSearch}
                 onChange={e => setAdminSearch(e.target.value)}
                 placeholder="Filter by name or sector..."
+                aria-label="Filter companies by name or sector"
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400 pl-8"
               />
               <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -504,6 +506,7 @@ export default function AdminPage() {
                 <button
                   key={opt.key}
                   type="button"
+                  aria-pressed={adminSort === opt.key}
                   onClick={() => setAdminSort(opt.key)}
                   className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${adminSort === opt.key ? "bg-[#4B2580] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
                 >
@@ -544,13 +547,14 @@ export default function AdminPage() {
       </div>
 
       {toast && (
-        <div className="fixed bottom-6 right-6 bg-gray-900 text-white text-sm px-4 py-3 rounded-xl shadow-lg animate-pulse">
+        <div role="status" aria-live="polite" aria-atomic="true" className="fixed bottom-6 right-6 bg-gray-900 text-white text-sm px-4 py-3 rounded-xl shadow-lg">
           {toast}
         </div>
       )}
       {saving && (
-        <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50" aria-hidden="true">
-          <div role="status" aria-live="polite" className="bg-white rounded-xl px-6 py-4 text-sm text-gray-700">Saving…</div>
+        <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
+          <div aria-hidden="true" className="absolute inset-0" />
+          <div role="status" aria-live="polite" className="relative bg-white rounded-xl px-6 py-4 text-sm text-gray-700">Saving…</div>
         </div>
       )}
     </div>

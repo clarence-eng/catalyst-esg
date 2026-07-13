@@ -104,7 +104,7 @@ export function KeyboardShortcuts() {
             <Keyboard className="w-4 h-4 text-purple-700" />
             <h2 id="shortcuts-title" className="text-sm font-semibold text-gray-900">Keyboard Shortcuts</h2>
           </div>
-          <button ref={closeButtonRef} type="button" onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600"><X className="w-4 h-4" /></button>
+          <button ref={closeButtonRef} type="button" aria-label="Close keyboard shortcuts" onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600"><X className="w-4 h-4" /></button>
         </div>
         <div className="space-y-2">
           {SHORTCUTS.map((s, i) => (
