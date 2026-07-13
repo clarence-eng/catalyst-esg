@@ -385,16 +385,13 @@ export default function AdminPage() {
 
   const deleteCompany = async (id: string, slug: string, name: string) => {
     if (!confirm(`Delete ${name}? This also deletes all engagements and material issues.`)) return;
-    // Delete sub-rows first (no DB CASCADE configured)
-    // Run both deletes before checking errors — prevents orphaned engagements if material_issues fails
-    const [{ error: engDelErr }, { error: miDelErr }] = await Promise.all([
-      supabase.from("engagements").delete().eq("company_slug", slug),
-      supabase.from("material_issues").delete().eq("company_slug", slug),
-    ]);
-    if (engDelErr || miDelErr) {
-      showToast(`Error deleting sub-records: ${engDelErr?.message ?? miDelErr?.message}`);
-      return;
-    }
+    // Delete sub-rows sequentially: material_issues first, then engagements.
+    // This ordering ensures that if material_issues delete fails, engagements are untouched (no partial data loss).
+    // If engagements delete fails after MI succeeds, the company retains its engagement history for recovery.
+    const { error: miDelErr } = await supabase.from("material_issues").delete().eq("company_slug", slug);
+    if (miDelErr) { showToast("Error deleting issues: " + miDelErr.message); return; }
+    const { error: engDelErr } = await supabase.from("engagements").delete().eq("company_slug", slug);
+    if (engDelErr) { showToast("Error deleting engagements: " + engDelErr.message); return; }
     const { error } = await supabase.from("companies").delete().eq("id", id);
     if (error) { showToast("Error deleting: " + error.message); return; }
     showToast(`${name} deleted`);

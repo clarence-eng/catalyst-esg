@@ -64,6 +64,8 @@ export default function ScoutPage() {
   const [compareSet, setCompareSet] = useState<Set<string>>(new Set());
   // Track whether initial restore from sessionStorage has completed
   const restoredRef = useRef(false);
+  // renderCountRef: persist effects only write after at least 2 renders (restore fires on render 1, restored values apply on render 2)
+  const renderCountRef = useRef(0);
 
   // Restore from sessionStorage after hydration (client only)
   useEffect(() => {
@@ -75,15 +77,16 @@ export default function ScoutPage() {
     restoredRef.current = true;
   }, []);
 
-  // Persist comparison state — only after initial restore to avoid overwriting saved values
+  // Persist comparison state — only after initial restore values have rendered
   useEffect(() => {
-    if (!restoredRef.current) return;
+    renderCountRef.current += 1;
+    if (!restoredRef.current || renderCountRef.current <= 1) return;
     try { sessionStorage.setItem(COMPARE_KEY, JSON.stringify([...compareSet])); } catch { /* quota exceeded */ }
   }, [compareSet]);
 
-  // Persist filter state — only after initial restore
+  // Persist filter state — only after initial restore values have rendered
   useEffect(() => {
-    if (!restoredRef.current) return;
+    if (!restoredRef.current || renderCountRef.current <= 1) return;
     try { sessionStorage.setItem(FILTER_KEY, JSON.stringify({ query, statusFilter })); } catch { /* quota exceeded */ }
   }, [query, statusFilter]);
 
