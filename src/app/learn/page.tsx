@@ -9,10 +9,11 @@ type FrameworkFilter = "All" | "Climate" | "Nature" | "Cross-cutting" | "Reporti
 
 function LearnContent() {
   const [frameworkFilter, setFrameworkFilter] = useState<FrameworkFilter>("All");
-  const [searchQuery, setSearchQuery] = useState("");
   const searchParams = useSearchParams();
+  // Initialize from URL param immediately (lazy initializer) — prevents flash of unfiltered results
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get("q") ?? "");
 
-  // Pre-populate search from ?q= URL parameter; also clear when param is removed
+  // Sync when searchParams changes via client-side navigation (e.g. back/forward)
   useEffect(() => {
     const q = searchParams.get("q");
     setSearchQuery(q ?? "");
