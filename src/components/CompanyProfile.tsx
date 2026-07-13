@@ -431,7 +431,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
   ];
 
   if (cat.includes("banking") || cat.includes("commercial bank")) return [
-    { kpi: "Green & Transition Finance Ratio", value: `${co.greenRevenuePct}%`, unit: "of total lending", benchmark: "Singapore target: 10%+ by 2025" },
+    { kpi: "Green & Transition Finance Ratio", value: `${co.greenRevenuePct}%`, unit: "of total lending", benchmark: "Singapore target: 10%+ by 2025 (MAS Green Finance Action Plan)" },
     { kpi: "Financed Emissions (PCAF Scope 3 Cat.15)", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("financed")) ? "Disclosed / in progress" : "Not yet disclosed", unit: "", benchmark: "PCAF standard required", note: co.materialIssues.some(i => i.issue.toLowerCase().includes("financed")) ? "Material issue — active engagement" : undefined },
     { kpi: "Forest-Risk Commodity Exposure", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("deforestation") || i.issue.toLowerCase().includes("nature")) ? "Material exposure (EUDR risk)" : "Not material", unit: "of loan book", benchmark: "EUDR Dec 2026 / TNFD FRE metric", note: co.materialIssues.some(i => i.issue.toLowerCase().includes("deforestation") || i.issue.toLowerCase().includes("nature")) ? "Material issue" : undefined },
     { kpi: "ESG Screening Coverage", value: co.engagement.some(e => e.notes && (e.notes.toLowerCase().includes("esg screening") || e.notes.toLowerCase().includes("screening coverage"))) ? "Monitored — engagement record" : co.materialIssues.some(i => i.category === "Environmental" && !i.opportunity) ? "Partial (gaps in ESG credit criteria)" : "Not formally disclosed", unit: "of new origination", benchmark: "MAS best practice: 100%" },
@@ -447,7 +447,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
 
   if (cat.includes("electric util") || cat.includes("power")) return [
     { kpi: "Carbon Intensity (Generation)", value: `${co.carbonIntensity} tCO₂e/$M rev`, unit: "", benchmark: "IEA ASEAN 2030: <500 tCO₂e/$M rev", note: "Revenue-normalised; generation intensity (gCO₂/kWh) in material issues" },
-    { kpi: "Renewable Capacity Share", value: `${co.greenRevenuePct}%`, unit: "of total installed", benchmark: "Indonesia NDC: 23% RE by 2025" },
+    { kpi: "Renewable Capacity Share", value: `${co.greenRevenuePct}%`, unit: "of total installed", benchmark: "Indonesia NDC: 23% RE by 2025 (revised 2030 target: 34%)" },
     { kpi: "Just Transition Plan", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("just transition")) ? "In development" : "Not initiated", unit: "", benchmark: "JETP ETM requirement" },
     { kpi: "Coal Phase-out Target", value: co.netZeroCommitment !== "None" ? "Committed" : "Not committed", unit: "", benchmark: "Indonesia 2040 coal exit target" },
   ];
@@ -1024,7 +1024,7 @@ function ClimateTab({ co }: { co: Company }) {
         <p className="text-xs text-gray-500 mb-4">Key milestones on the path to net zero — derived from commitments and engagement history</p>
         {(() => {
           const milestones = [
-            { year: "2024", label: "Baseline", event: `Current: ${co.carbonIntensity} tCO₂e/$M, ESG Score ${co.esgScore.overall}`, status: "done" },
+            { year: "2024", label: "Baseline", event: `2024 Baseline: ${co.carbonIntensity} tCO₂e/$M revenue, ESG Score ${co.esgScore.overall}`, status: "done" },
             { year: "2025", label: "Near-term", event: co.netZeroCommitment === "SBTi Committed" ? "SBTi near-term target submission (committed, deadline passed)" : co.netZeroCommitment === "SBTi Targets Set" ? "SBTi near-term targets validated ✓" : "SBTi near-term target not set — submission deadline passed", status: co.netZeroCommitment === "SBTi Targets Set" ? "done" : "missed" },
             { year: "2026", label: "Engagement", event: [...co.engagement].filter(e => e.status === "Planned").sort((a, b) => a.date < b.date ? -1 : 1).slice(0,1).map(e => `Planned: ${e.topic}`).join("") || "No planned engagements", status: co.engagement.some(e => e.status === "Planned") ? "upcoming" : "gap" },
             { year: "2030", label: "SBTi Target", event: co.netZeroCommitment === "SBTi Targets Set"

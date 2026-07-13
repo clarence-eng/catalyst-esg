@@ -355,10 +355,10 @@ export default function AdminPage() {
     setLoading(true);
     try {
       const { data, error } = await supabase.from("companies").select("*").order("created_at");
-      if (error) { showToast("Database error: " + error.message); setCompanies([]); }
+      if (error) { showToast("Database error: " + error.message, true); setCompanies([]); }
       else setCompanies((data || []) as DbCompany[]);
     } catch {
-      showToast("Database unavailable — check connection");
+      showToast("Database unavailable — check connection", true);
       setCompanies([]);
     } finally {
       setLoading(false);

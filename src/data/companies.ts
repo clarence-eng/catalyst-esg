@@ -1154,7 +1154,7 @@ export const companies: Company[] = [
     investmentValue: 95,
     carbonIntensity: 12,
     greenRevenuePct: 5,
-    lastUpdated: "2026-04-08",
+    lastUpdated: "2026-07-01",
     sdgAlignment: [
       { sdg: 3, label: "Good Health" },
       { sdg: 10, label: "Reduced Inequalities" },
