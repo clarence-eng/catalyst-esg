@@ -62,7 +62,7 @@ export function GlobalSearch() {
             aria-label="Search companies and frameworks"
             className="flex-1 text-sm text-gray-900 placeholder:text-gray-400 bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-purple-400 rounded"
           />
-          <button type="button" onClick={() => setOpen(false)} aria-label="Close search" className="text-gray-400 hover:text-gray-600">
+          <button type="button" onClick={() => setOpen(false)} aria-label="Close search" className="text-gray-500 hover:text-gray-700">
             <X className="w-4 h-4" />
           </button>
         </div>
