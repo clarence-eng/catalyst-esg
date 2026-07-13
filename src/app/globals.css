@@ -273,6 +273,8 @@
 /* Primary action button bg-[#4B2580] — dark mode needs lighter purple for WCAG 1.4.11 (3:1 non-text contrast vs #0f1117) */
 .dark .bg-\[\#4B2580\] { background-color: #6d28d9 !important; }
 .dark .hover\:bg-\[\#3D1A6E\]:hover { background-color: #5b21b6 !important; }
+/* Skip-link and other focus: variants of the primary color */
+.dark .focus\:bg-\[\#4B2580\]:focus { background-color: #6d28d9 !important; }
 /* Focus ring visibility in dark mode — --ring defaults to #4B2580 (1.2:1 on dark bg); raise it to visible purple */
 .dark { --ring: oklch(0.7 0.15 298); }
 /* ScoreRing dark mode — SVG inline styles can't be overridden by class rules,
