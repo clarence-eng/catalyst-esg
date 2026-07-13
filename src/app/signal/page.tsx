@@ -259,7 +259,7 @@ export default function SignalPage() {
 
       <div className="space-y-3 mb-8">
         {/* Urgency filter tabs */}
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-4" role="group" aria-label="Filter by urgency">
           {[
             { key: "all", label: "All Regulations", count: filteredUpdates.length },
             { key: "high", label: "High", count: highUrgency.length, color: "text-red-700 bg-red-50 border-red-200" },
