@@ -79,7 +79,7 @@ function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; on
       <h3 className="text-sm font-semibold text-gray-900">{initial.id ? "Edit Company" : "New Company"}</h3>
       <div className="grid grid-cols-2 gap-4">
         <CoField label="Company Name *" k="name" co={co} set={set} required />
-        <CoField label="Slug (auto-generated, read-only for edits)" k="slug" co={co} set={set} />
+        <CoField label="Slug (auto-generated, read-only for edits)" k="slug" co={co} set={set} required />
         <CoField label="Sector *" k="sector" co={co} set={set} required />
         <CoField label="Country *" k="country" co={co} set={set} required />
         <CoField label="Region" k="region" opts={["Southeast Asia", "Asia Pacific", "South Asia", "Global"]} co={co} set={set} />
@@ -425,8 +425,10 @@ export default function AdminPage() {
             <input id="admin-password" type="password" autoComplete="off" value={auth.pw} onChange={e => auth.setPw(e.target.value)}
               onKeyDown={e => e.key === "Enter" && auth.check()}
               placeholder="Enter password" autoFocus
+              aria-invalid={auth.err || undefined}
+              aria-describedby={auth.err ? "admin-pw-error" : undefined}
               className={`w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${auth.err ? "border-red-400 focus:ring-red-400/50" : "border-gray-200 focus:border-purple-400 focus:ring-purple-400/30"}`} />
-            {auth.err && <p className="text-xs text-red-600 mt-1">Incorrect password</p>}
+            {auth.err && <p id="admin-pw-error" role="alert" className="text-xs text-red-600 mt-1">Incorrect password</p>}
           </div>
           <button type="button" onClick={auth.check} className="w-full bg-[#4B2580] hover:bg-[#3D1A6E] text-white py-2.5 rounded-lg text-sm font-medium transition-colors">
             Access Admin Panel

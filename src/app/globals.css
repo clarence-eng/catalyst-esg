@@ -281,6 +281,15 @@
 .dark { --ring: oklch(0.7 0.15 298); }
 /* Override outline-ring/50 default to full opacity in dark mode (50% opacity = 2.6:1 — below WCAG 1.4.11 3:1) */
 .dark *:focus-visible { outline-color: oklch(0.7 0.15 298) !important; }
+/* Tailwind focus:ring-* uses CSS box-shadow via --tw-ring-color, NOT outline — must be overridden separately.
+   All semi-transparent purple/red rings fail WCAG 1.4.11 in dark mode (<3:1). Fix: raise alpha to 85% (#a78bfa at 85% = ~5.4:1 on card, ~7.1:1 on page). */
+.dark .focus\:ring-purple-400\/40:focus,
+.dark .focus\:ring-purple-400\/30:focus,
+.dark .focus\:ring-purple-400\/50:focus { --tw-ring-color: rgb(167 139 250 / 0.85) !important; }
+.dark .focus-visible\:ring-purple-400:focus-visible,
+.dark .focus-visible\:ring-purple-500\/50:focus-visible,
+.dark .focus-visible\:ring-purple-600\/50:focus-visible { --tw-ring-color: rgb(167 139 250 / 0.85) !important; }
+.dark .focus\:ring-red-400\/50:focus { --tw-ring-color: rgb(252 165 165 / 0.85) !important; }
 /* ScoreRing dark mode — SVG inline styles can't be overridden by class rules,
    so we target the SVG elements by their class names */
 .dark .score-ring text {
