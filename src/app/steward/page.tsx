@@ -320,7 +320,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
               <ESGMini label="G" value={co.esgScore.governance} />
             </div>
             <div className="flex flex-col items-center" title={`${completionPct}% of engagements completed`}>
-              <svg width="44" height="44" className="-rotate-90">
+              <svg aria-hidden="true" width="44" height="44" className="-rotate-90">
                 <circle cx="22" cy="22" r={radius} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth={5} />
                 {total > 0 && <circle cx="22" cy="22" r={radius} fill="none"
                   stroke={overdueCount > 0 ? "#f97316" : "#10b981"}
