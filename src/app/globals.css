@@ -161,6 +161,15 @@
 .dark .border-gray-200 {
   border-color: #2d3748 !important;
 }
+.dark .border-gray-100 {
+  border-color: #1e2a3a !important;
+}
+.dark .divide-gray-100 > * + * {
+  border-color: #1e2a3a !important;
+}
+.dark .divide-gray-50 > * + * {
+  border-color: #151821 !important;
+}
 .dark .text-gray-900 {
   color: #f1f5f9 !important;
 }
