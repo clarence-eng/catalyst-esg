@@ -98,6 +98,18 @@
 
 /* chart grid lines — dark theme: switch to white-opacity instead of black-opacity */
 .dark .recharts-cartesian-grid line { stroke: rgba(255,255,255,0.08) !important; }
+/* PolarGrid (radar chart) — different DOM path than CartesianGrid */
+.dark .recharts-polar-grid-concentric-polygon,
+.dark .recharts-polar-grid-concentric-circle,
+.dark .recharts-polar-grid-angle line {
+  stroke: rgba(255,255,255,0.12) !important;
+}
+/* Axis tick labels — hardcoded fill in SVG, override via CSS */
+.dark .recharts-xAxis .recharts-text,
+.dark .recharts-yAxis .recharts-text,
+.dark .recharts-polar-angle-axis .recharts-text {
+  fill: #94a3b8 !important;
+}
 /* Recharts tooltip uses inline styles — target the element directly */
 .dark .recharts-tooltip-wrapper .recharts-default-tooltip {
   background-color: #1e2130 !important;
@@ -178,3 +190,28 @@
 .dark .score-ring-track {
   stroke: rgba(255,255,255,0.15) !important;
 }
+/* Colored badge backgrounds (*-50 tints) — replace with dark equivalents */
+.dark .bg-emerald-50 { background-color: #064e3b !important; }
+.dark .bg-amber-50  { background-color: #451a03 !important; }
+.dark .bg-red-50    { background-color: #450a0a !important; }
+.dark .bg-blue-50   { background-color: #172554 !important; }
+.dark .bg-orange-50 { background-color: #431407 !important; }
+.dark .bg-purple-50 { background-color: #2e1065 !important; }
+.dark .bg-indigo-50 { background-color: #1e1b4b !important; }
+.dark .bg-green-50  { background-color: #052e16 !important; }
+/* Badge text colors stay readable on dark badge backgrounds */
+.dark .text-emerald-700 { color: #34d399 !important; }
+.dark .text-amber-700   { color: #fbbf24 !important; }
+.dark .text-amber-800   { color: #f59e0b !important; }
+.dark .text-red-700     { color: #f87171 !important; }
+.dark .text-blue-700    { color: #60a5fa !important; }
+.dark .text-orange-700  { color: #fb923c !important; }
+.dark .text-purple-700  { color: #a78bfa !important; }
+.dark .text-green-700   { color: #4ade80 !important; }
+/* Alert/status banners */
+.dark .border-emerald-200 { border-color: #065f46 !important; }
+.dark .border-amber-200   { border-color: #78350f !important; }
+.dark .border-red-200     { border-color: #7f1d1d !important; }
+.dark .border-blue-200    { border-color: #1e3a8a !important; }
+.dark .border-orange-200  { border-color: #7c2d12 !important; }
+.dark .border-amber-400\/40 { border-color: rgba(180,83,9,0.4) !important; }
