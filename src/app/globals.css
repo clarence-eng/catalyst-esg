@@ -131,6 +131,10 @@
 .animate-bounce-gentle {
   animation: bounce-gentle 1.4s ease-in-out infinite;
 }
+/* Respect prefers-reduced-motion — WCAG 2.1 SC 2.3.3 */
+@media (prefers-reduced-motion: reduce) {
+  .animate-bounce-gentle { animation: none; }
+}
 
 @layer base {
   * {

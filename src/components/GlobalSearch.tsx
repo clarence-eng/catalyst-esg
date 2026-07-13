@@ -60,7 +60,7 @@ export function GlobalSearch() {
             onChange={e => setQuery(e.target.value)}
             placeholder="Search companies, frameworks..."
             aria-label="Search companies and frameworks"
-            className="flex-1 text-sm text-gray-900 placeholder:text-gray-400 bg-transparent focus:outline-none"
+            className="flex-1 text-sm text-gray-900 placeholder:text-gray-400 bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-purple-400 rounded"
           />
           <button type="button" onClick={() => setOpen(false)} aria-label="Close search" className="text-gray-400 hover:text-gray-600">
             <X className="w-4 h-4" />

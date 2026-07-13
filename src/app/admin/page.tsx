@@ -63,7 +63,7 @@ function CoField({ label, k, type = "text", opts, co, set, required: isRequired 
                type === "number" && k === "green_revenue_pct" ? { min: 0, max: 100 } :
                type === "number" && k === "carbon_intensity" ? { min: 0 } :
                type === "number" && k === "investment_value" ? { min: 0 } : {})}
-          className={`border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none ${k === "slug" && co.id ? "bg-gray-50 text-gray-600 cursor-not-allowed" : "focus:border-purple-400"}`} />
+          className={`border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400/50 ${k === "slug" && co.id ? "bg-gray-50 text-gray-600 cursor-not-allowed" : "focus:border-purple-400"}`} />
       )}
     </div>
   );
