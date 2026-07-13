@@ -381,9 +381,9 @@ export default function OverviewPage() {
               <tr className="border-b border-gray-100">
                 <th scope="col" className="text-left pb-2 pr-4 text-gray-500 font-medium w-40">Company</th>
                 {megatrends.map(t => (
-                  <th key={t.slug} scope="col" className="text-center pb-2 px-2 text-gray-500 font-medium max-w-[80px]">
-                    <span className="block truncate text-[10px]">{t.title.split(" ")[0]}</span>
-                    <span className="block truncate text-[10px]">{t.title.split(" ").slice(1, 3).join(" ")}</span>
+                  <th key={t.slug} scope="col" title={t.title} className="text-center pb-2 px-2 text-gray-500 font-medium max-w-[80px]">
+                    <span className="block truncate text-[10px]">{t.title.split(" ").slice(0, 2).join(" ")}</span>
+                    <span className="block truncate text-[10px]">{t.title.split(" ").slice(2, 4).join(" ")}</span>
                   </th>
                 ))}
               </tr>
@@ -391,7 +391,7 @@ export default function OverviewPage() {
             <tbody>
               {activeCompanies.map(co => (
                 <tr key={co.slug} className="border-b border-gray-50 hover:bg-gray-50/50">
-                  <th scope="row" className="py-2 pr-4 font-medium text-gray-800 truncate max-w-[160px] text-left">
+                  <th scope="row" className="py-2 pr-4 font-medium text-gray-800 truncate max-w-[160px] text-left" title={co.name}>
                     <Link href={`/scout/${co.slug}`} className="hover:text-purple-700 transition-colors">{co.name}</Link>
                   </th>
                   {megatrends.map(t => {

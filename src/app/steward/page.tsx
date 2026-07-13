@@ -122,7 +122,7 @@ export default function StewardPage() {
                     </div>
                     {/* Topic */}
                     <div className="flex-1 min-w-0">
-                      <span className="text-sm text-gray-900 truncate block">{e.topic}</span>
+                      <span className="text-sm text-gray-900 truncate block" title={e.topic}>{e.topic}</span>
                       <span className="text-xs text-gray-500 ml-2">{e.type}</span>
                     </div>
                     {/* Status */}
