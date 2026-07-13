@@ -78,9 +78,9 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
             <button
               type="button"
               onClick={() => {
-                const date = new Date().toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" });
-                const now = new Date();
-                const quarter = `Q${Math.ceil((now.getMonth() + 1) / 3)} ${now.getFullYear()}`;
+                const stamp = generatedAt ?? new Date();
+                const date = stamp.toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" });
+                const quarter = `Q${Math.ceil((stamp.getMonth() + 1) / 3)} ${stamp.getFullYear()}`;
                 const count = companyNames.length;
                 const names = count > 0 ? companyNames.join(", ") : "Active Portfolio Companies";
                 const countLabel = count > 0 ? `${count} ` : "";
