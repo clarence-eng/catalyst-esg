@@ -358,6 +358,10 @@ export default function AdminPage() {
   const saveCompany = async (co: Partial<DbCompany>) => {
     if (!co.name?.trim() || !co.slug?.trim() || !co.sector?.trim() || !co.country?.trim() || !co.description?.trim()) return showToast("Name, slug, sector, country, and description are required");
     if (!/^[a-z0-9-]+$/.test(co.slug.trim())) return showToast("Slug must be lowercase alphanumeric with hyphens only (e.g. my-company)");
+    const e = co.esg_environmental ?? 0, s = co.esg_social ?? 0, g = co.esg_governance ?? 0, ov = co.esg_overall ?? 0;
+    if ([e,s,g,ov].some(v => v < 0 || v > 100)) return showToast("ESG scores must be between 0 and 100");
+    if ((co.green_revenue_pct ?? 0) < 0 || (co.green_revenue_pct ?? 0) > 100) return showToast("Green revenue % must be between 0 and 100");
+    if ((co.carbon_intensity ?? 0) < 0) return showToast("Carbon intensity must be 0 or greater");
     setSaving(true);
     try {
       if (co.id) {
