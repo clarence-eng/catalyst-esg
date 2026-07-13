@@ -549,8 +549,8 @@ export default function AdminPage() {
         </div>
       )}
       {saving && (
-        <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl px-6 py-4 text-sm text-gray-700">Saving…</div>
+        <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50" aria-hidden="true">
+          <div role="status" aria-live="polite" className="bg-white rounded-xl px-6 py-4 text-sm text-gray-700">Saving…</div>
         </div>
       )}
     </div>

@@ -267,9 +267,9 @@ export default function ScoutPage() {
                   <div className="text-xs text-gray-500">
                     Megatrend: <button
                       type="button"
+                      aria-label={`View ${co.temasekMegatrend} megatrend signal`}
                       className={`text-xs ${MEGATREND_COLORS[co.temasekMegatrend] ?? "text-gray-600"} hover:underline`}
                       onClick={e => { e.preventDefault(); e.stopPropagation(); router.push(`/signal/${MEGATREND_SLUGS[co.temasekMegatrend] ?? "climate-transition"}`); }}
-                      title={`View ${co.temasekMegatrend} megatrend signal`}
                     >
                       {co.temasekMegatrend}
                     </button>
@@ -337,7 +337,8 @@ export default function ScoutPage() {
                   return (
                     <div
                       className={`flex flex-col items-center justify-center w-14 h-14 rounded-full border-2 flex-shrink-0 ${ringClass}`}
-                      title={`E: ${co.esgScore.environmental} | S: ${co.esgScore.social} | G: ${co.esgScore.governance}`}
+                      aria-label={`ESG score ${score}: Environmental ${co.esgScore.environmental}, Social ${co.esgScore.social}, Governance ${co.esgScore.governance}`}
+                      role="img"
                     >
                       <span className={`text-lg font-bold leading-none ${textClass}`}>{score}</span>
                       <span className="text-[8px] text-gray-500 leading-none mt-0.5">ESG</span>
@@ -360,7 +361,7 @@ export default function ScoutPage() {
                   const trend = avgs[avgs.length - 1] > avgs[0] ? "up" : avgs[avgs.length - 1] < avgs[0] ? "down" : "flat";
                   const strokeColor = trend === "up" ? "#10b981" : trend === "down" ? "#ef4444" : "#94a3b8";
                   return (
-                    <div className="flex-shrink-0" title={`6-period ESG trend: ${avgs.map(v => v.toFixed(1)).join(" → ")}`}>
+                    <div className="flex-shrink-0" aria-label={`6-period ESG trend (${trend}): ${avgs.map(v => v.toFixed(1)).join(" → ")}`} role="img">
                       <svg width={W} height={H} className="overflow-visible" aria-hidden="true">
                         <polyline points={pts} fill="none" stroke={strokeColor} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
                         <circle cx={(avgs.length - 1) / (avgs.length - 1) * W} cy={H - ((avgs[avgs.length-1] - min) / range) * H} r={2.5} fill={strokeColor} />
