@@ -54,7 +54,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
         "Heat stress impacts on dock worker productivity and equipment performance",
       ],
     },
-    boardComposition: { boardSize: 9, independentPct: 44, womenPct: 22, ceoChairSplit: true, auditCommittee: true, esgCommittee: false },
+    boardComposition: { boardSize: 9, independentPct: 44, womenPct: 25, ceoChairSplit: false, auditCommittee: true, esgCommittee: false },
     historicalScores: [
       { period: "Q1 2024", e: 35, s: 55, g: 50 },
       { period: "Q2 2024", e: 33, s: 57, g: 52 },
@@ -203,7 +203,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
         "Peat soil subsidence risk in drainage areas following peat conservation commitments",
       ],
     },
-    boardComposition: { boardSize: 8, independentPct: 38, womenPct: 25, ceoChairSplit: false, auditCommittee: true, esgCommittee: false },
+    boardComposition: { boardSize: 8, independentPct: 56, womenPct: 33, ceoChairSplit: true, auditCommittee: true, esgCommittee: true },
     historicalScores: [
       { period: "Q1 2024", e: 38, s: 55, g: 55 },
       { period: "Q2 2024", e: 40, s: 57, g: 58 },
@@ -253,7 +253,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
         "Hydro-dependent cooling systems at thermal plants face water availability risk under drought scenarios",
       ],
     },
-    boardComposition: { boardSize: 10, independentPct: 40, womenPct: 20, ceoChairSplit: true, auditCommittee: true, esgCommittee: false },
+    boardComposition: { boardSize: 10, independentPct: 44, womenPct: 25, ceoChairSplit: false, auditCommittee: true, esgCommittee: false },
     historicalScores: [
       { period: "Q1 2024", e: 25, s: 48, g: 44 },
       { period: "Q2 2024", e: 27, s: 50, g: 47 },
@@ -299,7 +299,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
         "Data centres exposed to Singapore temperature increase — cooling cost uplift est. 5% by 2035",
       ],
     },
-    boardComposition: { boardSize: 5, independentPct: 40, womenPct: 20, ceoChairSplit: false, auditCommittee: false, esgCommittee: false },
+    boardComposition: { boardSize: 5, independentPct: 44, womenPct: 25, ceoChairSplit: false, auditCommittee: true, esgCommittee: false },
     historicalScores: [
       { period: "Q1 2024", e: 30, s: 62, g: 42 },
       { period: "Q2 2024", e: 31, s: 64, g: 44 },
