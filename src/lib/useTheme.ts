@@ -1,22 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
 
-function getInitialTheme(): "light" | "dark" {
-  if (typeof window === "undefined") return "light";
-  try {
-    const stored = localStorage.getItem("catalyst-theme") as "light" | "dark" | null;
-    if (stored) return stored;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  } catch { return "light"; }
-}
-
 export function useTheme() {
-  const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
+  // Start with "light" for SSR safety (no hydration mismatch)
+  // The layout.tsx inline script applies dark class before first paint
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
-    // Apply on mount to sync the DOM class with the lazy-initialized state
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Read the actual applied theme from the DOM class (set by the pre-paint inline script)
+    // This is synchronous and matches what the user actually sees after first paint
+    const stored = localStorage.getItem("catalyst-theme") as "light" | "dark" | null;
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initial = stored ?? (prefersDark ? "dark" : "light");
+    setTheme(initial);
+    document.documentElement.classList.toggle("dark", initial === "dark");
   }, []);
 
   const toggle = () => {
