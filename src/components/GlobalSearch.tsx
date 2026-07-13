@@ -19,6 +19,8 @@ export function GlobalSearch() {
       const isInput = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement || target.contentEditable === "true";
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         if (isInput) return;
+        // Don't open if KeyboardShortcuts dialog is already open
+        if (document.querySelector("[data-modal='shortcuts']")) return;
         e.preventDefault();
         setOpen(o => !o);
       }
@@ -127,8 +129,8 @@ export function GlobalSearch() {
 
         {/* Footer hint */}
         <div className="px-4 py-2 border-t border-gray-100 flex items-center justify-end gap-3">
-          <span className="text-[10px] text-gray-400 font-mono">↵ to navigate</span>
-          <span className="text-[10px] text-gray-400 font-mono">Esc to close</span>
+          <span className="text-[10px] text-gray-500 font-mono">↵ to navigate</span>
+          <span className="text-[10px] text-gray-500 font-mono">Esc to close</span>
         </div>
       </div>
     </div>
