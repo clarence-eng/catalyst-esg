@@ -270,12 +270,12 @@
 .dark .bg-\[\#4B2580\]\/10 { background-color: rgba(167,139,250,0.15) !important; }
 .dark .border-\[\#4B2580\]\/30 { border-color: rgba(167,139,250,0.3) !important; }
 .dark .text-\[\#4B2580\] { color: #a78bfa !important; }
-/* Primary action button bg-[#4B2580] — dark mode needs lighter purple for WCAG 1.4.11 (3:1 non-text contrast vs #0f1117 and #1e2130) */
-/* #8b5cf6 gives 4.46:1 vs page bg and 3.77:1 vs card bg; white text on #8b5cf6 = 4.23:1 (WCAG 1.4.3 AA) */
-.dark .bg-\[\#4B2580\] { background-color: #8b5cf6 !important; }
+/* Primary action button bg-[#4B2580] — dark mode needs lighter purple for WCAG 1.4.11 (3:1 non-text contrast) AND WCAG 1.4.3 (4.5:1 text contrast for white text) */
+/* #9b44f0: white text=4.69:1 (AA pass), vs card #1e2130=3.40:1 (1.4.11 pass), vs page #0f1117=4.02:1 (1.4.11 pass) */
+.dark .bg-\[\#4B2580\] { background-color: #9b44f0 !important; }
 .dark .hover\:bg-\[\#3D1A6E\]:hover { background-color: #7c3aed !important; }
 /* Skip-link and other focus: variants of the primary color */
-.dark .focus\:bg-\[\#4B2580\]:focus { background-color: #8b5cf6 !important; }
+.dark .focus\:bg-\[\#4B2580\]:focus { background-color: #9b44f0 !important; }
 /* Focus ring visibility in dark mode — --ring defaults to #4B2580 (1.2:1 on dark bg); raise it to visible purple */
 .dark { --ring: oklch(0.7 0.15 298); }
 /* Override outline-ring/50 default to full opacity in dark mode (50% opacity = 2.6:1 — below WCAG 1.4.11 3:1) */
