@@ -164,10 +164,17 @@
 .dark .border-gray-100 {
   border-color: #1e2a3a !important;
 }
-.dark .divide-gray-100 > * + * {
+.dark .border-gray-300 {
+  border-color: #374151 !important;
+}
+.dark .border-emerald-300 { border-color: #065f46 !important; }
+.dark .border-amber-300   { border-color: #78350f !important; }
+.dark .border-red-300     { border-color: #7f1d1d !important; }
+.dark .border-blue-300    { border-color: #1e3a8a !important; }
+.dark .divide-gray-100 > :not(:last-child) {
   border-color: #1e2a3a !important;
 }
-.dark .divide-gray-50 > * + * {
+.dark .divide-gray-50 > :not(:last-child) {
   border-color: #151821 !important;
 }
 .dark .text-gray-900 {
