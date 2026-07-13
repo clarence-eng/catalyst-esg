@@ -380,13 +380,16 @@ export default function AdminPage() {
       if (co.id) {
         const { id: coId, created_at: _ccat, ...coFields } = { ...co, last_updated: todayISO() } as Required<typeof co>;
         const { error } = await supabase.from("companies").update(coFields).eq("id", coId);
-        if (error) showToast("Error: " + error.message);
+        if (error) showToast("Error: " + error.message, true);
         else { showToast("Company updated ✓"); setEditing(null); clearCache(); loadCompanies(); }
       } else {
         const { error } = await supabase.from("companies").insert(co);
-        if (error) showToast("Error: " + error.message);
+        if (error) showToast("Error: " + error.message, true);
         else { showToast("Company added ✓"); setAdding(false); clearCache(); loadCompanies(); }
       }
+    } catch (err) {
+      showToast("Unexpected error saving company", true);
+      console.error("[Admin] saveCompany threw:", err);
     } finally {
       setSaving(false);
     }
