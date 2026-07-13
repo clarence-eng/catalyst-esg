@@ -168,7 +168,7 @@ function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: st
 }
 
 // ─── Company Row ──────────────────────────────────────────────────────────────
-function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit: () => void; onDelete: () => void; showToast: (msg: string) => void }) {
+function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit: () => void; onDelete: () => void; showToast: (msg: string, isError?: boolean) => void }) {
   const [expanded, setExpanded] = useState(false);
   const [engagements, setEngagements] = useState<DbEngagement[]>([]);
   const [issues, setIssues] = useState<DbMaterialIssue[]>([]);
