@@ -152,7 +152,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
         "Limited physical risk given hardened data centre infrastructure",
       ],
     },
-    boardComposition: { boardSize: 7, independentPct: 57, womenPct: 29, ceoChairSplit: true, auditCommittee: true, esgCommittee: true },
+    boardComposition: { boardSize: 7, independentPct: 56, womenPct: 33, ceoChairSplit: true, auditCommittee: true, esgCommittee: true },
     historicalScores: [
       { period: "Q1 2024", e: 55, s: 68, g: 72 },
       { period: "Q2 2024", e: 57, s: 70, g: 74 },
