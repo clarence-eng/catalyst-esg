@@ -103,7 +103,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
         "Physical damage risk to collateral assets estimated at 6-9% of secured loan book by 2040",
       ],
     },
-    boardComposition: { boardSize: 8, independentPct: 50, womenPct: 25, ceoChairSplit: true, auditCommittee: true, esgCommittee: true },
+    boardComposition: { boardSize: 8, independentPct: 56, womenPct: 33, ceoChairSplit: true, auditCommittee: true, esgCommittee: true },
     historicalScores: [
       { period: "Q1 2024", e: 48, s: 62, g: 65 },
       { period: "Q2 2024", e: 50, s: 63, g: 62 },
