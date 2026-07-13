@@ -814,7 +814,7 @@ function OverviewTab({
                     {/* Portfolio avg marker — clamped to match label position */}
                     <div className="absolute top-0 bottom-0 w-0.5 bg-purple-500 opacity-60" style={{ left: `${Math.min(Math.max(portfolioAvg, 5), 93)}%` }} />
                   </div>
-                  <div className="relative mt-0.5 text-[9px] text-gray-400 h-3">
+                  <div className="relative mt-0.5 text-[9px] text-gray-500 h-3">
                     <span className="absolute left-0">0</span>
                     <span className="absolute text-purple-600" style={{ left: `${Math.min(Math.max(portfolioAvg, 5), 93)}%`, transform: "translateX(-50%)" }}>avg</span>
                     <span className="absolute right-0">100</span>
@@ -824,7 +824,7 @@ function OverviewTab({
             })
             })()}
           </div>
-          <p className="text-[10px] text-gray-400 mt-3">Purple marker = investment-weighted portfolio average · Benchmarks based on SASB sector medians</p>
+          <p className="text-[10px] text-gray-500 mt-3">Purple marker = investment-weighted portfolio average · Benchmarks based on SASB sector medians</p>
         </div>
 
         {/* Score Trend */}

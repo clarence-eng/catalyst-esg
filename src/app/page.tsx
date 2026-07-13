@@ -165,7 +165,7 @@ export default function OverviewPage() {
               avgScore >= 65 ? "bg-emerald-500" : avgScore >= 40 ? "bg-amber-500" : "bg-red-500"
             }`} style={{ width: `${avgScore}%` }} />
           </div>
-          <div className="flex justify-between mt-1 text-[10px] text-gray-400">
+          <div className="flex justify-between mt-1 text-[10px] text-gray-500">
             <span>0</span><span>50</span><span>100</span>
           </div>
         </div>

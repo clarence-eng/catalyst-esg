@@ -49,7 +49,7 @@ export function PortfolioTrend({ data, activeCount }: { data: TrendPoint[]; acti
             <div key={label} className="text-center">
               <div className={`text-lg font-bold ${color}`}>{value}</div>
               <div className="text-xs text-gray-500">{label} <span className={change > 0 ? "text-emerald-700" : change < 0 ? "text-red-600" : "text-gray-500"}>({sign(change)})</span></div>
-              <div className="text-[9px] text-gray-400">since {earliest.period}</div>
+              <div className="text-[9px] text-gray-500">since {earliest.period}</div>
             </div>
           ))}
         </div>
