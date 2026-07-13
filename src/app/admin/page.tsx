@@ -215,13 +215,16 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
       const { error: engErr } = e.id
         ? await supabase.from("engagements").update(engFields).eq("id", engId)
         : await supabase.from("engagements").insert({ ...e, company_slug: co.slug });
-      if (engErr) { showToast("Error saving engagement: " + engErr.message); return; }
+      if (engErr) { showToast("Error saving engagement: " + engErr.message, true); return; }
       setAddEng(false); setEditEng(null); clearCache(); loadDetail();
+    } catch (err) {
+      showToast("Unexpected error saving engagement", true);
+      console.error("[Admin] saveEng threw:", err);
     } finally {
       savingEngRef.current = false;
     }
   };
-  const delEng = async (id: string) => { const { error } = await supabase.from("engagements").delete().eq("id", id); if (error) { showToast("Error deleting engagement: " + error.message); return; } clearCache(); loadDetail(); };
+  const delEng = async (id: string) => { const { error } = await supabase.from("engagements").delete().eq("id", id); if (error) { showToast("Error deleting engagement: " + error.message, true); return; } clearCache(); loadDetail(); };
   const saveIssue = async (i: Partial<DbMaterialIssue>) => {
     if (savingIssueRef.current) return;
     savingIssueRef.current = true;
@@ -230,13 +233,16 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
       const { error: issErr } = issId
         ? await supabase.from("material_issues").update(issFields).eq("id", issId)
         : await supabase.from("material_issues").insert({ ...i, sort_order: issues.length > 0 ? Math.max(...issues.map(x => x.sort_order ?? 0)) + 1 : 0, company_slug: co.slug });
-      if (issErr) { showToast("Error saving issue: " + issErr.message); return; }
+      if (issErr) { showToast("Error saving issue: " + issErr.message, true); return; }
       setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();
+    } catch (err) {
+      showToast("Unexpected error saving issue", true);
+      console.error("[Admin] saveIssue threw:", err);
     } finally {
       savingIssueRef.current = false;
     }
   };
-  const delIssue = async (id: string) => { const { error } = await supabase.from("material_issues").delete().eq("id", id); if (error) { showToast("Error deleting issue: " + error.message); return; } clearCache(); loadDetail(); };
+  const delIssue = async (id: string) => { const { error } = await supabase.from("material_issues").delete().eq("id", id); if (error) { showToast("Error deleting issue: " + error.message, true); return; } clearCache(); loadDetail(); };
 
   const statusColor = co.portfolio_status === "Active" ? "text-emerald-700 bg-emerald-50 border-emerald-300" : "text-blue-700 bg-blue-50 border-blue-300";
   const riskColor = { Low: "text-emerald-700", Medium: "text-amber-700", High: "text-orange-700", Critical: "text-red-700" }[co.transition_risk] || "text-gray-600";
