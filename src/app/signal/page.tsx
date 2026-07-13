@@ -229,7 +229,7 @@ export default function SignalPage() {
               aria-pressed={jurisdictionFilter === j}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 jurisdictionFilter === j
-                  ? "bg-purple-700/15 text-purple-700 border-purple-500/40"
+                  ? "bg-[#4B2580]/15 text-purple-700 border-purple-500/40"
                   : "text-gray-600 border-gray-200 hover:text-gray-800"
               }`}
             >
@@ -247,7 +247,7 @@ export default function SignalPage() {
               aria-pressed={categoryFilter === c}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 categoryFilter === c
-                  ? "bg-purple-700/15 text-purple-700 border-purple-500/40"
+                  ? "bg-[#4B2580]/15 text-purple-700 border-purple-500/40"
                   : "text-gray-600 border-gray-200 hover:text-gray-800"
               }`}
             >
