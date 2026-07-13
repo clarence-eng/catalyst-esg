@@ -117,6 +117,9 @@ function LearnContent() {
             ))}
           </div>
 
+          <p role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+            {filteredFrameworks.length} framework{filteredFrameworks.length !== 1 ? "s" : ""} and {filteredCaseStudies.length} case stud{filteredCaseStudies.length !== 1 ? "ies" : "y"} shown
+          </p>
           {filteredFrameworks.length === 0 && (
             <p className="text-xs text-gray-500 py-4">No frameworks in this category or search.</p>
           )}
