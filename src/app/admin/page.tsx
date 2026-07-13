@@ -362,10 +362,11 @@ export default function AdminPage() {
     if ([e,s,g,ov].some(v => v < 0 || v > 100)) return showToast("ESG scores must be between 0 and 100");
     if ((co.green_revenue_pct ?? 0) < 0 || (co.green_revenue_pct ?? 0) > 100) return showToast("Green revenue % must be between 0 and 100");
     if ((co.carbon_intensity ?? 0) < 0) return showToast("Carbon intensity must be 0 or greater");
+    if ((co.investment_value ?? 0) < 0) return showToast("Investment value must be 0 or greater");
     setSaving(true);
     try {
       if (co.id) {
-        const { id: coId, created_at: _ccat, ...coFields } = co as Required<typeof co>;
+        const { id: coId, created_at: _ccat, ...coFields } = { ...co, last_updated: todayISO() } as Required<typeof co>;
         const { error } = await supabase.from("companies").update(coFields).eq("id", coId);
         if (error) showToast("Error: " + error.message);
         else { showToast("Company updated ✓"); setEditing(null); clearCache(); loadCompanies(); }
@@ -412,7 +413,7 @@ export default function AdminPage() {
         <div className="space-y-4">
           <div>
             <label htmlFor="admin-password" className="text-xs font-medium text-gray-700">Admin Password <span className="text-gray-500 font-normal">(set in Vercel env vars)</span></label>
-            <input id="admin-password" type="password" autoComplete="current-password" value={auth.pw} onChange={e => auth.setPw(e.target.value)}
+            <input id="admin-password" type="password" autoComplete="off" value={auth.pw} onChange={e => auth.setPw(e.target.value)}
               onKeyDown={e => e.key === "Enter" && auth.check()}
               placeholder="Enter password" autoFocus
               className={`w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none ${auth.err ? "border-red-400" : "border-gray-200 focus:border-purple-400"}`} />
