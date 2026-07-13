@@ -230,7 +230,7 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
         >
           <ExternalLink className="w-3.5 h-3.5" />
         </a>
-        <span className="text-gray-400 flex-shrink-0">
+        <span className="text-gray-500 flex-shrink-0">
           {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </span>
       </div>

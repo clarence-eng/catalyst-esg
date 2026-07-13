@@ -144,7 +144,7 @@ export default function OverviewPage() {
         <div className="mb-6 rounded-xl px-6 py-4 border bg-gray-50 border-gray-200 flex items-center justify-between">
           <div>
             <div className="text-xs font-medium text-gray-600 mb-0.5">Portfolio ESG Health</div>
-            <div className="text-sm text-gray-400 italic">No active companies — add companies via the admin panel</div>
+            <div className="text-sm text-gray-500 italic">No active companies — add companies via the admin panel</div>
           </div>
         </div>
       ) : (
@@ -399,7 +399,7 @@ export default function OverviewPage() {
                     const level = exposure?.exposure ?? "Low";
                     const cellStyle = level === "High" ? "bg-red-100 text-red-700 border border-red-200" :
                       level === "Medium" ? "bg-amber-50 text-amber-700 border border-amber-200" :
-                      "bg-gray-50 text-gray-400 border border-gray-100";
+                      "bg-gray-50 text-gray-500 border border-gray-200";
                     return (
                       <td key={t.slug} className="py-2 px-2 text-center">
                         <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${cellStyle}`}>{level[0]}</span>

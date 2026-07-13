@@ -46,7 +46,7 @@ export function ComparisonDrawer({ companies, onRemove, onClear }: Props) {
                     <Link href={`/scout/${c.slug}`} className="font-semibold text-gray-900 hover:text-purple-700 truncate max-w-[100px]">{c.name}</Link>
                     <button type="button" onClick={() => onRemove(c.slug)} aria-label={`Remove ${c.name} from comparison`} className="text-gray-500 hover:text-gray-700 flex-shrink-0"><X className="w-3 h-3" /></button>
                   </div>
-                  <div className="text-gray-400 font-normal truncate">{c.sector.split(" ")[0]}</div>
+                  <div className="text-gray-500 font-normal truncate">{c.sector.split(" ")[0]}</div>
                 </th>
               ))}
             </tr>
