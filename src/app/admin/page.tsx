@@ -224,7 +224,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
       savingEngRef.current = false;
     }
   };
-  const delEng = async (id: string) => { const { error } = await supabase.from("engagements").delete().eq("id", id); if (error) { showToast("Error deleting engagement: " + error.message, true); return; } clearCache(); loadDetail(); };
+  const delEng = async (id: string) => { try { const { error } = await supabase.from("engagements").delete().eq("id", id); if (error) { showToast("Error deleting engagement: " + error.message, true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting engagement", true); console.error("[Admin] delEng threw:", err); } };
   const saveIssue = async (i: Partial<DbMaterialIssue>) => {
     if (savingIssueRef.current) return;
     savingIssueRef.current = true;
@@ -242,7 +242,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
       savingIssueRef.current = false;
     }
   };
-  const delIssue = async (id: string) => { const { error } = await supabase.from("material_issues").delete().eq("id", id); if (error) { showToast("Error deleting issue: " + error.message, true); return; } clearCache(); loadDetail(); };
+  const delIssue = async (id: string) => { try { const { error } = await supabase.from("material_issues").delete().eq("id", id); if (error) { showToast("Error deleting issue: " + error.message, true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting issue", true); console.error("[Admin] delIssue threw:", err); } };
 
   const statusColor = co.portfolio_status === "Active" ? "text-emerald-700 bg-emerald-50 border-emerald-300" : "text-blue-700 bg-blue-50 border-blue-300";
   const riskColor = { Low: "text-emerald-700", Medium: "text-amber-700", High: "text-orange-700", Critical: "text-red-700" }[co.transition_risk] || "text-gray-600";
@@ -397,18 +397,21 @@ export default function AdminPage() {
 
   const deleteCompany = async (id: string, slug: string, name: string) => {
     if (!confirm(`Delete ${name}? This also deletes all engagements and material issues.`)) return;
-    // Delete sub-rows sequentially: material_issues first, then engagements.
-    // This ordering ensures that if material_issues delete fails, engagements are untouched (no partial data loss).
-    // If engagements delete fails after MI succeeds, the company retains its engagement history for recovery.
-    const { error: miDelErr } = await supabase.from("material_issues").delete().eq("company_slug", slug);
-    if (miDelErr) { showToast("Error deleting issues: " + miDelErr.message); return; }
-    const { error: engDelErr } = await supabase.from("engagements").delete().eq("company_slug", slug);
-    if (engDelErr) { showToast("Error deleting engagements: " + engDelErr.message); return; }
-    const { error } = await supabase.from("companies").delete().eq("id", id);
-    if (error) { showToast("Error deleting: " + error.message); return; }
-    showToast(`${name} deleted`);
-    clearCache();
-    loadCompanies();
+    try {
+      // Delete sub-rows sequentially: material_issues first, then engagements.
+      const { error: miDelErr } = await supabase.from("material_issues").delete().eq("company_slug", slug);
+      if (miDelErr) { showToast("Error deleting issues: " + miDelErr.message, true); return; }
+      const { error: engDelErr } = await supabase.from("engagements").delete().eq("company_slug", slug);
+      if (engDelErr) { showToast("Error deleting engagements: " + engDelErr.message, true); return; }
+      const { error } = await supabase.from("companies").delete().eq("id", id);
+      if (error) { showToast("Error deleting: " + error.message, true); return; }
+      showToast(`${name} deleted`);
+      clearCache();
+      loadCompanies();
+    } catch (err) {
+      showToast("Unexpected error during deletion", true);
+      console.error("[Admin] deleteCompany threw:", err);
+    }
   };
 
   // Login screen
