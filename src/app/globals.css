@@ -169,8 +169,19 @@
 }
 .dark .border-emerald-300 { border-color: #065f46 !important; }
 .dark .border-amber-300   { border-color: #78350f !important; }
+.dark .border-orange-300  { border-color: #7c2d12 !important; }
 .dark .border-red-300     { border-color: #7f1d1d !important; }
+.dark .border-red-100     { border-color: #450a0a !important; }
 .dark .border-blue-300    { border-color: #1e3a8a !important; }
+.dark .border-purple-200  { border-color: #4c1d95 !important; }
+.dark .border-purple-300  { border-color: #4c1d95 !important; }
+.dark .border-teal-300    { border-color: #134e4a !important; }
+.dark .border-gray-50     { border-color: #151821 !important; }
+/* hover:border-* dark overrides — same Tailwind v4 class-name mismatch */
+.dark .hover\:border-gray-300:hover { border-color: #374151 !important; }
+.dark .hover\:border-gray-400:hover { border-color: #4b5563 !important; }
+/* hover:text-gray-500 — base text-gray-300 is readable but hover-500 is near-invisible */
+.dark .hover\:text-gray-500:hover   { color: #94a3b8 !important; }
 .dark .divide-gray-100 > :not(:last-child) {
   border-color: #1e2a3a !important;
 }
