@@ -112,14 +112,14 @@ export function KeyboardShortcuts() {
               <span className="text-sm text-gray-700">{s.desc}</span>
               <div className="flex items-center gap-1">
                 {s.keys.map((k, j) => (
-                  k === "then" ? <span key={j} className="text-gray-400 text-xs mx-1">then</span> :
+                  k === "then" ? <span key={j} className="text-gray-500 text-xs mx-1">then</span> :
                   <kbd key={j} className="bg-gray-100 text-gray-700 text-xs px-1.5 py-0.5 rounded border border-gray-200 font-mono">{k}</kbd>
                 ))}
               </div>
             </div>
           ))}
         </div>
-        <p className="text-[10px] text-gray-400 mt-4 text-center">Press <kbd className="bg-gray-100 text-gray-500 px-1 py-0.5 rounded text-[10px] font-mono">?</kbd> to toggle this panel</p>
+        <p className="text-[10px] text-gray-500 mt-4 text-center">Press <kbd className="bg-gray-100 text-gray-500 px-1 py-0.5 rounded text-[10px] font-mono">?</kbd> to toggle this panel</p>
       </div>
     </div>
   );

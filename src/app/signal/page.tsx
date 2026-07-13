@@ -115,7 +115,7 @@ export default function SignalPage() {
       <div className="mb-8">
         <h2 className="text-sm font-semibold text-gray-900 mb-2">
           Compliance Deadline Calendar
-          {urgencyView !== "all" && <span className="ml-2 text-xs font-normal text-gray-400">· {urgencyView} urgency only</span>}
+          {urgencyView !== "all" && <span className="ml-2 text-xs font-normal text-gray-500">· {urgencyView} urgency only</span>}
         </h2>
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           {(() => {
