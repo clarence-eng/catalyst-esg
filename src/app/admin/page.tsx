@@ -419,7 +419,7 @@ export default function AdminPage() {
             <input id="admin-password" type="password" autoComplete="off" value={auth.pw} onChange={e => auth.setPw(e.target.value)}
               onKeyDown={e => e.key === "Enter" && auth.check()}
               placeholder="Enter password" autoFocus
-              className={`w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none ${auth.err ? "border-red-400" : "border-gray-200 focus:border-purple-400"}`} />
+              className={`w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${auth.err ? "border-red-400 focus:ring-red-400/50" : "border-gray-200 focus:border-purple-400 focus:ring-purple-400/30"}`} />
             {auth.err && <p className="text-xs text-red-600 mt-1">Incorrect password</p>}
           </div>
           <button type="button" onClick={auth.check} className="w-full bg-[#4B2580] hover:bg-[#3D1A6E] text-white py-2.5 rounded-lg text-sm font-medium transition-colors">
