@@ -367,6 +367,9 @@ export default function AdminPage() {
 
   useEffect(() => { if (auth.authed) loadCompanies(); }, [auth.authed, loadCompanies]);
 
+  // Cleanup toast timer on unmount to prevent setState on unmounted component
+  useEffect(() => () => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); }, []);
+
   const saveCompany = async (co: Partial<DbCompany>) => {
     if (!co.name?.trim() || !co.slug?.trim() || !co.sector?.trim() || !co.country?.trim() || !co.description?.trim()) return showToast("Name, slug, sector, country, and description are required", true);
     if (!/^[a-z0-9-]+$/.test(co.slug.trim())) return showToast("Slug must be lowercase alphanumeric with hyphens only (e.g. my-company)", true);
