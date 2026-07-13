@@ -42,8 +42,8 @@ function slugify(s: string) {
 }
 
 // Hoisted outside CoForm to prevent unmount/remount on every state update
-function CoField({ label, k, type = "text", opts, co, set }: {
-  label: string; k: string; type?: string; opts?: string[];
+function CoField({ label, k, type = "text", opts, co, set, required: isRequired }: {
+  label: string; k: string; type?: string; opts?: string[]; required?: boolean;
   co: Partial<DbCompany>; set: (k: string, v: unknown) => void;
 }) {
   const fieldId = `cofield-${k}`;
@@ -51,12 +51,12 @@ function CoField({ label, k, type = "text", opts, co, set }: {
     <div className="flex flex-col gap-1">
       <label htmlFor={fieldId} className="text-xs font-medium text-gray-700">{label}</label>
       {opts ? (
-        <select id={fieldId} value={(co as Record<string,unknown>)[k] as string || ""} onChange={e => set(k, e.target.value)}
+        <select id={fieldId} aria-required={isRequired} value={(co as Record<string,unknown>)[k] as string || ""} onChange={e => set(k, e.target.value)}
           className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400">
           {opts.map(o => <option key={o}>{o}</option>)}
         </select>
       ) : (
-        <input id={fieldId} type={type} value={((co as Record<string,unknown>)[k] ?? "") as string}
+        <input id={fieldId} aria-required={isRequired} type={type} value={((co as Record<string,unknown>)[k] ?? "") as string}
           onChange={e => { const v = type === "number" ? (e.target.value === '' ? 0 : parseFloat(e.target.value) || 0) : e.target.value; set(k, v); if (k === "name" && !co.id) set("slug", slugify(e.target.value)); }}
           readOnly={k === "slug" && !!co.id}
           {...(type === "number" && k.startsWith("esg_") ? { min: 0, max: 100 } :
@@ -77,10 +77,10 @@ function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; on
     <div className="bg-white border border-gray-200 rounded-xl p-6 space-y-4">
       <h3 className="text-sm font-semibold text-gray-900">{initial.id ? "Edit Company" : "New Company"}</h3>
       <div className="grid grid-cols-2 gap-4">
-        <CoField label="Company Name *" k="name" co={co} set={set} />
+        <CoField label="Company Name *" k="name" co={co} set={set} required />
         <CoField label="Slug (auto-generated, read-only for edits)" k="slug" co={co} set={set} />
-        <CoField label="Sector *" k="sector" co={co} set={set} />
-        <CoField label="Country *" k="country" co={co} set={set} />
+        <CoField label="Sector *" k="sector" co={co} set={set} required />
+        <CoField label="Country *" k="country" co={co} set={set} required />
         <CoField label="Region" k="region" opts={["Southeast Asia", "Asia Pacific", "South Asia", "Global"]} co={co} set={set} />
         <CoField label="Portfolio Status" k="portfolio_status" opts={["Active", "Pipeline"]} co={co} set={set} />
         <CoField label="Maturity" k="maturity" opts={["Leading", "Advanced", "Developing", "Lagging"]} co={co} set={set} />
@@ -88,7 +88,7 @@ function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; on
       </div>
       <div>
         <label htmlFor="co-description" className="text-xs font-medium text-gray-700">Description *</label>
-        <textarea id="co-description" value={co.description || ""} onChange={e => set("description", e.target.value)} rows={3}
+        <textarea id="co-description" aria-required="true" value={co.description || ""} onChange={e => set("description", e.target.value)} rows={3}
           className="w-full mt-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400" />
       </div>
       <div className="grid grid-cols-4 gap-4">
@@ -265,7 +265,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
         <div className="flex items-center gap-2">
           <button type="button" aria-label={`Edit ${co.name}`} onClick={onEdit} className="p-2 text-gray-500 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-colors"><Edit3 className="w-4 h-4"/></button>
           <button type="button" aria-label={`Delete ${co.name}`} onClick={onDelete} className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"><Trash2 className="w-4 h-4"/></button>
-          <button type="button" aria-label={expanded ? "Collapse" : "Expand"} onClick={() => setExpanded(e => !e)} className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg">{expanded ? <ChevronUp className="w-4 h-4"/> : <ChevronDown className="w-4 h-4"/>}</button>
+          <button type="button" aria-label={expanded ? "Collapse company details" : "Expand company details"} aria-expanded={expanded} onClick={() => setExpanded(e => !e)} className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg">{expanded ? <ChevronUp className="w-4 h-4"/> : <ChevronDown className="w-4 h-4"/>}</button>
         </div>
       </div>
 
@@ -503,7 +503,7 @@ export default function AdminPage() {
               </svg>
             </div>
             {adminSearch && <button type="button" onClick={() => setAdminSearch("")} className="text-xs text-gray-500 hover:text-gray-700">Clear</button>}
-            <div className="flex items-center gap-1">
+            <div role="group" aria-label="Sort companies by" className="flex items-center gap-1">
               {([{key:"recent",label:"Recent"},{key:"name",label:"A–Z"},{key:"esg",label:"ESG Score"}] as {key:"recent"|"name"|"esg"; label:string}[]).map(opt => (
                 <button
                   key={opt.key}
