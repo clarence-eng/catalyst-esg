@@ -21,14 +21,20 @@ export function KeyboardShortcuts() {
   // Use a ref to avoid stale closure issues — handler always reads current gPressed value
   const gPressedRef = useRef(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
   const router = useRouter();
 
   // Keep ref in sync with state
   useEffect(() => { gPressedRef.current = gPressed; }, [gPressed]);
 
-  // Move focus into dialog when it opens (WCAG 2.4.3 Focus Order)
+  // Move focus into dialog on open; restore focus to trigger element on close (WCAG 2.4.3)
   useEffect(() => {
-    if (open) setTimeout(() => closeButtonRef.current?.focus(), 50);
+    if (open) {
+      triggerRef.current = document.activeElement as HTMLElement;
+      setTimeout(() => closeButtonRef.current?.focus(), 50);
+    } else {
+      setTimeout(() => triggerRef.current?.focus(), 50);
+    }
   }, [open]);
 
   useEffect(() => {

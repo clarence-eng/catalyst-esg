@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { type Company, companies as allCompanies } from "@/data/companies";
 import { RiskBadge, RatingBadge, MaturityBadge, ScoreRing } from "@/components/ui-elements";
 import { AIOutput } from "@/components/AIOutput";
@@ -522,7 +523,7 @@ function OverviewTab({
             {co.materialIssues.length === 0 && (
               <p className="text-xs text-gray-500 py-2">No material issues identified.</p>
             )}
-            {co.materialIssues.map((issue) => (
+            {[...co.materialIssues].sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4)).map((issue) => (
               <div key={issue.issue} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
                 <div className="flex-shrink-0 mt-0.5">
                   {issue.opportunity ? (
@@ -1546,7 +1547,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
         {co.engagement.length === 0 ? (
           <div className="text-center py-6">
             <p className="text-xs text-gray-500 mb-2">No engagement records yet.</p>
-            <a href="/admin" className="text-xs text-purple-700 hover:underline">Log an engagement via Admin →</a>
+            <Link href="/admin" className="text-xs text-purple-700 hover:underline">Log an engagement via Admin →</Link>
           </div>
         ) : (
         <div className="relative">

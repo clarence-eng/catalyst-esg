@@ -41,7 +41,7 @@ export function Navigation() {
           <div
             className="font-bold tracking-[0.12em] leading-none"
             style={{
-              color: TEMASEK_PURPLE,
+              color: theme === "dark" ? "#a78bfa" : TEMASEK_PURPLE,
               fontSize: "18px",
               fontFamily: "'Georgia', 'Palatino Linotype', 'Palatino', 'Book Antiqua', 'Times New Roman', serif",
               letterSpacing: "0.15em",
@@ -77,7 +77,7 @@ export function Navigation() {
                 className="w-4 h-4 flex-shrink-0"
                 style={
                   active
-                    ? { color: TEMASEK_PURPLE }
+                    ? { color: theme === "dark" ? "#a78bfa" : TEMASEK_PURPLE }
                     : { color: "rgb(107 114 128)" }
                 }
               />
