@@ -22,7 +22,7 @@ function sanitizeBlock(value: unknown, maxLen = 5000): string {
 
 function validateContext(type: GenerationType, ctx: Record<string, unknown>): boolean {
   if (type === "deal_memo") {
-    const strOk = ["name", "sector", "country", "rating", "maturity"].every((k) => typeof ctx[k] === "string");
+    const strOk = ["name", "sector", "country", "rating", "maturity"].every((k) => typeof ctx[k] === "string" && (ctx[k] as string).trim().length > 0);
     const numOk = ["overallScore", "eScore", "sScore", "gScore"].every((k) => {
       const v = ctx[k];
       return v !== undefined && v !== null && v !== "" && v !== "null" && v !== "undefined";
@@ -30,16 +30,16 @@ function validateContext(type: GenerationType, ctx: Record<string, unknown>): bo
     return strOk && numOk;
   }
   if (type === "action_plan") {
-    return ["name", "sector", "maturity"].every((k) => typeof ctx[k] === "string");
+    return ["name", "sector", "maturity"].every((k) => typeof ctx[k] === "string" && (ctx[k] as string).trim().length > 0);
   }
   if (type === "thematic_brief") {
-    return ["theme", "subtitle", "temasekAlignment"].every((k) => typeof ctx[k] === "string");
+    return ["theme", "subtitle", "temasekAlignment"].every((k) => typeof ctx[k] === "string" && (ctx[k] as string).trim().length > 0);
   }
   if (type === "portfolio_brief") {
     return typeof ctx.portfolioSummary === "string" && ctx.portfolioSummary.trim().length > 0;
   }
   if (type === "engagement_questions") {
-    return ["name", "sector", "maturity", "country"].every((k) => typeof ctx[k] === "string");
+    return ["name", "sector", "maturity", "country"].every((k) => typeof ctx[k] === "string" && (ctx[k] as string).trim().length > 0);
   }
   return false;
 }
