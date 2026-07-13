@@ -126,15 +126,16 @@ function makeEmptyEng(): Partial<DbEngagement> {
 function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: string; initial: Partial<DbEngagement>; onSave: (e: Partial<DbEngagement>) => void; onCancel: () => void }) {
   const [eng, setEng] = useState({ ...initial });
   const set = (k: string, v: string) => setEng(p => ({ ...p, [k]: v }));
+  const p = `eng-${companySlug}`;
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
       <div className="grid grid-cols-3 gap-3">
-        <div><label htmlFor="eng-date" className="text-xs font-medium text-gray-700">Date</label><input id="eng-date" type="date" value={eng.date||""} onChange={e=>set("date",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
-        <div><label htmlFor="eng-type" className="text-xs font-medium text-gray-700">Type</label><select id="eng-type" value={eng.type||""} onChange={e=>set("type",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"><option>Meeting</option><option>Call</option><option>Email</option><option>Site Visit</option></select></div>
-        <div><label htmlFor="eng-status" className="text-xs font-medium text-gray-700">Status</label><select id="eng-status" value={eng.status||""} onChange={e=>set("status",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"><option>Planned</option><option>Completed</option><option>Overdue</option></select></div>
+        <div><label htmlFor={`${p}-date`} className="text-xs font-medium text-gray-700">Date</label><input id={`${p}-date`} type="date" value={eng.date||""} onChange={e=>set("date",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
+        <div><label htmlFor={`${p}-type`} className="text-xs font-medium text-gray-700">Type</label><select id={`${p}-type`} value={eng.type||""} onChange={e=>set("type",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"><option>Meeting</option><option>Call</option><option>Email</option><option>Site Visit</option></select></div>
+        <div><label htmlFor={`${p}-status`} className="text-xs font-medium text-gray-700">Status</label><select id={`${p}-status`} value={eng.status||""} onChange={e=>set("status",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"><option>Planned</option><option>Completed</option><option>Overdue</option></select></div>
       </div>
-      <div><label htmlFor="eng-topic" className="text-xs font-medium text-gray-700">Topic</label><input id="eng-topic" type="text" value={eng.topic||""} onChange={e=>set("topic",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
-      <div><label htmlFor="eng-notes" className="text-xs font-medium text-gray-700">Notes</label><textarea id="eng-notes" value={eng.notes||""} onChange={e=>set("notes",e.target.value)} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
+      <div><label htmlFor={`${p}-topic`} className="text-xs font-medium text-gray-700">Topic</label><input id={`${p}-topic`} type="text" value={eng.topic||""} onChange={e=>set("topic",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
+      <div><label htmlFor={`${p}-notes`} className="text-xs font-medium text-gray-700">Notes</label><textarea id={`${p}-notes`} value={eng.notes||""} onChange={e=>set("notes",e.target.value)} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-3 py-1 text-xs text-gray-600 border border-gray-200 rounded hover:bg-gray-100">Cancel</button>
         <button type="button" onClick={() => { if (!eng.topic?.trim()) return; onSave({ ...eng, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
@@ -147,15 +148,16 @@ function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: stri
 const EMPTY_MI: Partial<DbMaterialIssue> = { issue: "", severity: "Medium", category: "Environmental", opportunity: false, detail: "" };
 function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: string; initial: Partial<DbMaterialIssue>; onSave: (i: Partial<DbMaterialIssue>) => void; onCancel: () => void }) {
   const [mi, setMi] = useState({ ...initial });
+  const p = `issue-${companySlug}`;
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
       <div className="grid grid-cols-3 gap-3">
-        <div><label className="text-xs font-medium text-gray-700">Issue Name</label><input type="text" value={mi.issue||""} onChange={e=>setMi(p=>({...p,issue:e.target.value}))} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
-        <div><label className="text-xs font-medium text-gray-700">Severity</label><select value={mi.severity||""} onChange={e=>setMi(p=>({...p,severity:e.target.value as "Critical"|"High"|"Medium"|"Low"}))} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
-        <div><label className="text-xs font-medium text-gray-700">Category</label><select value={mi.category||""} onChange={e=>setMi(p=>({...p,category:e.target.value as "Environmental"|"Social"|"Governance"}))} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"><option>Environmental</option><option>Social</option><option>Governance</option></select></div>
+        <div><label htmlFor={`${p}-name`} className="text-xs font-medium text-gray-700">Issue Name</label><input id={`${p}-name`} type="text" value={mi.issue||""} onChange={e=>setMi(p=>({...p,issue:e.target.value}))} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
+        <div><label htmlFor={`${p}-sev`} className="text-xs font-medium text-gray-700">Severity</label><select id={`${p}-sev`} value={mi.severity||""} onChange={e=>setMi(p=>({...p,severity:e.target.value as "Critical"|"High"|"Medium"|"Low"}))} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+        <div><label htmlFor={`${p}-cat`} className="text-xs font-medium text-gray-700">Category</label><select id={`${p}-cat`} value={mi.category||""} onChange={e=>setMi(p=>({...p,category:e.target.value as "Environmental"|"Social"|"Governance"}))} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"><option>Environmental</option><option>Social</option><option>Governance</option></select></div>
       </div>
-      <div className="flex items-center gap-2"><input type="checkbox" checked={mi.opportunity||false} onChange={e=>setMi(p=>({...p,opportunity:e.target.checked}))} id="opp"/><label htmlFor="opp" className="text-xs text-gray-700">Mark as Opportunity (not risk)</label></div>
-      <div><label htmlFor="issue-detail" className="text-xs font-medium text-gray-700">Detail</label><textarea id="issue-detail" value={mi.detail||""} onChange={e=>setMi(p=>({...p,detail:e.target.value}))} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
+      <div className="flex items-center gap-2"><input type="checkbox" checked={mi.opportunity||false} onChange={e=>setMi(p=>({...p,opportunity:e.target.checked}))} id={`${p}-opp`}/><label htmlFor={`${p}-opp`} className="text-xs text-gray-700">Mark as Opportunity (not risk)</label></div>
+      <div><label htmlFor={`${p}-detail`} className="text-xs font-medium text-gray-700">Detail</label><textarea id={`${p}-detail`} value={mi.detail||""} onChange={e=>setMi(p=>({...p,detail:e.target.value}))} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs"/></div>
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-3 py-1 text-xs text-gray-600 border border-gray-200 rounded hover:bg-gray-100">Cancel</button>
         <button type="button" onClick={() => { if (!mi.issue?.trim()) return; onSave({ ...mi, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
