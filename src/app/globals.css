@@ -164,6 +164,9 @@
 .dark .text-gray-900 {
   color: #f1f5f9 !important;
 }
+.dark .text-gray-800 {
+  color: #e2e8f0 !important;
+}
 .dark .text-gray-700 {
   color: #cbd5e1 !important;
 }

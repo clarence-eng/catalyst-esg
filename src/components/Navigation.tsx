@@ -14,8 +14,6 @@ const navItems = [
   { href: "/learn", icon: BookOpen, label: "Learn", desc: "Frameworks & case studies" },
 ];
 
-// Temasek brand color — deep purple from the official TEMASEK wordmark logo
-const TEMASEK_PURPLE = "#4B2580";
 
 export function Navigation() {
   const pathname = usePathname();
