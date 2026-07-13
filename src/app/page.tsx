@@ -177,7 +177,7 @@ export default function OverviewPage() {
           }`}>
             {avgScore >= 65 ? "Strong" : avgScore >= 40 ? "Developing" : "Needs Attention"}
           </div>
-          <div className="text-[10px] text-gray-400 mt-1">{activeCompanies.length} active companies</div>
+          <div className="text-[10px] text-gray-500 mt-1">{activeCompanies.length} active companies</div>
         </div>
       </div>
       )}
@@ -250,7 +250,7 @@ export default function OverviewPage() {
             })()}
           </div>
           {activeCompanies.some(c => c.carbonIntensity > 500) && (
-            <p className="text-[10px] text-gray-400 mt-3">│ = IEA ASEAN 2030 benchmark (500 tCO₂e/$M)</p>
+            <p className="text-[10px] text-gray-500 mt-3">│ = IEA ASEAN 2030 benchmark (500 tCO₂e/$M)</p>
           )}
         </div>
       )}

@@ -249,7 +249,7 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
                 ))}
               </ul>
               {f.keyRequirements.length > 3 && (
-                <p className="text-[10px] text-gray-400 mt-1 pl-5">+{f.keyRequirements.length - 3} more — see full framework documentation</p>
+                <p className="text-[10px] text-gray-500 mt-1 pl-5">+{f.keyRequirements.length - 3} more — see full framework documentation</p>
               )}
             </div>
           )}

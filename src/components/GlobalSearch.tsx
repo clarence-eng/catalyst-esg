@@ -75,7 +75,7 @@ export function GlobalSearch() {
             )}
             {matchedCompanies.length > 0 && (
               <div>
-                <div className="px-4 pt-3 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Companies</div>
+                <div className="px-4 pt-3 pb-1 text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Companies</div>
                 {matchedCompanies.map(c => (
                   <button key={c.slug} type="button" onClick={() => { router.push(`/scout/${c.slug}`); setOpen(false); }}
                     className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-left">
@@ -98,7 +98,7 @@ export function GlobalSearch() {
             )}
             {matchedFrameworks.length > 0 && (
               <div>
-                <div className="px-4 pt-3 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Frameworks</div>
+                <div className="px-4 pt-3 pb-1 text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Frameworks</div>
                 {matchedFrameworks.map(f => (
                   <button key={f.id} type="button" onClick={() => { router.push(`/learn?q=${encodeURIComponent(query)}`); setOpen(false); }}
                     className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-left">

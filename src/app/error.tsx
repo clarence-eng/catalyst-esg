@@ -37,7 +37,7 @@ export default function GlobalError({
           </Link>
         </div>
         {error.digest && (
-          <p className="text-xs text-gray-400 mt-4">Error ID: {error.digest}</p>
+          <p className="text-xs text-gray-500 mt-4">Error ID: {error.digest}</p>
         )}
       </div>
     </div>
