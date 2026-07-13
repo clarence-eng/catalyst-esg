@@ -199,6 +199,7 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
         onClick={() => setExpanded((e) => !e)}
         role="button"
         aria-expanded={expanded}
+        aria-controls={`framework-details-${f.id}`}
         tabIndex={0}
         onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded((v) => !v); } }}
       >
@@ -231,7 +232,7 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
         </span>
       </div>
       {expanded && (
-        <div className="px-3 pb-3 border-t border-gray-100">
+        <div id={`framework-details-${f.id}`} className="px-3 pb-3 border-t border-gray-100">
           <p className="text-xs text-gray-600 leading-relaxed mt-2 mb-2">{f.description}</p>
           {f.keyRequirements.length > 0 && (
             <div>

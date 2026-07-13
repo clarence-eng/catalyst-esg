@@ -1,7 +1,15 @@
 "use client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function NotFound() {
+  const [canGoBack, setCanGoBack] = useState(false);
+
+  useEffect(() => {
+    // history.length > 1 means there is a previous entry to go back to
+    setCanGoBack(window.history.length > 1);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F5F5F7] flex items-center justify-center">
       <div className="bg-white rounded-2xl border border-gray-200 p-10 max-w-md w-full text-center shadow-sm">
@@ -11,13 +19,15 @@ export default function NotFound() {
           The page you requested doesn&apos;t exist or has been moved.
         </p>
         <div className="flex items-center justify-center gap-3">
-          <button
-            type="button"
-            onClick={() => window.history.back()}
-            className="text-sm text-gray-600 border border-gray-200 px-5 py-2.5 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            Go back
-          </button>
+          {canGoBack && (
+            <button
+              type="button"
+              onClick={() => window.history.back()}
+              className="text-sm text-gray-600 border border-gray-200 px-5 py-2.5 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Go back
+            </button>
+          )}
           <Link
             href="/"
             className="inline-flex items-center gap-2 bg-[#4B2580] text-white text-sm px-5 py-2.5 rounded-lg hover:bg-[#3D1A6E] transition-colors"
