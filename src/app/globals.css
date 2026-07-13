@@ -281,7 +281,10 @@
 .dark { --ring: oklch(0.7 0.15 298); }
 /* Override outline-ring/50 default to full opacity in dark mode (50% opacity = 2.6:1 — below WCAG 1.4.11 3:1) */
 .dark *:focus-visible { outline-color: oklch(0.7 0.15 298) !important; }
-/* Tailwind focus:ring-* uses CSS box-shadow via --tw-ring-color, NOT outline — must be overridden separately.
+/* Tailwind v4 alpha-modifier variants bypass dark overrides (separate CSS class names) */
+.dark .bg-white\/60   { background-color: rgba(30,33,48,0.85) !important; }
+.dark .hover\:bg-gray-50\/50:hover { background-color: rgba(21,24,33,0.7) !important; }
+.dark .hover\:bg-gray-50\/30:hover { background-color: rgba(21,24,33,0.5) !important; }
    All semi-transparent purple/red rings fail WCAG 1.4.11 in dark mode (<3:1). Fix: raise alpha to 85% (#a78bfa at 85% = ~5.4:1 on card, ~7.1:1 on page). */
 .dark .focus\:ring-purple-400\/40:focus,
 .dark .focus\:ring-purple-400\/30:focus,
