@@ -273,7 +273,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
           <div>
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Engagements ({engagements.length})</h4>
-              <button type="button" onClick={() => setAddEng(true)} className="flex items-center gap-1 text-xs text-purple-700 hover:text-purple-900"><Plus className="w-3 h-3"/> Add</button>
+              <button type="button" onClick={() => { setAddEng(true); setEditEng(null); }} className="flex items-center gap-1 text-xs text-purple-700 hover:text-purple-900"><Plus className="w-3 h-3"/> Add</button>
             </div>
             {addEng && <div className="mb-3"><EngForm companySlug={co.slug} initial={makeEmptyEng()} onSave={saveEng} onCancel={() => setAddEng(false)}/></div>}
             <div className="space-y-2">
@@ -284,7 +284,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
                   <span className="text-gray-500 w-24 flex-shrink-0">{e.date}</span>
                   <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${e.status==="Completed"?"bg-emerald-50 text-emerald-700":e.status==="Overdue"?"bg-red-50 text-red-700":"bg-blue-50 text-blue-700"}`}>{e.status}</span>
                   <span className="flex-1 text-gray-700 truncate">{e.topic}</span>
-                  <button type="button" aria-label={`Edit engagement: ${e.topic}`} onClick={() => setEditEng(e)} className="text-gray-500 hover:text-purple-700"><Edit3 className="w-3 h-3"/></button>
+                  <button type="button" aria-label={`Edit engagement: ${e.topic}`} onClick={() => { setEditEng(e); setAddEng(false); }} className="text-gray-500 hover:text-purple-700"><Edit3 className="w-3 h-3"/></button>
                   <button type="button" aria-label={`Delete engagement: ${e.topic}`} onClick={() => delEng(e.id)} className="text-gray-500 hover:text-red-600"><Trash2 className="w-3 h-3"/></button>
                 </div>
               ))}
@@ -296,7 +296,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
           <div>
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Material Issues ({issues.length})</h4>
-              <button type="button" onClick={() => setAddIssue(true)} className="flex items-center gap-1 text-xs text-purple-700 hover:text-purple-900"><Plus className="w-3 h-3"/> Add</button>
+              <button type="button" onClick={() => { setAddIssue(true); setEditIssue(null); }} className="flex items-center gap-1 text-xs text-purple-700 hover:text-purple-900"><Plus className="w-3 h-3"/> Add</button>
             </div>
             {addIssue && <div className="mb-3"><IssueForm companySlug={co.slug} initial={EMPTY_MI} onSave={saveIssue} onCancel={() => setAddIssue(false)}/></div>}
             <div className="space-y-2">
@@ -308,7 +308,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
                   <span className="text-gray-500 text-[10px]">{i.category}</span>
                   {i.opportunity && <span className="text-[10px] text-emerald-600">Opportunity</span>}
                   <span className="flex-1 text-gray-700 truncate">{i.issue}</span>
-                  <button type="button" aria-label={`Edit issue: ${i.issue}`} onClick={() => setEditIssue(i)} className="text-gray-500 hover:text-purple-700"><Edit3 className="w-3 h-3"/></button>
+                  <button type="button" aria-label={`Edit issue: ${i.issue}`} onClick={() => { setEditIssue(i); setAddIssue(false); }} className="text-gray-500 hover:text-purple-700"><Edit3 className="w-3 h-3"/></button>
                   <button type="button" aria-label={`Delete issue: ${i.issue}`} onClick={() => delIssue(i.id)} className="text-gray-500 hover:text-red-600"><Trash2 className="w-3 h-3"/></button>
                 </div>
               ))}
