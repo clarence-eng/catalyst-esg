@@ -126,6 +126,7 @@ function makeEmptyEng(): Partial<DbEngagement> {
 }
 function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: string; initial: Partial<DbEngagement>; onSave: (e: Partial<DbEngagement>) => void; onCancel: () => void }) {
   const [eng, setEng] = useState({ ...initial });
+  const [topicError, setTopicError] = useState(false);
   const set = (k: string, v: string) => setEng(p => ({ ...p, [k]: v }));
   const p = `eng-${companySlug}`;
   return (
@@ -135,11 +136,15 @@ function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: stri
         <div><label htmlFor={`${p}-type`} className="text-xs font-medium text-gray-700">Type</label><select id={`${p}-type`} value={eng.type||""} onChange={e=>set("type",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"><option>Meeting</option><option>Call</option><option>Email</option><option>Site Visit</option></select></div>
         <div><label htmlFor={`${p}-status`} className="text-xs font-medium text-gray-700">Status</label><select id={`${p}-status`} value={eng.status||""} onChange={e=>set("status",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"><option>Planned</option><option>Completed</option><option>Overdue</option></select></div>
       </div>
-      <div><label htmlFor={`${p}-topic`} className="text-xs font-medium text-gray-700">Topic <span aria-hidden="true">*</span></label><input id={`${p}-topic`} aria-required="true" type="text" value={eng.topic||""} onChange={e=>set("topic",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"/></div>
+      <div>
+        <label htmlFor={`${p}-topic`} className="text-xs font-medium text-gray-700">Topic <span aria-hidden="true">*</span></label>
+        <input id={`${p}-topic`} aria-required="true" aria-invalid={topicError || undefined} aria-describedby={topicError ? `${p}-topic-err` : undefined} type="text" value={eng.topic||""} onChange={e=>{set("topic",e.target.value); if(e.target.value.trim()) setTopicError(false);}} className={`w-full mt-1 border rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40 ${topicError?"border-red-400":"border-gray-200"}`}/>
+        {topicError && <p id={`${p}-topic-err`} role="alert" className="text-xs text-red-600 mt-0.5">Topic is required</p>}
+      </div>
       <div><label htmlFor={`${p}-notes`} className="text-xs font-medium text-gray-700">Notes</label><textarea id={`${p}-notes`} value={eng.notes||""} onChange={e=>set("notes",e.target.value)} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"/></div>
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-3 py-1 text-xs text-gray-600 border border-gray-200 rounded hover:bg-gray-100">Cancel</button>
-        <button type="button" onClick={() => { if (!eng.topic?.trim()) { const el=document.getElementById(`${p}-topic`); el?.focus(); return; } onSave({ ...eng, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
+        <button type="button" onClick={() => { if (!eng.topic?.trim()) { setTopicError(true); document.getElementById(`${p}-topic`)?.focus(); return; } onSave({ ...eng, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
       </div>
     </div>
   );
@@ -149,11 +154,16 @@ function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: stri
 const EMPTY_MI: Partial<DbMaterialIssue> = { issue: "", severity: "Medium", category: "Environmental", opportunity: false, detail: "" };
 function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: string; initial: Partial<DbMaterialIssue>; onSave: (i: Partial<DbMaterialIssue>) => void; onCancel: () => void }) {
   const [mi, setMi] = useState({ ...initial });
+  const [nameError, setNameError] = useState(false);
   const p = `issue-${companySlug}`;
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
       <div className="grid grid-cols-3 gap-3">
-        <div><label htmlFor={`${p}-name`} className="text-xs font-medium text-gray-700">Issue Name <span aria-hidden="true">*</span></label><input id={`${p}-name`} aria-required="true" type="text" value={mi.issue||""} onChange={e=>setMi(p=>({...p,issue:e.target.value}))} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"/></div>
+        <div>
+          <label htmlFor={`${p}-name`} className="text-xs font-medium text-gray-700">Issue Name <span aria-hidden="true">*</span></label>
+          <input id={`${p}-name`} aria-required="true" aria-invalid={nameError || undefined} aria-describedby={nameError ? `${p}-name-err` : undefined} type="text" value={mi.issue||""} onChange={e=>{ setMi(p=>({...p,issue:e.target.value})); if(e.target.value.trim()) setNameError(false); }} className={`w-full mt-1 border rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40 ${nameError?"border-red-400":"border-gray-200"}`}/>
+          {nameError && <p id={`${p}-name-err`} role="alert" className="text-xs text-red-600 mt-0.5">Issue name is required</p>}
+        </div>
         <div><label htmlFor={`${p}-sev`} className="text-xs font-medium text-gray-700">Severity</label><select id={`${p}-sev`} value={mi.severity||""} onChange={e=>setMi(p=>({...p,severity:e.target.value as "Critical"|"High"|"Medium"|"Low"}))} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
         <div><label htmlFor={`${p}-cat`} className="text-xs font-medium text-gray-700">Category</label><select id={`${p}-cat`} value={mi.category||""} onChange={e=>setMi(p=>({...p,category:e.target.value as "Environmental"|"Social"|"Governance"}))} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"><option>Environmental</option><option>Social</option><option>Governance</option></select></div>
       </div>
@@ -161,7 +171,7 @@ function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: st
       <div><label htmlFor={`${p}-detail`} className="text-xs font-medium text-gray-700">Detail</label><textarea id={`${p}-detail`} value={mi.detail||""} onChange={e=>setMi(p=>({...p,detail:e.target.value}))} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"/></div>
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-3 py-1 text-xs text-gray-600 border border-gray-200 rounded hover:bg-gray-100">Cancel</button>
-        <button type="button" onClick={() => { if (!mi.issue?.trim()) { const el=document.getElementById(`${p}-name`); el?.focus(); return; } onSave({ ...mi, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
+        <button type="button" onClick={() => { if (!mi.issue?.trim()) { setNameError(true); document.getElementById(`${p}-name`)?.focus(); return; } onSave({ ...mi, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
       </div>
     </div>
   );

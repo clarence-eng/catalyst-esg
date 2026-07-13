@@ -121,7 +121,7 @@ export function GlobalSearch() {
             ) : (
               <p className="text-sm text-gray-400">Type 2+ characters to search companies and frameworks</p>
             )}
-            <p className="text-xs text-gray-300 mt-1">Press <kbd className="bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded text-[10px] font-mono">Esc</kbd> to close</p>
+            <p className="text-xs text-gray-500 mt-1">Press <kbd className="bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded text-[10px] font-mono">Esc</kbd> to close</p>
           </div>
         )}
 
