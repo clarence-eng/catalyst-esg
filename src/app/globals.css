@@ -245,7 +245,20 @@
 .dark .text-blue-500   { color: #93c5fd !important; }
 .dark .text-orange-500 { color: #fdba74 !important; }
 .dark .text-purple-500 { color: #c4b5fd !important; }
-/* Navigation sidebar — active item bg and TEMASEK wordmark on dark sidebar (#1a1d23) */
+/* SDG badge backgrounds — UN SDG brand hex colors, darkened for dark mode */
+.dark .bg-\[\#DDA63A\] { background-color: #78350f !important; }
+.dark .bg-\[\#FCC30B\] { background-color: #451a03 !important; }
+.dark .bg-\[\#FD6925\] { background-color: #431407 !important; }
+.dark .bg-\[\#56C02B\] { background-color: #052e16 !important; }
+.dark .bg-\[\#4C9F38\] { background-color: #052e16 !important; }
+.dark .bg-\[\#A21942\] { background-color: #4c0519 !important; }
+.dark .bg-\[\#DD1367\] { background-color: #4c0519 !important; }
+.dark .bg-\[\#3F7E44\] { background-color: #052e16 !important; }
+.dark .bg-\[\#0A97D9\] { background-color: #0c4a6e !important; }
+/* teal-50 for NetZeroBadge */
+.dark .bg-teal-50     { background-color: #134e4a !important; }
+/* bg-gray-200 progress bar tracks */
+.dark .bg-gray-200    { background-color: #2d3748 !important; }
 .dark .bg-\[\#4B2580\]\/15 { background-color: rgba(167,139,250,0.2) !important; }
 .dark .bg-\[\#4B2580\]\/10 { background-color: rgba(167,139,250,0.15) !important; }
 .dark .border-\[\#4B2580\]\/30 { border-color: rgba(167,139,250,0.3) !important; }
