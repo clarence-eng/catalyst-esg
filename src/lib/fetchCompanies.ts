@@ -345,7 +345,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
         "Data centres exposed to Singapore temperature increase — cooling cost uplift est. 5% by 2035",
       ],
     },
-    boardComposition: { boardSize: 5, independentPct: 40, womenPct: 20, ceoChairSplit: false, auditCommittee: true, esgCommittee: false },
+    boardComposition: { boardSize: 5, independentPct: 40, womenPct: 20, ceoChairSplit: false, auditCommittee: false, esgCommittee: false },
     historicalScores: [
       { period: "Q1 2024", e: 30, s: 62, g: 42 },
       { period: "Q2 2024", e: 31, s: 64, g: 44 },
