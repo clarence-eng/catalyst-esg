@@ -98,7 +98,23 @@ export function KeyboardShortcuts() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" data-modal="shortcuts" onClick={() => setOpen(false)}>
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" aria-hidden="true" />
-      <div role="dialog" aria-modal="true" aria-labelledby="shortcuts-title" className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 p-6 w-96 max-w-full mx-4" onClick={e => e.stopPropagation()}>
+      <div role="dialog" aria-modal="true" aria-labelledby="shortcuts-title" className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 p-6 w-96 max-w-full mx-4" onClick={e => e.stopPropagation()}
+        onKeyDown={(e) => {
+          // Focus trap: with only the close button focusable, Tab/Shift+Tab both stay on it
+          if (e.key === "Tab") {
+            const focusable = e.currentTarget.querySelectorAll<HTMLElement>(
+              'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+            );
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey) {
+              if (!first || document.activeElement === first) { e.preventDefault(); last?.focus(); }
+            } else {
+              if (!last || document.activeElement === last) { e.preventDefault(); first?.focus(); }
+            }
+          }
+        }}
+      >
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
             <Keyboard className="w-4 h-4 text-purple-700" />
