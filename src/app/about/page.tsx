@@ -143,7 +143,7 @@ export default function AboutPage() {
       <div className="mb-8">
         <h2 className="text-base font-semibold text-gray-900 mb-1">Five AI Features</h2>
         <p className="text-xs text-gray-500 mb-3">All powered by Google Gemini 2.5 Flash. Requires <code className="text-purple-700 bg-purple-50 px-1 rounded">GEMINI_API_KEY</code> in <code className="text-gray-700 bg-gray-100 px-1 rounded">.env.local</code></p>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {aiFeatures.map((f) => (
             <div key={f.name} className="bg-white rounded-xl border border-gray-200 p-4">
               <div className="flex items-center gap-2 mb-1">
@@ -161,7 +161,7 @@ export default function AboutPage() {
       <div className="mb-8">
         <h2 className="text-base font-semibold text-gray-900 mb-3">Mock Portfolio ({companies.length} Companies)</h2>
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
             {companies.map((co) => (
               <div key={co.slug} className={`p-2 rounded-lg border ${co.portfolioStatus === "Pipeline" ? "border-blue-400/40 bg-blue-50" : "border-gray-200 bg-gray-50"}`}>
                 <div className="flex items-center gap-1.5 mb-0.5">
