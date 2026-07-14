@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { type Company, companies as allCompanies } from "@/data/companies";
 import { RiskBadge, RatingBadge, MaturityBadge, ScoreRing } from "@/components/ui-elements";
@@ -484,6 +484,14 @@ function OverviewTab({
   memoGeneratedAt: Date | null;
   onSetMemoError: (msg: string) => void;
 }) {
+  const [reducedMotion, setReducedMotion] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
   return (
     <div className="grid grid-cols-3 gap-6">
       {/* Left: Material Issues */}
@@ -708,8 +716,10 @@ function OverviewTab({
           )}
           {memo ? (
             <>
-              {memoLoading && <div className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
+              {memoLoading && <div role="status" aria-live="polite" aria-atomic="true" className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
+              <div aria-busy={memoLoading}>
               <AIOutput text={memo} />
+              </div>
               <div className="mt-3 flex items-center">
                 <button
                   type="button"
@@ -778,7 +788,7 @@ function OverviewTab({
             <RadarChart data={radarData}>
               <PolarGrid stroke="rgba(0,0,0,0.08)" />
               <PolarAngleAxis dataKey="subject" tick={{ fill: "#64748b", fontSize: 10 }} />
-              <Radar name="ESG" dataKey="score" stroke="#10b981" fill="#10b981" fillOpacity={0.15} strokeWidth={2} />
+              <Radar name="ESG" dataKey="score" stroke="#10b981" fill="#10b981" fillOpacity={0.15} strokeWidth={2} isAnimationActive={!reducedMotion} />
             </RadarChart>
           </ResponsiveContainer>
           </div>
@@ -840,9 +850,9 @@ function OverviewTab({
                 contentStyle={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "8px", fontSize: 11 }}
                 labelStyle={{ color: "#6b7280" }}
               />
-              <Line type="monotone" dataKey="e" stroke="#10b981" strokeWidth={2} dot={{ r: 2, fill: "#10b981", strokeWidth: 0 }} name="E" />
-              <Line type="monotone" dataKey="s" stroke="#3b82f6" strokeWidth={2} dot={{ r: 2, fill: "#3b82f6", strokeWidth: 0 }} name="S" />
-              <Line type="monotone" dataKey="g" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 2, fill: "#8b5cf6", strokeWidth: 0 }} name="G" />
+              <Line type="monotone" dataKey="e" stroke="#10b981" strokeWidth={2} dot={{ r: 2, fill: "#10b981", strokeWidth: 0 }} name="E" isAnimationActive={!reducedMotion} />
+              <Line type="monotone" dataKey="s" stroke="#3b82f6" strokeWidth={2} dot={{ r: 2, fill: "#3b82f6", strokeWidth: 0 }} name="S" isAnimationActive={!reducedMotion} />
+              <Line type="monotone" dataKey="g" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 2, fill: "#8b5cf6", strokeWidth: 0 }} name="G" isAnimationActive={!reducedMotion} />
             </LineChart>
           </ResponsiveContainer>
           </div>
@@ -1608,8 +1618,10 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
         )}
         {questions ? (
           <>
-            {questionsLoading && <div className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
+            {questionsLoading && <div role="status" aria-live="polite" aria-atomic="true" className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
+            <div aria-busy={questionsLoading}>
             <AIOutput text={questions} />
+            </div>
             <div className="mt-3 flex items-center">
               <button
                 type="button"

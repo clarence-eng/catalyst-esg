@@ -46,7 +46,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 mb-8" aria-live="polite" aria-atomic="false">
+    <div className="bg-white rounded-xl border border-gray-200 p-5 mb-8">
       <div className="flex items-center justify-between mb-3">
         <div>
           <h2 className="text-sm font-semibold text-gray-900">Portfolio ESG Brief</h2>
@@ -70,6 +70,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
           {error}
         </div>
       )}
+      <div aria-live="polite" aria-atomic="false">
       {brief ? (
         <>
           {loading && <div className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
@@ -107,6 +108,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
           <div className="text-gray-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
         </div>
       )}
+      </div>
     </div>
   );
 }

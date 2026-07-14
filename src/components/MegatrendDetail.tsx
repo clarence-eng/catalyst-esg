@@ -79,12 +79,11 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
 
   return (
     <div className="p-8">
-      {liveDataError && (
-        <div role="status" aria-live="polite" className="bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg px-4 py-2.5 mb-4 flex items-center gap-2">
-          <span aria-hidden="true">⚠</span>
-          <span>Using demo data — live portfolio database unavailable. Portfolio exposure data may not reflect current holdings.</span>
-        </div>
-      )}
+      {/* Always-mounted live region — content changes after mount so screen readers can announce it */}
+      <div role="status" aria-live="polite" aria-atomic="true" className={`text-xs rounded-lg px-4 py-2.5 mb-4 flex items-center gap-2 ${liveDataError ? "bg-amber-50 border border-amber-200 text-amber-800" : "hidden"}`}>
+        <span aria-hidden="true">⚠</span>
+        <span>{liveDataError ? "Using demo data — live portfolio database unavailable. Portfolio exposure data may not reflect current holdings." : ""}</span>
+      </div>
       {/* Header */}
       <div className={`rounded-xl border p-6 mb-8 ${colorMap[t.color] ?? "border-gray-200 bg-gray-100"}`}>
         <div className="flex items-start justify-between">
@@ -149,7 +148,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
           </div>
 
           {/* AI Thematic Brief Generator */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5" aria-live="polite" aria-atomic="false">
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 className="text-sm font-semibold text-gray-900">AI Thematic Brief</h3>
@@ -171,9 +170,10 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                 {error}
               </div>
             )}
+            <div aria-live="polite" aria-atomic="false">
             {brief ? (
               <>
-                {loading && <div className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
+                {loading && <div role="status" aria-live="polite" aria-atomic="true" className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
                 <AIOutput text={brief} />
               </>
             ) : loading ? (
@@ -186,12 +186,13 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                 <div className="text-gray-500 mt-1">Requires GEMINI_API_KEY in .env.local</div>
               </div>
             )}
+            </div>
             {brief && (
               <div className="mt-3 flex items-center">
                 <button
                   type="button"
                   onClick={() => {
-                    const date = new Date().toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" });
+                    const date = (briefGeneratedAt ?? new Date()).toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" });
                     const header = `CATALYST ESG INTELLIGENCE\nThematic Brief: ${t.title}\nPrepared: ${date}\n${"─".repeat(60)}\n\n`;
                     copyToClipboard(header + brief);
                   }}
