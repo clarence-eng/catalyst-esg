@@ -1588,7 +1588,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
         <div className="flex items-center justify-between mb-3">
           <div>
             <h3 className="text-sm font-semibold text-gray-900">Pre-Engagement Question Pack</h3>
-            <p className="text-xs text-gray-500 mt-0.5">AI-generated due diligence questions tailored to this company's ESG profile</p>
+            <p className="text-xs text-gray-500 mt-0.5">AI-generated due diligence questions tailored to this company&apos;s ESG profile</p>
           </div>
           <button
             type="button"

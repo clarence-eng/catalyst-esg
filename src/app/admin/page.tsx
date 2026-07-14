@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
+import Link from "next/link";
 import { supabase, type DbCompany, type DbEngagement, type DbMaterialIssue } from "@/lib/supabase";
 import { clearCache } from "@/lib/useCompanies";
 import { Plus, Trash2, Edit3, Save, ChevronDown, ChevronUp, Lock, LogOut, Building2, Users, CheckCircle } from "lucide-react";
@@ -496,7 +497,7 @@ export default function AdminPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <a href="/" className="text-xs text-gray-500 hover:text-purple-700 transition-colors">← Back to App</a>
+            <Link href="/" className="text-xs text-gray-500 hover:text-purple-700 transition-colors">← Back to App</Link>
             <button type="button" onClick={auth.logout} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700"><LogOut className="w-3 h-3"/>Sign out</button>
           </div>
         </div>
@@ -568,7 +569,7 @@ export default function AdminPage() {
               <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-2xl">
                 <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-3"/>
                 <p className="text-gray-500 font-medium">No companies yet</p>
-                <p className="text-sm text-gray-500 mt-1">Click "Add Company" to add your first portfolio company</p>
+                <p className="text-sm text-gray-500 mt-1">Click &quot;Add Company&quot; to add your first portfolio company</p>
               </div>
             )}
           </div>
