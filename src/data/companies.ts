@@ -827,9 +827,9 @@ export const companies: Company[] = [
     netZeroCommitment: "SBTi Committed",
     boardComposition: {
       boardSize: 8,
-      independentPct: 56,
+      independentPct: 38,
       womenPct: 33,
-      ceoChairSplit: true,
+      ceoChairSplit: false,
       auditCommittee: true,
       esgCommittee: true,
     },
@@ -1043,8 +1043,8 @@ export const companies: Company[] = [
     portfolioStatus: "Pipeline",
     temasekMegatrend: "Longer Lifespans",
     esgScore: {
-      overall: 62,
-      environmental: 58,
+      overall: 56,
+      environmental: 41,
       social: 72,
       governance: 56,
       rating: "BBB",
@@ -1169,7 +1169,7 @@ export const companies: Company[] = [
     netZeroCommitment: "Net Zero Pledged",
     boardComposition: {
       boardSize: 5,
-      independentPct: 44,
+      independentPct: 40,
       womenPct: 25,
       ceoChairSplit: false,
       auditCommittee: true,
@@ -1185,7 +1185,7 @@ export const companies: Company[] = [
       { period: "Q3 2025", e: 38, s: 71, g: 53 },
       { period: "Q4 2025", e: 38, s: 71, g: 55 },
       { period: "Q1 2026", e: 39, s: 72, g: 55 },
-      { period: "Q2 2026", e: 58, s: 72, g: 56 },
+      { period: "Q2 2026", e: 41, s: 72, g: 56 },
     ],
     icRecommendation: {
       verdict: "Invest Conditional",

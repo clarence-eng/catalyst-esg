@@ -71,7 +71,7 @@ export default function SignalPage() {
 
       {/* Megatrend Cards */}
       <h2 className="text-sm font-semibold text-gray-900 mb-4">ESG Megatrends</h2>
-      <div className="grid grid-cols-3 gap-4 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
         {megatrends.map((t) => {
           const exposureSummary = t.portfolioExposure.filter((p) => p.exposure === "High" && activePortfolioSlugs.has(p.slug)).length;
 
@@ -114,7 +114,7 @@ export default function SignalPage() {
       {/* Regulatory Compliance Timeline — respects urgency tab selection */}
       <div className="mb-8">
         <h2 className="text-sm font-semibold text-gray-900 mb-2">
-          Compliance Deadline Calendar
+          Compliance Deadline Tracker
           {urgencyView !== "all" && <span className="ml-2 text-xs font-normal text-gray-500">· {urgencyView} urgency only</span>}
         </h2>
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">

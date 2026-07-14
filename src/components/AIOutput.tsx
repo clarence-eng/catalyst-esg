@@ -33,7 +33,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
           <ol key={key++} className="list-none space-y-1 my-2">
             {listBuffer.map((item, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
-                <span className="text-emerald-700 mt-0.5 flex-shrink-0 font-medium w-4 text-right">{item.num ?? i + 1}.</span>
+                <span className="text-emerald-700 mt-0.5 flex-shrink-0 font-medium min-w-[1.5rem] text-right">{item.num ?? i + 1}.</span>
                 <span dangerouslySetInnerHTML={{ __html: renderInline(item.text) }} />
               </li>
             ))}
