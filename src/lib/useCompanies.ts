@@ -10,6 +10,8 @@ let inFlight: Promise<void> | null = null;
 let cacheEpoch = 0;
 // Subscriber registry — notified on clearCache() so already-mounted hooks re-fetch
 const refreshCallbacks = new Set<() => void>();
+// Session-level demo banner: show only once per session (first page to render it)
+const DEMO_BANNER_KEY = "catalyst_demo_banner_shown";
 
 export function useCompanies() {
   const [companies, setCompanies] = useState<Company[]>(staticCompanies);
@@ -86,7 +88,18 @@ export function useCompanies() {
   // Re-run fetch whenever fetchTick increments (triggered by clearCache via subscriber registry)
   useEffect(() => { doFetch(); }, [fetchTick, doFetch]);
 
-  return { companies, loading, source, liveDataError };
+  // Session-level suppression: only show demo banner on the first page that triggers it per session
+  const [showDemoBanner, setShowDemoBanner] = useState(false);
+  useEffect(() => {
+    if (!liveDataError) return;
+    try {
+      if (sessionStorage.getItem(DEMO_BANNER_KEY)) return;
+      sessionStorage.setItem(DEMO_BANNER_KEY, "1");
+      setShowDemoBanner(true);
+    } catch { setShowDemoBanner(true); }
+  }, [liveDataError]);
+
+  return { companies, loading, source, liveDataError, showDemoBanner };
 }
 
 export function clearCache() {

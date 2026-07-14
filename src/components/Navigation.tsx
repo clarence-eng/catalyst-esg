@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, LayoutDashboard, Users, Radio, BookOpen, Info, Moon, Sun } from "lucide-react";
+import { Search, LayoutDashboard, Users, Radio, BookOpen, Info, Moon, Sun, Lock } from "lucide-react";
 import { useCompanies } from "@/lib/useCompanies";
 import { useTheme } from "@/lib/useTheme";
 
@@ -100,6 +100,14 @@ export function Navigation() {
         >
           <Info className="w-3 h-3" />
           About this demo
+        </Link>
+        <Link
+          href="/admin"
+          aria-current={pathname === "/admin" ? "page" : undefined}
+          className={`flex items-center gap-2 text-xs mb-2 transition-colors ${pathname === "/admin" ? "text-[#4B2580]" : "text-gray-500 hover:text-gray-700"}`}
+        >
+          <Lock className="w-3 h-3" />
+          Admin
         </Link>
         <button
           type="button"

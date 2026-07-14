@@ -857,7 +857,7 @@ function OverviewTab({
           </ResponsiveContainer>
           </div>
           <div className="flex gap-3 mt-2 justify-center">
-            {[{ color: "#10b981", label: "E" }, { color: "#3b82f6", label: "S" }, { color: "#8b5cf6", label: "G" }].map(({ color, label }) => (
+            {[{ color: "#10b981", label: "Environmental" }, { color: "#3b82f6", label: "Social" }, { color: "#8b5cf6", label: "Governance" }].map(({ color, label }) => (
               <div key={label} className="flex items-center gap-1.5">
                 <div className="w-2.5 h-0.5 rounded" style={{ backgroundColor: color }} />
                 <span className="text-xs text-gray-500">{label}</span>

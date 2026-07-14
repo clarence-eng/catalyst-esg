@@ -8,6 +8,7 @@ import { Search, ArrowRight, GitMerge } from "lucide-react";
 import { ComparisonDrawer } from "@/components/ComparisonDrawer";
 
 type StatusFilter = "All" | "Active" | "Pipeline";
+type SortKey = "esg_desc" | "esg_asc" | "carbon_asc" | "carbon_desc" | "name_asc";
 
 const MEGATREND_COLORS: Record<string, string> = {
   "Climate Transition": "text-emerald-700",
@@ -57,11 +58,12 @@ function loadFilter(): { query: string; statusFilter: StatusFilter } {
 
 export default function ScoutPage() {
   const router = useRouter();
-  const { companies, liveDataError } = useCompanies();
+  const { companies, liveDataError, showDemoBanner } = useCompanies();
   // Start with SSR-safe defaults to avoid hydration mismatch
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
   const [compareSet, setCompareSet] = useState<Set<string>>(new Set());
+  const [sortKey, setSortKey] = useState<SortKey>("esg_desc");
   // Track whether initial restore from sessionStorage has completed
   const restoredRef = useRef(false);
   // renderCountRef: persist effects only write after at least 2 renders (restore fires on render 1, restored values apply on render 2)
@@ -107,11 +109,18 @@ export default function ScoutPage() {
       c.description.toLowerCase().includes(q) ||
       c.temasekMegatrend.toLowerCase().includes(q)
     );
+  }).slice().sort((a, b) => {
+    if (sortKey === "esg_desc") return b.esgScore.overall - a.esgScore.overall;
+    if (sortKey === "esg_asc") return a.esgScore.overall - b.esgScore.overall;
+    if (sortKey === "carbon_asc") return a.carbonIntensity - b.carbonIntensity;
+    if (sortKey === "carbon_desc") return b.carbonIntensity - a.carbonIntensity;
+    if (sortKey === "name_asc") return a.name.localeCompare(b.name, "en-SG");
+    return 0;
   });
 
   return (
     <div className="p-8">
-      {liveDataError && (
+      {showDemoBanner && (
         <div role="status" aria-live="polite" className="bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg px-4 py-2.5 mb-4 flex items-center gap-2">
           <span aria-hidden="true">⚠</span>
           <span>Using demo data — live portfolio database unavailable. Company data may not reflect the current portfolio.</span>
@@ -150,6 +159,19 @@ export default function ScoutPage() {
             </button>
           ))}
         </div>
+        <label className="sr-only" htmlFor="scout-sort">Sort by</label>
+        <select
+          id="scout-sort"
+          value={sortKey}
+          onChange={(e) => setSortKey(e.target.value as SortKey)}
+          className="text-xs bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400/40 focus:border-purple-600/40"
+        >
+          <option value="esg_desc">ESG Score ↓ (best first)</option>
+          <option value="esg_asc">ESG Score ↑ (triage)</option>
+          <option value="carbon_asc">Carbon ↑ (lowest first)</option>
+          <option value="carbon_desc">Carbon ↓ (highest first)</option>
+          <option value="name_asc">Name A–Z</option>
+        </select>
         <div className="text-xs text-gray-500" role="status" aria-live="polite" aria-atomic="true">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</div>
       </div>
 
@@ -187,7 +209,7 @@ export default function ScoutPage() {
       )}
 
       {/* Company Cards */}
-      <div className="grid grid-cols-1 gap-4">
+      <div className={`grid grid-cols-1 gap-4 ${compareSet.size > 0 ? "pb-44" : ""}`}>
         {filtered.map((co) => (
           <Link
             key={co.slug}

@@ -3,7 +3,7 @@ import { useState, memo } from "react";
 import { useCompanies } from "@/lib/useCompanies";
 import type { Company } from "@/data/companies";
 import { RatingBadge, MaturityBadge, RiskBadge, PageHeader } from "@/components/ui-elements";
-import { Loader2, FileText, CheckCircle, Clock, ChevronDown, ChevronUp, Copy, GitMerge, AlertCircle } from "lucide-react";
+import { Loader2, FileText, CheckCircle, Clock, ChevronDown, ChevronUp, Copy, GitMerge, AlertCircle, Sparkles } from "lucide-react";
 import { AIOutput } from "@/components/AIOutput";
 import Link from "next/link";
 import { formatRelativeTime, formatDate, copyToClipboard } from "@/lib/utils";
@@ -11,7 +11,7 @@ import { formatRelativeTime, formatDate, copyToClipboard } from "@/lib/utils";
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
 export default function StewardPage() {
-  const { companies, loading: companiesLoading, liveDataError } = useCompanies();
+  const { companies, loading: companiesLoading, liveDataError, showDemoBanner } = useCompanies();
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const pipelineCompanies = companies.filter((c) => c.portfolioStatus === "Pipeline");
   const [view, setView] = useState<"cards" | "calendar">("cards");
@@ -46,7 +46,7 @@ export default function StewardPage() {
 
   return (
     <div className="p-8">
-      {liveDataError && (
+      {showDemoBanner && (
         <div role="status" aria-live="polite" className="bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg px-4 py-2.5 mb-4 flex items-center gap-2">
           <span aria-hidden="true">⚠</span>
           <span>Using demo data — live portfolio database unavailable. Engagement records may not reflect current portfolio.</span>
@@ -86,7 +86,7 @@ export default function StewardPage() {
                 : "text-gray-600 hover:text-gray-800"
             }`}
           >
-            {v === "cards" ? "Cards" : "Calendar"}
+            {v === "cards" ? "Cards" : "Timeline"}
           </button>
         ))}
       </div>
@@ -311,6 +311,12 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
                   </span>
                 );
               })()}
+              {!expanded && (
+                <span className="flex items-center gap-1 text-[10px] text-purple-600 bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded">
+                  <Sparkles className="w-2.5 h-2.5" aria-hidden="true" />
+                  AI Action Plan
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-4 text-xs text-gray-500">
               <span>{co.sector}</span>

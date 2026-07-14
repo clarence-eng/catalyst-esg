@@ -56,6 +56,9 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
 export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
   const router = useRouter();
   if (data.length === 0) return null;
+  const maxCarbon = Math.max(...data.map(d => d.carbonIntensity));
+  const yMax = Math.min(maxCarbon * 1.15, 2000);
+  const offChart = data.filter(d => d.carbonIntensity > yMax);
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
       <div className="flex items-center justify-between mb-1">
@@ -70,9 +73,9 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
           </div>
         ))}
         <span className="text-xs text-gray-500 ml-2">Transition Risk</span>
-        {data.filter(d => d.carbonIntensity > 400).length > 0 && (
+        {offChart.length > 0 && (
           <div className="ml-auto flex items-center gap-2 flex-shrink-0">
-            {data.filter(d => d.carbonIntensity > 400).map(d => (
+            {offChart.map(d => (
               <span key={d.slug} className="text-xs text-red-700 bg-red-50 border border-red-300 px-2 py-0.5 rounded">
                 ↑ {d.name} ({d.carbonIntensity} tCO₂e/$M) — off chart Y
               </span>
@@ -97,7 +100,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
             dataKey="carbonIntensity"
             type="number"
             name="Carbon Intensity"
-            domain={[0, 400]}
+            domain={[0, yMax]}
             tick={{ fill: "#64748b", fontSize: 10 }}
             tickLine={false}
             width={42}
@@ -121,15 +124,10 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
         </ScatterChart>
       </ResponsiveContainer>
       </div>
-      {(() => {
-        const offChart = data.filter(d => d.carbonIntensity > 400);
-        return (
-          <div className="text-xs text-gray-500 text-center mt-1">
-            Ideal: bottom-right (high ESG, low carbon)
-            {offChart.length > 0 && ` · ${offChart.map(d => `${d.name} (${d.carbonIntensity} tCO₂e/$M)`).join(", ")} off-chart`}
-          </div>
-        );
-      })()}
+      <div className="text-xs text-gray-500 text-center mt-1">
+        Ideal: bottom-right (high ESG, low carbon)
+        {offChart.length > 0 && ` · ${offChart.map(d => `${d.name} (${d.carbonIntensity} tCO₂e/$M)`).join(", ")} off-chart`}
+      </div>
       {/* Keyboard-accessible equivalent: screen-reader/keyboard users navigate to company profiles via this list */}
       <ul className="sr-only">
         {data.map(d => (
