@@ -11,7 +11,7 @@ import { formatRelativeTime, formatDate, copyToClipboard } from "@/lib/utils";
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
 export default function StewardPage() {
-  const { companies, liveDataError } = useCompanies();
+  const { companies, loading: companiesLoading, liveDataError } = useCompanies();
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const pipelineCompanies = companies.filter((c) => c.portfolioStatus === "Pipeline");
   const [view, setView] = useState<"cards" | "calendar">("cards");
@@ -73,7 +73,7 @@ export default function StewardPage() {
       </PageHeader>
 
       {/* View Toggle */}
-      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 mb-6 w-fit">
+      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 mb-6 w-fit" role="group" aria-label="View mode">
         {(["cards", "calendar"] as const).map((v) => (
           <button
             type="button"
@@ -92,6 +92,7 @@ export default function StewardPage() {
       </div>
 
       {/* Calendar View */}
+      <div aria-live="polite" aria-atomic="false" aria-busy={companiesLoading}>
       {view === "calendar" && (
         <div className="mb-8">
           <div className="bg-white rounded-xl border border-gray-200">
@@ -171,6 +172,7 @@ export default function StewardPage() {
           </div>
         </div>
       )}
+      </div>{/* end aria-live view wrapper */}
     </div>
   );
 }
@@ -291,6 +293,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
           role="button"
           tabIndex={0}
           aria-expanded={expanded}
+          aria-controls={`steward-card-${co.slug}`}
           aria-label={`${co.name} engagement details`}
           onClick={() => setExpanded(!expanded)}
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded(!expanded); } }}
@@ -325,7 +328,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
               <ESGMini label="S" value={co.esgScore.social} />
               <ESGMini label="G" value={co.esgScore.governance} />
             </div>
-            <div className="flex flex-col items-center" title={`${completionPct}% of engagements completed`}>
+            <div className="flex flex-col items-center" aria-label={`${completionPct}% of engagements completed`}>
               <svg aria-hidden="true" width="44" height="44" className="-rotate-90">
                 <circle cx="22" cy="22" r={radius} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth={5} />
                 {total > 0 && <circle cx="22" cy="22" r={radius} fill="none"
@@ -338,17 +341,17 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 text-xs">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-                <span className="text-gray-700">{completedCount}</span>
+                <CheckCircle className="w-3.5 h-3.5 text-emerald-500" aria-hidden="true" />
+                <span className="text-gray-700"><span className="sr-only">Completed: </span>{completedCount}</span>
               </div>
               <div className="flex items-center gap-1.5 text-xs">
-                <Clock className="w-3.5 h-3.5 text-blue-600" />
-                <span className="text-gray-700">{plannedCount}</span>
+                <Clock className="w-3.5 h-3.5 text-blue-600" aria-hidden="true" />
+                <span className="text-gray-700"><span className="sr-only">Planned: </span>{plannedCount}</span>
               </div>
               {overdueCount > 0 && (
                 <div className="flex items-center gap-1.5 text-xs">
-                  <AlertCircle className="w-3.5 h-3.5 text-red-500" />
-                  <span className="text-red-700 font-medium">{overdueCount}</span>
+                  <AlertCircle className="w-3.5 h-3.5 text-red-500" aria-hidden="true" />
+                  <span className="text-red-700 font-medium"><span className="sr-only">Overdue: </span>{overdueCount}</span>
                 </div>
               )}
             </div>
@@ -374,7 +377,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
 
       {/* Expanded Content */}
       {expanded && (
-        <div className="border-t border-gray-200 p-5 space-y-5">
+        <div id={`steward-card-${co.slug}`} className="border-t border-gray-200 p-5 space-y-5">
           {/* Engagement Timeline */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 mb-3">Engagement History</h3>
@@ -505,7 +508,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
 
 function ESGMini({ label, value }: { label: string; value: number }) {
   const color =
-    value >= 65 ? "text-emerald-700" : value >= 40 ? "text-amber-600" : value >= 25 ? "text-orange-600" : "text-red-600";
+    value >= 65 ? "text-emerald-700" : value >= 40 ? "text-amber-800" : value >= 25 ? "text-orange-700" : "text-red-600";
   return (
     <div className="text-center">
       <div className={`text-sm font-bold ${color}`}>{value}</div>
