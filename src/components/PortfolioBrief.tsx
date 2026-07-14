@@ -14,6 +14,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [generatedAt, setGeneratedAt] = useState<Date | null>(null);
+  const [copied, setCopied] = useState(false);
 
   async function generate() {
     if (loading) return;
@@ -79,7 +80,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
           <div className="flex items-center gap-4 mt-3">
             <button
               type="button"
-              onClick={() => {
+              onClick={async () => {
                 const stamp = generatedAt ?? new Date();
                 const date = stamp.toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" });
                 const quarter = `Q${Math.ceil((stamp.getMonth() + 1) / 3)} ${stamp.getFullYear()}`;
@@ -87,12 +88,13 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
                 const names = count > 0 ? companyNames.join(", ") : "Active Portfolio Companies";
                 const countLabel = count > 0 ? `${count} ` : "";
                 const header = `CATALYST ESG INTELLIGENCE\n${quarter} Portfolio ESG Brief\nPrepared: ${date}\nPortfolio: ${countLabel}Active Companies (${names})\n${"─".repeat(60)}\n\n`;
-                copyToClipboard(header + brief);
+                await copyToClipboard(header + brief);
+                setCopied(true); setTimeout(() => setCopied(false), 2000);
               }}
               className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
             >
               <Copy className="w-3 h-3" />
-              Copy as document
+              {copied ? "Copied!" : "Copy as document"}
             </button>
             {generatedAt && (
               <span className="text-xs text-gray-500">Generated {formatRelativeTime(generatedAt)}</span>

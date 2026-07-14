@@ -498,6 +498,7 @@ function OverviewTab({
   }, []);
   // Use live companies for portfolio benchmark so admin edits are reflected immediately
   const { companies: liveCompanies } = useCompanies();
+  const [memoCopied, setMemoCopied] = useState(false);
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="col-span-2 space-y-4">
@@ -731,11 +732,11 @@ function OverviewTab({
               <div className="mt-3 flex items-center">
                 <button
                   type="button"
-                  onClick={() => copyToClipboard(memo)}
+                  onClick={async () => { await copyToClipboard(memo); setMemoCopied(true); setTimeout(() => setMemoCopied(false), 2000); }}
                   className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                 >
                   <Copy className="w-3 h-3" />
-                  Copy to clipboard
+                  {memoCopied ? "Copied!" : "Copy to clipboard"}
                 </button>
                 <button
                   type="button"
@@ -1503,8 +1504,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
   const completed = co.engagement.filter((e) => e.status === "Completed").length;
   const overdue = co.engagement.filter((e) => e.status === "Overdue").length;
   const completionPct = total > 0 ? Math.round((completed / total) * 100) : 0;
-
-  // Show most recent overdue (if any) or earliest planned
+  const [questionsCopied, setQuestionsCopied] = useState(false);
   const overdueItems = co.engagement
     .filter((e) => e.status === "Overdue")
     .sort((a, b) => a.date > b.date ? -1 : a.date < b.date ? 1 : 0); // newest overdue first
@@ -1633,11 +1633,11 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
             <div className="mt-3 flex items-center">
               <button
                 type="button"
-                onClick={() => copyToClipboard(questions)}
+                onClick={async () => { await copyToClipboard(questions); setQuestionsCopied(true); setTimeout(() => setQuestionsCopied(false), 2000); }}
                 className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
               >
                 <Copy className="w-3 h-3" />
-                Copy question pack
+                {questionsCopied ? "Copied!" : "Copy question pack"}
               </button>
               <span className="text-xs text-gray-500 ml-auto">
                 {questionsGeneratedAt ? `Generated ${formatRelativeTime(questionsGeneratedAt)}` : ""}

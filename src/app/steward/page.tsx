@@ -196,6 +196,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
   const planLoadingRef = useRef(false);
   const [planError, setPlanError] = useState("");
   const [planGeneratedAt, setPlanGeneratedAt] = useState<Date | null>(null);
+  const [planCopied, setPlanCopied] = useState(false);
 
   // Invalidate cached plan when any key company data changes — include material issue fingerprint
   // and tnfdAligned so plan clears when issues are promoted/resolved or TNFD milestone is achieved
@@ -464,11 +465,11 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
                 <div className="mt-3 flex items-center">
                   <button
                     type="button"
-                    onClick={() => copyToClipboard(plan)}
+                    onClick={async () => { await copyToClipboard(plan); setPlanCopied(true); setTimeout(() => setPlanCopied(false), 2000); }}
                     className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                   >
                     <Copy className="w-3 h-3" />
-                    Copy to clipboard
+                    {planCopied ? "Copied!" : "Copy to clipboard"}
                   </button>
                   <button
                     type="button"

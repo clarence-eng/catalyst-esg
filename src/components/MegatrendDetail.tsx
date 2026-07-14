@@ -37,6 +37,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [briefGeneratedAt, setBriefGeneratedAt] = useState<Date | null>(null);
+  const [briefCopied, setBriefCopied] = useState(false);
 
   async function generateBrief() {
     if (loading) return;
@@ -191,15 +192,16 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
               <div className="mt-3 flex items-center">
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={async () => {
                     const date = (briefGeneratedAt ?? new Date()).toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" });
                     const header = `CATALYST ESG INTELLIGENCE\nThematic Brief: ${t.title}\nPrepared: ${date}\n${"─".repeat(60)}\n\n`;
-                    copyToClipboard(header + brief);
+                    await copyToClipboard(header + brief);
+                    setBriefCopied(true); setTimeout(() => setBriefCopied(false), 2000);
                   }}
                   className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                 >
                   <Copy className="w-3 h-3" />
-                  Copy to clipboard
+                  {briefCopied ? "Copied!" : "Copy to clipboard"}
                 </button>
                 <span className="text-xs text-gray-500 ml-auto">
                   {briefGeneratedAt ? `Generated ${formatRelativeTime(briefGeneratedAt)}` : ""}

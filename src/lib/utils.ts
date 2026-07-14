@@ -24,11 +24,17 @@ export function formatDate(iso: string): string {
   return `${day} ${months[monthIdx]} ${y}`;
 }
 
-/** Copy text to clipboard with a window.prompt fallback for non-HTTPS contexts. */
-export function copyToClipboard(text: string): void {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).catch(() => { window.prompt("Copy manually:", text); });
-  } else {
+/** Copy text to clipboard with a window.prompt fallback for non-HTTPS contexts. Returns true on success. */
+export async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
     window.prompt("Copy manually:", text);
+    return true;
+  } catch {
+    window.prompt("Copy manually:", text);
+    return false;
   }
 }
