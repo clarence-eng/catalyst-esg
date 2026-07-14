@@ -197,41 +197,45 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 transition-colors">
-      <div
-        className="flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-50 transition-colors rounded-lg"
-        onClick={() => setExpanded((e) => !e)}
-        role="button"
-        aria-expanded={expanded}
-        tabIndex={0}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded((v) => !v); } }}
-      >
-        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-base font-bold ${categoryColors[f.category] ?? "text-gray-600"} bg-gray-100`}>
-          {f.name.charAt(0)}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-sm font-medium text-gray-900 truncate"><Highlight text={f.name} query={query} /></span>
-            <span className={`text-xs px-1.5 py-0.5 rounded border flex-shrink-0 ${statusStyles[f.status] ?? "text-gray-600 bg-gray-100 border-gray-200"}`}>{f.status}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className={`text-xs font-medium ${categoryColors[f.category] ?? "text-gray-600"}`}>{f.category}</span>
-            <span className="text-xs text-gray-500">·</span>
-            <span className="text-xs text-gray-500 truncate">{f.fullName}</span>
-          </div>
-        </div>
-        <a
-          href={f.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Open ${f.name} website`}
-          className="text-gray-500 hover:text-gray-700 transition-colors flex-shrink-0"
-          onClick={(e) => e.stopPropagation()}
+      <div className="flex items-center">
+        <div
+          className="flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-50 transition-colors rounded-lg flex-1 min-w-0"
+          onClick={() => setExpanded((e) => !e)}
+          role="button"
+          aria-label={`${f.name} — ${expanded ? "collapse" : "expand"} details`}
+          aria-expanded={expanded}
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded((v) => !v); } }}
         >
-          <ExternalLink className="w-3.5 h-3.5" />
-        </a>
-        <span className="text-gray-500 flex-shrink-0">
-          {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </span>
+          <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-base font-bold ${categoryColors[f.category] ?? "text-gray-600"} bg-gray-100`}>
+            {f.name.charAt(0)}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-0.5">
+              <span className="text-sm font-medium text-gray-900 truncate"><Highlight text={f.name} query={query} /></span>
+              <span className={`text-xs px-1.5 py-0.5 rounded border flex-shrink-0 ${statusStyles[f.status] ?? "text-gray-600 bg-gray-100 border-gray-200"}`}>{f.status}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-medium ${categoryColors[f.category] ?? "text-gray-600"}`}>{f.category}</span>
+              <span className="text-xs text-gray-500">·</span>
+              <span className="text-xs text-gray-500 truncate">{f.fullName}</span>
+            </div>
+          </div>
+          <span className="text-gray-500 flex-shrink-0 ml-2">
+            {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </span>
+        </div>
+        {f.url && (
+          <a
+            href={f.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open ${f.name} website`}
+            className="text-gray-500 hover:text-gray-700 transition-colors flex-shrink-0 px-3 py-3"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        )}
       </div>
       {expanded && (
         <div id={`framework-details-${f.id}`} className="px-3 pb-3 border-t border-gray-100">

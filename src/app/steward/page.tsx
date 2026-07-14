@@ -285,12 +285,14 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
+              <span className="font-semibold text-gray-900">{co.name}</span>
               <Link
                 href={`/scout/${co.slug}`}
-                className="font-semibold text-gray-900 hover:text-purple-700 transition-colors"
+                className="text-xs text-purple-700 hover:text-purple-900 transition-colors flex-shrink-0"
                 onClick={(e) => e.stopPropagation()}
+                aria-label={`View ${co.name} ESG profile`}
               >
-                {co.name}
+                Profile ↗
               </Link>
               <RatingBadge rating={co.esgScore.rating} />
               <MaturityBadge level={co.maturity} />
