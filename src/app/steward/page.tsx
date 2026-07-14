@@ -11,7 +11,7 @@ import { formatRelativeTime, formatDate, copyToClipboard } from "@/lib/utils";
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
 export default function StewardPage() {
-  const { companies, loading: companiesLoading, liveDataError, showDemoBanner } = useCompanies();
+  const { companies, loading: companiesLoading, showDemoBanner } = useCompanies();
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const pipelineCompanies = companies.filter((c) => c.portfolioStatus === "Pipeline");
   const [view, setView] = useState<"cards" | "calendar">("cards");

@@ -55,7 +55,7 @@ const overviewUrgencyMap: Record<string, string> = {
 };
 
 export default function OverviewPage() {
-  const { companies, liveDataError, showDemoBanner } = useCompanies();
+  const { companies, showDemoBanner } = useCompanies();
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const pipelineCount = companies.filter((c) => c.portfolioStatus === "Pipeline").length;
 
@@ -71,7 +71,7 @@ export default function OverviewPage() {
   const totalNonUtility = nonUtilityActive.reduce((s, c) => s + c.investmentValue, 0);
   const avgCarbonIntensity = totalNonUtility > 0
     ? Math.round(nonUtilityActive.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalNonUtility)
-    : 0;
+    : null;
   // Full weighted avg for AI context (more informative with the outlier noted)
   const avgCarbonIntensityFull = totalActive > 0
     ? Math.round(activeCompanies.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalActive)
@@ -111,7 +111,11 @@ export default function OverviewPage() {
   const eDelta = lastTrend && prevTrend ? lastTrend.e - prevTrend.e : 0;
   const sDelta = lastTrend && prevTrend ? lastTrend.s - prevTrend.s : 0;
   const gDelta = lastTrend && prevTrend ? lastTrend.g - prevTrend.g : 0;
-  const avgDelta = (eDelta + sDelta + gDelta) !== 0 ? Math.round((eDelta + sDelta + gDelta) / 3) : 0;
+  // Use raw sum check so individual-pillar badges show even when avg rounds to 0
+  const deltaSum = eDelta + sDelta + gDelta;
+  const avgDelta = deltaSum !== 0 ? Math.round(deltaSum / 3) : 0;
+  // Dynamic period label derived from data — never stale as new periods are added
+  const deltaLabel = lastTrend && prevTrend ? `${lastTrend.period} vs ${prevTrend.period}` : "";
 
   const portfolioSummary = activeCompanies.map((c) => {
     const topIssue = [...c.materialIssues]
@@ -120,7 +124,7 @@ export default function OverviewPage() {
     return (
       `${c.name} (${c.sector}, ${c.country}): ESG ${c.esgScore.overall}/100 [E:${c.esgScore.environmental} S:${c.esgScore.social} G:${c.esgScore.governance}], ` +
       `Maturity: ${c.maturity}, Transition Risk: ${c.climateRisk.transition}, Nature Risk: ${c.natureRisk.overall}, ` +
-      `Carbon Intensity: ${c.carbonIntensity} tCO2e/$M (non-utility portfolio avg: ${avgCarbonIntensity} tCO2e/$M, full portfolio avg incl. ${utilityLabel}: ${avgCarbonIntensityFull} tCO2e/$M), Green Revenue: ${c.greenRevenuePct}%, ` +
+      `Carbon Intensity: ${c.carbonIntensity} tCO2e/$M (non-utility portfolio avg: ${avgCarbonIntensity ?? "N/A"} tCO2e/$M, full portfolio avg incl. ${utilityLabel}: ${avgCarbonIntensityFull} tCO2e/$M), Green Revenue: ${c.greenRevenuePct}%, ` +
       `Overdue engagements: ${c.engagement.filter(e => e.status === "Overdue").length}, Planned: ${c.engagement.filter(e => e.status === "Planned").length}, ` +
       `Top issue: ${topIssue ? `${topIssue.issue} (${topIssue.severity})` : "None"}`
     );
@@ -210,18 +214,18 @@ export default function OverviewPage() {
               {avgDelta !== 0 && (
                 <span className={`text-xs font-medium px-2 py-0.5 rounded border ${
                   avgDelta > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200" : "text-red-700 bg-red-50 border-red-200"
-                }`} title="Q2 2026 vs Q1 2026">{avgDelta > 0 ? `↑ +${avgDelta}` : `↓ ${avgDelta}`} Q2 vs Q1</span>
+                }`} title={deltaLabel}>{avgDelta > 0 ? `↑ +${avgDelta}` : `↓ ${avgDelta}`} {deltaLabel}</span>
               )}
               {[{k:"E", v:eDelta},{k:"S", v:sDelta},{k:"G", v:gDelta}].map(({k,v}) => v !== 0 && (
                 <span key={k} className={`text-[10px] px-1.5 py-0.5 rounded border ${
                   v > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200" : "text-red-700 bg-red-50 border-red-200"
-                }`} title="Q2 2026 vs Q1 2026">{k}{v > 0 ? `+${v}` : v}</span>
+                }`} title={deltaLabel}>{k}{v > 0 ? `+${v}` : v}</span>
               ))}
             </div>
           )}
         </div>
         <StatCard label="Transition Risk Flags" value={highRisk} sub="High or Critical exposure" color="amber" />
-        <StatCard label="Avg Carbon Intensity" value={`${avgCarbonIntensity}`} sub="tCO₂e/$M revenue · ex-utilities weighted avg" color="default" />
+        <StatCard label="Avg Carbon Intensity" value={avgCarbonIntensity !== null ? `${avgCarbonIntensity}` : "N/A"} sub="tCO₂e/$M revenue · ex-utilities weighted avg" color="default" />
         <StatCard label="Overdue Engagements" value={overdueCount} sub="Requires immediate follow-up" color="red" />
         <StatCard label="Planned Engagements" value={plannedCount} sub="Upcoming" color="default" />
       </div>

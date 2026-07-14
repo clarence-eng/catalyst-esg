@@ -33,7 +33,7 @@ const megatrendUrgencyMap: Record<string, string> = {
 };
 
 export default function SignalPage() {
-  const { companies, liveDataError, showDemoBanner } = useCompanies();
+  const { companies, showDemoBanner } = useCompanies();
   const [jurisdictionFilter, setJurisdictionFilter] = useState("All");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [urgencyView, setUrgencyView] = useState<"all"|"high"|"medium"|"low">("all");

@@ -16,6 +16,8 @@ const SHORTCUTS = [
 
 export function KeyboardShortcuts() {
   const [open, setOpen] = useState(false);
+  const openRef = useRef(false);
+  useEffect(() => { openRef.current = open; }, [open]);
   const [gPressed, setGPressed] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Use a ref to avoid stale closure issues — handler always reads current gPressed value
@@ -30,22 +32,25 @@ export function KeyboardShortcuts() {
   // Move focus into dialog on open; restore focus to trigger element on close (WCAG 2.4.3)
   useEffect(() => {
     if (open) {
-      triggerRef.current = document.activeElement as HTMLElement;
+      const active = document.activeElement as HTMLElement;
+      // Only capture focusable elements — body/main have no .focus() effect
+      triggerRef.current = (active && active !== document.body && active.tabIndex >= -1) ? active : null;
       setTimeout(() => closeButtonRef.current?.focus(), 50);
     } else {
-      setTimeout(() => triggerRef.current?.focus(), 50);
+      if (triggerRef.current) {
+        setTimeout(() => triggerRef.current?.focus(), 50);
+      }
     }
   }, [open]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      const isInput = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement;
+      const isInput = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement || target.contentEditable === "true";
       if (isInput) return;
 
-      // Don't open shortcuts overlay if a true blocking modal (search) is already open
-      // Note: ComparisonDrawer (data-modal="comparison") is a non-blocking bottom bar — don't exclude it
-      const hasOtherModal = document.querySelector("[data-modal='search']");
+      // Don't fire when a blocking modal (search or shortcuts itself) is open
+      const hasOtherModal = document.querySelector("[data-modal='search']") || document.querySelector("[data-modal='shortcuts']");
 
       if (e.key === "?" && !e.metaKey && !e.ctrlKey) {
         if (!hasOtherModal) setOpen(o => !o);
@@ -53,7 +58,10 @@ export function KeyboardShortcuts() {
       }
       if (e.key === "Escape") { setOpen(false); setGPressed(false); gPressedRef.current = false; return; }
 
-      // Go-to shortcuts — read from ref so no stale closure, no effect re-run
+      // Go-to shortcuts — disabled while shortcuts dialog is open
+      if (openRef.current) return;
+
+      // Read from ref so no stale closure, no effect re-run
       if (e.key.toLowerCase() === "g" && !gPressedRef.current) {
         setGPressed(true);
         gPressedRef.current = true;

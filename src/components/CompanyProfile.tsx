@@ -2,6 +2,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { type Company, companies as allCompanies } from "@/data/companies";
+import { useCompanies } from "@/lib/useCompanies";
 import { RiskBadge, RatingBadge, MaturityBadge, ScoreRing } from "@/components/ui-elements";
 import { AIOutput } from "@/components/AIOutput";
 import { formatRelativeTime, formatDate, copyToClipboard } from "@/lib/utils";
@@ -484,7 +485,10 @@ function OverviewTab({
   memoGeneratedAt: Date | null;
   onSetMemoError: (msg: string) => void;
 }) {
-  const [reducedMotion, setReducedMotion] = useState(false);
+  // Initialize synchronously from matchMedia to avoid animation flash on remount for reduced-motion users
+  const [reducedMotion, setReducedMotion] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(mq.matches);
@@ -492,6 +496,8 @@ function OverviewTab({
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
   }, []);
+  // Use live companies for portfolio benchmark so admin edits are reflected immediately
+  const { companies: liveCompanies } = useCompanies();
   return (
     <div className="grid grid-cols-3 gap-6">
       {/* Left: Material Issues */}
@@ -799,7 +805,7 @@ function OverviewTab({
           <h3 className="text-sm font-semibold text-gray-900 mb-4">ESG Score Context</h3>
           <div className="space-y-3">
             {(() => {
-              const active = allCompanies.filter(c => c.portfolioStatus === "Active");
+              const active = (liveCompanies.length > 0 ? liveCompanies : allCompanies).filter(c => c.portfolioStatus === "Active");
               const totalIV = active.reduce((s, c) => s + c.investmentValue, 0) || 1;
               const wtdE = Math.round(active.reduce((s, c) => s + c.esgScore.environmental * c.investmentValue, 0) / totalIV);
               const wtdS = Math.round(active.reduce((s, c) => s + c.esgScore.social * c.investmentValue, 0) / totalIV);

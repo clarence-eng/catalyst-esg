@@ -60,7 +60,7 @@ function loadFilter(): { query: string; statusFilter: StatusFilter; sortKey: Sor
 
 export default function ScoutPage() {
   const router = useRouter();
-  const { companies, liveDataError, showDemoBanner } = useCompanies();
+  const { companies, showDemoBanner } = useCompanies();
   // Start with SSR-safe defaults to avoid hydration mismatch
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
