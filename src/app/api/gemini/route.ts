@@ -55,6 +55,8 @@ export async function POST(req: NextRequest) {
   // Use explicit allowlist (NOT the attacker-controllable Host header, NOT prefix matches).
   const origin = req.headers.get("origin") ?? "";
   const referer = req.headers.get("referer") ?? "";
+  // Extract origin from a full Referer URL (Referer includes path; Origin does not)
+  const refererOrigin = referer ? (() => { try { const u = new URL(referer); return `${u.protocol}//${u.host}`; } catch { return ""; } })() : "";
   // Exact domain allowlist — prefix matching removed to prevent any attacker-registered
   // catalyst-neon-eight-* Vercel project from bypassing this guard.
   const isAllowed = (s: string) =>
@@ -62,7 +64,7 @@ export async function POST(req: NextRequest) {
     s === "http://localhost:3000" ||
     s === "http://localhost:3001";
   const hasSourceHeader = origin !== "" || referer !== "";
-  const sameOrigin = isAllowed(origin) || isAllowed(referer);
+  const sameOrigin = isAllowed(origin) || isAllowed(refererOrigin);
   if (!hasSourceHeader || !sameOrigin) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
