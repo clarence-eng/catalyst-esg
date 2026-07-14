@@ -272,28 +272,32 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
         ? "border-blue-500/20 hover:border-blue-500/30"
         : "border-gray-200 hover:border-gray-200"
     }`}>
-      {/* Card Header — click anywhere to expand */}
-      <div
-        className="p-5 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/50 focus-visible:ring-inset rounded-t-xl"
-        role="button"
-        tabIndex={0}
-        aria-expanded={expanded}
-        aria-label={`${co.name} engagement card, ${expanded ? "expanded" : "collapsed"}`}
-        onClick={() => setExpanded(!expanded)}
-        onKeyDown={(e) => { if ((e.target as HTMLElement).closest('a,button')) return; if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded(!expanded); } }}
-      >
+      {/* Card Header */}
+      <div className="p-5">
+        {/* Company name row — outside the expand button to avoid nested-interactive */}
+        <div className="flex items-center gap-2 mb-3">
+          <span className="font-semibold text-gray-900">{co.name}</span>
+          <Link
+            href={`/scout/${co.slug}`}
+            className="text-xs text-purple-700 hover:text-purple-900 transition-colors"
+            aria-label={`View ${co.name} ESG profile`}
+          >
+            Profile ↗
+          </Link>
+        </div>
+        {/* Expand/collapse trigger — no nested interactive elements */}
+        <div
+          className="cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/50 focus-visible:ring-inset rounded-lg"
+          role="button"
+          tabIndex={0}
+          aria-expanded={expanded}
+          aria-label={`${co.name} engagement details, ${expanded ? "expanded" : "collapsed"}`}
+          onClick={() => setExpanded(!expanded)}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded(!expanded); } }}
+        >
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
-              <span className="font-semibold text-gray-900">{co.name}</span>
-              <Link
-                href={`/scout/${co.slug}`}
-                className="text-xs text-purple-700 hover:text-purple-900 transition-colors flex-shrink-0"
-                onClick={(e) => e.stopPropagation()}
-                aria-label={`View ${co.name} ESG profile`}
-              >
-                Profile ↗
-              </Link>
               <RatingBadge rating={co.esgScore.rating} />
               <MaturityBadge level={co.maturity} />
               {!isPipeline && (() => {
@@ -365,7 +369,8 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
             Green revenue: <span className="text-emerald-700">{co.greenRevenuePct}%</span>
           </div>
         </div>
-      </div>
+        </div>{/* close expand/collapse role=button */}
+      </div>{/* close p-5 outer div */}
 
       {/* Expanded Content */}
       {expanded && (
