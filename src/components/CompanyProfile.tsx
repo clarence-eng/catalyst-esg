@@ -406,7 +406,7 @@ function ASEANTaxonomyCard({ co }: { co: Company }) {
       <div className="space-y-2">
         {activities.map((a) => (
           <div key={`${a.activity}-${a.tier}`} className="flex items-center justify-between py-1.5 px-3 rounded-lg bg-gray-50 border border-gray-100">
-            <span className="text-xs text-gray-700 flex-1 min-w-0 mr-3 truncate">{a.activity}</span>
+            <span className="text-xs text-gray-700 flex-1 min-w-0 mr-3 truncate" title={a.activity}>{a.activity}</span>
             <div className="flex items-center gap-2 flex-shrink-0">
               <span className="text-xs text-gray-600">{a.pct}%</span>
               <span className={`text-xs px-2 py-0.5 rounded border font-medium ${tierBadgeClass[a.tier]}`}>
@@ -1665,9 +1665,9 @@ function SDGBadge({ sdg, label }: { sdg: number; label: string }) {
   const bg = sdgColors[sdg] ?? "bg-slate-600";
   const textClass = darkTextSdgs.has(sdg) ? "text-gray-900" : "text-white";
   return (
-    <div className={`flex items-center gap-1 ${bg} rounded px-1.5 py-0.5`} title={`SDG ${sdg}: ${label}`}>
-      <span className={`${textClass} text-[10px] font-bold leading-none`}>{sdg}</span>
-      <span className={`${textClass} text-[9px] leading-none opacity-90 hidden sm:inline`}>{label}</span>
+    <div className={`flex items-center gap-1 ${bg} rounded px-1.5 py-0.5`} aria-label={`SDG ${sdg}: ${label}`}>
+      <span className={`${textClass} text-[10px] font-bold leading-none`} aria-hidden="true">{sdg}</span>
+      <span className={`${textClass} text-[9px] leading-none opacity-90 hidden sm:inline`} aria-hidden="true">{label}</span>
     </div>
   );
 }

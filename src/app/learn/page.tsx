@@ -204,6 +204,7 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
           role="button"
           aria-label={`${f.name} details`}
           aria-expanded={expanded}
+          aria-controls={`framework-details-${f.id}`}
           tabIndex={0}
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded((v) => !v); } }}
         >

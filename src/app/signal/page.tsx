@@ -210,7 +210,7 @@ export default function SignalPage() {
       {/* Regulatory Radar */}
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-sm font-semibold text-gray-900">Regulatory Radar</h2>
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-gray-500" role="status" aria-live="polite" aria-atomic="true">
           {urgencyView === "all"
             ? `${filteredUpdates.length} of ${regulatoryUpdates.length} regulations`
             : `${(urgencyView === "high" ? highUrgency : urgencyView === "medium" ? mediumUrgency : lowUrgency).length} of ${filteredUpdates.length} filtered`}
@@ -219,8 +219,8 @@ export default function SignalPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-4">
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-xs text-gray-500">Jurisdiction:</span>
+        <div className="flex items-center gap-1.5 flex-wrap" role="group" aria-label="Filter by jurisdiction">
+          <span className="text-xs text-gray-500" aria-hidden="true">Jurisdiction:</span>
           {allJurisdictions.map((j) => (
             <button
               type="button"
@@ -237,8 +237,8 @@ export default function SignalPage() {
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-xs text-gray-500">Category:</span>
+        <div className="flex items-center gap-1.5 flex-wrap" role="group" aria-label="Filter by category">
+          <span className="text-xs text-gray-500" aria-hidden="true">Category:</span>
           {allCategories.map((c) => (
             <button
               type="button"

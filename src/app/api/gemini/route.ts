@@ -6,7 +6,7 @@ type GenerationType = (typeof ALLOWED_TYPES)[number];
 
 // Strip HTML-injection chars, collapse line endings, and remove all control chars
 // (incl. null byte, tab used as TSV separator, U+2028/U+2029 JS line terminators)
-const CTRL_RE = new RegExp("[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F\\xA0\\u2028\\u2029]", "g");
+const CTRL_RE = new RegExp("[\\x00-\\x09\\x0B\\x0C\\x0E-\\x1F\\x7F\\xA0\\u2028\\u2029]", "g");
 
 function sanitize(value: unknown, maxLen = 200): string {
   if (value === null || value === undefined) return "";

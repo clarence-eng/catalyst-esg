@@ -150,7 +150,7 @@ export default function ScoutPage() {
             </button>
           ))}
         </div>
-        <div className="text-xs text-gray-500">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</div>
+        <div className="text-xs text-gray-500" role="status" aria-live="polite" aria-atomic="true">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</div>
       </div>
 
       {/* Search Bar */}
@@ -388,7 +388,7 @@ export default function ScoutPage() {
                 </div>
                 <button
                   type="button"
-                  aria-label={compareSet.has(co.slug) ? "Remove from comparison" : compareSet.size >= 3 ? "Max 3 companies selected" : "Add to comparison"}
+                  aria-label={compareSet.has(co.slug) ? `Remove ${co.name} from comparison` : compareSet.size >= 3 ? `Max 3 companies selected — ${co.name}` : `Add ${co.name} to comparison`}
                   aria-disabled={!compareSet.has(co.slug) && compareSet.size >= 3}
                   title={!compareSet.has(co.slug) && compareSet.size >= 3 ? "Maximum 3 companies can be compared" : undefined}
                   onClick={(e) => {
