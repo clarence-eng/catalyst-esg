@@ -451,7 +451,7 @@ export const companies: Company[] = [
     netZeroCommitment: "Net Zero Pledged",
     boardComposition: {
       boardSize: 8,
-      independentPct: 62,
+      independentPct: 63,
       womenPct: 38,
       ceoChairSplit: true,
       auditCommittee: true,
