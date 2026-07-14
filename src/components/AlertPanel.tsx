@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AlertCircle, AlertTriangle, Info } from "lucide-react";
+import { AlertCircle, AlertTriangle, Info, CheckCircle2 } from "lucide-react";
 import { type Company } from "@/data/companies";
 
 interface Alert {
@@ -87,7 +87,12 @@ function generateAlerts(companies: Company[]): Alert[] {
 export function AlertPanel({ companies }: { companies: Company[] }) {
   const alerts = generateAlerts(companies);
 
-  if (alerts.length === 0) return null;
+  if (alerts.length === 0) return (
+    <div className="rounded-xl border border-emerald-300/50 bg-emerald-50/60 p-4 mb-6 flex items-center gap-2">
+      <CheckCircle2 className="w-4 h-4 text-emerald-700 flex-shrink-0" />
+      <p className="text-xs text-emerald-800 font-medium">No active alerts — portfolio engagements and ESG scores are on track.</p>
+    </div>
+  );
 
   return (
     <div className="rounded-xl border border-amber-400/40 bg-amber-50 p-4 mb-6">

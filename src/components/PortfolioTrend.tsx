@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -17,6 +18,16 @@ interface TrendPoint {
 }
 
 export function PortfolioTrend({ data, activeCount }: { data: TrendPoint[]; activeCount: number }) {
+  const [reducedMotion, setReducedMotion] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   if (data.length < 2) return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6 flex items-center justify-center h-32">
       <p className="text-xs text-gray-500">Insufficient historical data to display trend</p>
@@ -84,9 +95,9 @@ export function PortfolioTrend({ data, activeCount }: { data: TrendPoint[]; acti
             }}
             labelStyle={{ color: "#6b7280" }}
           />
-          <Line type="monotone" dataKey="e" stroke="#10b981" strokeWidth={2} dot={{ r: 2, fill: "#10b981", strokeWidth: 0 }} name="Env" />
-          <Line type="monotone" dataKey="s" stroke="#3b82f6" strokeWidth={2} dot={{ r: 2, fill: "#3b82f6", strokeWidth: 0 }} name="Social" />
-          <Line type="monotone" dataKey="g" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 2, fill: "#8b5cf6", strokeWidth: 0 }} name="Gov" />
+          <Line type="monotone" dataKey="e" stroke="#10b981" strokeWidth={2} dot={{ r: 2, fill: "#10b981", strokeWidth: 0 }} name="Env" isAnimationActive={!reducedMotion} />
+          <Line type="monotone" dataKey="s" stroke="#3b82f6" strokeWidth={2} dot={{ r: 2, fill: "#3b82f6", strokeWidth: 0 }} name="Social" isAnimationActive={!reducedMotion} />
+          <Line type="monotone" dataKey="g" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 2, fill: "#8b5cf6", strokeWidth: 0 }} name="Gov" isAnimationActive={!reducedMotion} />
         </LineChart>
       </ResponsiveContainer>
       </div>

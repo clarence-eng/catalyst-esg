@@ -409,7 +409,7 @@ export default function AdminPage() {
         if (error) showToast("Error: " + error.message, true);
         else { showToast("Company updated ✓"); setEditing(null); clearCache(); loadCompanies(); }
       } else {
-        const { error } = await supabase.from("companies").insert(co);
+        const { error } = await supabase.from("companies").insert({ ...co, last_updated: todayISO() });
         if (error) showToast("Error: " + error.message, true);
         else { showToast("Company added ✓"); setAdding(false); clearCache(); loadCompanies(); }
       }
@@ -592,11 +592,15 @@ export default function AdminPage() {
         )}
       </div>
 
-      {toast && (
-        <div role={toastIsError ? "alert" : "status"} aria-live={toastIsError ? "assertive" : "polite"} aria-atomic="true" className="fixed bottom-6 right-6 bg-gray-900 text-white text-sm px-4 py-3 rounded-xl shadow-lg">
-          {toast}
-        </div>
-      )}
+      {/* Pre-mounted toast live region — content update (not mount) triggers AT announcement */}
+      <div
+        role={toastIsError ? "alert" : "status"}
+        aria-live={toastIsError ? "assertive" : "polite"}
+        aria-atomic="true"
+        className={toast ? "fixed bottom-6 right-6 bg-gray-900 text-white text-sm px-4 py-3 rounded-xl shadow-lg" : "sr-only"}
+      >
+        {toast}
+      </div>
       {/* Persistent aria-live region for saving status — must be pre-mounted for reliable AT announcement */}
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {saving ? "Saving…" : ""}

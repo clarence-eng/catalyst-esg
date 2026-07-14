@@ -238,8 +238,7 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
           </a>
         )}
       </div>
-      {expanded && (
-        <div id={`framework-details-${f.id}`} className="px-3 pb-3 border-t border-gray-100">
+      <div id={`framework-details-${f.id}`} hidden={!expanded} className="px-3 pb-3 border-t border-gray-100">
           <p className="text-xs text-gray-600 leading-relaxed mt-2 mb-2">{f.description}</p>
           {f.keyRequirements.length > 0 && (
             <div>
@@ -258,7 +257,6 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
             </div>
           )}
         </div>
-      )}
     </div>
   );
 }
