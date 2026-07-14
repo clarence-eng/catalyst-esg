@@ -499,8 +499,7 @@ function OverviewTab({
   // Use live companies for portfolio benchmark so admin edits are reflected immediately
   const { companies: liveCompanies } = useCompanies();
   return (
-    <div className="grid grid-cols-3 gap-6">
-      {/* Left: Material Issues */}
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="col-span-2 space-y-4">
         {co.icRecommendation ? (
           <div className={`rounded-xl border p-4 ${

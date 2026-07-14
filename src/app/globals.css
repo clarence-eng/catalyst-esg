@@ -349,3 +349,9 @@
 .dark .border-blue-200    { border-color: #1e3a8a !important; }
 .dark .border-orange-200  { border-color: #7c2d12 !important; }
 .dark .border-amber-400\/40 { border-color: rgba(251,191,36,0.4) !important; }
+
+/* Print: hide sidebar navigation, remove margin offset */
+@media print {
+  aside { display: none !important; }
+  main  { margin-left: 0 !important; }
+}

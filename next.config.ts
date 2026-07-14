@@ -21,6 +21,8 @@ const securityHeaders = [
       "img-src 'self' data: https:",
       "connect-src 'self' https://*.supabase.co",
       "frame-ancestors 'none'",
+      "base-uri 'self'",
+      "object-src 'none'",
     ].join("; "),
   },
 ];

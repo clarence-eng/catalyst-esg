@@ -206,7 +206,7 @@ export default function OverviewPage() {
       )}
 
       {/* KPI Row — scoped to Active portfolio */}
-      <div className="grid grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
         <div>
           <StatCard label="Portfolio ESG Score" value={avgScore} sub="Active companies · investment-weighted" color="green" />
           {(avgDelta !== 0 || eDelta !== 0 || sDelta !== 0 || gDelta !== 0) && (
@@ -369,7 +369,7 @@ export default function OverviewPage() {
           View all signals <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {megatrends.slice(0, 3).map((t) => {
           return (
             <Link
