@@ -125,6 +125,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { area: "JETP Transition Finance", potential: "High", description: "Indonesia's $20B JETP creates demand for transition finance products. Position bank as preferred arranger for coal-to-renewables refinancing." },
       { area: "Nature-Positive Lending Policy", potential: "High", description: "Adopt TNFD-aligned forest-risk commodity policy to de-risk EUDR exposure and unlock HSBC/IFC co-lending partnerships." },
       { area: "Digital Inclusive Finance", potential: "Medium", description: "ESG-linked digital credit products for unbanked SMEs. Blended finance available via ADB Digital Finance Facility." },
+      { area: "Digital Health Embedded Finance", potential: "High", description: "Cross-portfolio opportunity with MediLink Health (Pipeline): offer embedded microinsurance and health savings products to MediLink's 40M+ ASEAN patient base. Aligns with OJK financial inclusion mandate and Temasek's Longer Lifespans and AI & Digital Ethics megatrend thesis." },
     ],
     tnfdPillars: [
       { pillar: "Governance", status: "Partial" },
@@ -170,7 +171,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { sdg: 13, label: "Climate Action" },
     ],
     valueUplift: [
-      { area: "Green Data Centre Certification", potential: "High", description: "BCA Green Mark Platinum for Singapore DC + 100% renewable energy claim via I-REC unlocks premium pricing with ESG-conscious enterprise clients (10-15% willingness-to-pay premium)." },
+      { area: "Green Cloud Certification", potential: "High", description: "BCA Green Mark Platinum for Singapore DC + 100% renewable energy claim via I-REC unlocks premium pricing with ESG-conscious enterprise clients (10-15% willingness-to-pay premium)." },
       { area: "Responsible AI Framework", potential: "Medium", description: "Publish MAS FEAT-aligned AI governance framework. Differentiator for financial services clients facing AI regulatory scrutiny." },
       { area: "Sustainability Analytics Product", potential: "High", description: "Embed carbon accounting into cloud billing dashboard. ISSB S2 reporting requirement creates $2B+ APAC market for enterprise carbon management SaaS." },
     ],
