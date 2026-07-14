@@ -46,6 +46,7 @@ export function useCompanies() {
           setCompanies(cachedResult.companies);
           setSource(cachedResult.source);
           if (cachedResult.source === "static") setLiveDataError(true);
+          else setLiveDataError(false);
         } else {
           setLiveDataError(true);
         }
@@ -73,6 +74,7 @@ export function useCompanies() {
           setCompanies(cos);
           setSource(src);
           if (src === "static") setLiveDataError(true);
+          else setLiveDataError(false); // reset error if Supabase reconnected
         } else {
           setLiveDataError(true);
         }

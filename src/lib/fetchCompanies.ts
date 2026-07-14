@@ -524,7 +524,7 @@ function dbToCompany(
 
 let cachedCompanies: Company[] | null = null;
 let cacheTime = 0;
-const CACHE_TTL = 5_000; // 5 second cache (short to ensure mutations from admin propagate quickly)
+const CACHE_TTL = 500; // 0.5 second cache — just enough to deduplicate burst requests on same warm lambda; short enough that admin mutations are visible within 1s
 
 export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
   // Return cache if fresh
