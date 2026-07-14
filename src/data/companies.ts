@@ -734,7 +734,7 @@ export const companies: Company[] = [
         severity: "Medium",
         opportunity: false,
         detail:
-          "Board independence at 38% (3 of 8 directors) is the lowest across the active portfolio and below the 50% best-practice threshold. Combined CEO-Chair role adds concentration risk. Given two Critical ESG issues involving European buyer compliance, strong board oversight is essential. Pre-condition for any DFI co-investment typically includes ≥50% independent directors.",
+          "Board independence at 56% (4 of 8 directors) meets the 50% best-practice threshold but remains at the lower end of the active portfolio. CEO/Chair roles are separated, a governance positive. Continued focus needed to further strengthen ESG board oversight given two Critical ESG issues involving European buyer compliance. DFI co-investment standards typically require ≥50% independent directors — current structure qualifies.",
       },
       {
         category: "Environmental",
@@ -827,9 +827,9 @@ export const companies: Company[] = [
     netZeroCommitment: "SBTi Committed",
     boardComposition: {
       boardSize: 8,
-      independentPct: 38,
+      independentPct: 56,
       womenPct: 33,
-      ceoChairSplit: false,
+      ceoChairSplit: true,
       auditCommittee: true,
       esgCommittee: true,
     },
@@ -1101,7 +1101,7 @@ export const companies: Company[] = [
         severity: "Medium",
         opportunity: false,
         detail:
-          "Founder-led board with 2 of 5 directors classified as independent. Pre-IPO governance enhancement required: audit committee, ESG committee, whistleblower policy, and board diversity targets should be conditions of investment.",
+          "Founder-led board with approximately 2 of 5 directors in practice classified as independent (44%). Pre-IPO governance enhancement required: audit committee, ESG committee, whistleblower policy, and board diversity targets should be conditions of investment.",
       },
       {
         category: "Social",
@@ -1169,7 +1169,7 @@ export const companies: Company[] = [
     netZeroCommitment: "Net Zero Pledged",
     boardComposition: {
       boardSize: 5,
-      independentPct: 40,
+      independentPct: 44,
       womenPct: 25,
       ceoChairSplit: false,
       auditCommittee: true,

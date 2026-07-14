@@ -219,7 +219,7 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
             <div className="flex items-center gap-2">
               <span className={`text-xs font-medium ${categoryColors[f.category] ?? "text-gray-600"}`}>{f.category}</span>
               <span className="text-xs text-gray-500">·</span>
-              <span className="text-xs text-gray-500 truncate">{f.fullName}</span>
+              <span className="text-xs text-gray-500 truncate" title={f.fullName}>{f.fullName}</span>
             </div>
           </div>
           <span className="text-gray-500 flex-shrink-0 ml-2">

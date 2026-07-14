@@ -635,7 +635,7 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
           const isNeutral = delta === 0;
           return (
             <div key={slug} className="flex items-center gap-3">
-              <span className="text-xs text-gray-700 w-44 flex-shrink-0 truncate">{name}</span>
+              <span className="text-xs text-gray-700 w-44 flex-shrink-0 truncate" title={name}>{name}</span>
               <div className="flex-1 flex items-center gap-2">
                 <div className="flex-1 h-4 bg-gray-100 rounded-sm overflow-hidden">
                   <div

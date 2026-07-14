@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { companies } from "@/data/companies";
 import { PageHeader } from "@/components/ui-elements";
 import { Search, Users, Radio, BookOpen, LayoutDashboard, Cpu, GitMerge, ChevronRight, Target, ClipboardList, BarChart2 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "About — Catalyst by Temasek",
+  description: "About Catalyst — Temasek's ESG Investment Intelligence platform for due diligence, stewardship, and megatrend analysis.",
+};
 
 const companyWhy: Record<string, string> = {
   "seaport-logistics": "IMO CII, EU ETS, physical climate risk",

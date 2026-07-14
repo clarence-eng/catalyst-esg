@@ -228,7 +228,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
               {t.portfolioExposure.filter(p => (p.exposure === "High" || p.exposure === "Medium") && (activeSlugs.has(p.slug) || pipelineSlugs.has(p.slug))).map((p) => (
                 <div key={p.slug} className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 truncate mr-2">
-                    <Link href={`/scout/${p.slug}`} className="text-xs text-gray-600 hover:text-purple-700 transition-colors truncate">{p.name}</Link>
+                    <Link href={`/scout/${p.slug}`} className="text-xs text-gray-600 hover:text-purple-700 transition-colors truncate" title={p.name}>{p.name}</Link>
                     {pipelineSlugs.has(p.slug) && <span className="text-[10px] text-blue-600 flex-shrink-0">·Pipeline</span>}
                   </div>
                   <ExposureBadge level={p.exposure} />
