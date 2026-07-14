@@ -380,8 +380,10 @@ export default function AdminPage() {
 
   // Cleanup toast timer on unmount to prevent setState on unmounted component
   useEffect(() => () => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); }, []);
+  const savingCompanyRef = useRef(false); // prevent duplicate concurrent saves
 
   const saveCompany = async (co: Partial<DbCompany>) => {
+    if (savingCompanyRef.current) return;
     if (!co.name?.trim() || !co.slug?.trim() || !co.sector?.trim() || !co.country?.trim() || !co.description?.trim()) return showToast("Name, slug, sector, country, and description are required", true);
     if (!/^[a-z0-9-]+$/.test(co.slug.trim())) return showToast("Slug must be lowercase alphanumeric with hyphens only (e.g. my-company)", true);
     const e = co.esg_environmental ?? 0, s = co.esg_social ?? 0, g = co.esg_governance ?? 0, ov = co.esg_overall ?? 0;
@@ -389,6 +391,7 @@ export default function AdminPage() {
     if ((co.green_revenue_pct ?? 0) < 0 || (co.green_revenue_pct ?? 0) > 100) return showToast("Green revenue % must be between 0 and 100", true);
     if ((co.carbon_intensity ?? 0) < 0) return showToast("Carbon intensity must be 0 or greater", true);
     if ((co.investment_value ?? 0) < 0) return showToast("Investment value must be 0 or greater", true);
+    savingCompanyRef.current = true;
     setSaving(true);
     try {
       if (co.id) {
@@ -405,6 +408,7 @@ export default function AdminPage() {
       showToast("Unexpected error saving company", true);
       console.error("[Admin] saveCompany threw:", err);
     } finally {
+      savingCompanyRef.current = false;
       setSaving(false);
     }
   };
@@ -442,7 +446,7 @@ export default function AdminPage() {
         <div className="space-y-4">
           <div>
             <label htmlFor="admin-password" className="text-xs font-medium text-gray-700">Admin Password <span className="text-gray-500 font-normal">(set in Vercel env vars)</span></label>
-            <input id="admin-password" type="password" autoComplete="off" value={auth.pw} onChange={e => auth.setPw(e.target.value)}
+            <input id="admin-password" type="password" aria-required="true" autoComplete="off" value={auth.pw} onChange={e => auth.setPw(e.target.value)}
               onKeyDown={e => e.key === "Enter" && auth.check()}
               placeholder="Enter password" autoFocus
               aria-invalid={auth.err || undefined}
@@ -581,10 +585,14 @@ export default function AdminPage() {
           {toast}
         </div>
       )}
+      {/* Persistent aria-live region for saving status — must be pre-mounted for reliable AT announcement */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {saving ? "Saving…" : ""}
+      </div>
       {saving && (
         <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
           <div aria-hidden="true" className="absolute inset-0" />
-          <div role="status" aria-live="polite" className="relative bg-white rounded-xl px-6 py-4 text-sm text-gray-700">Saving…</div>
+          <div aria-hidden="true" className="relative bg-white rounded-xl px-6 py-4 text-sm text-gray-700">Saving…</div>
         </div>
       )}
     </div>

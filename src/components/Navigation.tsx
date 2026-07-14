@@ -82,8 +82,8 @@ export function Navigation() {
                 <div className="text-xs text-gray-600 mt-0.5">{desc}</div>
               </div>
               {label === "Steward" && overdueCount > 0 && (
-                <span className="ml-auto text-[10px] font-bold bg-orange-500 text-white rounded-full px-1.5 py-0.5 min-w-[18px] text-center">
-                  {overdueCount}
+                <span className="ml-auto text-[10px] font-bold bg-orange-500 text-white rounded-full px-1.5 py-0.5 min-w-[18px] text-center" aria-label={`${overdueCount} overdue engagement${overdueCount !== 1 ? "s" : ""}`}>
+                  <span aria-hidden="true">{overdueCount}</span>
                 </span>
               )}
             </Link>

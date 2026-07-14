@@ -58,7 +58,7 @@ export function ComparisonDrawer({ companies, onRemove, onClear }: Props) {
               const best = numVals.length > 1 ? (m.lowerIsBetter ? Math.min(...numVals) : Math.max(...numVals)) : null;
               return (
                 <tr key={m.label} className="border-b border-gray-50 hover:bg-gray-50/50">
-                  <td className="px-4 py-2 text-gray-500 font-medium">{m.label}</td>
+                  <th scope="row" className="px-4 py-2 text-gray-500 font-medium text-left">{m.label}</th>
                   {companies.map((c, i) => {
                     const v = values[i];
                     const isBest = typeof v === "number" && v === best && numVals.length > 1;

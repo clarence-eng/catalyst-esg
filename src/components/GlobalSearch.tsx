@@ -11,6 +11,8 @@ export function GlobalSearch() {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
+  // Flag to skip focus restoration when closing via navigation (new page handles its own focus)
+  const navigatingRef = useRef(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -33,11 +35,16 @@ export function GlobalSearch() {
 
   useEffect(() => {
     if (open) {
+      navigatingRef.current = false;
       triggerRef.current = document.activeElement as HTMLElement;
       setTimeout(() => inputRef.current?.focus(), 50);
     } else {
       setQuery("");
-      setTimeout(() => triggerRef.current?.focus(), 50);
+      // Only restore focus if not navigating away (navigation = new page handles focus)
+      if (!navigatingRef.current) {
+        setTimeout(() => triggerRef.current?.focus(), 50);
+      }
+      navigatingRef.current = false;
     }
   }, [open]);
 
@@ -101,7 +108,7 @@ export function GlobalSearch() {
               <div>
                 <div className="px-4 pt-3 pb-1 text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Companies</div>
                 {matchedCompanies.map(c => (
-                  <button key={c.slug} type="button" onClick={() => { router.push(`/scout/${c.slug}`); setOpen(false); }}
+                  <button key={c.slug} type="button" onClick={() => { navigatingRef.current = true; router.push(`/scout/${c.slug}`); setOpen(false); }}
                     className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-left">
                     <Building2 className="w-4 h-4 text-gray-400 flex-shrink-0" />
                     <div className="min-w-0">
@@ -124,7 +131,7 @@ export function GlobalSearch() {
               <div>
                 <div className="px-4 pt-3 pb-1 text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Frameworks</div>
                 {matchedFrameworks.map(f => (
-                  <button key={f.id} type="button" onClick={() => { router.push(`/learn?q=${encodeURIComponent(query)}`); setOpen(false); }}
+                  <button key={f.id} type="button" onClick={() => { navigatingRef.current = true; router.push(`/learn?q=${encodeURIComponent(query)}`); setOpen(false); }}
                     className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-left">
                     <BookOpen className="w-4 h-4 text-gray-400 flex-shrink-0" />
                     <div className="min-w-0">
