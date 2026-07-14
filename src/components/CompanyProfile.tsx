@@ -516,11 +516,14 @@ function OverviewTab({
             </div>
             {co.icRecommendation.conditions.length > 0 && (
               <div className="space-y-1 mb-2">
-                {co.icRecommendation.conditions.map((c, i) => (
-                  <div key={i} className="flex items-start gap-2 text-xs text-gray-700">
-                    <span className="text-amber-700 mt-0.5">◦</span>{c}
-                  </div>
-                ))}
+                {co.icRecommendation.conditions.map((c, i) => {
+                  const bulletColor = co.icRecommendation!.verdict === "Invest" ? "text-emerald-700" : co.icRecommendation!.verdict === "Pass" ? "text-red-700" : "text-amber-700";
+                  return (
+                    <div key={i} className="flex items-start gap-2 text-xs text-gray-700">
+                      <span className={`${bulletColor} mt-0.5`}>◦</span>{c}
+                    </div>
+                  );
+                })}
               </div>
             )}
             <p className="text-xs text-gray-500 italic">{co.icRecommendation.esgGating}</p>

@@ -82,6 +82,15 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { pillar: "Risk & Impact Mgmt", status: "Gap" },
       { pillar: "Metrics & Targets", status: "Gap" },
     ],
+    icRecommendation: {
+      verdict: "Invest Conditional",
+      conditions: [
+        "Publish IMO-aligned fleet decarbonisation pathway with interim 2027 milestones before Q3 2026",
+        "Commit to third-party CII rating audit across owned fleet within 12 months of investment",
+        "Establish TNFD-aligned nature risk assessment for two port expansion sites",
+      ],
+      esgGating: "Fleet transition pathway is a pre-close condition — without a credible capex commitment to methanol-ready retrofits, IMO CII penalties represent a material and unquantified financial risk.",
+    },
   },
 
   "nusantara-bank": {
@@ -133,6 +142,15 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { pillar: "Risk & Impact Mgmt", status: "Gap" },
       { pillar: "Metrics & Targets", status: "Gap" },
     ],
+    icRecommendation: {
+      verdict: "Invest Conditional",
+      conditions: [
+        "Publish TCFD-aligned climate risk assessment for corporate lending book by Q2 2027",
+        "Establish financed emissions measurement baseline (Scope 3 Category 15) within 18 months",
+        "Board ESG oversight charter adopted with dedicated ESG committee or clear mandate",
+      ],
+      esgGating: "ESG-linked value creation thesis requires confirmed trajectory toward financed emissions disclosure — absence of PCAF baseline within 24 months should trigger portfolio review.",
+    },
   },
 
   "cloudmesh-technologies": {
@@ -181,6 +199,15 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { pillar: "Risk & Impact Mgmt", status: "Gap" },
       { pillar: "Metrics & Targets", status: "Gap" },
     ],
+    icRecommendation: {
+      verdict: "Invest",
+      conditions: [
+        "Maintain MAS FEAT-aligned AI governance policy publication on schedule (H2 2026 target)",
+        "Carbon Management SaaS product to achieve APAC ISSB S2 compliance endorsement by Q4 2026",
+        "I-REC procurement to reach 60% renewable electricity by Q4 2026",
+      ],
+      esgGating: "No hard veto conditions — Leading ESG maturity with clear value creation catalysts. Milestones tracked at quarterly portfolio reviews.",
+    },
   },
 
   "greenharvest-agri": {
@@ -233,6 +260,15 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { pillar: "Risk & Impact Mgmt", status: "Partial" },
       { pillar: "Metrics & Targets", status: "Gap" },
     ],
+    icRecommendation: {
+      verdict: "Invest Conditional",
+      conditions: [
+        "EUDR-compliant traceability system deployed across 100% of Sabah and Sarawak supply chain before close",
+        "Board independence increased to ≥50% as a pre-close governance condition",
+        "SBTi FLAG target submitted within 12 months of close",
+      ],
+      esgGating: "EUDR non-compliance represents a binary European market access risk. Supply chain traceability is a hard pre-close condition.",
+    },
   },
 
   "asiapower-energy": {
@@ -283,6 +319,15 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { pillar: "Risk & Impact Mgmt", status: "Gap" },
       { pillar: "Metrics & Targets", status: "Gap" },
     ],
+    icRecommendation: {
+      verdict: "Invest Conditional",
+      conditions: [
+        "Published coal phase-out schedule with hard 2034 retirement commitment for all thermal assets",
+        "Geothermal development capex ringfenced at S$150M minimum for Sumatra pipeline within 24 months",
+        "Paris-aligned TCFD scenario analysis (1.5°C and 2°C) disclosed in next annual report",
+      ],
+      esgGating: "Coal phase-out commitment is a hard pre-close condition — without a credible 2034 retirement schedule, the Paris-misaligned carbon pathway creates stranded-asset risk.",
+    },
   },
 
   "medilink-health": {
