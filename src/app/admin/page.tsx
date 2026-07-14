@@ -293,7 +293,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
           <div>
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Engagements ({engagements.length})</h4>
-              <button type="button" onClick={() => { setAddEng(true); setEditEng(null); }} className="flex items-center gap-1 text-xs text-purple-700 hover:text-purple-900"><Plus className="w-3 h-3"/> Add</button>
+              <button type="button" onClick={() => { setAddEng(true); setEditEng(null); }} aria-label="Add engagement" className="flex items-center gap-1 text-xs text-purple-700 hover:text-purple-900"><Plus className="w-3 h-3" aria-hidden="true"/> Add</button>
             </div>
             {addEng && <div className="mb-3"><EngForm companySlug={co.slug} initial={makeEmptyEng()} onSave={saveEng} onCancel={() => setAddEng(false)}/></div>}
             <div className="space-y-2">
@@ -316,7 +316,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
           <div>
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Material Issues ({issues.length})</h4>
-              <button type="button" onClick={() => { setAddIssue(true); setEditIssue(null); }} className="flex items-center gap-1 text-xs text-purple-700 hover:text-purple-900"><Plus className="w-3 h-3"/> Add</button>
+              <button type="button" onClick={() => { setAddIssue(true); setEditIssue(null); }} aria-label="Add material issue" className="flex items-center gap-1 text-xs text-purple-700 hover:text-purple-900"><Plus className="w-3 h-3" aria-hidden="true"/> Add</button>
             </div>
             {addIssue && <div className="mb-3"><IssueForm companySlug={co.slug} initial={EMPTY_MI} onSave={saveIssue} onCancel={() => setAddIssue(false)}/></div>}
             <div className="space-y-2">
