@@ -167,7 +167,7 @@ export default function ScoutPage() {
           id="scout-sort"
           value={sortKey}
           onChange={(e) => setSortKey(e.target.value as SortKey)}
-          className="text-xs bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400/40 focus:border-purple-600/40"
+          className="appearance-none text-xs bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400/40 focus:border-purple-600/40"
         >
           <option value="esg_desc">ESG Score ↓ (best first)</option>
           <option value="esg_asc">ESG Score ↑ (triage)</option>

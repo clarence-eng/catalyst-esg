@@ -100,7 +100,7 @@ export default function AboutPage() {
         <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-3">
           {[
             { icon: Target, text: "ESG due diligence for new investment opportunities — risk management and value uplift lens" },
-            { icon: ClipboardList, text: "Post-investment engagement monitoring with AI-generated 12-month ESG action plans" },
+            { icon: ClipboardList, text: "Post-investment engagement monitoring with AI-generated 12-month ESG Action Plans" },
             { icon: BarChart2, text: "Thematic ESG research across megatrends with AI-generated investment briefs" },
             { icon: BookOpen, text: "ESG knowledge repository — frameworks, guidelines, and case studies for the Investment Group" },
             { icon: BarChart2, text: "Portfolio-level ESG health summaries for internal review — copyable formatted document" },

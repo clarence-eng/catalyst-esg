@@ -88,7 +88,7 @@ export function AlertPanel({ companies }: { companies: Company[] }) {
   const alerts = generateAlerts(companies);
 
   if (alerts.length === 0) return (
-    <div className="rounded-xl border border-emerald-300/50 bg-emerald-50/60 p-4 mb-6 flex items-center gap-2">
+    <div className="rounded-xl border border-emerald-300 bg-emerald-50 p-4 mb-6 flex items-center gap-2">
       <CheckCircle2 className="w-4 h-4 text-emerald-700 flex-shrink-0" />
       <p className="text-xs text-emerald-800 font-medium">No active alerts — portfolio engagements and ESG scores are on track.</p>
     </div>
