@@ -393,5 +393,6 @@
   main  { margin-left: 0 !important; }
 }
 
-/* Opacity-modifier variants without JIT dark: support */
-.dark .border-white\/40 { border-color: rgba(255,255,255,0.25) !important; }
+/* Admin saving overlay and GlobalSearch backdrop — raised for dark mode visibility */
+.dark .bg-black\/20 { background-color: rgba(0,0,0,0.55) !important; }
+.dark .bg-black\/40 { background-color: rgba(0,0,0,0.65) !important; }
