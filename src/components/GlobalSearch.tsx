@@ -51,7 +51,23 @@ export function GlobalSearch() {
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4" data-modal="search" role="presentation" onClick={() => setOpen(false)}>
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" aria-hidden="true" />
-      <div role="dialog" aria-modal="true" aria-label="Search companies and frameworks" className="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden" onClick={e => e.stopPropagation()}>
+      <div role="dialog" aria-modal="true" aria-label="Search companies and frameworks" className="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden" onClick={e => e.stopPropagation()}
+        onKeyDown={(e) => {
+          // Focus trap: keep Tab within the dialog
+          if (e.key === "Tab") {
+            const focusable = e.currentTarget.querySelectorAll<HTMLElement>(
+              'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+            );
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey) {
+              if (document.activeElement === first) { e.preventDefault(); last?.focus(); }
+            } else {
+              if (document.activeElement === last) { e.preventDefault(); first?.focus(); }
+            }
+          }
+        }}
+      >
         {/* Search input */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
           <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />

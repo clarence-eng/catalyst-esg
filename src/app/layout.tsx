@@ -17,11 +17,20 @@ export const metadata: Metadata = {
     siteName: "Catalyst by Temasek",
     locale: "en_SG",
     type: "website",
+    images: [
+      {
+        url: "https://catalyst-neon-eight.vercel.app/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Catalyst by Temasek — ESG Investment Intelligence",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Catalyst by Temasek — ESG Investment Intelligence",
     description: "ESG due diligence, portfolio engagement, climate risk, and megatrend analysis.",
+    images: ["https://catalyst-neon-eight.vercel.app/og-image.png"],
   },
 };
 
