@@ -171,7 +171,7 @@ function Highlight({ text, query }: { text: string; query: string }) {
   let matchIdx = lower.indexOf(qLower);
   while (matchIdx !== -1) {
     if (matchIdx > pos) parts.push(text.slice(pos, matchIdx));
-    parts.push(<mark key={matchIdx} className="bg-yellow-200 text-yellow-900 rounded-sm px-0.5">{text.slice(matchIdx, matchIdx + query.length)}</mark>);
+    parts.push(<mark key={matchIdx} className="bg-yellow-200 dark:bg-yellow-900 text-yellow-900 dark:text-yellow-200 rounded-sm px-0.5">{text.slice(matchIdx, matchIdx + query.length)}</mark>);
     pos = matchIdx + query.length;
     matchIdx = lower.indexOf(qLower, pos);
   }

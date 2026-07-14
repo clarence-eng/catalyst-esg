@@ -355,3 +355,6 @@
   aside { display: none !important; }
   main  { margin-left: 0 !important; }
 }
+
+/* Opacity-modifier variants without JIT dark: support */
+.dark .border-white\/40 { border-color: rgba(255,255,255,0.25) !important; }
