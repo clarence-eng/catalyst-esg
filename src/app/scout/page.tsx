@@ -212,7 +212,7 @@ export default function ScoutPage() {
       )}
 
       {/* Company Cards */}
-      <div className={`grid grid-cols-1 gap-4 ${compareSet.size > 0 ? "pb-44" : ""}`}>
+      <div className={`grid grid-cols-1 gap-4 ${compareSet.size > 0 ? "pb-96" : ""}`}>
         {filtered.map((co) => (
           <Link
             key={co.slug}
