@@ -40,7 +40,7 @@ export const megatrends: Megatrend[] = [
       { label: "Global clean energy investment (2024)", value: "$2.1 trillion", source: "IEA World Energy Investment 2024" },
       { label: "ASEAN renewable energy capacity target by 2035", value: "35% of mix", source: "IRENA ASEAN Outlook" },
       { label: "Indonesia JETP financing commitment", value: "$20 billion", source: "Indonesia JETP Secretariat" },
-      { label: "Carbon price required for 1.5°C (2030)", value: "$147/tCO2", source: "IMF Carbon Price Monitor" },
+      { label: "Carbon price required for 1.5°C (2030)", value: "$147/tCO₂e", source: "IMF Carbon Price Monitor" },
       { label: "Temasek portfolio emissions reduction (to 2025)", value: "28%", source: "Temasek Sustainability Report 2025" },
     ],
     investmentImplications: [

@@ -451,7 +451,7 @@ export const companies: Company[] = [
     netZeroCommitment: "Net Zero Pledged",
     boardComposition: {
       boardSize: 8,
-      independentPct: 56,
+      independentPct: 50,
       womenPct: 33,
       ceoChairSplit: true,
       auditCommittee: true,
@@ -761,7 +761,7 @@ export const companies: Company[] = [
         severity: "Medium",
         opportunity: false,
         detail:
-          "Board independence at 56% (4 of 8 directors) meets the 50% best-practice threshold but remains at the lower end of the active portfolio. CEO/Chair roles are separated, a governance positive. Continued focus needed to further strengthen ESG board oversight given two Critical ESG issues involving European buyer compliance. DFI co-investment standards typically require ≥50% independent directors — current structure qualifies.",
+          "Board independence at 50% (4 of 8 directors) meets the minimum best-practice threshold. Continued ESG board oversight strengthening needed given two Critical issues involving European buyer compliance. CEO/Chair roles are separated, a governance positive. Continued focus needed to further strengthen ESG board oversight given two Critical ESG issues involving European buyer compliance. DFI co-investment standards typically require ≥50% independent directors — current structure qualifies.",
       },
       {
         category: "Environmental",
@@ -854,7 +854,7 @@ export const companies: Company[] = [
     netZeroCommitment: "SBTi Committed",
     boardComposition: {
       boardSize: 8,
-      independentPct: 56,
+      independentPct: 50,
       womenPct: 33,
       ceoChairSplit: true,
       auditCommittee: true,
@@ -876,7 +876,7 @@ export const companies: Company[] = [
       verdict: "Invest Conditional",
       conditions: [
         "EUDR-compliant traceability system deployed across 100% of Sabah and Sarawak supply chain before close",
-        "Board independence increased to ≥50% (minimum 4 of 8 independent directors) as a pre-close governance condition",
+        "Board independence maintained at ≥50% (currently 4 of 8 independent directors) — monitor and improve to ≥62% within 18 months of close",
         "SBTi FLAG target submitted within 12 months of close — covering Scope 1, 2, and land-use emissions",
       ],
       esgGating: "EUDR non-compliance represents a binary European market access risk. Supply chain traceability certification is a hard pre-close condition. Board independence uplift is required to meet DFI co-investment standards.",
@@ -1048,7 +1048,7 @@ export const companies: Company[] = [
     netZeroCommitment: "None",
     boardComposition: {
       boardSize: 10,
-      independentPct: 44,
+      independentPct: 40,
       womenPct: 25,
       ceoChairSplit: false,
       auditCommittee: true,
@@ -1146,7 +1146,7 @@ export const companies: Company[] = [
         severity: "Medium",
         opportunity: false,
         detail:
-          "Founder-led board with approximately 2 of 5 directors in practice classified as independent (44%). Pre-IPO governance enhancement required: audit committee, ESG committee, whistleblower policy, and board diversity targets should be conditions of investment.",
+          "Founder-led board with 2 of 5 directors classified as independent (40%). Pre-IPO governance enhancement required: audit committee, ESG committee, whistleblower policy, and board diversity targets should be conditions of investment.",
       },
       {
         category: "Social",
@@ -1217,7 +1217,7 @@ export const companies: Company[] = [
       independentPct: 44,
       womenPct: 25,
       ceoChairSplit: false,
-      auditCommittee: true,
+      auditCommittee: false,
       esgCommittee: false,
     },
     historicalScores: [
