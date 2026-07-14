@@ -202,7 +202,7 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
           className="flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-50 transition-colors rounded-lg flex-1 min-w-0"
           onClick={() => setExpanded((e) => !e)}
           role="button"
-          aria-label={`${f.name} — ${expanded ? "collapse" : "expand"} details`}
+          aria-label={`${f.name} details`}
           aria-expanded={expanded}
           tabIndex={0}
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded((v) => !v); } }}

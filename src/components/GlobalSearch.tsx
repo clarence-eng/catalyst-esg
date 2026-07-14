@@ -10,6 +10,7 @@ export function GlobalSearch() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -31,8 +32,13 @@ export function GlobalSearch() {
   }, []);
 
   useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 50);
-    else setQuery("");
+    if (open) {
+      triggerRef.current = document.activeElement as HTMLElement;
+      setTimeout(() => inputRef.current?.focus(), 50);
+    } else {
+      setQuery("");
+      setTimeout(() => triggerRef.current?.focus(), 50);
+    }
   }, [open]);
 
   const q = query.toLowerCase();

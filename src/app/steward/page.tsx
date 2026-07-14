@@ -291,7 +291,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
           role="button"
           tabIndex={0}
           aria-expanded={expanded}
-          aria-label={`${co.name} engagement details, ${expanded ? "expanded" : "collapsed"}`}
+          aria-label={`${co.name} engagement details`}
           onClick={() => setExpanded(!expanded)}
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded(!expanded); } }}
         >
