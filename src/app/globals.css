@@ -270,6 +270,11 @@
 .dark .bg-\[\#4B2580\]\/10 { background-color: rgba(167,139,250,0.15) !important; }
 .dark .border-\[\#4B2580\]\/30 { border-color: rgba(167,139,250,0.3) !important; }
 .dark .border-purple-500\/40  { border-color: rgba(167,139,250,0.4) !important; }
+/* IC recommendation card verdict borders — must meet WCAG 1.4.11 3:1 on dark bg #1e2130 */
+.dark .border-amber-500\/30   { border-color: rgba(251,191,36,0.5) !important; }
+.dark .border-emerald-500\/30 { border-color: rgba(52,211,153,0.5) !important; }
+.dark .border-red-500\/30     { border-color: rgba(239,68,68,0.5) !important; }
+.dark .border-purple-500\/30  { border-color: rgba(167,139,250,0.5) !important; }
 .dark .text-\[\#4B2580\] { color: #a78bfa !important; }
 /* Primary action button bg-[#4B2580] — dark mode needs lighter purple for WCAG 1.4.11 (3:1 non-text contrast) AND WCAG 1.4.3 (4.5:1 text contrast for white text) */
 /* #9b44f0: white text=4.69:1 (AA pass), vs card #1e2130=3.40:1 (1.4.11 pass), vs page #0f1117=4.02:1 (1.4.11 pass) */
