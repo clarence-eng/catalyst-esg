@@ -143,7 +143,7 @@ function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: stri
     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
       <div className="grid grid-cols-3 gap-3">
         <div><label htmlFor={`${p}-date`} className="text-xs font-medium text-gray-700">Date</label><input id={`${p}-date`} type="date" value={eng.date||""} onChange={e=>set("date",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"/></div>
-        <div><label htmlFor={`${p}-type`} className="text-xs font-medium text-gray-700">Type</label><select id={`${p}-type`} value={eng.type||""} onChange={e=>set("type",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"><option>Meeting</option><option>Call</option><option>Email</option><option>Site Visit</option></select></div>
+        <div><label htmlFor={`${p}-type`} className="text-xs font-medium text-gray-700">Type</label><select id={`${p}-type`} value={eng.type||""} onChange={e=>set("type",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"><option>Meeting</option><option>Call</option><option>Email</option><option>Report Review</option><option>Site Visit</option></select></div>
         <div><label htmlFor={`${p}-status`} className="text-xs font-medium text-gray-700">Status</label><select id={`${p}-status`} value={eng.status||""} onChange={e=>set("status",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"><option>Planned</option><option>Completed</option><option>Overdue</option></select></div>
       </div>
       <div>
@@ -154,7 +154,11 @@ function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: stri
       <div><label htmlFor={`${p}-notes`} className="text-xs font-medium text-gray-700">Notes</label><textarea id={`${p}-notes`} value={eng.notes||""} onChange={e=>set("notes",e.target.value)} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"/></div>
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-3 py-1 text-xs text-gray-600 border border-gray-200 rounded hover:bg-gray-100">Cancel</button>
-        <button type="button" onClick={() => { if (!eng.topic?.trim()) { setTopicError(true); document.getElementById(`${p}-topic`)?.focus(); return; } onSave({ ...eng, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
+        <button type="button" onClick={() => {
+          if (!eng.topic?.trim()) { setTopicError(true); document.getElementById(`${p}-topic`)?.focus(); return; }
+          if (!eng.date || !/^\d{4}-\d{2}-\d{2}$/.test(eng.date)) { alert("Invalid date — use YYYY-MM-DD format"); document.getElementById(`${p}-date`)?.focus(); return; }
+          onSave({ ...eng, company_slug: companySlug });
+        }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
       </div>
     </div>
   );
@@ -244,7 +248,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
       savingEngRef.current = false;
     }
   };
-  const delEng = async (id: string) => { try { const { error } = await supabase.from("engagements").delete().eq("id", id); if (error) { showToast("Error deleting engagement: " + error.message, true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting engagement", true); console.error("[Admin] delEng threw:", err); } };
+  const delEng = async (id: string) => { if (!confirm("Delete this engagement? This cannot be undone.")) return; try { const { error } = await supabase.from("engagements").delete().eq("id", id); if (error) { showToast("Error deleting engagement: " + error.message, true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting engagement", true); console.error("[Admin] delEng threw:", err); } };
   const saveIssue = async (i: Partial<DbMaterialIssue>) => {
     if (savingIssueRef.current) return;
     savingIssueRef.current = true;
@@ -262,7 +266,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
       savingIssueRef.current = false;
     }
   };
-  const delIssue = async (id: string) => { try { const { error } = await supabase.from("material_issues").delete().eq("id", id); if (error) { showToast("Error deleting issue: " + error.message, true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting issue", true); console.error("[Admin] delIssue threw:", err); } };
+  const delIssue = async (id: string) => { if (!confirm("Delete this material issue? This cannot be undone.")) return; try { const { error } = await supabase.from("material_issues").delete().eq("id", id); if (error) { showToast("Error deleting issue: " + error.message, true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting issue", true); console.error("[Admin] delIssue threw:", err); } };
 
   const statusColor = co.portfolio_status === "Active" ? "text-emerald-700 bg-emerald-50 border-emerald-300" : "text-blue-700 bg-blue-50 border-blue-300";
   const riskColor = { Low: "text-emerald-700", Medium: "text-amber-700", High: "text-orange-700", Critical: "text-red-700" }[co.transition_risk] || "text-gray-600";

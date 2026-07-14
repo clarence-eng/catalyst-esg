@@ -36,7 +36,7 @@ function LearnContent() {
 
   // Map framework categories to related case study themes for cross-column filtering
   const categoryToThemes: Record<string, string[]> = {
-    Climate: ["Climate Transition"],
+    Climate: ["Climate Transition", "Sustainable Finance"], // PCAF/TCFD case studies fall under Sustainable Finance
     Nature: ["Nature & Biodiversity"],
     Social: ["Just Transition"],
     Reporting: ["Climate Transition", "Nature & Biodiversity", "Just Transition", "Governance", "Sustainable Finance"],
@@ -240,6 +240,12 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
       </div>
       <div id={`framework-details-${f.id}`} hidden={!expanded} className="px-3 pb-3 border-t border-gray-100">
           <p className="text-xs text-gray-600 leading-relaxed mt-2 mb-2">{f.description}</p>
+          {f.aseanContext && (
+            <div className="mb-2 bg-emerald-50 border border-emerald-200 rounded px-2 py-1.5">
+              <span className="text-[10px] font-semibold text-emerald-700 uppercase tracking-wider">ASEAN Context</span>
+              <p className="text-xs text-gray-700 mt-0.5 leading-relaxed">{f.aseanContext}</p>
+            </div>
+          )}
           {f.keyRequirements.length > 0 && (
             <div>
               <div className="text-xs text-gray-500 font-medium mb-1">Key Requirements</div>
