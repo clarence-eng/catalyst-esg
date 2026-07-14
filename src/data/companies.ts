@@ -254,7 +254,7 @@ export const companies: Company[] = [
     boardComposition: {
       boardSize: 9,
       independentPct: 44,
-      womenPct: 25,
+      womenPct: 22,
       ceoChairSplit: false,
       auditCommittee: true,
       esgCommittee: false,
@@ -452,7 +452,7 @@ export const companies: Company[] = [
     boardComposition: {
       boardSize: 8,
       independentPct: 50,
-      womenPct: 33,
+      womenPct: 38,
       ceoChairSplit: true,
       auditCommittee: true,
       esgCommittee: true,
@@ -641,8 +641,8 @@ export const companies: Company[] = [
     netZeroCommitment: "SBTi Targets Set",
     boardComposition: {
       boardSize: 7,
-      independentPct: 56,
-      womenPct: 33,
+      independentPct: 57,
+      womenPct: 29,
       ceoChairSplit: true,
       auditCommittee: true,
       esgCommittee: true,
@@ -855,7 +855,7 @@ export const companies: Company[] = [
     boardComposition: {
       boardSize: 8,
       independentPct: 50,
-      womenPct: 33,
+      womenPct: 25,
       ceoChairSplit: true,
       auditCommittee: true,
       esgCommittee: true,
@@ -1049,7 +1049,7 @@ export const companies: Company[] = [
     boardComposition: {
       boardSize: 10,
       independentPct: 40,
-      womenPct: 25,
+      womenPct: 20,
       ceoChairSplit: false,
       auditCommittee: true,
       esgCommittee: false,
@@ -1214,8 +1214,8 @@ export const companies: Company[] = [
     netZeroCommitment: "Net Zero Pledged",
     boardComposition: {
       boardSize: 5,
-      independentPct: 44,
-      womenPct: 25,
+      independentPct: 40,
+      womenPct: 20,
       ceoChairSplit: false,
       auditCommittee: false,
       esgCommittee: false,
