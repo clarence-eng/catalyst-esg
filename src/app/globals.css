@@ -299,6 +299,7 @@
 .dark .ring-purple-600\/50           { --tw-ring-color: rgba(167,139,250,0.6) !important; }
 /* Megatrend card background tints — /5 opacity is invisible on dark bg; raise to ~12% */
 .dark .bg-emerald-600\/5  { background-color: rgba(5,150,105,0.12) !important; }
+.dark .bg-emerald-500\/5  { background-color: rgba(16,185,129,0.12) !important; }
 .dark .bg-green-600\/5    { background-color: rgba(22,163,74,0.12) !important; }
 .dark .bg-orange-500\/5   { background-color: rgba(249,115,22,0.12) !important; }
 .dark .bg-blue-500\/5     { background-color: rgba(59,130,246,0.12) !important; }
