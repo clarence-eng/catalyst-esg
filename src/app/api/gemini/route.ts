@@ -4,12 +4,17 @@ import { GoogleGenAI } from "@google/genai";
 const ALLOWED_TYPES = ["deal_memo", "action_plan", "thematic_brief", "portfolio_brief", "engagement_questions"] as const;
 type GenerationType = (typeof ALLOWED_TYPES)[number];
 
+// Strip HTML-injection chars, collapse line endings, and remove all control chars
+// (incl. null byte, tab used as TSV separator, U+2028/U+2029 JS line terminators)
+const CTRL_RE = new RegExp("[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F\\xA0\\u2028\\u2029]", "g");
+
 function sanitize(value: unknown, maxLen = 200): string {
   if (value === null || value === undefined) return "";
   return String(value)
     .slice(0, maxLen)
     .replace(/[<>]/g, "")
-    .replace(/[\r\n]+/g, " ");
+    .replace(/[\r\n]+/g, " ")
+    .replace(CTRL_RE, "");
 }
 
 function sanitizeBlock(value: unknown, maxLen = 5000): string {
@@ -17,7 +22,8 @@ function sanitizeBlock(value: unknown, maxLen = 5000): string {
   return String(value)
     .slice(0, maxLen)
     .replace(/[<>]/g, "")
-    .replace(/[\r\n]+/g, " ");
+    .replace(/[\r\n]+/g, " ")
+    .replace(CTRL_RE, "");
 }
 
 function validateContext(type: GenerationType, ctx: Record<string, unknown>): boolean {
@@ -49,10 +55,10 @@ export async function POST(req: NextRequest) {
   // Use explicit allowlist (NOT the attacker-controllable Host header, NOT prefix matches).
   const origin = req.headers.get("origin") ?? "";
   const referer = req.headers.get("referer") ?? "";
-  // Exact domain allowlist — no prefix matching to prevent subdomain bypass attacks
+  // Exact domain allowlist — prefix matching removed to prevent any attacker-registered
+  // catalyst-neon-eight-* Vercel project from bypassing this guard.
   const isAllowed = (s: string) =>
     s === "https://catalyst-neon-eight.vercel.app" ||
-    s.startsWith("https://catalyst-neon-eight-") && s.endsWith(".vercel.app") ||
     s === "http://localhost:3000" ||
     s === "http://localhost:3001";
   const hasSourceHeader = origin !== "" || referer !== "";

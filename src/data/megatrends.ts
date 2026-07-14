@@ -41,7 +41,7 @@ export const megatrends: Megatrend[] = [
       { label: "ASEAN renewable energy capacity target by 2035", value: "35% of mix", source: "IRENA ASEAN Outlook" },
       { label: "Indonesia JETP financing commitment", value: "$20 billion", source: "Indonesia JETP Secretariat" },
       { label: "Carbon price required for 1.5°C (2030)", value: "$147/tCO2", source: "IMF Carbon Price Monitor" },
-      { label: "Temasek portfolio emissions reduction (to 2024)", value: "22%", source: "Temasek Sustainability Report 2024" },
+      { label: "Temasek portfolio emissions reduction (to 2025)", value: "28%", source: "Temasek Sustainability Report 2025" },
     ],
     investmentImplications: [
       { type: "Risk", sector: "Energy", description: "Coal and high-carbon assets face accelerated stranded asset timelines as carbon pricing expands across ASEAN." },

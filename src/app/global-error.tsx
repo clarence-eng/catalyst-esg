@@ -16,12 +16,14 @@ export default function GlobalError({
 
   return (
     <html lang="en">
-      <body style={{ margin: 0, fontFamily: "system-ui, sans-serif", background: "#F5F5F7" }}>
+      {/* Apply saved dark mode preference since layout.tsx FOUC script doesn't run here */}
+      <script dangerouslySetInnerHTML={{ __html: `(function(){try{if(localStorage.getItem('theme')==='dark'||(!localStorage.getItem('theme')&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();` }} />
+      <body className="bg-[#F5F5F7] dark:bg-[#0a0f1e]" style={{ margin: 0, fontFamily: "system-ui, sans-serif" }}>
         <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
-          <div style={{ background: "white", borderRadius: "16px", border: "1px solid #e5e7eb", padding: "40px", maxWidth: "400px", width: "100%", textAlign: "center", boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
+          <div className="bg-white dark:bg-[#141824] border border-gray-200 dark:border-gray-700" style={{ borderRadius: "16px", padding: "40px", maxWidth: "400px", width: "100%", textAlign: "center", boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
             <div aria-hidden="true" style={{ fontSize: "40px", color: "#fca5a5", marginBottom: "16px" }}>⚠</div>
-            <h1 style={{ fontSize: "18px", fontWeight: "600", color: "#111827", marginBottom: "8px" }}>Something went wrong</h1>
-            <p style={{ fontSize: "14px", color: "#6b7280", marginBottom: "24px" }}>
+            <h1 className="text-gray-900 dark:text-gray-100" style={{ fontSize: "18px", fontWeight: "600", marginBottom: "8px" }}>Something went wrong</h1>
+            <p className="text-gray-500 dark:text-gray-400" style={{ fontSize: "14px", marginBottom: "24px" }}>
               An unexpected error occurred in the application shell.
             </p>
             <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
@@ -36,13 +38,14 @@ export default function GlobalError({
               </button>
               <a
                 href="/"
-                style={{ fontSize: "14px", color: "#374151", border: "1px solid #e5e7eb", padding: "10px 20px", borderRadius: "8px", textDecoration: "none" }}
+                className="text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
+                style={{ fontSize: "14px", padding: "10px 20px", borderRadius: "8px", textDecoration: "none" }}
               >
                 Back to Overview
               </a>
             </div>
             {error.digest && (
-              <p style={{ fontSize: "11px", color: "#9ca3af", marginTop: "16px" }}>Error ID: {error.digest}</p>
+              <p className="text-gray-400 dark:text-gray-500" style={{ fontSize: "11px", marginTop: "16px" }}>Error ID: {error.digest}</p>
             )}
           </div>
         </div>

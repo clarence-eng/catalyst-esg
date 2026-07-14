@@ -191,12 +191,12 @@ export default function OverviewPage() {
               {avgDelta !== 0 && (
                 <span className={`text-xs font-medium px-2 py-0.5 rounded border ${
                   avgDelta > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200" : "text-red-700 bg-red-50 border-red-200"
-                }`}>{avgDelta > 0 ? `↑ +${avgDelta}` : `↓ ${avgDelta}`} avg</span>
+                }`} title="Q2 2026 vs Q1 2026">{avgDelta > 0 ? `↑ +${avgDelta}` : `↓ ${avgDelta}`} Q2 vs Q1</span>
               )}
               {[{k:"E", v:eDelta},{k:"S", v:sDelta},{k:"G", v:gDelta}].map(({k,v}) => v !== 0 && (
                 <span key={k} className={`text-[10px] px-1.5 py-0.5 rounded border ${
                   v > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200" : "text-red-700 bg-red-50 border-red-200"
-                }`}>{k}{v > 0 ? `+${v}` : v}</span>
+                }`} title="Q2 2026 vs Q1 2026">{k}{v > 0 ? `+${v}` : v}</span>
               ))}
             </div>
           )}
@@ -242,7 +242,7 @@ export default function OverviewPage() {
                     )}
                   </div>
                   <span className={`text-xs font-medium w-20 text-right flex-shrink-0 ${isHighEmitter ? "text-red-700" : "text-gray-700"}`}>
-                    {co.carbonIntensity.toLocaleString()} tCO₂/$M
+                    {co.carbonIntensity.toLocaleString("en-SG")} tCO₂/$M
                   </span>
                 </div>
               );
@@ -694,7 +694,7 @@ function PCARFinancedEmissionsTable({ companies, totalActive }: { companies: Com
                 <td className="px-6 py-3 text-sm font-medium text-gray-900">{co.name}</td>
                 <td className="px-4 py-3 text-xs text-gray-600">{co.sector}</td>
                 <td className="px-4 py-3 text-xs text-gray-600 text-right">{stake.toFixed(1)}%</td>
-                <td className="px-4 py-3 text-xs text-gray-800 text-right font-medium">{estimatedEmissions.toLocaleString()}</td>
+                <td className="px-4 py-3 text-xs text-gray-800 text-right font-medium">{estimatedEmissions.toLocaleString("en-SG")}</td>
                 <td className="px-4 py-3">
                   <span className={`text-xs px-2 py-0.5 rounded border ${
                     score <= 2 ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
@@ -709,7 +709,7 @@ function PCARFinancedEmissionsTable({ companies, totalActive }: { companies: Com
             ))}
             <tr className="bg-gray-50 font-semibold">
               <td className="px-6 py-3 text-xs text-gray-900" colSpan={3}>Portfolio Total</td>
-              <td className="px-4 py-3 text-xs text-gray-900 text-right">{totalEmissions.toLocaleString()}</td>
+              <td className="px-4 py-3 text-xs text-gray-900 text-right">{totalEmissions.toLocaleString("en-SG")}</td>
               <td className="px-4 py-3" />
             </tr>
           </tbody>

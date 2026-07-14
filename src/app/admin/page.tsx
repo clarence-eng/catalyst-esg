@@ -492,7 +492,7 @@ export default function AdminPage() {
       <div className="bg-white border-b border-gray-200 px-8 py-4">
         <div className="flex items-center justify-between max-w-6xl mx-auto">
           <div className="flex items-center gap-4">
-            <div className="font-bold text-lg" style={{fontFamily:"Georgia,serif",color:"#4B2580",letterSpacing:"0.12em"}}>TEMASEK</div>
+            <div className="font-bold text-lg text-[#4B2580]" style={{fontFamily:"Georgia,serif",letterSpacing:"0.12em"}}>TEMASEK</div>
             <span aria-hidden="true" className="text-gray-400">|</span>
             <span className="text-sm font-semibold text-gray-900">Portfolio Admin</span>
             <div className="flex items-center gap-3 text-xs">

@@ -27,12 +27,12 @@ const riskColor: Record<string, string> = {
   Medium: "#f59e0b",
   Low: "#10b981",
 };
-// WCAG AA–safe text equivalents for tooltip (4.5:1 on white)
-const riskTextColor: Record<string, string> = {
-  Critical: "#b91c1c",
-  High: "#c2410c",
-  Medium: "#92400e",
-  Low: "#047857",
+// WCAG AA–safe text classes for tooltip (4.5:1 on white; -400 variants for dark mode #1e2130)
+const riskTextClass: Record<string, string> = {
+  Critical: "text-red-700 dark:text-red-400",
+  High: "text-orange-700 dark:text-orange-400",
+  Medium: "text-amber-700 dark:text-amber-400",
+  Low: "text-emerald-700 dark:text-emerald-400",
 };
 
 interface TooltipPayload {
@@ -48,7 +48,7 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
       <div className="text-gray-600">ESG Score: <span className="text-gray-900">{d.esgScore}</span></div>
       <div className="text-gray-600">Carbon Intensity: <span className="text-gray-900">{d.carbonIntensity} tCO₂e/$M</span></div>
       <div className="text-gray-600">Investment: <span className="text-gray-900">S${d.investmentValue}M</span></div>
-      <div className="text-gray-600">Transition Risk: <span style={{ color: riskTextColor[d.transitionRisk] ?? "#374151" }}>{d.transitionRisk}</span></div>
+      <div className="text-gray-600">Transition Risk: <span className={riskTextClass[d.transitionRisk] ?? "text-gray-700"}>{d.transitionRisk}</span></div>
     </div>
   );
 }
@@ -130,6 +130,14 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
           </div>
         );
       })()}
+      {/* Keyboard-accessible equivalent: screen-reader/keyboard users navigate to company profiles via this list */}
+      <ul className="sr-only">
+        {data.map(d => (
+          <li key={d.slug}>
+            <a href={`/scout/${d.slug}`}>{d.name} — ESG {d.esgScore}, Carbon {d.carbonIntensity} tCO₂e/$M, {d.transitionRisk} transition risk</a>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

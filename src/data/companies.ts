@@ -609,7 +609,7 @@ export const companies: Company[] = [
         type: "Meeting",
         topic: "Responsible AI Policy Launch & Carbon Analytics Product Review",
         status: "Planned",
-        notes: "Review published MAS FEAT-aligned AI Governance Policy (target Q2 2026). Assess Carbon Management SaaS product traction and pipeline against APAC ISSB S2 disclosure demand. Confirm I-REC procurement progress toward 60% RE target (Q4 2026 deadline).",
+        notes: "Review MAS FEAT-aligned AI Governance Policy (Q2 2026 publication target — confirm status). Assess Carbon Management SaaS product traction and pipeline against APAC ISSB S2 disclosure demand. Confirm I-REC procurement progress toward 60% RE target (Q4 2026 deadline).",
       },
     ],
     investmentValue: 285,
