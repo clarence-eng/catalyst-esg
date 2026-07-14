@@ -35,7 +35,7 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
       let data: { error?: string; text?: string };
       try { data = await res.json(); } catch { throw new Error(`Request failed: ${res.status} (unexpected response format)`); }
       if (data.error) throw new Error(data.error);
-      if (!data.text) throw new Error("No content received from AI");
+      if (!data.text?.trim()) throw new Error("No content received from AI");
       setBrief(data.text);
       setGeneratedAt(new Date());
     } catch (e: unknown) {

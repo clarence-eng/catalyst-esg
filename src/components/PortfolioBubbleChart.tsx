@@ -57,7 +57,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
   const router = useRouter();
   if (data.length === 0) return null;
   const maxCarbon = Math.max(...data.map(d => d.carbonIntensity));
-  const yMax = Math.min(maxCarbon * 1.15, 2000);
+  const yMax = Math.min(Math.max(maxCarbon * 1.15, 100), 2000);
   const offChart = data.filter(d => d.carbonIntensity > yMax);
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">

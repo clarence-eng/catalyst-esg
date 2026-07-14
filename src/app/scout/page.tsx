@@ -41,9 +41,10 @@ function loadCompareSet(): Set<string> {
 }
 
 const VALID_STATUS: StatusFilter[] = ["All", "Active", "Pipeline"];
+const VALID_SORT: SortKey[] = ["esg_desc", "esg_asc", "carbon_asc", "carbon_desc", "name_asc"];
 
-function loadFilter(): { query: string; statusFilter: StatusFilter } {
-  const defaults = { query: "", statusFilter: "All" as StatusFilter };
+function loadFilter(): { query: string; statusFilter: StatusFilter; sortKey: SortKey } {
+  const defaults = { query: "", statusFilter: "All" as StatusFilter, sortKey: "esg_desc" as SortKey };
   if (typeof window === "undefined") return defaults;
   try {
     const stored = sessionStorage.getItem(FILTER_KEY);
@@ -52,7 +53,8 @@ function loadFilter(): { query: string; statusFilter: StatusFilter } {
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return defaults;
     const q = typeof parsed.query === "string" ? parsed.query : "";
     const sf = VALID_STATUS.includes(parsed.statusFilter) ? parsed.statusFilter as StatusFilter : "All";
-    return { query: q, statusFilter: sf };
+    const sk = VALID_SORT.includes(parsed.sortKey) ? parsed.sortKey as SortKey : "esg_desc";
+    return { query: q, statusFilter: sf, sortKey: sk };
   } catch { return defaults; }
 }
 
@@ -71,10 +73,11 @@ export default function ScoutPage() {
 
   // Restore from sessionStorage after hydration (client only)
   useEffect(() => {
-    const { query: q, statusFilter: sf } = loadFilter();
+    const { query: q, statusFilter: sf, sortKey: sk } = loadFilter();
     const cs = loadCompareSet();
     setQuery(q);
     setStatusFilter(sf);
+    setSortKey(sk);
     setCompareSet(cs);
     restoredRef.current = true;
   }, []);
@@ -89,8 +92,8 @@ export default function ScoutPage() {
   // Persist filter state — only after initial restore values have rendered
   useEffect(() => {
     if (!restoredRef.current || renderCountRef.current <= 1) return;
-    try { sessionStorage.setItem(FILTER_KEY, JSON.stringify({ query, statusFilter })); } catch { /* quota exceeded */ }
-  }, [query, statusFilter]);
+    try { sessionStorage.setItem(FILTER_KEY, JSON.stringify({ query, statusFilter, sortKey })); } catch { /* quota exceeded */ }
+  }, [query, statusFilter, sortKey]);
 
 
   const ACTIVE_COUNT = companies.filter((c) => c.portfolioStatus === "Active").length;

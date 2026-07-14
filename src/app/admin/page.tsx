@@ -10,12 +10,21 @@ function useAdminAuth() {
   const [authed, setAuthed] = useState(false);
   const [pw, setPw] = useState("");
   const [err, setErr] = useState(false);
-  const check = () => {
-    if (pw === (process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "catalyst2026")) {
-      setAuthed(true); setErr(false);
-    } else setErr(true);
+  const [checking, setChecking] = useState(false);
+  const check = async () => {
+    setChecking(true);
+    try {
+      const res = await fetch("/api/admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: pw }),
+      });
+      if (res.ok) { setAuthed(true); setErr(false); }
+      else setErr(true);
+    } catch { setErr(true); }
+    finally { setChecking(false); }
   };
-  return { authed, pw, setPw, err, check, logout: () => setAuthed(false) };
+  return { authed, pw, setPw, err, check, checking, logout: () => setAuthed(false) };
 }
 
 // ─── Company Form ────────────────────────────────────────────────────────────
@@ -447,15 +456,15 @@ export default function AdminPage() {
           <div>
             <label htmlFor="admin-password" className="text-xs font-medium text-gray-700">Admin Password <span className="text-gray-500 font-normal">(set in Vercel env vars)</span></label>
             <input id="admin-password" type="password" aria-required="true" autoComplete="off" value={auth.pw} onChange={e => auth.setPw(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && auth.check()}
+              onKeyDown={e => { if (e.key === "Enter" && !auth.checking) auth.check(); }}
               placeholder="Enter password" autoFocus
               aria-invalid={auth.err || undefined}
               aria-describedby={auth.err ? "admin-pw-error" : undefined}
               className={`w-full mt-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 ${auth.err ? "border-red-400 focus:ring-red-400/50" : "border-gray-200 focus:border-purple-400 focus:ring-purple-400/30"}`} />
             {auth.err && <p id="admin-pw-error" role="alert" className="text-xs text-red-600 mt-1">Incorrect password</p>}
           </div>
-          <button type="button" onClick={auth.check} className="w-full bg-[#4B2580] hover:bg-[#3D1A6E] text-white py-2.5 rounded-lg text-sm font-medium transition-colors">
-            Access Admin Panel
+          <button type="button" onClick={auth.check} disabled={auth.checking} aria-busy={auth.checking} className="w-full bg-[#4B2580] hover:bg-[#3D1A6E] disabled:opacity-60 text-white py-2.5 rounded-lg text-sm font-medium transition-colors">
+            {auth.checking ? "Verifying…" : "Access Admin Panel"}
           </button>
         </div>
       </div>

@@ -311,7 +311,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
                   </span>
                 );
               })()}
-              {!expanded && (
+              {!isPipeline && !expanded && (
                 <span className="flex items-center gap-1 text-[10px] text-purple-600 bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded">
                   <Sparkles className="w-2.5 h-2.5" aria-hidden="true" />
                   AI Action Plan
