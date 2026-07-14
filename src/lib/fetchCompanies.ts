@@ -319,7 +319,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
     valueUplift: [
       { area: "Inclusive Finance Integration", potential: "High", description: "Partner with Nusantara Bank (portfolio company) to offer embedded microinsurance and health savings products to MediLink's 40M+ patient base. Creates synergistic value across Temasek's portfolio aligned with inclusive growth mandate." },
       { area: "Responsible AI Certification", potential: "High", description: "Achieve MOH AI in Healthcare accreditation and MAS FEAT compliance across financial health products. Positions MediLink as the only certified AI health platform in ASEAN — critical differentiator for government and insurer contracts." },
-      { area: "Carbon-Neutral Telehealth", potential: "Medium", description: "Achieve net zero Scope 1+2 by 2026 via I-REC + energy efficiency. Enables access to European development finance and WHO digital health partnership programmes that require ESG baseline standards." },
+      { area: "Carbon-Neutral Telehealth", potential: "Medium", description: "Achieve net zero Scope 1+2 by 2027 via I-REC + energy efficiency (post-close commitment). Enables access to European development finance and WHO digital health partnership programmes that require ESG baseline standards." },
     ],
     tnfdPillars: [
       { pillar: "Governance", status: "Gap" },
