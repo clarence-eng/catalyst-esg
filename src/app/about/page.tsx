@@ -182,6 +182,7 @@ export default function AboutPage() {
           Catalyst is a candidate portfolio project for Temasek&apos;s ESG Investment Management team. It is not an official Temasek product.
           All portfolio company data is mock and for demonstration purposes only.
           AI features use Google Gemini 2.5 Flash (free tier) and require a personal API key in <code className="text-gray-600 bg-gray-100 px-1 rounded">.env.local</code>.
+          Includes dark/light mode toggle, keyboard shortcuts (⌘K global search, ? for shortcuts, G+key for navigation), and full screen-reader accessibility (WCAG 2.1 AA).
         </p>
       </div>
 

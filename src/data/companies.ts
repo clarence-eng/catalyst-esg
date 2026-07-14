@@ -113,7 +113,7 @@ export const companies: Company[] = [
       environmental: 41,
       social: 62,
       governance: 59,
-      rating: "BB",
+      rating: "BBB",
     },
     maturity: "Developing",
     climateRisk: {
@@ -271,6 +271,15 @@ export const companies: Company[] = [
       { period: "Q1 2026", e: 41, s: 61, g: 58 },
       { period: "Q2 2026", e: 41, s: 62, g: 59 },
     ],
+    icRecommendation: {
+      verdict: "Invest Conditional",
+      conditions: [
+        "Publish IMO-aligned fleet decarbonisation pathway with interim 2027 milestones before Q3 2026",
+        "Commit to third-party CII rating audit across owned fleet within 12 months of investment",
+        "Establish TNFD-aligned nature risk assessment for two port expansion sites",
+      ],
+      esgGating: "Fleet transition pathway is a pre-close condition — without a credible capex commitment to methanol-ready retrofits, IMO CII penalties represent a material and unquantified financial risk.",
+    },
   },
   {
     slug: "nusantara-bank",
@@ -460,6 +469,15 @@ export const companies: Company[] = [
       { period: "Q1 2026", e: 55, s: 68, g: 72 },
       { period: "Q2 2026", e: 55, s: 69, g: 72 },
     ],
+    icRecommendation: {
+      verdict: "Invest Conditional",
+      conditions: [
+        "Publish TCFD-aligned climate risk assessment for corporate lending book by Q2 2027",
+        "Establish financed emissions measurement baseline (Scope 3 Category 15) within 18 months",
+        "Board ESG oversight charter adopted with dedicated ESG committee or clear mandate",
+      ],
+      esgGating: "ESG-linked value creation thesis requires confirmed trajectory toward financed emissions disclosure — an absence of any PCAF reporting baseline within 24 months should trigger portfolio review.",
+    },
   },
   {
     slug: "cloudmesh-technologies",
@@ -477,7 +495,7 @@ export const companies: Company[] = [
       environmental: 63,
       social: 74,
       governance: 79,
-      rating: "A",
+      rating: "AA",
     },
     maturity: "Advanced",
     climateRisk: {
@@ -641,6 +659,15 @@ export const companies: Company[] = [
       { period: "Q1 2026", e: 63, s: 74, g: 78 },
       { period: "Q2 2026", e: 63, s: 74, g: 79 },
     ],
+    icRecommendation: {
+      verdict: "Invest",
+      conditions: [
+        "Maintain MAS FEAT-aligned AI governance policy publication on schedule (H2 2026 target)",
+        "Carbon Management SaaS product to achieve APAC ISSB S2 compliance endorsement by Q4 2026",
+        "I-REC procurement to reach 60% renewable electricity by Q4 2026 (tracked quarterly)",
+      ],
+      esgGating: "No hard veto conditions — Leading ESG maturity with clear value creation catalysts. Investment proceeds on current terms; engagement milestones tracked at quarterly portfolio reviews.",
+    },
   },
   {
     slug: "greenharvest-agri",
@@ -658,7 +685,7 @@ export const companies: Company[] = [
       environmental: 49,
       social: 63,
       governance: 65,
-      rating: "BBB",
+      rating: "A",
     },
     maturity: "Developing",
     climateRisk: {
@@ -845,6 +872,15 @@ export const companies: Company[] = [
       { period: "Q1 2026", e: 48, s: 62, g: 64 },
       { period: "Q2 2026", e: 49, s: 63, g: 65 },
     ],
+    icRecommendation: {
+      verdict: "Invest Conditional",
+      conditions: [
+        "EUDR-compliant traceability system deployed across 100% of Sabah and Sarawak supply chain before close",
+        "Board independence increased to ≥50% (minimum 4 of 8 independent directors) as a pre-close governance condition",
+        "SBTi FLAG target submitted within 12 months of close — covering Scope 1, 2, and land-use emissions",
+      ],
+      esgGating: "EUDR non-compliance represents a binary European market access risk. Supply chain traceability certification is a hard pre-close condition. Board independence uplift is required to meet DFI co-investment standards.",
+    },
   },
   {
     slug: "asiapower-energy",
@@ -862,7 +898,7 @@ export const companies: Company[] = [
       environmental: 32,
       social: 55,
       governance: 52,
-      rating: "BB",
+      rating: "BBB",
     },
     maturity: "Developing",
     climateRisk: {
@@ -1030,6 +1066,15 @@ export const companies: Company[] = [
       { period: "Q1 2026", e: 36, s: 56, g: 53 },
       { period: "Q2 2026", e: 32, s: 55, g: 52 },
     ],
+    icRecommendation: {
+      verdict: "Invest Conditional",
+      conditions: [
+        "Published coal phase-out schedule with hard 2034 retirement commitment for all thermal assets",
+        "Geothermal development capex ringfenced at S$150M minimum for Sumatra pipeline within 24 months",
+        "Paris-aligned TCFD scenario analysis (1.5°C and 2°C) disclosed in next annual report",
+      ],
+      esgGating: "Coal phase-out commitment is a hard pre-close condition — without a credible 2034 retirement schedule, the Paris-misaligned carbon pathway creates stranded-asset risk that cannot be mitigated post-investment.",
+    },
   },
   {
     slug: "medilink-health",
@@ -1047,7 +1092,7 @@ export const companies: Company[] = [
       environmental: 41,
       social: 72,
       governance: 56,
-      rating: "BBB",
+      rating: "A",
     },
     maturity: "Developing",
     climateRisk: {

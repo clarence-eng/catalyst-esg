@@ -1,5 +1,5 @@
 "use client";
-import { useState, memo } from "react";
+import { useState, useRef, memo } from "react";
 import { useCompanies } from "@/lib/useCompanies";
 import type { Company } from "@/data/companies";
 import { RatingBadge, MaturityBadge, RiskBadge, PageHeader } from "@/components/ui-elements";
@@ -193,6 +193,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
   const [expanded, setExpanded] = useState(false);
   const [plan, setPlan] = useState("");
   const [planLoading, setPlanLoading] = useState(false);
+  const planLoadingRef = useRef(false);
   const [planError, setPlanError] = useState("");
   const [planGeneratedAt, setPlanGeneratedAt] = useState<Date | null>(null);
 
@@ -216,7 +217,8 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
   const filled = (completionPct / 100) * circ;
 
   async function generateActionPlan() {
-    if (planLoading) return;
+    if (planLoadingRef.current) return;
+    planLoadingRef.current = true;
     setPlanLoading(true);
     setPlanError("");
     try {
@@ -226,16 +228,17 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
         .slice(0, 3)
         .map((i) => `${i.issue} (${i.severity})`)
         .join(", ") || "No specific risk issues identified — focus on value creation and governance uplift";
-      const keyGaps = [
+      const keyGapsArr = [
         co.climateRisk.transition !== "Low" && "Climate transition strategy and emissions pathway",
         co.natureRisk.overall !== "Low" && "Nature risk and TNFD assessment",
         !co.natureRisk.tnfdAligned && "TNFD adoption",
         co.netZeroCommitment === "None" && "No net zero commitment — ISSB S2 readiness gap",
-        // Only flag green revenue gap for non-utilities — for electric utilities the priority is coal phase-out, not green revenue growth
         co.greenRevenuePct < 20 && !co.sector.includes("Electric Utilit") && "Green revenue development",
-      ]
-        .filter(Boolean)
-        .join("; ");
+      ].filter(Boolean);
+      const keyGaps = keyGapsArr.length > 0
+        ? keyGapsArr.join("; ")
+        : "No material gaps — focus on reporting quality uplift, stakeholder engagement, and ESG value creation";
+      const overdueEngagements = co.engagement.filter(e => e.status === "Overdue").map(e => e.topic).join(", ") || "None";
 
       const res = await fetch("/api/gemini", {
         method: "POST",
@@ -245,7 +248,14 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
           context: {
             name: co.name,
             sector: co.sector,
+            country: co.country,
             maturity: co.maturity,
+            esgScore: `Overall ${co.esgScore.overall}/100 (E:${co.esgScore.environmental} S:${co.esgScore.social} G:${co.esgScore.governance})`,
+            transitionRisk: co.climateRisk.transition,
+            carbonIntensity: `${co.carbonIntensity} tCO₂e/$M`,
+            greenRevenuePct: `${co.greenRevenuePct}%`,
+            netZeroCommitment: co.netZeroCommitment,
+            overdueEngagements,
             topIssues,
             keyGaps,
           },
@@ -264,6 +274,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
     } catch (e: unknown) {
       setPlanError(e instanceof Error ? e.message : "Failed to generate action plan");
     } finally {
+      planLoadingRef.current = false;
       setPlanLoading(false);
     }
   }
@@ -424,7 +435,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
             <div className="text-xs text-gray-500 border border-dashed border-gray-200 rounded-lg p-4 text-center">
               ESG Action Plan available after investment close. IC conditions precedent tracked in engagement history above.
             </div>
-          ) : <div aria-live="polite" aria-atomic="false">
+          ) : <div aria-live="polite" aria-atomic="false" aria-busy={planLoading}>
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 className="text-sm font-semibold text-gray-900">ESG Action Plan</h3>
