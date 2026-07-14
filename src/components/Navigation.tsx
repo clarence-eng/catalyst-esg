@@ -113,6 +113,7 @@ export function Navigation() {
           type="button"
           onClick={toggle}
           aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          aria-pressed={theme === 'dark'}
           className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded-lg hover:bg-gray-100 transition-colors w-full mt-1"
         >
           {theme === 'light' ? <Moon className="w-3 h-3" /> : <Sun className="w-3 h-3" />}

@@ -8,18 +8,30 @@ export function useTheme() {
 
   useEffect(() => {
     // Read the actual applied theme from the DOM class (set by the pre-paint inline script)
-    // This is synchronous and matches what the user actually sees after first paint
-    const stored = localStorage.getItem("catalyst-theme") as "light" | "dark" | null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initial = stored ?? (prefersDark ? "dark" : "light");
-    setTheme(initial);
-    document.documentElement.classList.toggle("dark", initial === "dark");
+    let stored: "light" | "dark" | null = null;
+    try { stored = localStorage.getItem("catalyst-theme") as "light" | "dark" | null; } catch { /* storage restricted */ }
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const applyTheme = (s: "light" | "dark" | null, prefersDark: boolean) => {
+      const resolved = s ?? (prefersDark ? "dark" : "light");
+      setTheme(resolved);
+      document.documentElement.classList.toggle("dark", resolved === "dark");
+    };
+    applyTheme(stored, mq.matches);
+
+    // Update if user changes OS theme while tab is open (only relevant when no manual preference)
+    const onChange = (e: MediaQueryListEvent) => {
+      let current: "light" | "dark" | null = null;
+      try { current = localStorage.getItem("catalyst-theme") as "light" | "dark" | null; } catch { /* storage restricted */ }
+      if (!current) applyTheme(null, e.matches);
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
   }, []);
 
   const toggle = () => {
     const next = theme === "light" ? "dark" : "light";
     setTheme(next);
-    localStorage.setItem("catalyst-theme", next);
+    try { localStorage.setItem("catalyst-theme", next); } catch { /* storage restricted */ }
     document.documentElement.classList.toggle("dark", next === "dark");
   };
 
