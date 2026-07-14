@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
-  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  // Note: X-Frame-Options removed — frame-ancestors 'none' in CSP supersedes it per RFC 7034
   { key: "X-XSS-Protection", value: "1; mode=block" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
