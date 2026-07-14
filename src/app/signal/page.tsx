@@ -213,7 +213,7 @@ export default function SignalPage() {
         <span className="text-xs text-gray-500" role="status" aria-live="polite" aria-atomic="true">
           {urgencyView === "all"
             ? `${filteredUpdates.length} of ${regulatoryUpdates.length} regulations`
-            : `${(urgencyView === "high" ? highUrgency : urgencyView === "medium" ? mediumUrgency : lowUrgency).length} of ${filteredUpdates.length} filtered`}
+            : `${(urgencyView === "high" ? highUrgency : urgencyView === "medium" ? mediumUrgency : lowUrgency).length} of ${filteredUpdates.length}${jurisdictionFilter !== "All" || categoryFilter !== "All" ? " filtered" : " regulations"}`}
         </span>
       </div>
 
@@ -342,14 +342,18 @@ function RegUpdateCard({ update: r, companyNameMap = Object.fromEntries(staticCo
             {r.portfolioImpact && r.portfolioImpact.length > 0 && (() => {
               const activeImpactCount = r.portfolioImpact.filter(s => activePortfolioSlugs.has(s)).length;
               const totalImpactCount = r.portfolioImpact.length;
+              // Only show badge if at least one active company is affected
+              if (activeImpactCount === 0 && totalImpactCount === 0) return null;
               const label = activeImpactCount === 1 ? "company" : "companies";
               return (
                 <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${
-                  activeImpactCount <= 2
+                  activeImpactCount === 0
+                    ? "text-gray-600 bg-gray-50 border-gray-300"
+                    : activeImpactCount <= 2
                     ? "text-amber-700 bg-amber-50 border-amber-300"
                     : "text-orange-700 bg-orange-50 border-orange-300"
                 }`}>
-                  Affects {activeImpactCount} active {label}{totalImpactCount > activeImpactCount ? ` (+${totalImpactCount - activeImpactCount} pipeline)` : ""}
+                  {activeImpactCount > 0 ? `Affects ${activeImpactCount} active ${label}` : "Pipeline only"}{totalImpactCount > activeImpactCount ? ` (+${totalImpactCount - activeImpactCount} pipeline)` : ""}
                 </span>
               );
             })()}

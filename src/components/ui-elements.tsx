@@ -8,9 +8,10 @@ export function RiskBadge({ level }: { level: RiskLevel }) {
     High: "bg-orange-50 text-orange-700 border-orange-300",
     Critical: "bg-red-50 text-red-700 border-red-300",
   };
+  const cls = styles[level] ?? "bg-gray-50 text-gray-500 border-gray-300";
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${styles[level]}`}>
-      {level}
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${cls}`}>
+      {level ?? "—"}
     </span>
   );
 }
@@ -22,9 +23,10 @@ export function MaturityBadge({ level }: { level: MaturityLevel }) {
     Developing: "bg-amber-50 text-amber-700 border-amber-300",
     Lagging: "bg-red-50 text-red-700 border-red-300",
   };
+  const cls = styles[level] ?? "bg-gray-50 text-gray-500 border-gray-300";
   return (
-    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${styles[level]}`}>
-      {level}
+    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${cls}`}>
+      {level ?? "—"}
     </span>
   );
 }
@@ -48,7 +50,9 @@ export function RatingBadge({ rating }: { rating: ESGRating }) {
 }
 
 export function ScoreRing({ score: rawScore, size = 80, label }: { score: number; size?: number; label?: string }) {
-  const score = Math.max(0, Math.min(100, rawScore));
+  // Guard against NaN/Infinity so the ring never renders corrupted values
+  const safe = isNaN(rawScore) || !isFinite(rawScore) ? 0 : rawScore;
+  const score = Math.max(0, Math.min(100, safe));
   const radius = (size - 8) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = (score / 100) * circumference;
