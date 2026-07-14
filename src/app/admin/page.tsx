@@ -425,14 +425,17 @@ export default function AdminPage() {
   const deleteCompany = async (id: string, slug: string, name: string) => {
     if (!confirm(`Delete ${name}? This also deletes all engagements and material issues.`)) return;
     try {
-      // Delete sub-rows sequentially: material_issues first, then engagements.
+      // Delete child rows first (best-effort); if they fail report but still attempt company delete.
+      // Note: Supabase FK constraints may cascade automatically depending on DB config.
       const { error: miDelErr } = await supabase.from("material_issues").delete().eq("company_slug", slug);
-      if (miDelErr) { showToast("Error deleting issues: " + miDelErr.message, true); return; }
       const { error: engDelErr } = await supabase.from("engagements").delete().eq("company_slug", slug);
-      if (engDelErr) { showToast("Error deleting engagements: " + engDelErr.message, true); return; }
-      const { error } = await supabase.from("companies").delete().eq("id", id);
-      if (error) { showToast("Error deleting: " + error.message, true); return; }
-      showToast(`${name} deleted`);
+      const { error: coDelErr } = await supabase.from("companies").delete().eq("id", id);
+      if (miDelErr || engDelErr || coDelErr) {
+        const msgs = [miDelErr?.message, engDelErr?.message, coDelErr?.message].filter(Boolean).join("; ");
+        showToast("Partial deletion error — refresh to verify: " + msgs, true);
+      } else {
+        showToast(`${name} deleted`);
+      }
       clearCache();
       loadCompanies();
     } catch (err) {
