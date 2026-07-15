@@ -262,6 +262,11 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
             overdueEngagements,
             topIssues,
             keyGaps,
+            topUplift: co.valueUplift
+              .filter(v => v.potential === "High" || v.potential === "Medium")
+              .slice(0, 3)
+              .map(v => `${v.area} (${v.potential} potential)`)
+              .join(", ") || "No specific value creation opportunities flagged",
           },
         }),
       });
