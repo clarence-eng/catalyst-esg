@@ -558,12 +558,13 @@ export default function AdminPage() {
               </svg>
             </div>
             {adminSearch && <button type="button" onClick={() => setAdminSearch("")} className="text-xs text-gray-500 hover:text-gray-700">Clear</button>}
-            <div role="group" aria-label="Sort companies by" className="flex items-center gap-1">
+            <div role="radiogroup" aria-label="Sort companies by" className="flex items-center gap-1">
               {([{key:"recent",label:"Recent"},{key:"name",label:"A–Z"},{key:"esg",label:"ESG Score"}] as {key:"recent"|"name"|"esg"; label:string}[]).map(opt => (
                 <button
                   key={opt.key}
                   type="button"
-                  aria-pressed={adminSort === opt.key}
+                  role="radio"
+                  aria-checked={adminSort === opt.key}
                   onClick={() => setAdminSort(opt.key)}
                   className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${adminSort === opt.key ? "bg-[#4B2580] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
                 >

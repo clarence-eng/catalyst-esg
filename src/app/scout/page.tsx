@@ -164,18 +164,21 @@ export default function ScoutPage() {
           ))}
         </div>
         <label className="sr-only" htmlFor="scout-sort">Sort by</label>
-        <select
-          id="scout-sort"
-          value={sortKey}
-          onChange={(e) => setSortKey(e.target.value as SortKey)}
-          className="appearance-none text-xs bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400/40 focus:border-purple-600/40"
-        >
-          <option value="esg_desc">ESG Score ↓ (best first)</option>
-          <option value="esg_asc">ESG Score ↑ (triage)</option>
-          <option value="carbon_asc">Carbon ↑ (lowest first)</option>
-          <option value="carbon_desc">Carbon ↓ (highest first)</option>
-          <option value="name_asc">Name A–Z</option>
-        </select>
+        <div className="relative">
+          <select
+            id="scout-sort"
+            value={sortKey}
+            onChange={(e) => setSortKey(e.target.value as SortKey)}
+            className="appearance-none text-xs bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 pr-7 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400/40 focus:border-purple-600/40"
+          >
+            <option value="esg_desc">ESG Score ↓ (best first)</option>
+            <option value="esg_asc">ESG Score ↑ (triage)</option>
+            <option value="carbon_asc">Carbon ↑ (lowest first)</option>
+            <option value="carbon_desc">Carbon ↓ (highest first)</option>
+            <option value="name_asc">Name A–Z</option>
+          </select>
+          <svg className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </div>
         <div className="text-xs text-gray-500" role="status" aria-live="polite" aria-atomic="true">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</div>
       </div>
 
