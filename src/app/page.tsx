@@ -155,11 +155,13 @@ export default function OverviewPage() {
     );
   }).join(" || ");
 
+  // Compute portfolio weights server-side — never send raw S$M investmentValue to the client component
+  const totalActiveInvestment = activeCompanies.reduce((s, c) => s + c.investmentValue, 0);
   const bubbleData = activeCompanies.map((c) => ({
     name: c.name,
     esgScore: c.esgScore.overall,
     carbonIntensity: c.carbonIntensity,
-    investmentValue: c.investmentValue,
+    portfolioWeight: totalActiveInvestment > 0 ? (c.investmentValue / totalActiveInvestment) * 100 : 0,
     transitionRisk: c.climateRisk.transition,
     slug: c.slug,
   }));
@@ -250,7 +252,7 @@ export default function OverviewPage() {
           )}
         </div>
         <StatCard label="Transition Risk Flags" value={highRisk} sub="High or Critical exposure" color="amber" />
-        <StatCard label="Avg Carbon Intensity" value={avgCarbonIntensity !== null ? `${avgCarbonIntensity}` : "N/A"} sub="tCO₂e/$M revenue · ex-utilities weighted avg" color="default" />
+        <StatCard label="Avg Carbon Intensity" value={avgCarbonIntensity !== null ? `${avgCarbonIntensity}` : "N/A"} sub={avgCarbonIntensity !== null ? "tCO₂e/$M revenue · ex-utilities weighted avg" : "All active companies are electric utilities — reported separately"} color="default" />
         <StatCard label="Overdue Engagements" value={overdueCount} sub="Requires immediate follow-up" color="red" />
         <StatCard label="Planned Engagements" value={plannedCount} sub="Upcoming" color="default" />
       </div>

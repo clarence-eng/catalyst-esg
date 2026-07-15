@@ -51,7 +51,7 @@ function coerceNumber(v: unknown, fallback = 0): number {
 export async function POST(req: NextRequest) {
   if (!verifyAdminRequest(req)) return forbidden();
 
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? req.headers.get("x-real-ip") ?? "unknown";
+  const ip = req.headers.get("x-real-ip") ?? req.headers.get("x-forwarded-for")?.split(",").at(-1)?.trim() ?? "unknown";
   if (!checkRateLimit(ip)) {
     return NextResponse.json({ error: "Too many requests — please wait before retrying" }, { status: 429 });
   }

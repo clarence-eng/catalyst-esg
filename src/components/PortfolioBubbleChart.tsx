@@ -16,7 +16,7 @@ interface BubblePoint {
   name: string;
   esgScore: number;
   carbonIntensity: number;
-  investmentValue: number;
+  portfolioWeight: number;
   transitionRisk: string;
   slug: string;
 }
@@ -36,7 +36,7 @@ const riskTextClass: Record<string, string> = {
 };
 
 interface TooltipPayload {
-  payload?: BubblePoint & { portfolioWeight?: number };
+  payload?: BubblePoint;
 }
 
 function CustomTooltip({ active, payload }: { active?: boolean; payload?: TooltipPayload[] }) {
@@ -47,9 +47,7 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
       <div className="font-semibold text-gray-900 mb-1">{d.name}</div>
       <div className="text-gray-600">ESG Score: <span className="text-gray-900">{d.esgScore}</span></div>
       <div className="text-gray-600">Carbon Intensity: <span className="text-gray-900">{d.carbonIntensity} tCO₂e/$M</span></div>
-      {d.portfolioWeight !== undefined && (
-        <div className="text-gray-600">Portfolio Weight: <span className="text-gray-900">{d.portfolioWeight.toFixed(1)}%</span></div>
-      )}
+      <div className="text-gray-600">Portfolio Weight: <span className="text-gray-900">{d.portfolioWeight.toFixed(1)}%</span></div>
       <div className="text-gray-600">Transition Risk: <span className={riskTextClass[d.transitionRisk] ?? "text-gray-700"}>{d.transitionRisk}</span></div>
     </div>
   );
@@ -58,11 +56,6 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
 export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
   const router = useRouter();
   if (data.length === 0) return null;
-  const totalInvestment = data.reduce((s, d) => s + d.investmentValue, 0);
-  const dataWithWeight = data.map(d => ({
-    ...d,
-    portfolioWeight: totalInvestment > 0 ? (d.investmentValue / totalInvestment) * 100 : 0,
-  }));
   const maxCarbon = Math.max(...data.map(d => d.carbonIntensity));
   const yMax = Math.min(Math.max(maxCarbon * 1.15, 100), 2000);
   const offChart = data.filter(d => d.carbonIntensity > yMax);
@@ -90,7 +83,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
           </div>
         )}
       </div>
-      <div role="img" aria-label="Portfolio positioning chart — ESG Score vs Carbon Intensity">
+      <div role="img" aria-label="Portfolio positioning chart — ESG Score vs Carbon Intensity; bubble size represents portfolio weight percentage">
       <ResponsiveContainer width="100%" height={240}>
         <ScatterChart margin={{ top: 8, right: 24, bottom: 16, left: 8 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
@@ -113,10 +106,10 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
             width={42}
             label={{ value: "tCO₂e/$M ↑", angle: -90, position: "insideLeft", offset: 12, fill: "#475569", fontSize: 10 }}
           />
-          <ZAxis dataKey="investmentValue" range={[80, 600]} name="Portfolio Weight" />
+          <ZAxis dataKey="portfolioWeight" range={[80, 600]} name="Portfolio Weight (%)" />
           <Tooltip content={<CustomTooltip />} />
           <Scatter
-            data={dataWithWeight}
+            data={data}
             fillOpacity={0.75}
             cursor="pointer"
             onClick={(entry: unknown) => {
@@ -124,7 +117,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
               if (pt?.slug) router.push(`/scout/${pt.slug}`);
             }}
           >
-            {dataWithWeight.map((entry) => (
+            {data.map((entry) => (
               <Cell key={entry.slug} fill={riskColor[entry.transitionRisk] ?? "#64748b"} />
             ))}
           </Scatter>
@@ -139,7 +132,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
       <ul className="sr-only">
         {data.map(d => (
           <li key={d.slug}>
-            <a href={`/scout/${d.slug}`}>{d.name} — ESG {d.esgScore}, Carbon {d.carbonIntensity} tCO₂e/$M, {d.transitionRisk} transition risk</a>
+            <a href={`/scout/${d.slug}`}>{d.name} — ESG {d.esgScore}, Carbon {d.carbonIntensity} tCO₂e/$M, Portfolio weight {d.portfolioWeight.toFixed(1)}%, {d.transitionRisk} transition risk</a>
           </li>
         ))}
       </ul>

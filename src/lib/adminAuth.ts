@@ -7,6 +7,10 @@ export const ADMIN_COOKIE = "catalyst_admin_tok";
 function computeToken(): string {
   const pw = process.env.ADMIN_PASSWORD;
   if (!pw) throw new Error("ADMIN_PASSWORD env var is not set");
+  // HMAC-SHA256(key=password, message=fixed-string) produces a deterministic token.
+  // This means: (1) the token is valid until ADMIN_PASSWORD is rotated regardless of
+  // logout — a captured cookie value remains exploitable; (2) no per-session uniqueness.
+  // For production: replace with a random nonce stored server-side (Redis/DB) and deleted on logout.
   return createHmac("sha256", pw).update("catalyst-admin-session-v1").digest("hex");
 }
 
