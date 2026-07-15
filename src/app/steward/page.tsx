@@ -73,13 +73,14 @@ export default function StewardPage() {
       </PageHeader>
 
       {/* View Toggle */}
-      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 mb-6 w-fit" role="group" aria-label="View mode">
+      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 mb-6 w-fit" role="radiogroup" aria-label="View mode">
         {(["cards", "calendar"] as const).map((v) => (
           <button
             type="button"
             key={v}
             onClick={() => setView(v)}
-            aria-pressed={view === v}
+            role="radio"
+            aria-checked={view === v}
             className={`text-xs px-3 py-1.5 rounded-md transition-colors font-medium capitalize ${
               view === v
                 ? "bg-[#4B2580]/15 text-purple-700 border border-purple-500/40"
