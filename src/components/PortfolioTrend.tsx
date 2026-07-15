@@ -65,7 +65,7 @@ export function PortfolioTrend({ data, activeCount }: { data: TrendPoint[]; acti
           ))}
         </div>
       </div>
-      <div role="img" aria-label={`Portfolio ESG trend from ${data[0].period} to ${data[data.length - 1].period}`}>
+      <div role="img" aria-label={`Portfolio ESG trend from ${data[0].period} to ${data[data.length - 1].period}. Latest: Environmental ${latest.e}, Social ${latest.s}, Governance ${latest.g}. Changes over period: E ${eChange >= 0 ? "+" : ""}${eChange}, S ${sChange >= 0 ? "+" : ""}${sChange}, G ${gChange >= 0 ? "+" : ""}${gChange}.`}>
       <ResponsiveContainer width="100%" height={140}>
         <LineChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
