@@ -129,7 +129,10 @@ export default function SignalPage() {
             return calendarItems
               .sort((a, b) => {
               const urgencyOrder = { High: 0, Medium: 1, Low: 2 };
-              return (urgencyOrder[a.urgency as keyof typeof urgencyOrder] ?? 3) - (urgencyOrder[b.urgency as keyof typeof urgencyOrder] ?? 3);
+              const urgencyDiff = (urgencyOrder[a.urgency as keyof typeof urgencyOrder] ?? 3) - (urgencyOrder[b.urgency as keyof typeof urgencyOrder] ?? 3);
+              if (urgencyDiff !== 0) return urgencyDiff;
+              // Secondary: sort by id (data-authoring order = effectively chronological within urgency tier)
+              return a.id.localeCompare(b.id, "en", { numeric: true });
             })
             .map((r, i) => (
               <div key={r.id} className={`flex items-start gap-4 px-5 py-3 ${i % 2 === 0 ? "bg-gray-50" : "bg-white"} border-b border-gray-100 last:border-0`}>
