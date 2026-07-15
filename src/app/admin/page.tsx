@@ -259,6 +259,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
   }, [co.slug]);
 
   useEffect(() => { if (expanded) loadDetail(); }, [expanded, loadDetail]);
+  useEffect(() => { if (!expanded) { setPendingDelEngId(null); setPendingDelIssueId(null); } }, [expanded]);
 
   const saveEng = async (e: Partial<DbEngagement>) => {
     if (savingEngRef.current) return;
@@ -418,6 +419,7 @@ export default function AdminPage() {
 
   const loadCompanies = useCallback(async () => {
     setLoading(true);
+    setPendingDeleteCoId(null);
     try {
       const { data, error } = await supabase.from("companies").select("*").order("created_at");
       if (error) { showToast("Database error: " + error.message, true); setCompanies([]); }

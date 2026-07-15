@@ -688,7 +688,7 @@ function OverviewTab({
                 <tbody>
                   {sasbKPIs.map((row, i) => (
                     <tr key={row.kpi} className={i % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                      <td className="py-2 pr-3 font-medium text-gray-700 whitespace-nowrap">{row.kpi}</td>
+                      <th scope="row" className="py-2 pr-3 font-medium text-gray-700 whitespace-nowrap">{row.kpi}</th>
                       <td className="py-2 pr-3 text-gray-900 font-medium">
                         {row.value}{row.unit ? <span className="text-gray-600 font-normal ml-1">{row.unit}</span> : null}
                       </td>

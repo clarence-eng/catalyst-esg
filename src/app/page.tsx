@@ -490,9 +490,9 @@ function ESGDimensionHeatmap({ companies }: { companies: Array<{ name: string; s
           <tbody className="divide-y divide-gray-50">
             {[...active].sort((a, b) => b.esgScore.overall - a.esgScore.overall).map(co => (
               <tr key={co.slug}>
-                <td className="py-2.5 pr-4">
+                <th scope="row" className="py-2.5 pr-4">
                   <Link href={`/scout/${co.slug}`} className="text-gray-800 font-medium hover:text-purple-700 transition-colors">{co.name}</Link>
-                </td>
+                </th>
                 {(["environmental", "social", "governance", "overall"] as const).map(dim => (
                   <td key={dim} className="py-2.5 px-3 text-center">
                     <span className={`inline-block w-12 py-0.5 rounded text-center ${scoreColor(co.esgScore[dim])}`}>
@@ -735,7 +735,7 @@ function PCAFFinancedEmissionsTable({ companies, totalActive }: { companies: Com
           <tbody>
             {rows.map(({ co, stake, estimatedEmissions, score }) => (
               <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors">
-                <td className="px-6 py-3 text-sm font-medium text-gray-900">{co.name}</td>
+                <th scope="row" className="px-6 py-3 text-sm font-medium text-gray-900">{co.name}</th>
                 <td className="px-4 py-3 text-xs text-gray-600">{co.sector}</td>
                 <td className="px-4 py-3 text-xs text-gray-600 text-right">{stake.toFixed(1)}%</td>
                 <td className="px-4 py-3 text-xs text-gray-800 text-right font-medium">{estimatedEmissions.toLocaleString("en-SG")}</td>
