@@ -73,7 +73,14 @@ export default function StewardPage() {
       </PageHeader>
 
       {/* View Toggle */}
-      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 mb-6 w-fit" role="radiogroup" aria-label="View mode">
+      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 mb-6 w-fit" role="radiogroup" aria-label="View mode"
+        onKeyDown={(e) => {
+          const opts = ["cards","calendar"] as const;
+          const idx = opts.indexOf(view);
+          if (e.key==="ArrowRight"||e.key==="ArrowDown") { e.preventDefault(); setView(opts[(idx+1)%opts.length]); }
+          if (e.key==="ArrowLeft"||e.key==="ArrowUp") { e.preventDefault(); setView(opts[(idx-1+opts.length)%opts.length]); }
+        }}
+      >
         {(["cards", "calendar"] as const).map((v) => (
           <button
             type="button"
@@ -81,6 +88,7 @@ export default function StewardPage() {
             onClick={() => setView(v)}
             role="radio"
             aria-checked={view === v}
+            tabIndex={view === v ? 0 : -1}
             className={`text-xs px-3 py-1.5 rounded-md transition-colors font-medium capitalize ${
               view === v
                 ? "bg-[#4B2580]/15 text-purple-700 border border-purple-500/40"

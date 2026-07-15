@@ -144,13 +144,19 @@ export default function ScoutPage() {
 
       {/* Filters */}
       <div className="flex items-center gap-3 mb-4">
-        <div role="radiogroup" aria-label="Filter by portfolio status" className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
+        <div role="radiogroup" aria-label="Filter by portfolio status" className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1"
+          onKeyDown={(e) => {
+            const opts = ["All","Active","Pipeline"] as const;
+            const idx = opts.indexOf(statusFilter);
+            if (e.key==="ArrowRight"||e.key==="ArrowDown") { e.preventDefault(); setStatusFilter(opts[(idx+1)%opts.length]); }
+            if (e.key==="ArrowLeft"||e.key==="ArrowUp") { e.preventDefault(); setStatusFilter(opts[(idx-1+opts.length)%opts.length]); }
+          }}>
           {(["All", "Active", "Pipeline"] as StatusFilter[]).map((s) => (
             <button
               type="button"
               key={s}
               onClick={() => setStatusFilter(s)}
-              role="radio" aria-checked={statusFilter === s}
+              role="radio" aria-checked={statusFilter === s} tabIndex={statusFilter === s ? 0 : -1}
               className={`text-xs px-3 py-1.5 rounded-md transition-colors font-medium ${
                 statusFilter === s
                   ? s === "Pipeline"

@@ -99,13 +99,19 @@ function LearnContent() {
           </div>
 
           {/* Filter pills */}
-          <div className="flex flex-wrap gap-1.5 mb-4" role="radiogroup" aria-label="Filter by category">
+          <div className="flex flex-wrap gap-1.5 mb-4" role="radiogroup" aria-label="Filter by category"
+          onKeyDown={(e) => {
+            const opts = filterCategories;
+            const idx = opts.indexOf(frameworkFilter);
+            if (e.key==="ArrowRight"||e.key==="ArrowDown") { e.preventDefault(); setFrameworkFilter(opts[(idx+1)%opts.length]); }
+            if (e.key==="ArrowLeft"||e.key==="ArrowUp") { e.preventDefault(); setFrameworkFilter(opts[(idx-1+opts.length)%opts.length]); }
+          }}>
             {filterCategories.map((cat) => (
               <button
                 type="button"
                 key={cat}
                 onClick={() => setFrameworkFilter(cat)}
-                role="radio" aria-checked={frameworkFilter === cat}
+                role="radio" aria-checked={frameworkFilter === cat} tabIndex={frameworkFilter === cat ? 0 : -1}
                 className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                   frameworkFilter === cat
                     ? "bg-[#4B2580]/15 text-purple-700 border-purple-500/40"
