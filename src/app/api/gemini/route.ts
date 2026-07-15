@@ -98,13 +98,18 @@ export async function POST(req: NextRequest) {
     }
 
     const ctx = context as Record<string, unknown>;
-    let prompt = "";
+    let systemInstruction = "";
+    let userContent = "";
 
     if (type === "deal_memo") {
-      prompt = `You are a senior ESG analyst at Temasek, a Singapore sovereign wealth fund.
-Write a concise 3-paragraph ESG section for an investment committee memo for the following company.
-
-Company: ${sanitize(ctx.name)}
+      systemInstruction = `You are a senior ESG analyst at Temasek, a Singapore sovereign wealth fund.
+Write a concise 3-paragraph ESG section for an investment committee memo.
+Write exactly three paragraphs:
+1. ESG Risk Summary: Key material ESG risks and their financial materiality to the investment
+2. Value Uplift Opportunities: Top 2-3 ESG-linked value creation levers
+3. Engagement & Monitoring: Recommended post-investment ESG action priorities
+Write in the style of a Temasek investment memo — precise, investment-grade, Singapore/Asia context-aware. No headers, just three paragraphs. Use frameworks like TCFD, TNFD, ISSB, and SASB appropriately. Reference "sustainable returns over the long term" and Temasek's mandate where relevant.`;
+      userContent = `Company: ${sanitize(ctx.name)}
 Sector: ${sanitize(ctx.sector)} (${sanitize(ctx.sasbCategory)})
 Country/Region: ${sanitize(ctx.country)}, ${sanitize(ctx.region)}
 ESG Rating: ${sanitize(ctx.rating)} (Overall score: ${sanitize(ctx.overallScore)}/100, E: ${sanitize(ctx.eScore)}, S: ${sanitize(ctx.sScore)}, G: ${sanitize(ctx.gScore)})
@@ -115,19 +120,17 @@ Nature Risk: ${sanitize(ctx.natureRisk)}
 Top Material Issues: ${sanitize(ctx.topIssues, 500)}
 Key Value Uplift: ${sanitize(ctx.topUplift, 300)}
 Carbon Intensity: ${sanitize(ctx.carbonIntensity)} tCO2e/$M revenue
-Green Revenue: ${sanitize(ctx.greenRevenuePct)}% of total revenue
-
-Write exactly three paragraphs:
-1. ESG Risk Summary: Key material ESG risks and their financial materiality to the investment
-2. Value Uplift Opportunities: Top 2-3 ESG-linked value creation levers
-3. Engagement & Monitoring: Recommended post-investment ESG action priorities
-
-Write in the style of a Temasek investment memo — precise, investment-grade, Singapore/Asia context-aware. No headers, just three paragraphs. Use frameworks like TCFD, TNFD, ISSB, and SASB appropriately. Reference "sustainable returns over the long term" and Temasek's mandate where relevant.`;
+Green Revenue: ${sanitize(ctx.greenRevenuePct)}% of total revenue`;
     } else if (type === "action_plan") {
-      prompt = `You are a senior ESG engagement specialist at Temasek.
-Generate a 12-month ESG Action Plan for the following portfolio company.
-
-Company: ${sanitize(ctx.name)}
+      systemInstruction = `You are a senior ESG engagement specialist at Temasek.
+Generate a 12-month ESG Action Plan for the portfolio company described in the user message.
+Structure the plan as follows:
+- Q1 (Months 1-3): Foundation & Assessment (2-3 actions with specific KPIs)
+- Q2 (Months 4-6): Implementation Begins (2-3 actions with specific KPIs)
+- Q3 (Months 7-9): Scale & Embed (2-3 actions with specific KPIs)
+- Q4 (Months 10-12): Report & Review (2-3 actions with specific KPIs)
+Each action should be specific, measurable, and time-bound. Reference relevant frameworks (TCFD, TNFD, ISSB, SASB, SBTi, etc.). Focus on the highest-impact interventions aligned with Temasek's ESG investment thesis. Be direct and investment-grade in tone.`;
+      userContent = `Company: ${sanitize(ctx.name)}
 Sector: ${sanitize(ctx.sector)}
 Country/Jurisdiction: ${sanitize(ctx.country)}
 ESG Maturity: ${sanitize(ctx.maturity)}
@@ -139,49 +142,44 @@ Net Zero Commitment: ${sanitize(ctx.netZeroCommitment)}
 Overdue Engagements: ${sanitize(ctx.overdueEngagements, 300)}
 Top Issues: ${sanitize(ctx.topIssues, 500)}
 Key Gaps: ${sanitizeBlock(ctx.keyGaps, 500)}
-Key Value Uplift Opportunities: ${sanitize(ctx.topUplift, 300)}
-
-Structure the plan as follows:
-- Q1 (Months 1-3): Foundation & Assessment (2-3 actions with specific KPIs)
-- Q2 (Months 4-6): Implementation Begins (2-3 actions with specific KPIs)
-- Q3 (Months 7-9): Scale & Embed (2-3 actions with specific KPIs)
-- Q4 (Months 10-12): Report & Review (2-3 actions with specific KPIs)
-
-Each action should be specific, measurable, and time-bound. Reference relevant frameworks (TCFD, TNFD, ISSB, SASB, SBTi, etc.). Focus on the highest-impact interventions aligned with Temasek's ESG investment thesis. Be direct and investment-grade in tone.`;
+Key Value Uplift Opportunities: ${sanitize(ctx.topUplift, 300)}`;
     } else if (type === "thematic_brief") {
-      prompt = `You are a senior sustainability strategist at Temasek's Sustainability Group.
-Write a 600-word investment-grade thematic brief on the following ESG megatrend.
-
-Theme: ${sanitize(ctx.theme)}
-Subtitle: ${sanitize(ctx.subtitle)}
-Temasek alignment: ${sanitize(ctx.temasekAlignment)}
-Key frameworks: ${sanitize(ctx.frameworks, 400)}
-Portfolio exposure: ${sanitizeBlock(ctx.portfolioExposure, 400)}
-
+      systemInstruction = `You are a senior sustainability strategist at Temasek's Sustainability Group.
+Write a 600-word investment-grade thematic brief on the ESG megatrend described in the user message.
 Structure:
 1. Why This Matters Now (150 words): The investment case — why this theme is urgent and financially material
 2. Key Risks (150 words): 2-3 specific risks for portfolio companies and deal pipelines
 3. Key Opportunities (150 words): 2-3 specific investment or engagement opportunities
 4. Temasek Portfolio Implications (150 words): Specific implications for our Asia/ASEAN portfolio companies
-
 Write in the voice of Temasek's Sustainability Group — sophisticated, Asia-aware, investment-grade. Reference Temasek's mandate of "so every generation prospers" and "sustainable returns over the long term." Cite specific frameworks and data where relevant. No headers — flowing paragraphs.`;
+      userContent = `Theme: ${sanitize(ctx.theme)}
+Subtitle: ${sanitize(ctx.subtitle)}
+Temasek alignment: ${sanitize(ctx.temasekAlignment)}
+Key frameworks: ${sanitize(ctx.frameworks, 400)}
+Portfolio exposure: ${sanitizeBlock(ctx.portfolioExposure, 400)}`;
     } else if (type === "portfolio_brief") {
-      prompt = `You are the Head of ESG Investment Management at Temasek, Singapore's sovereign wealth fund.
-Write a concise Portfolio ESG Health Summary for the most recent quarter.
-
-Portfolio Summary:
-${sanitizeBlock(ctx.portfolioSummary, 5000)}
-
+      systemInstruction = `You are the Head of ESG Investment Management at Temasek, Singapore's sovereign wealth fund.
+Write a concise Portfolio ESG Health Summary for the most recent quarter, based on the portfolio data in the user message.
 Write exactly 3 paragraphs:
 1. Portfolio ESG Performance: Aggregate ESG trajectory, top improvers, and companies requiring attention. Reference specific score movements and drivers.
 2. Key Risks & Escalations: The 2-3 most material ESG risks across the portfolio this quarter — include regulatory, physical climate, transition, and nature-related risks. Call out any overdue engagement commitments.
 3. ESG Value Creation Highlights: Concrete value uplift achievements and upcoming opportunities — green financing, engagement milestones, and pipeline evaluation progress.
-
 Write for an internal quarterly portfolio review — investment-grade, specific, and action-oriented. Reference TCFD, TNFD, ISSB, and Temasek's mandate. Use company names. No headers.`;
+      userContent = `Portfolio Summary:\n${sanitizeBlock(ctx.portfolioSummary, 5000)}`;
     } else if (type === "engagement_questions") {
-      prompt = `You are a senior ESG Engagement Specialist at Temasek, preparing for a stewardship meeting with a portfolio company.
-
-Company: ${sanitize(ctx.name)}
+      systemInstruction = `You are a senior ESG Engagement Specialist at Temasek, preparing for a stewardship meeting.
+Generate exactly 12 targeted due diligence questions for the portfolio company described in the user message, organized into 4 sections:
+**Section 1 — Climate & Net Zero (3 questions)**
+Questions about transition plan specifics, capital allocation, and pathway validation. Reference TCFD, ISSB S2, SBTi as appropriate.
+**Section 2 — Nature & Supply Chain (3 questions)**
+Questions about TNFD LEAP progress, supply chain traceability (EUDR where relevant), biodiversity risk management.
+**Section 3 — Social & Governance (3 questions)**
+Questions about board ESG oversight, UNGP HRDD, just transition plans for affected workers, labour practices.
+**Section 4 — Regulatory & Reporting Readiness (3 questions)**
+Questions about ISSB S1/S2 readiness, relevant Singapore/ASEAN regulatory compliance (MAS, SGX, OJK), data assurance plans.
+For each question: make it specific to this company's profile, not generic. Reference actual risks identified. Frame as questions an institutional investor would ask in an engagement meeting.
+Format: Numbered list within each section. Investment-grade language. Singapore/ASEAN context-aware.`;
+      userContent = `Company: ${sanitize(ctx.name)}
 Sector: ${sanitize(ctx.sector)}
 Country: ${sanitize(ctx.country)}
 ESG Maturity: ${sanitize(ctx.maturity)}
@@ -191,35 +189,20 @@ Pathway Alignment: ${sanitize(ctx.pathway)}
 Net Zero Commitment: ${sanitize(ctx.commitment)}
 Top Material Issues: ${sanitize(ctx.topIssues, 400)}
 Overdue Engagements: ${sanitize(ctx.overdueEngagements, 300)}
-Key Regulatory Pressures: ${sanitize(ctx.regulatoryContext, 300)}
-
-Generate exactly 12 targeted due diligence questions for this company engagement, organized into 4 sections:
-
-**Section 1 — Climate & Net Zero (3 questions)**
-Questions about transition plan specifics, capital allocation, and pathway validation. Reference TCFD, ISSB S2, SBTi as appropriate.
-
-**Section 2 — Nature & Supply Chain (3 questions)**
-Questions about TNFD LEAP progress, supply chain traceability (EUDR where relevant), biodiversity risk management.
-
-**Section 3 — Social & Governance (3 questions)**
-Questions about board ESG oversight, UNGP HRDD, just transition plans for affected workers, labour practices.
-
-**Section 4 — Regulatory & Reporting Readiness (3 questions)**
-Questions about ISSB S1/S2 readiness, relevant Singapore/ASEAN regulatory compliance (MAS, SGX, OJK), data assurance plans.
-
-For each question: make it specific to this company's profile, not generic. Reference actual risks identified above. Frame as questions an institutional investor would ask in an engagement meeting.
-
-Format: Numbered list within each section. Investment-grade language. Singapore/ASEAN context-aware.`;
+Key Regulatory Pressures: ${sanitize(ctx.regulatoryContext, 300)}`;
     }
 
-    if (!prompt) {
+    if (!userContent) {
       return NextResponse.json({ error: "Prompt construction failed for this generation type" }, { status: 500 });
     }
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: prompt,
-      config: { thinkingConfig: { thinkingBudget: 0 } },
+      contents: [{ role: "user", parts: [{ text: userContent }] }],
+      config: {
+        systemInstruction,
+        thinkingConfig: { thinkingBudget: 0 },
+      },
     });
 
     let text: string | undefined;
@@ -231,7 +214,9 @@ Format: Numbered list within each section. Investment-grade language. Singapore/
     if (!text?.trim()) {
       return NextResponse.json({ error: "No content returned from AI (response may have been filtered)" }, { status: 502 });
     }
-    return NextResponse.json({ text });
+    // Strip markdown code fences if the model wraps output in ```...``` blocks
+    const stripped = text.trim().replace(/^```[a-z]*\n?/i, "").replace(/\n?```$/i, "").trim();
+    return NextResponse.json({ text: stripped });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
     const safe = message.length > 200 ? message.slice(0, 200) + "…" : message;
