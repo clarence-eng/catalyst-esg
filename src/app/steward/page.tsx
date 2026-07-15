@@ -121,6 +121,7 @@ export default function StewardPage() {
                       <Link
                         href={`/scout/${e.companySlug}`}
                         className="text-xs font-medium text-purple-700 hover:text-purple-900 transition-colors truncate"
+                        title={e.companyName}
                       >
                         {e.companyName}
                       </Link>
@@ -401,9 +402,8 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
         </div>{/* close expand/collapse role=button */}
       </div>{/* close p-5 outer div */}
 
-      {/* Expanded Content */}
-      {expanded && (
-        <div id={`steward-card-${co.slug}`} className="border-t border-gray-200 p-5 space-y-5">
+      {/* Expanded Content — always in DOM so aria-controls target always resolves; toggle visibility with hidden */}
+        <div id={`steward-card-${co.slug}`} hidden={!expanded} className="border-t border-gray-200 p-5 space-y-5">
           {/* Engagement Timeline */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 mb-3">Engagement History</h3>
@@ -527,7 +527,6 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
             )}
           </div>}
         </div>
-      )}
     </div>
   );
 });

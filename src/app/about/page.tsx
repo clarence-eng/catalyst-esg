@@ -26,7 +26,7 @@ const modules = [
     color: "text-purple-700",
     bg: "bg-purple-600/10 border-purple-600/20",
     description:
-      "Portfolio ESG health dashboard. Investment-weighted KPIs, Paris Pathway alignment widget, ESG Attribution delta chart, E/S/G trajectory chart, portfolio bubble chart, risk matrix, alert panel with Critical issues, company table, and AI Portfolio ESG Brief. (PCAF financed emissions table in Scout company profiles.)",
+      "Portfolio ESG health dashboard. Investment-weighted KPIs, Paris Pathway alignment widget, ESG Attribution delta chart, E/S/G trajectory chart, portfolio bubble chart, risk matrix, alert panel with Critical issues, company table, and AI Portfolio ESG Brief. (includes PCAF financed emissions table with portfolio attribution)",
   },
   {
     href: "/scout",
@@ -35,7 +35,7 @@ const modules = [
     color: "text-blue-700",
     bg: "bg-blue-600/10 border-blue-600/20",
     description:
-      "Full ESG due diligence: company profiles with 5 tabs — Overview (SASB KPIs, ASEAN taxonomy, greenwashing check, ESG credibility score, IC Recommendation + AI IC Memo), Climate (TCFD grid, ISSB S2 scorecard, Paris pathway), Nature (TNFD LEAP tracker), Social & Governance (just transition readiness), Engagement (pre-engagement AI question pack). PCAF financed emissions in Overview tab.",
+      "Full ESG due diligence: company profiles with 5 tabs — Overview (SASB KPIs, ASEAN taxonomy, greenwashing check, ESG credibility score, IC Recommendation + AI IC Memo), Climate (TCFD grid, ISSB S2 scorecard, Paris pathway), Nature (TNFD LEAP tracker), Social & Governance (just transition readiness), Engagement (pre-engagement AI question pack).",
   },
   {
     href: "/steward",

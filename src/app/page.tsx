@@ -359,7 +359,7 @@ export default function OverviewPage() {
       {/* Portfolio ESG Brief — below table */}
       <RiskHeatmap companies={companies} />
       <ESGDimensionHeatmap companies={companies} />
-      <PCARFinancedEmissionsTable companies={activeCompanies} totalActive={totalActive} />
+      <PCAFFinancedEmissionsTable companies={activeCompanies} totalActive={totalActive} />
       <PortfolioBrief portfolioSummary={portfolioSummary} companyNames={activeCompanies.map(c => c.name)} />
 
       {/* Megatrend Cards */}
@@ -670,7 +670,7 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
   );
 }
 
-function PCARFinancedEmissionsTable({ companies, totalActive }: { companies: Company[]; totalActive: number }) {
+function PCAFFinancedEmissionsTable({ companies, totalActive }: { companies: Company[]; totalActive: number }) {
   const pcafScore = (commitment: string): number => {
     if (commitment === "SBTi Targets Set") return 2;
     if (commitment === "SBTi Committed") return 3;
