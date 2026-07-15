@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Loader2, BarChart3, Copy } from "lucide-react";
 import { AIOutput } from "@/components/AIOutput";
 import { formatRelativeTime, copyToClipboard } from "@/lib/utils";
@@ -15,6 +15,14 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
   const [error, setError] = useState("");
   const [generatedAt, setGeneratedAt] = useState<Date | null>(null);
   const [copied, setCopied] = useState(false);
+  // Clear stale brief when portfolio composition changes (same pattern as steward planKey)
+  const prevSummaryRef = useRef(portfolioSummary);
+  useEffect(() => {
+    if (prevSummaryRef.current !== portfolioSummary) {
+      prevSummaryRef.current = portfolioSummary;
+      if (brief) { setBrief(""); setGeneratedAt(null); setError(""); }
+    }
+  }, [portfolioSummary, brief]);
 
   async function generate() {
     if (loading) return;
