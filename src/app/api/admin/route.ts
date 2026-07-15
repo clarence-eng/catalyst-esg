@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { timingSafeEqual } from "crypto";
 import { setAdminCookie } from "@/lib/adminAuth";
 
 export async function POST(req: NextRequest) {
@@ -14,7 +15,12 @@ export async function POST(req: NextRequest) {
   if (typeof password !== "string" || !password) {
     return NextResponse.json({ error: "Missing password" }, { status: 400 });
   }
-  if (password !== correct) {
+  // Constant-length buffers for timing-safe comparison (pad/truncate to correct.length)
+  const pwBuf = Buffer.alloc(correct.length);
+  pwBuf.write(password.slice(0, correct.length));
+  const correctBuf = Buffer.from(correct);
+  const match = password.length === correct.length && timingSafeEqual(pwBuf, correctBuf);
+  if (!match) {
     return NextResponse.json({ error: "Incorrect password" }, { status: 401 });
   }
   const res = NextResponse.json({ ok: true });

@@ -130,8 +130,7 @@ export async function POST(req: NextRequest) {
     const payload = { company_slug, date, type, topic, status, notes };
     const id = typeof e.id === "string" && e.id.trim() ? e.id.trim() : null;
     if (id) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { error } = await sb.from("engagements").update({ date, type, topic, status, notes }).eq("id", id);
+      const { error } = await sb.from("engagements").update({ date, type, topic, status, notes }).eq("id", id).eq("company_slug", company_slug);
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     } else {
       const { error } = await sb.from("engagements").insert(payload);
@@ -166,7 +165,7 @@ export async function POST(req: NextRequest) {
     const payload = { company_slug, issue, severity, category, opportunity, detail, sort_order };
     const id = typeof i.id === "string" && i.id.trim() ? i.id.trim() : null;
     if (id) {
-      const { error } = await sb.from("material_issues").update({ issue, severity, category, opportunity, detail }).eq("id", id);
+      const { error } = await sb.from("material_issues").update({ issue, severity, category, opportunity, detail }).eq("id", id).eq("company_slug", company_slug);
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     } else {
       const { error } = await sb.from("material_issues").insert(payload);
