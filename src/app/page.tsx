@@ -128,7 +128,7 @@ export default function OverviewPage() {
   // to avoid composition bias (companies with fewer periods skewing the delta)
   const fullCoverageTrend = portfolioTrend.filter((_, i) => {
     const period = allPeriods[i];
-    return activeCompanies.every(c => c.historicalScores.some(s => s.period === period));
+    return activeCompanies.every(c => c.historicalScores.some(s => normalisePeriod(s.period) === period));
   });
   const lastTrend = fullCoverageTrend[fullCoverageTrend.length - 1];
   const prevTrend = fullCoverageTrend[fullCoverageTrend.length - 2];
@@ -603,10 +603,11 @@ function ParisPathwayWidget({ companies }: { companies: { pathwayAlignment: stri
 }
 
 function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
+  const normPeriod = (p: string) => p.replace(/\s+/g, " ").trim();
   // Use only periods where ALL companies have data to avoid composition bias
   // (same principle as fullCoverageTrend in the avgDelta badge)
   const allPeriodsSorted = [...new Set(
-    companies.flatMap(co => co.historicalScores.map(s => s.period))
+    companies.flatMap(co => co.historicalScores.map(s => normPeriod(s.period)))
   )].sort((a, b) => {
     const [aq, ay] = (a.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
     const [bq, by] = (b.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
@@ -615,7 +616,7 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
 
   // Filter to full-coverage periods (all companies have a score entry)
   const fullCoveragePeriods = allPeriodsSorted.filter(period =>
-    companies.every(co => co.historicalScores.some(s => s.period === period))
+    companies.every(co => co.historicalScores.some(s => normPeriod(s.period) === period))
   );
 
   if (fullCoveragePeriods.length < 2) {
@@ -632,8 +633,8 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
 
   const rows = companies
     .map(co => {
-      const q1 = co.historicalScores.find(s => s.period === Q1);
-      const q2 = co.historicalScores.find(s => s.period === Q2);
+      const q1 = co.historicalScores.find(s => normPeriod(s.period) === Q1);
+      const q2 = co.historicalScores.find(s => normPeriod(s.period) === Q2);
       if (!q1 || !q2) return null;
       const avg1 = (q1.e + q1.s + q1.g) / 3;
       const avg2 = (q2.e + q2.s + q2.g) / 3;

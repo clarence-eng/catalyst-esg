@@ -57,21 +57,17 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
   }
 
   // Render inline markdown to safe HTML.
-  // Apply markdown substitutions first (each substitution escapes its own capture group),
-  // then escape any remaining plain text that contains HTML metacharacters.
-  // This avoids double-encoding: &amp; inside **bold** stays as & not &amp;amp;
+  // XSS strategy: escapeHtml() runs FIRST — all Gemini-supplied angle brackets and entities
+  // become &lt;/&gt;/&amp; before any regex touches the string. The markdown regexes then
+  // inject only our own known-safe <strong>/<em>/<a> tags. No Gemini content can produce a
+  // tag. The captures ($1 or replacement function arg) are already HTML-entity-encoded,
+  // which is correct: the browser decodes &amp; → & when rendering innerHTML.
   function renderInline(s: string): string {
-    const urlRe = /(https?:\/\/[^\s<>"'*]+)/g;
-    const result = s
-      .replace(/\*{3}(.+?)\*{3}/g, (_, t) => `<strong class="text-gray-900 font-semibold"><em class="text-gray-800">${escapeHtml(t)}</em></strong>`)
-      .replace(/\*\*(.+?)\*\*/g, (_, t) => `<strong class="text-gray-900 font-semibold">${escapeHtml(t)}</strong>`)
-      .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, (_, t) => `<em class="text-gray-800">${escapeHtml(t)}</em>`)
-      .replace(urlRe, (url) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${escapeHtml(url)}</a>`);
-    // Escape remaining plain text segments (those not inside injected tags)
-    // Split on tag boundaries and escape non-tag segments
-    return result.replace(/(<[^>]+>)|([^<]+)/g, (_, tag, text) =>
-      tag ? tag : escapeHtml(text)
-    );
+    return escapeHtml(s)
+      .replace(/\*{3}(.+?)\*{3}/g, '<strong class="text-gray-900 font-semibold"><em class="text-gray-800">$1</em></strong>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong class="text-gray-900 font-semibold">$1</strong>')
+      .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-gray-800">$1</em>')
+      .replace(/(https?:\/\/[^\s&lt;&gt;"'*]+(?:&amp;[^\s&lt;&gt;"'*]*)*)/g, (url) => `<a href="${url.replace(/&amp;/g, '&')}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${url}</a>`);
   }
 
   for (const line of lines) {
@@ -140,7 +136,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
   flushList();
 
   return (
-    <div className={`bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-wrap-anywhere break-words ${className}`}>
+    <div className={`bg-gray-50 border border-gray-200 rounded-lg p-4 wrap-anywhere break-words ${className}`}>
       {elements}
     </div>
   );
