@@ -207,6 +207,7 @@ function getEscalationLevel(co: Company): { level: number; label: string; color:
 
 const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = false }: { company: Company; isPipeline?: boolean }) {
   const [expanded, setExpanded] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
   const [plan, setPlan] = useState("");
   const [planLoading, setPlanLoading] = useState(false);
   const planLoadingRef = useRef(false);
@@ -329,14 +330,15 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
         </div>
         {/* Expand/collapse trigger — no nested interactive elements */}
         <div
+          ref={triggerRef}
           className="cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/50 focus-visible:ring-inset rounded-lg"
           role="button"
           tabIndex={0}
           aria-expanded={expanded}
           aria-controls={`steward-card-${co.slug}`}
           aria-label={`${co.name} engagement details`}
-          onClick={() => setExpanded(!expanded)}
-          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpanded(!expanded); } }}
+          onClick={() => { const wasExpanded = expanded; setExpanded(!expanded); if (wasExpanded) triggerRef.current?.focus(); }}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); const wasExpanded = expanded; setExpanded(!expanded); if (wasExpanded) triggerRef.current?.focus(); } }}
         >
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -492,7 +494,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
                 <div className="mt-3 flex items-center">
                   <button
                     type="button"
-                    onClick={async () => { await copyToClipboard(plan); setPlanCopied(true); setTimeout(() => setPlanCopied(false), 2000); }}
+                    onClick={async () => { const ok = await copyToClipboard(plan); if (ok) { setPlanCopied(true); setTimeout(() => setPlanCopied(false), 2000); } }}
                     className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                   >
                     <Copy className="w-3 h-3" />

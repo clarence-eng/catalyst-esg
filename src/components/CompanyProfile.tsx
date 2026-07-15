@@ -735,7 +735,7 @@ function OverviewTab({
               <div className="mt-3 flex items-center">
                 <button
                   type="button"
-                  onClick={async () => { await copyToClipboard(memo); setMemoCopied(true); setTimeout(() => setMemoCopied(false), 2000); }}
+                  onClick={async () => { const ok = await copyToClipboard(memo); if (ok) { setMemoCopied(true); setTimeout(() => setMemoCopied(false), 2000); } }}
                   className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                 >
                   <Copy className="w-3 h-3" />
@@ -1645,7 +1645,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
             <div className="mt-3 flex items-center">
               <button
                 type="button"
-                onClick={async () => { await copyToClipboard(questions); setQuestionsCopied(true); setTimeout(() => setQuestionsCopied(false), 2000); }}
+                onClick={async () => { const ok = await copyToClipboard(questions); if (ok) { setQuestionsCopied(true); setTimeout(() => setQuestionsCopied(false), 2000); } }}
                 className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
               >
                 <Copy className="w-3 h-3" />

@@ -2,7 +2,16 @@ export function formatRelativeTime(date: Date): string {
   const ms = date.getTime();
   if (isNaN(ms)) return "unknown time";
   const secs = Math.floor((Date.now() - ms) / 1000);
-  if (secs < 0) return "just now";
+  if (secs < 0) {
+    const futureSecs = -secs;
+    if (futureSecs < 60) return "in a moment";
+    const mins = Math.floor(futureSecs / 60);
+    if (mins < 60) return `in ${mins} minute${mins === 1 ? "" : "s"}`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `in ${hours} hour${hours === 1 ? "" : "s"}`;
+    const days = Math.floor(hours / 24);
+    return `in ${days} day${days === 1 ? "" : "s"}`;
+  }
   if (secs < 60) return "just now";
   const mins = Math.floor(secs / 60);
   if (mins < 60) return `${mins} minute${mins === 1 ? "" : "s"} ago`;
