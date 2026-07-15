@@ -510,10 +510,12 @@ function OverviewTab({
               ? "border-amber-500/30 bg-amber-500/5"
               : co.icRecommendation.verdict === "Invest"
               ? "border-emerald-500/30 bg-emerald-500/5"
-              : "border-red-500/30 bg-red-500/5"
+              : co.icRecommendation.verdict === "Pass"
+              ? "border-red-500/30 bg-red-500/5"
+              : "border-gray-300/30 bg-gray-100/50"
           }`}>
             <div className="flex items-center gap-2 mb-2">
-              <span className={`text-sm font-bold ${co.icRecommendation.verdict === "Invest Conditional" ? "text-amber-700" : co.icRecommendation.verdict === "Invest" ? "text-emerald-700" : "text-red-700"}`}>
+              <span className={`text-sm font-bold ${co.icRecommendation.verdict === "Invest Conditional" ? "text-amber-700" : co.icRecommendation.verdict === "Invest" ? "text-emerald-700" : co.icRecommendation.verdict === "Pass" ? "text-red-700" : "text-gray-700"}`}>
                 IC Recommendation: {co.icRecommendation.verdict}
               </span>
             </div>

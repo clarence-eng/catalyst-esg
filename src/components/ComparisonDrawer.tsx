@@ -29,7 +29,7 @@ export function ComparisonDrawer({ companies, onRemove, onClear, onDismiss }: Pr
       <div className="px-6 py-3 flex items-center justify-between border-b border-gray-100">
         <div className="flex items-center gap-2">
           <BarChart3 className="w-4 h-4 text-purple-700" />
-          <span className="text-sm font-semibold text-gray-900">Comparing {companies.length} companies</span>
+          <span className="text-sm font-semibold text-gray-900">Comparing {companies.length} {companies.length === 1 ? "company" : "companies"}</span>
         </div>
         <div className="flex items-center gap-3">
           <button type="button" onClick={onClear} className="text-xs text-gray-500 hover:text-gray-700 px-3 py-1 border border-gray-200 rounded-lg hover:bg-gray-50">Clear all</button>

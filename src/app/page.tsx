@@ -334,7 +334,11 @@ export default function OverviewPage() {
               </tr>
             </thead>
             <tbody>
-              {[...companies].sort((a, b) => a.name.localeCompare(b.name, "en-SG")).map((co) => (
+              {[...companies].sort((a, b) => {
+                // Active holdings first, then Pipeline — within each group alphabetical
+                if (a.portfolioStatus !== b.portfolioStatus) return a.portfolioStatus === "Active" ? -1 : 1;
+                return a.name.localeCompare(b.name, "en-SG");
+              }).map((co) => (
                 <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors">
                   <td className="px-6 py-4">
                     <Link href={`/scout/${co.slug}`} className="font-medium text-gray-900 text-sm hover:text-purple-700 transition-colors">{co.name}</Link>
