@@ -4,6 +4,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 // a route handler (where the error is caught) rather than at module load time
 // (which would crash the entire serverless function before any catch fires).
 let _client: SupabaseClient | null = null;
+let _adminClient: SupabaseClient | null = null;
 
 export function getSupabaseClient(): SupabaseClient {
   if (_client) return _client;
@@ -12,6 +13,23 @@ export function getSupabaseClient(): SupabaseClient {
   if (!url || !key) throw new Error("Supabase env vars not configured (NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY)");
   _client = createClient(url, key);
   return _client;
+}
+
+// Admin client — uses service_role key which bypasses RLS.
+// MUST only be used in server-side route handlers, never in client components.
+// Falls back to anon key with a warning if SUPABASE_SERVICE_ROLE_KEY is not set
+// (acceptable in local dev; required in production for secure write operations).
+export function getSupabaseAdminClient(): SupabaseClient {
+  if (_adminClient) return _adminClient;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url) throw new Error("NEXT_PUBLIC_SUPABASE_URL not configured");
+  if (!serviceKey) {
+    console.warn("[Supabase] SUPABASE_SERVICE_ROLE_KEY not set — falling back to anon key for admin writes. Set this env var in production.");
+    return getSupabaseClient();
+  }
+  _adminClient = createClient(url, serviceKey, { auth: { persistSession: false } });
+  return _adminClient;
 }
 
 // Convenience proxy — same API as before for code that imports `supabase` directly.

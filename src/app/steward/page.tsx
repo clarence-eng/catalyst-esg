@@ -315,9 +315,11 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
         ? "border-blue-500/20 hover:border-blue-500/30"
         : "border-gray-200 hover:border-gray-200"
     }`}>
-      {/* Persistent sr-only live region — outside hidden panel so AT hears announcements even when panel is collapsed */}
-      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
-        {planLoading ? "Generating ESG action plan…" : plan && !planLoading ? "ESG action plan ready — expand the card to read" : planError ? `Action plan error: ${planError}` : ""}
+      {/* Persistent sr-only live region — outside hidden panel so AT hears announcements even when panel is collapsed.
+          aria-label includes company name so screen readers can attribute the announcement to the correct card
+          when multiple cards are mounted simultaneously. */}
+      <div role="status" aria-live="polite" aria-atomic="true" aria-label={`${co.name} plan status`} className="sr-only">
+        {planLoading ? `Generating ESG action plan for ${co.name}…` : plan && !planLoading ? `${co.name}: ESG action plan ready — expand the card to read` : planError ? `${co.name} action plan error: ${planError}` : ""}
       </div>
       {/* Card Header */}
       <div className="p-5">

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminRequest } from "@/lib/adminAuth";
-import { getSupabaseClient } from "@/lib/supabase";
+import { getSupabaseAdminClient } from "@/lib/supabase";
 
 function forbidden() {
   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     return badRequest("Invalid JSON");
   }
 
-  const sb = getSupabaseClient();
+  const sb = getSupabaseAdminClient();
 
   if (body.action === "upsert_company") {
     const co = body.company;
