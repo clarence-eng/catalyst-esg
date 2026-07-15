@@ -133,6 +133,7 @@ Sector: ${sanitize(ctx.sector)}
 ESG Maturity: ${sanitize(ctx.maturity)}
 Top Issues: ${sanitize(ctx.topIssues, 500)}
 Key Gaps: ${sanitizeBlock(ctx.keyGaps, 500)}
+Key Value Uplift Opportunities: ${sanitize(ctx.topUplift, 300)}
 
 Structure the plan as follows:
 - Q1 (Months 1-3): Foundation & Assessment (2-3 actions with specific KPIs)
