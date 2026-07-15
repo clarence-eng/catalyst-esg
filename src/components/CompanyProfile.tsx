@@ -852,30 +852,36 @@ function OverviewTab({
         {/* Score Trend */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-3">Score Trend (E/S/G)</h3>
-          <div role="img" aria-label={`Historical E/S/G score trend for ${co.name}. Latest: Environmental ${co.esgScore.environmental}, Social ${co.esgScore.social}, Governance ${co.esgScore.governance}`}>
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={co.historicalScores}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
-              <XAxis dataKey="period" tick={{ fill: "#64748b", fontSize: 9 }} interval={0} tickFormatter={(v: string) => { const m = v.match(/Q(\d) (\d{4})/); return m ? `Q${m[1]}'${m[2].slice(2)}` : v; }} />
-              <YAxis domain={[0, 100]} tick={{ fill: "#64748b", fontSize: 9 }} width={25} />
-              <Tooltip
-                contentStyle={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "8px", fontSize: 11 }}
-                labelStyle={{ color: "#6b7280" }}
-              />
-              <Line type="monotone" dataKey="e" stroke="#10b981" strokeWidth={2} dot={{ r: 2, fill: "#10b981", strokeWidth: 0 }} name="E" isAnimationActive={!reducedMotion} />
-              <Line type="monotone" dataKey="s" stroke="#3b82f6" strokeWidth={2} dot={{ r: 2, fill: "#3b82f6", strokeWidth: 0 }} name="S" isAnimationActive={!reducedMotion} />
-              <Line type="monotone" dataKey="g" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 2, fill: "#8b5cf6", strokeWidth: 0 }} name="G" isAnimationActive={!reducedMotion} />
-            </LineChart>
-          </ResponsiveContainer>
-          </div>
-          <div className="flex gap-3 mt-2 justify-center">
-            {[{ color: "#10b981", label: "Environmental" }, { color: "#3b82f6", label: "Social" }, { color: "#8b5cf6", label: "Governance" }].map(({ color, label }) => (
-              <div key={label} className="flex items-center gap-1.5">
-                <div className="w-2.5 h-0.5 rounded" style={{ backgroundColor: color }} />
-                <span className="text-xs text-gray-500">{label}</span>
-              </div>
-            ))}
-          </div>
+          {co.historicalScores.length < 2 ? (
+            <p className="text-xs text-gray-500 text-center py-6">Insufficient historical data to display trend</p>
+          ) : (
+            <>
+            <div role="img" aria-label={`Historical E/S/G score trend for ${co.name}. Latest: Environmental ${co.esgScore.environmental}, Social ${co.esgScore.social}, Governance ${co.esgScore.governance}`}>
+            <ResponsiveContainer width="100%" height={200}>
+              <LineChart data={co.historicalScores}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
+                <XAxis dataKey="period" tick={{ fill: "#64748b", fontSize: 9 }} interval={0} tickFormatter={(v: string) => { const m = v.match(/Q(\d) (\d{4})/); return m ? `Q${m[1]}'${m[2].slice(2)}` : v; }} />
+                <YAxis domain={[0, 100]} tick={{ fill: "#64748b", fontSize: 9 }} width={25} />
+                <Tooltip
+                  contentStyle={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "8px", fontSize: 11 }}
+                  labelStyle={{ color: "#6b7280" }}
+                />
+                <Line type="monotone" dataKey="e" stroke="#10b981" strokeWidth={2} dot={{ r: 2, fill: "#10b981", strokeWidth: 0 }} name="E" isAnimationActive={!reducedMotion} />
+                <Line type="monotone" dataKey="s" stroke="#3b82f6" strokeWidth={2} dot={{ r: 2, fill: "#3b82f6", strokeWidth: 0 }} name="S" isAnimationActive={!reducedMotion} />
+                <Line type="monotone" dataKey="g" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 2, fill: "#8b5cf6", strokeWidth: 0 }} name="G" isAnimationActive={!reducedMotion} />
+              </LineChart>
+            </ResponsiveContainer>
+            </div>
+            <div className="flex gap-3 mt-2 justify-center">
+              {[{ color: "#10b981", label: "Environmental" }, { color: "#3b82f6", label: "Social" }, { color: "#8b5cf6", label: "Governance" }].map(({ color, label }) => (
+                <div key={label} className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-0.5 rounded" style={{ backgroundColor: color }} />
+                  <span className="text-xs text-gray-500">{label}</span>
+                </div>
+              ))}
+            </div>
+            </>
+          )}
         </div>
 
         {/* Key Metrics */}

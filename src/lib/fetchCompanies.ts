@@ -503,10 +503,15 @@ function dbToCompany(
       // When base has exactly 1 entry (fallback path), append Q2 with live values.
       const withoutLast = base.length > 1 ? base.slice(0, -1) : base;
       const lastPeriod = base.length > 1 ? (base[base.length - 1]?.period ?? "Q2 2026") : "Q2 2026";
-      return [
+      const sorted = [
         ...withoutLast,
         { period: lastPeriod, e: co.esg_environmental, s: co.esg_social, g: co.esg_governance },
-      ];
+      ].sort((a, b) => {
+        const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) ?? ["", "0", "0"]).slice(1).map(Number);
+        const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) ?? ["", "0", "0"]).slice(1).map(Number);
+        return ay !== by ? ay - by : aq - bq;
+      });
+      return sorted;
     })(),
     boardComposition: enrichment?.boardComposition ?? {
       boardSize: 8,

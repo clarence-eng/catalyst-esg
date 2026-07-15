@@ -157,14 +157,15 @@ export default function OverviewPage() {
 
   // Compute portfolio weights server-side — never send raw S$M investmentValue to the client component
   const totalActiveInvestment = activeCompanies.reduce((s, c) => s + c.investmentValue, 0);
-  const bubbleData = activeCompanies.map((c) => ({
+  // If all active companies have zero investment value, skip bubble chart to avoid ZAxis NaN
+  const bubbleData = totalActiveInvestment > 0 ? activeCompanies.map((c) => ({
     name: c.name,
     esgScore: c.esgScore.overall,
     carbonIntensity: c.carbonIntensity,
-    portfolioWeight: totalActiveInvestment > 0 ? (c.investmentValue / totalActiveInvestment) * 100 : 0,
+    portfolioWeight: (c.investmentValue / totalActiveInvestment) * 100,
     transitionRisk: c.climateRisk.transition,
     slug: c.slug,
-  }));
+  })) : [];
 
   return (
     <div className="p-8">
@@ -252,7 +253,7 @@ export default function OverviewPage() {
           )}
         </div>
         <StatCard label="Transition Risk Flags" value={highRisk} sub="High or Critical exposure" color="amber" />
-        <StatCard label="Avg Carbon Intensity" value={avgCarbonIntensity !== null ? `${avgCarbonIntensity}` : "N/A"} sub={avgCarbonIntensity !== null ? "tCO₂e/$M revenue · ex-utilities weighted avg" : "All active companies are electric utilities — reported separately"} color="default" />
+        <StatCard label="Avg Carbon Intensity" value={avgCarbonIntensity !== null ? `${avgCarbonIntensity}` : "N/A"} sub={avgCarbonIntensity !== null ? "tCO₂e/$M revenue · ex-utilities weighted avg" : activeCompanies.length === 0 ? "No active companies in portfolio" : "All active companies are electric utilities — reported separately"} color="default" />
         <StatCard label="Overdue Engagements" value={overdueCount} sub="Requires immediate follow-up" color="red" />
         <StatCard label="Planned Engagements" value={plannedCount} sub="Upcoming" color="default" />
       </div>
