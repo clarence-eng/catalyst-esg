@@ -70,6 +70,14 @@ export function GlobalSearch() {
   // Reset active index when results change
   useEffect(() => { setActiveIdx(-1); }, [query]);
 
+  // Scroll active result into view when navigating with arrow keys
+  useEffect(() => {
+    if (activeIdx < 0) return;
+    const id = resultItems[activeIdx]?.id;
+    if (id) document.getElementById(id)?.scrollIntoView({ block: "nearest" });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeIdx]);
+
   const navigateTo = useCallback((href: string) => {
     navigatingRef.current = true;
     router.push(href);
