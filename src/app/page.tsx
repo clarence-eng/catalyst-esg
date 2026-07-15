@@ -600,7 +600,7 @@ function ParisPathwayWidget({ companies }: { companies: { pathwayAlignment: stri
           </div>
         </>
       ) : (
-        <p className="text-xs text-gray-500">No active companies.</p>
+        <p className="text-xs text-gray-500">{companies.length === 0 ? "No active companies." : "Investment values not set — cannot compute pathway weights."}</p>
       )}
     </div>
   );
