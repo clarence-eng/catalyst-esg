@@ -36,7 +36,7 @@ export function ComparisonDrawer({ companies, onRemove, onClear }: Props) {
         </div>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-xs">
+        <table className="w-full text-xs" aria-label={`ESG comparison: ${companies.map(c => c.name).join(", ")}`}>
           <thead>
             <tr className="border-b border-gray-100">
               <th scope="col" className="text-left px-4 py-2 text-gray-500 font-medium w-36">Metric</th>

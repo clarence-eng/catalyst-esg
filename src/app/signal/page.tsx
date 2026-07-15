@@ -171,10 +171,10 @@ export default function SignalPage() {
 
       {/* Portfolio Exposure Matrix */}
       <div className="mb-8">
-        <h2 className="text-sm font-semibold text-gray-900 mb-2">Portfolio Exposure Matrix</h2>
+        <h2 id="exposure-matrix-heading" className="text-sm font-semibold text-gray-900 mb-2">Portfolio Exposure Matrix</h2>
         <p className="text-xs text-gray-500 mb-4">High/Medium exposure by active portfolio company × megatrend · Pipeline companies excluded</p>
         <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
-          <table className="w-full text-xs min-w-[700px]">
+          <table className="w-full text-xs min-w-[700px]" aria-labelledby="exposure-matrix-heading">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
                 <th scope="col" className="text-left px-4 py-3 text-gray-600 font-medium w-36">Company</th>

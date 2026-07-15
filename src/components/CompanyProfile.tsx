@@ -671,10 +671,10 @@ function OverviewTab({
           return (
             <div className="bg-white rounded-xl border border-gray-200 p-5">
               <div className="mb-4">
-                <h3 className="text-sm font-semibold text-gray-900">SASB Material KPIs — {co.sasbCategory}</h3>
+                <h3 id="sasb-kpi-heading" className="text-sm font-semibold text-gray-900">SASB Material KPIs — {co.sasbCategory}</h3>
                 <p className="text-xs text-gray-500 mt-0.5">Most financially material ESG metrics for this industry</p>
               </div>
-              <table className="w-full text-xs">
+              <table className="w-full text-xs" aria-labelledby="sasb-kpi-heading">
                 <thead>
                   <tr className="border-b border-gray-200">
                     <th scope="col" className="text-left font-medium text-gray-500 pb-2 pr-3">KPI</th>
@@ -725,7 +725,8 @@ function OverviewTab({
           )}
           {memo ? (
             <>
-              {memoLoading && <div role="status" aria-live="polite" aria-atomic="true" className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
+              {/* Always-mounted live region — text change (not DOM insertion) fires reliable AT announcement */}
+              <div role="status" aria-live="polite" aria-atomic="true" className={memoLoading ? "text-xs text-gray-500 text-center py-2 mb-2" : "sr-only"}>{memoLoading ? "Regenerating…" : ""}</div>
               <div aria-busy={memoLoading}>
               <AIOutput text={memo} />
               </div>
@@ -1635,7 +1636,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
         )}
         {questions ? (
           <>
-            {questionsLoading && <div role="status" aria-live="polite" aria-atomic="true" className="text-xs text-gray-500 text-center py-2 mb-2">Regenerating…</div>}
+            <div role="status" aria-live="polite" aria-atomic="true" className={questionsLoading ? "text-xs text-gray-500 text-center py-2 mb-2" : "sr-only"}>{questionsLoading ? "Regenerating…" : ""}</div>
             <div aria-busy={questionsLoading}>
             <AIOutput text={questions} />
             </div>
