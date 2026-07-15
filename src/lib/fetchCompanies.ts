@@ -548,7 +548,7 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
       { data: mis, error: misErr }
     ] = await Promise.all([
       supabase.from("companies").select("*").order("created_at"),
-      supabase.from("engagements").select("*").order("date", { ascending: false }),
+      supabase.from("engagements").select("*").order("date", { ascending: false }).order("id", { ascending: true }),
       supabase.from("material_issues").select("*").order("sort_order"),
     ]);
     if (cosErr && process.env.NODE_ENV !== "production") console.warn("[Supabase] companies error:", cosErr.message);

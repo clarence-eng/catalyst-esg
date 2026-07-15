@@ -957,16 +957,19 @@ function ClimateTab({ co }: { co: Company }) {
     },
   ];
 
+  const isFinancialSector = co.sector.toLowerCase().includes("bank") || co.sector.toLowerCase().includes("finance") || co.sector.toLowerCase().includes("insurance") || co.sector.toLowerCase().includes("asset");
+  const hasPhysicalRisk = co.climateRisk.physicalDetails.length > 0 || co.climateRisk.physical !== "Low";
   const issbChecks = [
-    { item: "Board climate oversight documented", status: co.boardComposition.esgCommittee ? "✓" : "✗", pass: co.boardComposition.esgCommittee },
-    { item: "Climate scenario analysis (≥2 scenarios)", status: (co.climateRisk.pathwayAlignment === "1.5°C" || co.climateRisk.pathwayAlignment === "2°C") && co.netZeroCommitment !== "None" ? "✓" : co.climateRisk.pathwayAlignment !== "Not assessed" && co.netZeroCommitment !== "None" ? "Partial" : "✗", pass: (co.climateRisk.pathwayAlignment === "1.5°C" || co.climateRisk.pathwayAlignment === "2°C") && co.netZeroCommitment !== "None" },
-    { item: "Physical risk quantification", status: co.climateRisk.physicalDetails.length > 0 ? "✓" : "✗", pass: co.climateRisk.physicalDetails.length > 0 },
-    { item: "Scope 1+2 emissions disclosed", status: co.carbonIntensity > 0 ? "✓" : "✗", pass: co.carbonIntensity > 0 },
-    { item: "Scope 3 assessment / financed emissions", status: co.materialIssues.some(i => { if (i.opportunity) return false; const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }) ? "✓" : "✗", pass: co.materialIssues.some(i => { if (i.opportunity) return false; const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }) },
-    { item: "Climate-related targets set", status: co.netZeroCommitment !== "None" ? "✓" : "✗", pass: co.netZeroCommitment !== "None" },
-    { item: "SBTi-validated or equivalent pathway", status: co.netZeroCommitment === "SBTi Targets Set" ? "✓" : co.netZeroCommitment === "SBTi Committed" ? "In Progress" : "✗", pass: co.netZeroCommitment === "SBTi Targets Set" },
+    { item: "Board climate oversight documented", status: co.boardComposition.esgCommittee ? "✓" : "✗", pass: co.boardComposition.esgCommittee, applicable: true },
+    { item: "Climate scenario analysis (≥2 scenarios)", status: (co.climateRisk.pathwayAlignment === "1.5°C" || co.climateRisk.pathwayAlignment === "2°C") && co.netZeroCommitment !== "None" ? "✓" : co.climateRisk.pathwayAlignment !== "Not assessed" && co.netZeroCommitment !== "None" ? "Partial" : "✗", pass: (co.climateRisk.pathwayAlignment === "1.5°C" || co.climateRisk.pathwayAlignment === "2°C") && co.netZeroCommitment !== "None", applicable: true },
+    { item: "Physical risk quantification", status: co.climateRisk.physicalDetails.length > 0 ? "✓" : "✗", pass: co.climateRisk.physicalDetails.length > 0, applicable: hasPhysicalRisk },
+    { item: "Scope 1+2 emissions disclosed", status: co.carbonIntensity > 0 ? "✓" : "✗", pass: co.carbonIntensity > 0, applicable: true },
+    { item: "Scope 3 / financed emissions assessed", status: co.materialIssues.some(i => { if (i.opportunity) return false; const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }) ? "✓" : "✗", pass: co.materialIssues.some(i => { if (i.opportunity) return false; const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }), applicable: isFinancialSector || co.sector.toLowerCase().includes("electric") || co.sector.toLowerCase().includes("energy") },
+    { item: "Climate-related targets set", status: co.netZeroCommitment !== "None" ? "✓" : "✗", pass: co.netZeroCommitment !== "None", applicable: true },
+    { item: "SBTi-validated or equivalent pathway", status: co.netZeroCommitment === "SBTi Targets Set" ? "✓" : co.netZeroCommitment === "SBTi Committed" ? "In Progress" : "✗", pass: co.netZeroCommitment === "SBTi Targets Set", applicable: true },
   ];
-  const issbScore = issbChecks.filter(c => c.pass).length;
+  const applicableChecks = issbChecks.filter(c => c.applicable);
+  const issbScore = applicableChecks.filter(c => c.pass).length;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1027,13 +1030,13 @@ function ClimateTab({ co }: { co: Company }) {
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold text-gray-900">ISSB S2 Disclosure Readiness</h3>
           <span className={`text-xs px-2.5 py-1 rounded border font-medium ${
-            issbScore >= Math.ceil(issbChecks.length * 6/7) ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
-            issbScore >= Math.ceil(issbChecks.length * 4/7) ? "text-amber-700 bg-amber-50 border-amber-300" :
+            issbScore >= Math.ceil(applicableChecks.length * 6/7) ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
+            issbScore >= Math.ceil(applicableChecks.length * 4/7) ? "text-amber-700 bg-amber-50 border-amber-300" :
             "text-red-700 bg-red-50 border-red-300"
-          }`}>{issbScore}/{issbChecks.length} requirements met</span>
+          }`}>{issbScore}/{applicableChecks.length} requirements met</span>
         </div>
         <div className="space-y-2">
-          {issbChecks.map(({ item, status, pass }) => {
+          {applicableChecks.map(({ item, status, pass }) => {
             const isPartial = status === "Partial" || status === "In Progress";
             const iconColor = pass ? "text-emerald-600" : isPartial ? "text-amber-700" : "text-red-600";
             const rowBg = pass ? "bg-emerald-50 border-emerald-200" : isPartial ? "bg-amber-50 border-amber-200" : "bg-gray-50 border-gray-200";
