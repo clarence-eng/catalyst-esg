@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
+// Demo platform: password stored as server-side env var (not NEXT_PUBLIC_).
+// For production: replace with bcrypt comparison + HttpOnly session cookie or JWT.
+// Set ADMIN_PASSWORD in Vercel environment variables to override the demo default.
 export async function POST(req: NextRequest) {
   let body: unknown;
   try { body = await req.json(); } catch {
