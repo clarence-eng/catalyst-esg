@@ -146,10 +146,11 @@ export default function ScoutPage() {
       <div className="flex items-center gap-3 mb-4">
         <div role="radiogroup" aria-label="Filter by portfolio status" className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1"
           onKeyDown={(e) => {
-            const opts = ["All","Active","Pipeline"] as const;
-            const idx = opts.indexOf(statusFilter);
-            if (e.key==="ArrowRight"||e.key==="ArrowDown") { e.preventDefault(); setStatusFilter(opts[(idx+1)%opts.length]); }
-            if (e.key==="ArrowLeft"||e.key==="ArrowUp") { e.preventDefault(); setStatusFilter(opts[(idx-1+opts.length)%opts.length]); }
+            const btns = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]'));
+            const idx = btns.indexOf(e.target as HTMLButtonElement);
+            if (idx === -1) return;
+            if (e.key==="ArrowRight"||e.key==="ArrowDown") { e.preventDefault(); const n=btns[(idx+1)%btns.length]; n.click(); n.focus(); }
+            if (e.key==="ArrowLeft"||e.key==="ArrowUp") { e.preventDefault(); const n=btns[(idx-1+btns.length)%btns.length]; n.click(); n.focus(); }
           }}>
           {(["All", "Active", "Pipeline"] as StatusFilter[]).map((s) => (
             <button

@@ -224,10 +224,11 @@ export default function SignalPage() {
       <div className="flex flex-wrap gap-4 mb-4">
         <div className="flex items-center gap-1.5 flex-wrap" role="radiogroup" aria-label="Filter by jurisdiction"
           onKeyDown={(e) => {
-            const opts = allJurisdictions;
-            const idx = opts.indexOf(jurisdictionFilter);
-            if (e.key==="ArrowRight"||e.key==="ArrowDown") { e.preventDefault(); setJurisdictionFilter(opts[(idx+1)%opts.length]); }
-            if (e.key==="ArrowLeft"||e.key==="ArrowUp") { e.preventDefault(); setJurisdictionFilter(opts[(idx-1+opts.length)%opts.length]); }
+            const btns = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]'));
+            const idx = btns.indexOf(e.target as HTMLButtonElement);
+            if (idx === -1) return;
+            if (e.key==="ArrowRight"||e.key==="ArrowDown") { e.preventDefault(); const n=btns[(idx+1)%btns.length]; n.click(); n.focus(); }
+            if (e.key==="ArrowLeft"||e.key==="ArrowUp") { e.preventDefault(); const n=btns[(idx-1+btns.length)%btns.length]; n.click(); n.focus(); }
           }}>
           <span className="text-xs text-gray-500" aria-hidden="true">Jurisdiction:</span>
           {allJurisdictions.map((j) => (
@@ -248,10 +249,11 @@ export default function SignalPage() {
         </div>
         <div className="flex items-center gap-1.5 flex-wrap" role="radiogroup" aria-label="Filter by category"
           onKeyDown={(e) => {
-            const opts = allCategories;
-            const idx = opts.indexOf(categoryFilter);
-            if (e.key==="ArrowRight"||e.key==="ArrowDown") { e.preventDefault(); setCategoryFilter(opts[(idx+1)%opts.length]); }
-            if (e.key==="ArrowLeft"||e.key==="ArrowUp") { e.preventDefault(); setCategoryFilter(opts[(idx-1+opts.length)%opts.length]); }
+            const btns = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]'));
+            const idx = btns.indexOf(e.target as HTMLButtonElement);
+            if (idx === -1) return;
+            if (e.key==="ArrowRight"||e.key==="ArrowDown") { e.preventDefault(); const n=btns[(idx+1)%btns.length]; n.click(); n.focus(); }
+            if (e.key==="ArrowLeft"||e.key==="ArrowUp") { e.preventDefault(); const n=btns[(idx-1+btns.length)%btns.length]; n.click(); n.focus(); }
           }}>
           <span className="text-xs text-gray-500" aria-hidden="true">Category:</span>
           {allCategories.map((c) => (
@@ -276,10 +278,11 @@ export default function SignalPage() {
         {/* Urgency filter tabs */}
         <div className="flex items-center gap-2 mb-4" role="radiogroup" aria-label="Filter by urgency"
           onKeyDown={(e) => {
-            const opts = ["all","high","medium","low"] as const;
-            const idx = opts.indexOf(urgencyView);
-            if (e.key==="ArrowRight"||e.key==="ArrowDown") { e.preventDefault(); setUrgencyView(opts[(idx+1)%opts.length]); }
-            if (e.key==="ArrowLeft"||e.key==="ArrowUp") { e.preventDefault(); setUrgencyView(opts[(idx-1+opts.length)%opts.length]); }
+            const btns = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]'));
+            const idx = btns.indexOf(e.target as HTMLButtonElement);
+            if (idx === -1) return;
+            if (e.key==="ArrowRight"||e.key==="ArrowDown") { e.preventDefault(); const n=btns[(idx+1)%btns.length]; n.click(); n.focus(); }
+            if (e.key==="ArrowLeft"||e.key==="ArrowUp") { e.preventDefault(); const n=btns[(idx-1+btns.length)%btns.length]; n.click(); n.focus(); }
           }}>
           {[
             { key: "all", label: "All Regulations", count: filteredUpdates.length },

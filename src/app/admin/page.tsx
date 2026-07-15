@@ -560,10 +560,11 @@ export default function AdminPage() {
             {adminSearch && <button type="button" onClick={() => setAdminSearch("")} className="text-xs text-gray-500 hover:text-gray-700">Clear</button>}
             <div role="radiogroup" aria-label="Sort companies by" className="flex items-center gap-1"
               onKeyDown={(e) => {
-                const opts = ["recent", "name", "esg"] as const;
-                const idx = opts.indexOf(adminSort as "recent"|"name"|"esg");
-                if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); setAdminSort(opts[(idx + 1) % opts.length]); }
-                if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); setAdminSort(opts[(idx - 1 + opts.length) % opts.length]); }
+                const btns = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]'));
+                const idx = btns.indexOf(e.target as HTMLButtonElement);
+                if (idx === -1) return;
+                if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); const n=btns[(idx+1)%btns.length]; n.click(); n.focus(); }
+                if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); const n=btns[(idx-1+btns.length)%btns.length]; n.click(); n.focus(); }
               }}
             >
               {([{key:"recent",label:"Recent"},{key:"name",label:"A–Z"},{key:"esg",label:"ESG Score"}] as {key:"recent"|"name"|"esg"; label:string}[]).map(opt => (

@@ -75,10 +75,11 @@ export default function StewardPage() {
       {/* View Toggle */}
       <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 mb-6 w-fit" role="radiogroup" aria-label="View mode"
         onKeyDown={(e) => {
-          const opts = ["cards","calendar"] as const;
-          const idx = opts.indexOf(view);
-          if (e.key==="ArrowRight"||e.key==="ArrowDown") { e.preventDefault(); setView(opts[(idx+1)%opts.length]); }
-          if (e.key==="ArrowLeft"||e.key==="ArrowUp") { e.preventDefault(); setView(opts[(idx-1+opts.length)%opts.length]); }
+          const btns = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]'));
+          const idx = btns.indexOf(e.target as HTMLButtonElement);
+          if (idx === -1) return;
+          if (e.key==="ArrowRight"||e.key==="ArrowDown") { e.preventDefault(); const n=btns[(idx+1)%btns.length]; n.click(); n.focus(); }
+          if (e.key==="ArrowLeft"||e.key==="ArrowUp") { e.preventDefault(); const n=btns[(idx-1+btns.length)%btns.length]; n.click(); n.focus(); }
         }}
       >
         {(["cards", "calendar"] as const).map((v) => (
