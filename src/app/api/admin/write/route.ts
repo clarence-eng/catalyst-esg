@@ -2,6 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminRequest } from "@/lib/adminAuth";
 import { getSupabaseAdminClient } from "@/lib/supabase";
 
+// In-memory rate limiter — 30 write requests per minute per IP on this lambda instance.
+// Resets on cold-start; provides blast-radius reduction if a stolen cookie is used for bulk deletes.
+const rateLimitMap = new Map<string, { count: number; reset: number }>();
+const RATE_LIMIT = 30;
+const RATE_WINDOW_MS = 60_000;
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.reset) {
+    rateLimitMap.set(ip, { count: 1, reset: now + RATE_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
 function forbidden() {
   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 }
@@ -32,6 +50,11 @@ function coerceNumber(v: unknown, fallback = 0): number {
 
 export async function POST(req: NextRequest) {
   if (!verifyAdminRequest(req)) return forbidden();
+
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? req.headers.get("x-real-ip") ?? "unknown";
+  if (!checkRateLimit(ip)) {
+    return NextResponse.json({ error: "Too many requests — please wait before retrying" }, { status: 429 });
+  }
 
   let body: WriteBody;
   try { body = await req.json() as WriteBody; } catch {
