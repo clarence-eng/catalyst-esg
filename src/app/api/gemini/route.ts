@@ -36,7 +36,7 @@ function validateContext(type: GenerationType, ctx: Record<string, unknown>): bo
     return strOk && numOk;
   }
   if (type === "action_plan") {
-    return ["name", "sector", "maturity"].every((k) => typeof ctx[k] === "string" && (ctx[k] as string).trim().length > 0);
+    return ["name", "sector", "maturity", "country"].every((k) => typeof ctx[k] === "string" && (ctx[k] as string).trim().length > 0);
   }
   if (type === "thematic_brief") {
     return ["theme", "subtitle", "temasekAlignment"].every((k) => typeof ctx[k] === "string" && (ctx[k] as string).trim().length > 0);
@@ -61,8 +61,7 @@ export async function POST(req: NextRequest) {
   // catalyst-neon-eight-* Vercel project from bypassing this guard.
   const isAllowed = (s: string) =>
     s === "https://catalyst-neon-eight.vercel.app" ||
-    s === "http://localhost:3000" ||
-    s === "http://localhost:3001";
+    (process.env.NODE_ENV !== "production" && (s === "http://localhost:3000" || s === "http://localhost:3001"));
   const hasSourceHeader = origin !== "" || referer !== "";
   const sameOrigin = isAllowed(origin) || isAllowed(refererOrigin);
   if (!hasSourceHeader || !sameOrigin) {

@@ -5,6 +5,22 @@ import { supabase, type DbCompany, type DbEngagement, type DbMaterialIssue } fro
 import { clearCache } from "@/lib/useCompanies";
 import { Plus, Trash2, Edit3, Save, ChevronDown, ChevronUp, Lock, LogOut, Building2, Users, CheckCircle } from "lucide-react";
 
+async function adminWrite(body: Record<string, unknown>): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const res = await fetch("/api/admin/write", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      credentials: "same-origin",
+    });
+    if (res.ok) return { ok: true };
+    const data = await res.json().catch(() => ({})) as { error?: string };
+    return { ok: false, error: data.error ?? `HTTP ${res.status}` };
+  } catch (err) {
+    return { ok: false, error: String(err) };
+  }
+}
+
 // ─── Auth ───────────────────────────────────────────────────────────────────
 function useAdminAuth() {
   const [authed, setAuthed] = useState(false);
@@ -243,11 +259,8 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
     if (savingEngRef.current) return;
     savingEngRef.current = true;
     try {
-      const { id: engId, company_slug: _, created_at: __, ...engFields } = e as Required<typeof e>;
-      const { error: engErr } = e.id
-        ? await supabase.from("engagements").update(engFields).eq("id", engId)
-        : await supabase.from("engagements").insert({ ...e, company_slug: co.slug });
-      if (engErr) { showToast("Error saving engagement: " + engErr.message, true); return; }
+      const result = await adminWrite({ action: "upsert_engagement", engagement: e, company_slug: co.slug });
+      if (!result.ok) { showToast("Error saving engagement: " + (result.error ?? ""), true); return; }
       setAddEng(false); setEditEng(null); clearCache(); loadDetail();
     } catch (err) {
       showToast("Unexpected error saving engagement", true);
@@ -256,16 +269,14 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
       savingEngRef.current = false;
     }
   };
-  const delEng = async (id: string) => { if (!confirm("Delete this engagement? This cannot be undone.")) return; try { const { error } = await supabase.from("engagements").delete().eq("id", id); if (error) { showToast("Error deleting engagement: " + error.message, true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting engagement", true); console.error("[Admin] delEng threw:", err); } };
+  const delEng = async (id: string) => { if (!confirm("Delete this engagement? This cannot be undone.")) return; try { const result = await adminWrite({ action: "delete_engagement", id }); if (!result.ok) { showToast("Error deleting engagement: " + (result.error ?? ""), true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting engagement", true); console.error("[Admin] delEng threw:", err); } };
   const saveIssue = async (i: Partial<DbMaterialIssue>) => {
     if (savingIssueRef.current) return;
     savingIssueRef.current = true;
     try {
-      const { id: issId, company_slug: _ic, created_at: _icat, ...issFields } = i as Required<typeof i>;
-      const { error: issErr } = issId
-        ? await supabase.from("material_issues").update(issFields).eq("id", issId)
-        : await supabase.from("material_issues").insert({ ...i, sort_order: issues.length > 0 ? Math.max(...issues.map(x => x.sort_order ?? 0)) + 1 : 0, company_slug: co.slug });
-      if (issErr) { showToast("Error saving issue: " + issErr.message, true); return; }
+      const sort_order = issues.length > 0 ? Math.max(...issues.map(x => x.sort_order ?? 0)) + 1 : 0;
+      const result = await adminWrite({ action: "upsert_issue", issue: { ...i, sort_order }, company_slug: co.slug });
+      if (!result.ok) { showToast("Error saving issue: " + (result.error ?? ""), true); return; }
       setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();
     } catch (err) {
       showToast("Unexpected error saving issue", true);
@@ -274,7 +285,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
       savingIssueRef.current = false;
     }
   };
-  const delIssue = async (id: string) => { if (!confirm("Delete this material issue? This cannot be undone.")) return; try { const { error } = await supabase.from("material_issues").delete().eq("id", id); if (error) { showToast("Error deleting issue: " + error.message, true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting issue", true); console.error("[Admin] delIssue threw:", err); } };
+  const delIssue = async (id: string) => { if (!confirm("Delete this material issue? This cannot be undone.")) return; try { const result = await adminWrite({ action: "delete_issue", id }); if (!result.ok) { showToast("Error deleting issue: " + (result.error ?? ""), true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting issue", true); console.error("[Admin] delIssue threw:", err); } };
 
   const statusColor = co.portfolio_status === "Active" ? "text-emerald-700 bg-emerald-50 border-emerald-300" : "text-blue-700 bg-blue-50 border-blue-300";
   const riskColor = { Low: "text-emerald-700", Medium: "text-amber-700", High: "text-orange-700", Critical: "text-red-700" }[co.transition_risk] || "text-gray-600";
@@ -414,16 +425,10 @@ export default function AdminPage() {
     savingCompanyRef.current = true;
     setSaving(true);
     try {
-      if (co.id) {
-        const { id: coId, created_at: _ccat, ...coFields } = { ...co, last_updated: todayISO() } as Required<typeof co>;
-        const { error } = await supabase.from("companies").update(coFields).eq("id", coId);
-        if (error) showToast("Error: " + error.message, true);
-        else { showToast("Company updated ✓"); setEditing(null); clearCache(); loadCompanies(); }
-      } else {
-        const { error } = await supabase.from("companies").insert({ ...co, last_updated: todayISO() });
-        if (error) showToast("Error: " + error.message, true);
-        else { showToast("Company added ✓"); setAdding(false); clearCache(); loadCompanies(); }
-      }
+      const result = await adminWrite({ action: "upsert_company", company: co });
+      if (!result.ok) showToast("Error: " + (result.error ?? "Unknown error"), true);
+      else if (co.id) { showToast("Company updated ✓"); setEditing(null); clearCache(); loadCompanies(); }
+      else { showToast("Company added ✓"); setAdding(false); clearCache(); loadCompanies(); }
     } catch (err) {
       showToast("Unexpected error saving company", true);
       console.error("[Admin] saveCompany threw:", err);
@@ -436,17 +441,9 @@ export default function AdminPage() {
   const deleteCompany = async (id: string, slug: string, name: string) => {
     if (!confirm(`Delete ${name}? This also deletes all engagements and material issues.`)) return;
     try {
-      // Delete child rows first (best-effort); if they fail report but still attempt company delete.
-      // Note: Supabase FK constraints may cascade automatically depending on DB config.
-      const { error: miDelErr } = await supabase.from("material_issues").delete().eq("company_slug", slug);
-      const { error: engDelErr } = await supabase.from("engagements").delete().eq("company_slug", slug);
-      const { error: coDelErr } = await supabase.from("companies").delete().eq("id", id);
-      if (miDelErr || engDelErr || coDelErr) {
-        const msgs = [miDelErr?.message, engDelErr?.message, coDelErr?.message].filter(Boolean).join("; ");
-        showToast("Partial deletion error — refresh to verify: " + msgs, true);
-      } else {
-        showToast(`${name} deleted`);
-      }
+      const result = await adminWrite({ action: "delete_company", id, slug });
+      if (!result.ok) showToast("Partial deletion error — refresh to verify: " + (result.error ?? ""), true);
+      else showToast(`${name} deleted`);
       clearCache();
       loadCompanies();
     } catch (err) {

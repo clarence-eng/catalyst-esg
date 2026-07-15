@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { setAdminCookie } from "@/lib/adminAuth";
 
-// Demo platform: password stored as server-side env var (not NEXT_PUBLIC_).
-// For production: replace with bcrypt comparison + HttpOnly session cookie or JWT.
-// Set ADMIN_PASSWORD in Vercel environment variables to override the demo default.
 export async function POST(req: NextRequest) {
   let body: unknown;
   try { body = await req.json(); } catch {
@@ -12,10 +10,11 @@ export async function POST(req: NextRequest) {
   if (typeof password !== "string" || !password) {
     return NextResponse.json({ error: "Missing password" }, { status: 400 });
   }
-  const correct = process.env.ADMIN_PASSWORD || "catalyst2026";
+  const correct = process.env.ADMIN_PASSWORD ?? "catalyst2026";
   if (password !== correct) {
     return NextResponse.json({ error: "Incorrect password" }, { status: 401 });
   }
-  return NextResponse.json({ ok: true });
+  const res = NextResponse.json({ ok: true });
+  setAdminCookie(res);
+  return res;
 }
-
