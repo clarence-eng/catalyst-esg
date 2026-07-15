@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-DNS-Prefetch-Control", value: "off" },
   // Belt-and-suspenders: keep X-Frame-Options for legacy proxies/enterprise appliances
   // that honour it but don't understand CSP frame-ancestors (RFC 7034)
   { key: "X-Frame-Options", value: "DENY" },

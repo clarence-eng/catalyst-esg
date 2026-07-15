@@ -69,13 +69,13 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       continue;
     }
 
-    // Quarter headers: only match action-plan structural labels like "Q1 (Months 1-3):" or "Q1:"
-    // Requires either bare "Q1:" or "Q1 (..." form — NOT "Q1 Arbitrary Text:"
-    if (/^(Q[1-4]\s*\([^)]*\)\s*:|Q[1-4]\s*:)/i.test(line) && !/^Q[1-4]\s+[A-Z][^:]*:/i.test(line)) {
+    // Quarter headers: match "Q1 (Months 1-3):" or "Q1:" bare or bold-wrapped (**Q1 (...):**)
+    const normalizedLine = line.replace(/^\*\*|\*\*$/g, "").trim();
+    if (/^(Q[1-4]\s*\([^)]*\)\s*:|Q[1-4]\s*:)/i.test(normalizedLine) && !/^Q[1-4]\s+[A-Z][^:]*:/i.test(normalizedLine)) {
       flushList();
       elements.push(
         <div key={key++} className="text-sm font-semibold text-emerald-700 mt-5 mb-2 border-b border-emerald-600/20 pb-1">
-          {line.replace(/^\*\*|\*\*$/g, "")}
+          {normalizedLine}
         </div>
       );
       continue;

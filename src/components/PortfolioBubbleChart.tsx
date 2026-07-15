@@ -36,7 +36,7 @@ const riskTextClass: Record<string, string> = {
 };
 
 interface TooltipPayload {
-  payload?: BubblePoint;
+  payload?: BubblePoint & { portfolioWeight?: number };
 }
 
 function CustomTooltip({ active, payload }: { active?: boolean; payload?: TooltipPayload[] }) {
@@ -47,7 +47,9 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
       <div className="font-semibold text-gray-900 mb-1">{d.name}</div>
       <div className="text-gray-600">ESG Score: <span className="text-gray-900">{d.esgScore}</span></div>
       <div className="text-gray-600">Carbon Intensity: <span className="text-gray-900">{d.carbonIntensity} tCO₂e/$M</span></div>
-      <div className="text-gray-600">Investment: <span className="text-gray-900">S${d.investmentValue}M</span></div>
+      {d.portfolioWeight !== undefined && (
+        <div className="text-gray-600">Portfolio Weight: <span className="text-gray-900">{d.portfolioWeight.toFixed(1)}%</span></div>
+      )}
       <div className="text-gray-600">Transition Risk: <span className={riskTextClass[d.transitionRisk] ?? "text-gray-700"}>{d.transitionRisk}</span></div>
     </div>
   );
@@ -56,6 +58,11 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
 export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
   const router = useRouter();
   if (data.length === 0) return null;
+  const totalInvestment = data.reduce((s, d) => s + d.investmentValue, 0);
+  const dataWithWeight = data.map(d => ({
+    ...d,
+    portfolioWeight: totalInvestment > 0 ? (d.investmentValue / totalInvestment) * 100 : 0,
+  }));
   const maxCarbon = Math.max(...data.map(d => d.carbonIntensity));
   const yMax = Math.min(Math.max(maxCarbon * 1.15, 100), 2000);
   const offChart = data.filter(d => d.carbonIntensity > yMax);
@@ -63,7 +70,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
     <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
       <div className="flex items-center justify-between mb-1">
         <h2 className="text-sm font-semibold text-gray-900">Portfolio Positioning</h2>
-        <div className="text-xs text-gray-500">ESG Score vs. Carbon Intensity · bubble = investment size</div>
+        <div className="text-xs text-gray-500">ESG Score vs. Carbon Intensity · bubble = portfolio weight</div>
       </div>
       <div className="flex items-center gap-4 mb-3">
         {Object.entries(riskColor).map(([level, color]) => (
@@ -106,10 +113,10 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
             width={42}
             label={{ value: "tCO₂e/$M ↑", angle: -90, position: "insideLeft", offset: 12, fill: "#475569", fontSize: 10 }}
           />
-          <ZAxis dataKey="investmentValue" range={[80, 600]} name="Investment (S$M)" />
+          <ZAxis dataKey="investmentValue" range={[80, 600]} name="Portfolio Weight" />
           <Tooltip content={<CustomTooltip />} />
           <Scatter
-            data={data}
+            data={dataWithWeight}
             fillOpacity={0.75}
             cursor="pointer"
             onClick={(entry: unknown) => {
@@ -117,7 +124,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
               if (pt?.slug) router.push(`/scout/${pt.slug}`);
             }}
           >
-            {data.map((entry) => (
+            {dataWithWeight.map((entry) => (
               <Cell key={entry.slug} fill={riskColor[entry.transitionRisk] ?? "#64748b"} />
             ))}
           </Scatter>
