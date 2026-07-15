@@ -7,9 +7,10 @@ interface Props {
   companies: Company[];
   onRemove: (slug: string) => void;
   onClear: () => void;
+  onDismiss?: () => void;
 }
 
-export function ComparisonDrawer({ companies, onRemove, onClear }: Props) {
+export function ComparisonDrawer({ companies, onRemove, onClear, onDismiss }: Props) {
   if (companies.length === 0) return null;
 
   const metrics = [
@@ -32,7 +33,10 @@ export function ComparisonDrawer({ companies, onRemove, onClear }: Props) {
         </div>
         <div className="flex items-center gap-3">
           <button type="button" onClick={onClear} className="text-xs text-gray-500 hover:text-gray-700 px-3 py-1 border border-gray-200 rounded-lg hover:bg-gray-50">Clear all</button>
-          <button type="button" onClick={onClear} aria-label="Close comparison drawer" className="text-gray-500 hover:text-gray-700"><X className="w-4 h-4" /></button>
+          {onDismiss
+            ? <button type="button" onClick={onDismiss} aria-label="Dismiss comparison drawer (selection preserved)" className="text-gray-500 hover:text-gray-700"><X className="w-4 h-4" /></button>
+            : <button type="button" onClick={onClear} aria-label="Clear and close comparison" className="text-gray-500 hover:text-gray-700"><X className="w-4 h-4" /></button>
+          }
         </div>
       </div>
       <div className="overflow-x-auto">

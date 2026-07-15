@@ -65,6 +65,7 @@ export default function ScoutPage() {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
   const [compareSet, setCompareSet] = useState<Set<string>>(new Set());
+  const [drawerDismissed, setDrawerDismissed] = useState(false);
   const [sortKey, setSortKey] = useState<SortKey>("esg_desc");
   // Track whether initial restore from sessionStorage has completed
   const restoredRef = useRef(false);
@@ -223,7 +224,7 @@ export default function ScoutPage() {
       )}
 
       {/* Company Cards */}
-      <div className={`grid grid-cols-1 gap-4 ${compareSet.size > 0 ? "pb-96" : ""}`}>
+      <div className={`grid grid-cols-1 gap-4 ${compareSet.size > 0 && !drawerDismissed ? "pb-96" : ""}`}>
         {filtered.map((co) => (
           <Link
             key={co.slug}
@@ -435,7 +436,7 @@ export default function ScoutPage() {
                     setCompareSet(prev => {
                       const next = new Set(prev);
                       if (next.has(co.slug)) next.delete(co.slug);
-                      else if (next.size < 3) next.add(co.slug);
+                      else if (next.size < 3) { next.add(co.slug); setDrawerDismissed(false); }
                       return next;
                     });
                   }}
@@ -454,9 +455,10 @@ export default function ScoutPage() {
         ))}
       </div>
       <ComparisonDrawer
-        companies={companies.filter(c => compareSet.has(c.slug))}
+        companies={drawerDismissed ? [] : companies.filter(c => compareSet.has(c.slug))}
         onRemove={(slug) => setCompareSet(prev => { const next = new Set(prev); next.delete(slug); return next; })}
-        onClear={() => setCompareSet(new Set())}
+        onClear={() => { setCompareSet(new Set()); setDrawerDismissed(false); }}
+        onDismiss={() => setDrawerDismissed(true)}
       />
     </div>
   );

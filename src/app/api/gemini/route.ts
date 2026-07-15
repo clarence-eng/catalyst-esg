@@ -206,10 +206,11 @@ Key Regulatory Pressures: ${sanitize(ctx.regulatoryContext, 300)}`;
     });
 
     let text: string | undefined;
-    try {
-      text = response.text;
-    } catch {
-      return NextResponse.json({ error: "No content returned from AI (response may have been filtered)" }, { status: 502 });
+    text = response.text;
+    // Check for truncated responses — MAX_TOKENS finishReason means partial output
+    const finishReason = response.candidates?.[0]?.finishReason;
+    if (finishReason === "MAX_TOKENS") {
+      return NextResponse.json({ error: "AI response was truncated — the request may be too long. Please try again." }, { status: 502 });
     }
     if (!text?.trim()) {
       return NextResponse.json({ error: "No content returned from AI (response may have been filtered)" }, { status: 502 });
