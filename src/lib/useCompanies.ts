@@ -61,7 +61,9 @@ export function useCompanies() {
     const epochAtStart = cacheEpoch;
     // Capture local reference so .finally() only nulls inFlight if it's still this promise
     let thisPromise: Promise<void>;
-    thisPromise = inFlight = fetch("/api/companies")
+    // Append cache-busting epoch so the Vercel/CDN edge cache treats post-clearCache fetches
+    // as distinct URLs, bypassing the s-maxage=30 TTL and always hitting the origin.
+    thisPromise = inFlight = fetch(`/api/companies?_v=${epochAtStart}`)
       .then(r => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();

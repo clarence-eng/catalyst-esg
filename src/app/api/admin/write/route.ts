@@ -86,7 +86,13 @@ export async function POST(req: NextRequest) {
     };
     const id = typeof co.id === "string" && co.id.trim() ? co.id.trim() : null;
     if (id) {
-      const { error } = await sb.from("companies").update(payload).eq("id", id);
+      // Verify slug is not being changed — slug is immutable after creation (child rows are keyed on it)
+      const { data: existing } = await sb.from("companies").select("slug").eq("id", id).single();
+      if (!existing) return badRequest("Company not found");
+      if (existing.slug !== slug) return badRequest("Slug is immutable — child records are keyed on the original slug. Create a new company instead of renaming.");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { slug: _slug, ...updatePayload } = payload;
+      const { error } = await sb.from("companies").update(updatePayload).eq("id", id);
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     } else {
       const { error } = await sb.from("companies").insert(payload);
