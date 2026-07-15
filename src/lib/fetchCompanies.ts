@@ -510,7 +510,7 @@ function dbToCompany(
     })(),
     boardComposition: enrichment?.boardComposition ?? {
       boardSize: 8,
-      independentPct: co.esg_governance >= 65 ? 62 : co.esg_governance >= 50 ? 50 : 38,
+      independentPct: co.esg_governance >= 65 ? 63 : co.esg_governance >= 50 ? 50 : 38,
       womenPct: co.esg_governance >= 65 ? 38 : 25,
       ceoChairSplit: co.esg_governance >= 60,
       auditCommittee: co.esg_governance >= 50,

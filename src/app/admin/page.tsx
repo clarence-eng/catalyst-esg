@@ -48,7 +48,9 @@ function makeEmptyCo(): Partial<DbCompany> {
 }
 
 function slugify(s: string) {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  // Normalize Unicode (NFD) then strip combining diacritical marks before slugifying
+  return s.normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
 // Hoisted outside CoForm to prevent unmount/remount on every state update
