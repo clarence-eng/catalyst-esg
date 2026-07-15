@@ -219,7 +219,7 @@ function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: st
 }
 
 // ─── Company Row ──────────────────────────────────────────────────────────────
-function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit: () => void; onDelete: () => void; showToast: (msg: string, isError?: boolean) => void }) {
+function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancelDelete }: { co: DbCompany; onEdit: () => void; onDelete: () => void; showToast: (msg: string, isError?: boolean) => void; isPendingDelete: boolean; onCancelDelete: () => void }) {
   const [expanded, setExpanded] = useState(false);
   const [engagements, setEngagements] = useState<DbEngagement[]>([]);
   const [issues, setIssues] = useState<DbMaterialIssue[]>([]);
@@ -227,6 +227,8 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
   const [addIssue, setAddIssue] = useState(false);
   const [editEng, setEditEng] = useState<DbEngagement | null>(null);
   const [editIssue, setEditIssue] = useState<DbMaterialIssue | null>(null);
+  const [pendingDelEngId, setPendingDelEngId] = useState<string | null>(null);
+  const [pendingDelIssueId, setPendingDelIssueId] = useState<string | null>(null);
   const loadingRef = useRef(false); // prevent concurrent loadDetail fetches
   const pendingReloadRef = useRef(false); // queue a reload if one is already in flight
   const detailLoadCount = useRef(0); // increment on each successful loadDetail to force EngForm/IssueForm remount
@@ -272,7 +274,11 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
       savingEngRef.current = false;
     }
   };
-  const delEng = async (id: string) => { if (!confirm("Delete this engagement? This cannot be undone.")) return; try { const result = await adminWrite({ action: "delete_engagement", id }); if (!result.ok) { showToast("Error deleting engagement: " + (result.error ?? ""), true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting engagement", true); console.error("[Admin] delEng threw:", err); } };
+  const delEng = async (id: string) => {
+    if (pendingDelEngId !== id) { setPendingDelEngId(id); return; }
+    setPendingDelEngId(null);
+    try { const result = await adminWrite({ action: "delete_engagement", id }); if (!result.ok) { showToast("Error deleting engagement: " + (result.error ?? ""), true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting engagement", true); console.error("[Admin] delEng threw:", err); }
+  };
   const saveIssue = async (i: Partial<DbMaterialIssue>) => {
     if (savingIssueRef.current) return;
     savingIssueRef.current = true;
@@ -288,7 +294,11 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
       savingIssueRef.current = false;
     }
   };
-  const delIssue = async (id: string) => { if (!confirm("Delete this material issue? This cannot be undone.")) return; try { const result = await adminWrite({ action: "delete_issue", id }); if (!result.ok) { showToast("Error deleting issue: " + (result.error ?? ""), true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting issue", true); console.error("[Admin] delIssue threw:", err); } };
+  const delIssue = async (id: string) => {
+    if (pendingDelIssueId !== id) { setPendingDelIssueId(id); return; }
+    setPendingDelIssueId(null);
+    try { const result = await adminWrite({ action: "delete_issue", id }); if (!result.ok) { showToast("Error deleting issue: " + (result.error ?? ""), true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting issue", true); console.error("[Admin] delIssue threw:", err); }
+  };
 
   const statusColor = co.portfolio_status === "Active" ? "text-emerald-700 bg-emerald-50 border-emerald-300" : "text-blue-700 bg-blue-50 border-blue-300";
   const riskColor = { Low: "text-emerald-700", Medium: "text-amber-700", High: "text-orange-700", Critical: "text-red-700" }[co.transition_risk] || "text-gray-600";
@@ -317,7 +327,10 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
         </div>
         <div className="flex items-center gap-2">
           <button type="button" aria-label={`Edit ${co.name}`} onClick={onEdit} className="p-2 text-gray-500 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-colors"><Edit3 className="w-4 h-4"/></button>
-          <button type="button" aria-label={`Delete ${co.name}`} onClick={onDelete} className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"><Trash2 className="w-4 h-4"/></button>
+          {isPendingDelete
+            ? <><button type="button" aria-label={`Confirm delete ${co.name} — this also deletes all engagements and issues`} onClick={onDelete} className="text-xs text-red-600 font-medium px-2 py-1 rounded bg-red-50 border border-red-300 hover:bg-red-100">Delete?</button><button type="button" aria-label="Cancel delete" onClick={onCancelDelete} className="text-xs text-gray-500 px-2 py-1 rounded border border-gray-200 hover:bg-gray-50 ml-1">Cancel</button></>
+            : <button type="button" aria-label={`Delete ${co.name}`} onClick={onDelete} className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"><Trash2 className="w-4 h-4"/></button>
+          }
           <button type="button" aria-label={`${co.name} details`} aria-expanded={expanded} aria-controls={`admin-details-${co.id}`} onClick={() => setExpanded(e => !e)} className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg">{expanded ? <ChevronUp className="w-4 h-4"/> : <ChevronDown className="w-4 h-4"/>}</button>
         </div>
       </div>
@@ -340,7 +353,10 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
                   <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${e.status==="Completed"?"bg-emerald-50 text-emerald-700":e.status==="Overdue"?"bg-red-50 text-red-700":"bg-blue-50 text-blue-700"}`}>{e.status}</span>
                   <span className="flex-1 text-gray-700 truncate">{e.topic}</span>
                   <button type="button" aria-label={`Edit engagement: ${e.topic}`} onClick={() => { setEditEng(e); setAddEng(false); }} className="text-gray-500 hover:text-purple-700"><Edit3 className="w-3 h-3"/></button>
-                  <button type="button" aria-label={`Delete engagement: ${e.topic}`} onClick={() => delEng(e.id)} className="text-gray-500 hover:text-red-600"><Trash2 className="w-3 h-3"/></button>
+                  {pendingDelEngId === e.id
+                    ? <><button type="button" aria-label={`Confirm delete engagement: ${e.topic}`} onClick={() => delEng(e.id)} className="text-xs text-red-600 font-medium px-1.5 py-0.5 rounded bg-red-50 border border-red-300 hover:bg-red-100">Delete?</button><button type="button" aria-label="Cancel delete" onClick={() => setPendingDelEngId(null)} className="text-xs text-gray-500 px-1.5 py-0.5 rounded border border-gray-200 hover:bg-gray-50 ml-1">Cancel</button></>
+                    : <button type="button" aria-label={`Delete engagement: ${e.topic}`} onClick={() => delEng(e.id)} className="text-gray-500 hover:text-red-600"><Trash2 className="w-3 h-3"/></button>
+                  }
                 </div>
               ))}
               {engagements.length === 0 && !addEng && <p className="text-xs text-gray-500 italic">No engagements yet</p>}
@@ -364,7 +380,10 @@ function CompanyRow({ co, onEdit, onDelete, showToast }: { co: DbCompany; onEdit
                   {i.opportunity && <span className="text-[10px] text-emerald-600">Opportunity</span>}
                   <span className="flex-1 text-gray-700 truncate">{i.issue}</span>
                   <button type="button" aria-label={`Edit issue: ${i.issue}`} onClick={() => { setEditIssue(i); setAddIssue(false); }} className="text-gray-500 hover:text-purple-700"><Edit3 className="w-3 h-3"/></button>
-                  <button type="button" aria-label={`Delete issue: ${i.issue}`} onClick={() => delIssue(i.id)} className="text-gray-500 hover:text-red-600"><Trash2 className="w-3 h-3"/></button>
+                  {pendingDelIssueId === i.id
+                    ? <><button type="button" aria-label={`Confirm delete issue: ${i.issue}`} onClick={() => delIssue(i.id)} className="text-xs text-red-600 font-medium px-1.5 py-0.5 rounded bg-red-50 border border-red-300 hover:bg-red-100">Delete?</button><button type="button" aria-label="Cancel delete" onClick={() => setPendingDelIssueId(null)} className="text-xs text-gray-500 px-1.5 py-0.5 rounded border border-gray-200 hover:bg-gray-50 ml-1">Cancel</button></>
+                    : <button type="button" aria-label={`Delete issue: ${i.issue}`} onClick={() => delIssue(i.id)} className="text-gray-500 hover:text-red-600"><Trash2 className="w-3 h-3"/></button>
+                  }
                 </div>
               ))}
               {issues.length === 0 && !addIssue && <p className="text-xs text-gray-500 italic">No material issues yet</p>}
@@ -388,6 +407,7 @@ export default function AdminPage() {
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [adminSearch, setAdminSearch] = useState("");
   const [adminSort, setAdminSort] = useState<"name"|"esg"|"recent">("recent");
+  const [pendingDeleteCoId, setPendingDeleteCoId] = useState<string | null>(null);
 
   const showToast = (msg: string, isError = false) => {
     setToast(msg);
@@ -442,7 +462,8 @@ export default function AdminPage() {
   };
 
   const deleteCompany = async (id: string, slug: string, name: string) => {
-    if (!confirm(`Delete ${name}? This also deletes all engagements and material issues.`)) return;
+    if (pendingDeleteCoId !== id) { setPendingDeleteCoId(id); return; }
+    setPendingDeleteCoId(null);
     try {
       const result = await adminWrite({ action: "delete_company", id, slug });
       if (!result.ok) showToast("Partial deletion error — refresh to verify: " + (result.error ?? ""), true);
@@ -600,7 +621,7 @@ export default function AdminPage() {
             {sortedAdminCompanies.map(co => editing?.id === co.id ? (
               <CoForm key={co.id} initial={editing} onSave={saveCompany} onCancel={() => setEditing(null)} />
             ) : (
-              <CompanyRow key={co.id} co={co} onEdit={() => { setEditing(co); setAdding(false); }} onDelete={() => deleteCompany(co.id, co.slug, co.name)} showToast={showToast} />
+              <CompanyRow key={co.id} co={co} onEdit={() => { setEditing(co); setAdding(false); }} onDelete={() => deleteCompany(co.id, co.slug, co.name)} showToast={showToast} isPendingDelete={pendingDeleteCoId === co.id} onCancelDelete={() => setPendingDeleteCoId(null)} />
             ))}
             {sortedAdminCompanies.length === 0 && !adding && !adminSearch && (
               <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-2xl">

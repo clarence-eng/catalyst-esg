@@ -27,6 +27,7 @@ const MEGATREND_SLUGS: Record<string, string> = {
 };
 
 const COMPARE_KEY = "catalyst_compare_set";
+const COMPARE_DISMISSED_KEY = "catalyst_compare_dismissed";
 const FILTER_KEY = "catalyst_scout_filter";
 
 function loadCompareSet(): Set<string> {
@@ -38,6 +39,11 @@ function loadCompareSet(): Set<string> {
     if (!Array.isArray(parsed)) { sessionStorage.removeItem(COMPARE_KEY); return new Set(); }
     return new Set(parsed.filter((x): x is string => typeof x === "string"));
   } catch { return new Set(); }
+}
+
+function loadDrawerDismissed(): boolean {
+  if (typeof window === "undefined") return false;
+  try { return sessionStorage.getItem(COMPARE_DISMISSED_KEY) === "1"; } catch { return false; }
 }
 
 const VALID_STATUS: StatusFilter[] = ["All", "Active", "Pipeline"];
@@ -80,6 +86,7 @@ export default function ScoutPage() {
     setStatusFilter(sf);
     setSortKey(sk);
     setCompareSet(cs);
+    setDrawerDismissed(loadDrawerDismissed());
     restoredRef.current = true;
   }, []);
 
@@ -89,6 +96,15 @@ export default function ScoutPage() {
     if (!restoredRef.current || renderCountRef.current <= 1) return;
     try { sessionStorage.setItem(COMPARE_KEY, JSON.stringify([...compareSet])); } catch { /* quota exceeded */ }
   }, [compareSet]);
+
+  // Persist drawer dismissed state
+  useEffect(() => {
+    if (!restoredRef.current) return;
+    try {
+      if (drawerDismissed) sessionStorage.setItem(COMPARE_DISMISSED_KEY, "1");
+      else sessionStorage.removeItem(COMPARE_DISMISSED_KEY);
+    } catch { /* quota exceeded */ }
+  }, [drawerDismissed]);
 
   // Persist filter state — only after initial restore values have rendered
   // Uses restoredRef alone (not renderCountRef which only increments on compareSet changes)
@@ -433,10 +449,12 @@ export default function ScoutPage() {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    const isAdding = !compareSet.has(co.slug) && compareSet.size < 3;
+                    if (isAdding) setDrawerDismissed(false);
                     setCompareSet(prev => {
                       const next = new Set(prev);
                       if (next.has(co.slug)) next.delete(co.slug);
-                      else if (next.size < 3) { next.add(co.slug); setDrawerDismissed(false); }
+                      else if (next.size < 3) next.add(co.slug);
                       return next;
                     });
                   }}
