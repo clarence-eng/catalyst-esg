@@ -708,12 +708,13 @@ function PCAFFinancedEmissionsTable({ companies, totalActive }: { companies: Com
 
   const rows = companies.map(co => {
     const stake = totalActive > 0 ? (co.investmentValue / totalActive) * 100 : 0;
-    const estimatedEmissions = totalActive > 0 ? Math.round((co.investmentValue / totalActive) * co.carbonIntensity * 2500) : 0;
-    const score = pcafScore(co.netZeroCommitment);
-    return { co, stake, estimatedEmissions, score };
+    const hasEmissionsData = co.carbonIntensity > 0;
+    const estimatedEmissions = hasEmissionsData && totalActive > 0 ? Math.round((co.investmentValue / totalActive) * co.carbonIntensity * 2500) : null;
+    const score = hasEmissionsData ? pcafScore(co.netZeroCommitment) : null;
+    return { co, stake, estimatedEmissions, score, hasEmissionsData };
   });
 
-  const totalEmissions = rows.reduce((s, r) => s + r.estimatedEmissions, 0);
+  const totalEmissions = rows.reduce((s, r) => s + (r.estimatedEmissions ?? 0), 0);
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 mb-6">
@@ -733,26 +734,32 @@ function PCAFFinancedEmissionsTable({ companies, totalActive }: { companies: Com
             </tr>
           </thead>
           <tbody>
-            {rows.map(({ co, stake, estimatedEmissions, score }) => (
+            {rows.map(({ co, stake, estimatedEmissions, score, hasEmissionsData }) => (
               <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors">
                 <th scope="row" className="px-6 py-3 text-sm font-medium text-gray-900">{co.name}</th>
                 <td className="px-4 py-3 text-xs text-gray-600">{co.sector}</td>
                 <td className="px-4 py-3 text-xs text-gray-600 text-right">{stake.toFixed(1)}%</td>
-                <td className="px-4 py-3 text-xs text-gray-800 text-right font-medium">{estimatedEmissions.toLocaleString("en-SG")}</td>
+                <td className="px-4 py-3 text-xs text-gray-800 text-right font-medium">
+                  {hasEmissionsData && estimatedEmissions !== null ? estimatedEmissions.toLocaleString("en-SG") : <span className="text-gray-400 italic">N/D</span>}
+                </td>
                 <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-0.5 rounded border ${
-                    score <= 2 ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
-                    score === 3 ? "text-blue-700 bg-blue-50 border-blue-200" :
-                    score === 4 ? "text-amber-700 bg-amber-50 border-amber-200" :
-                    "text-gray-600 bg-gray-100 border-gray-200"
-                  }`}>
-                    {score} — {pcafLabel[score]}
-                  </span>
+                  {score !== null ? (
+                    <span className={`text-xs px-2 py-0.5 rounded border ${
+                      score <= 2 ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
+                      score === 3 ? "text-blue-700 bg-blue-50 border-blue-200" :
+                      score === 4 ? "text-amber-700 bg-amber-50 border-amber-200" :
+                      "text-gray-600 bg-gray-100 border-gray-200"
+                    }`}>
+                      {score} — {pcafLabel[score]}
+                    </span>
+                  ) : (
+                    <span className="text-xs text-gray-400 italic">Not disclosed</span>
+                  )}
                 </td>
               </tr>
             ))}
             <tr className="bg-gray-50 font-semibold">
-              <td className="px-6 py-3 text-xs text-gray-900" colSpan={3}>Portfolio Total</td>
+              <td className="px-6 py-3 text-xs text-gray-900" colSpan={3}>Portfolio Total {rows.some(r => !r.hasEmissionsData) && <span className="font-normal text-gray-400 italic ml-1">(excludes N/D companies)</span>}</td>
               <td className="px-4 py-3 text-xs text-gray-900 text-right">{totalEmissions.toLocaleString("en-SG")}</td>
               <td className="px-4 py-3" />
             </tr>

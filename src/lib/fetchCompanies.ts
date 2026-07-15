@@ -524,15 +524,19 @@ function dbToCompany(
 
 let cachedCompanies: Company[] | null = null;
 let cacheTime = 0;
-const CACHE_TTL = 500; // 0.5 second cache — just enough to deduplicate burst requests on same warm lambda; short enough that admin mutations are visible within 1s
+let fetchInFlight: Promise<Company[]> | null = null;
+const CACHE_TTL = 500; // 0.5 second cache — deduplicates burst requests on same warm lambda
 
 export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
   // Return cache if fresh
   if (cachedCompanies && Date.now() - cacheTime < CACHE_TTL) {
     return cachedCompanies;
   }
+  // Deduplicate concurrent cold-start requests — return the in-flight promise if one exists
+  if (fetchInFlight) return fetchInFlight;
 
-  try {
+  fetchInFlight = (async () => {
+    try {
     const [
       { data: cos, error: cosErr },
       { data: engs, error: engsErr },
@@ -562,6 +566,9 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
     return companies;
   } catch {
     return [];
+  } finally {
+    fetchInFlight = null;
   }
+  })();
+  return fetchInFlight;
 }
-

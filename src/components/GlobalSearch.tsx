@@ -12,7 +12,6 @@ export function GlobalSearch() {
   const [query, setQuery] = useState("");
   const [activeIdx, setActiveIdx] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
-  const listboxRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const navigatingRef = useRef(false);
   const router = useRouter();
@@ -145,7 +144,7 @@ export function GlobalSearch() {
 
         {/* Results */}
         {query.length >= 2 && (
-          <div id="search-listbox" role="listbox" aria-label="Search results" ref={listboxRef} className="max-h-80 overflow-y-auto">
+          <div id="search-listbox" role="listbox" aria-label="Search results" className="max-h-80 overflow-y-auto">
             {!hasResults && (
               <p role="option" aria-selected="false" className="text-sm text-gray-500 text-center py-8">No results for &ldquo;{query}&rdquo;</p>
             )}

@@ -81,11 +81,10 @@ export function PortfolioTrend({ data, activeCount }: { data: TrendPoint[]; acti
             }}
           />
           <YAxis
-            domain={([dataMin, dataMax]: readonly number[]) => {
-              const min = dataMin as number, max = dataMax as number;
-              const range = max - min;
+            domain={([dataMin, dataMax]: readonly [number, number]): [number, number] => {
+              const range = dataMax - dataMin;
               const pad = range < 5 ? 10 : Math.ceil(range * 0.1);
-              return [Math.max(0, min - pad), Math.min(100, max + pad)];
+              return [Math.max(0, dataMin - pad), Math.min(100, dataMax + pad)];
             }}
             tick={{ fill: "#64748b", fontSize: 9 }}
             width={28}
