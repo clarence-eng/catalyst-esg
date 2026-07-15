@@ -67,14 +67,14 @@ function generateAlerts(companies: Company[]): { visible: Alert[]; hiddenLower: 
   alerts.sort((a, b) => a.severity - b.severity);
 
   // Critical (sev1) alerts are never truncated — missing a Critical ESG alert is a material gap.
-  // Lower-severity alerts are shown up to a cap of 6 total (sev1 + sev2 + sev3).
+  // sev2 (overdue engagements) always takes priority over sev3 (trend warnings).
   const sev1 = alerts.filter(a => a.severity === 1);
   const sev2 = alerts.filter(a => a.severity === 2);
   const sev3 = alerts.filter(a => a.severity === 3);
   const CAP = Math.max(6, sev1.length); // always show all Critical
   const remaining = CAP - sev1.length;
-  const sev2Take = Math.min(sev2.length, remaining - (sev3.length > 0 && remaining > 0 ? 1 : 0));
-  const sev3Take = Math.min(sev3.length, CAP - sev1.length - sev2Take);
+  const sev2Take = Math.min(sev2.length, remaining);
+  const sev3Take = Math.min(sev3.length, remaining - sev2Take);
   const hiddenLower = (sev2.length - sev2Take) + (sev3.length - sev3Take);
   return {
     visible: [...sev1, ...sev2.slice(0, sev2Take), ...sev3.slice(0, sev3Take)],

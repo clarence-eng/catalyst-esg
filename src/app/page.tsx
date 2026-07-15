@@ -242,7 +242,7 @@ export default function OverviewPage() {
               {avgDelta !== 0 && (
                 <span className={`text-xs font-medium px-2 py-0.5 rounded border ${
                   avgDelta > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200" : "text-red-700 bg-red-50 border-red-200"
-                }`} title={deltaLabel}>{avgDelta > 0 ? `↑ +${avgDelta}` : `↓ ${avgDelta}`} {deltaLabel}</span>
+                }`} title={`${deltaLabel} · equal-weight average`}>{avgDelta > 0 ? `↑ +${avgDelta}` : `↓ ${avgDelta}`} {deltaLabel}</span>
               )}
               {[{k:"E", v:eDelta},{k:"S", v:sDelta},{k:"G", v:gDelta}].map(({k,v}) => v !== 0 && (
                 <span key={k} className={`text-[10px] px-1.5 py-0.5 rounded border ${

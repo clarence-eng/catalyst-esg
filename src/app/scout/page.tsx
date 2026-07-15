@@ -97,6 +97,17 @@ export default function ScoutPage() {
     try { sessionStorage.setItem(COMPARE_KEY, JSON.stringify([...compareSet])); } catch { /* quota exceeded */ }
   }, [compareSet]);
 
+  // Purge stale slugs from compareSet when companies list changes (e.g. after a company deletion).
+  // Prevents ghost slugs from inflating compareSet.size and permanently disabling the compare button.
+  useEffect(() => {
+    if (!restoredRef.current || companies.length === 0) return;
+    setCompareSet(prev => {
+      const validSlugs = new Set(companies.map(c => c.slug));
+      const pruned = new Set([...prev].filter(slug => validSlugs.has(slug)));
+      return pruned.size !== prev.size ? pruned : prev;
+    });
+  }, [companies]);
+
   // Persist drawer dismissed state
   useEffect(() => {
     if (!restoredRef.current) return;
