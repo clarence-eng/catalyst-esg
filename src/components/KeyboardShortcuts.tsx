@@ -49,7 +49,7 @@ export function KeyboardShortcuts() {
       const isInput = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement || target.contentEditable === "true";
       if (isInput) return;
 
-      // Don't fire when a search modal is open; but allow ? to toggle shortcuts even when it's open
+      // ? opens/closes the shortcuts dialog; blocked only when search modal is open (not by shortcuts itself)
       const hasSearchModal = document.querySelector("[data-modal='search']");
 
       if (e.key === "?" && !e.metaKey && !e.ctrlKey) {
@@ -78,6 +78,8 @@ export function KeyboardShortcuts() {
           router.push(url);
           setGPressed(false);
           gPressedRef.current = false;
+          // Move focus to main content so keyboard users start from the right position on the new page
+          setTimeout(() => { document.getElementById("main-content")?.focus(); }, 50);
         }
       }
     };

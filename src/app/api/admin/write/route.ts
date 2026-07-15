@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
     const green_revenue_pct = Math.min(100, Math.max(0, coerceNumber(co.green_revenue_pct)));
     const investment_value = Math.max(0, coerceNumber(co.investment_value));
     const sasb_category = sanitizeString(co.sasb_category, 200).trim();
-    const last_updated = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Singapore" }).format(new Date());
+    const last_updated = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Singapore" });
     const payload = {
       name, slug, sector, country, description, portfolio_status, maturity,
       transition_risk, physical_risk, nature_risk, pathway_alignment,

@@ -113,7 +113,11 @@ export default function StewardPage() {
           <div className="bg-white rounded-xl border border-gray-200">
             <div className="px-5 py-4 border-b border-gray-200">
               <h2 className="text-sm font-semibold text-gray-900">Upcoming &amp; Overdue Engagements</h2>
-              <p className="text-xs text-gray-500 mt-0.5">{calendarEngagements.length} engagements across {new Set(calendarEngagements.map(e => e.companySlug)).size} companies</p>
+              <p className="text-xs text-gray-500 mt-0.5">
+                {calendarEngagements.length} engagements across {new Set(calendarEngagements.map(e => e.companySlug)).size} companies
+                {calendarEngagements.some(e => e.isPipeline) && <span className="ml-1">&middot; includes pipeline</span>}
+                {" "}&middot; header stats reflect active portfolio only
+              </p>
             </div>
             {calendarEngagements.length === 0 ? (
               <div className="text-xs text-gray-500 text-center py-8">No planned or overdue engagements</div>
@@ -132,7 +136,7 @@ export default function StewardPage() {
                       </div>
                     </div>
                     {/* Company */}
-                    <div className="w-40 flex-shrink-0 flex items-center gap-1.5">
+                    <div className="w-44 flex-shrink-0 flex items-center gap-1.5 flex-wrap">
                       <Link
                         href={`/scout/${e.companySlug}`}
                         className="text-xs font-medium text-purple-700 hover:text-purple-900 transition-colors truncate"
@@ -140,7 +144,7 @@ export default function StewardPage() {
                       >
                         {e.companyName}
                       </Link>
-                      {e.isPipeline && <span className="text-xs text-blue-700 flex-shrink-0">·Pipeline</span>}
+                      {e.isPipeline && <span className="text-[10px] text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded font-medium flex-shrink-0">Pipeline</span>}
                     </div>
                     {/* Topic */}
                     <div className="flex-1 min-w-0">
