@@ -279,21 +279,22 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         ))}
       </div>
 
-      {/* Tab Content — all panels rendered, inactive ones hidden so aria-controls always resolves */}
+      {/* Tab Content — all panels always in DOM so aria-controls targets always resolve
+          and component state (generated memos, questions) survives tab switches */}
       <div role="tabpanel" id="tabpanel-overview" aria-labelledby="tab-overview" hidden={tab !== "overview"}>
-        {tab === "overview" && <OverviewTab co={co} radarData={radarData} memo={memo} memoLoading={memoLoading} memoError={memoError} onGenerate={generateMemo} memoGeneratedAt={memoGeneratedAt} onSetMemoError={setMemoError} />}
+        <OverviewTab co={co} radarData={radarData} memo={memo} memoLoading={memoLoading} memoError={memoError} onGenerate={generateMemo} memoGeneratedAt={memoGeneratedAt} onSetMemoError={setMemoError} />
       </div>
       <div role="tabpanel" id="tabpanel-climate" aria-labelledby="tab-climate" hidden={tab !== "climate"}>
-        {tab === "climate" && <ClimateTab co={co} />}
+        <ClimateTab co={co} />
       </div>
       <div role="tabpanel" id="tabpanel-nature" aria-labelledby="tab-nature" hidden={tab !== "nature"}>
-        {tab === "nature" && <NatureTab co={co} />}
+        <NatureTab co={co} />
       </div>
       <div role="tabpanel" id="tabpanel-social" aria-labelledby="tab-social" hidden={tab !== "social"}>
-        {tab === "social" && <SocialTab co={co} />}
+        <SocialTab co={co} />
       </div>
       <div role="tabpanel" id="tabpanel-engagement" aria-labelledby="tab-engagement" hidden={tab !== "engagement"}>
-        {tab === "engagement" && <EngagementTab co={co} onGenerateQuestions={generateQuestions} questions={questions} questionsLoading={questionsLoading} questionsError={questionsError} questionsGeneratedAt={questionsGeneratedAt} />}
+        <EngagementTab co={co} onGenerateQuestions={generateQuestions} questions={questions} questionsLoading={questionsLoading} questionsError={questionsError} questionsGeneratedAt={questionsGeneratedAt} />
       </div>
     </div>
   );

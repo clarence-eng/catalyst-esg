@@ -214,8 +214,10 @@ Key Regulatory Pressures: ${sanitize(ctx.regulatoryContext, 300)}`;
     if (!text?.trim()) {
       return NextResponse.json({ error: "No content returned from AI (response may have been filtered)" }, { status: 502 });
     }
-    // Strip markdown code fences if the model wraps output in ```...``` blocks
-    const stripped = text.trim().replace(/^```[a-z]*\n?/i, "").replace(/\n?```$/i, "").trim();
+    // Strip markdown code fence lines (``` with optional language tag) wherever they appear.
+    // Handles preamble-before-fence, multiple blocks, and doesn't clip actual content
+    // since well-formed prose never has a line that is purely triple-backticks.
+    const stripped = text.replace(/^```[a-z]*\s*$/gim, "").trim();
     return NextResponse.json({ text: stripped });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
