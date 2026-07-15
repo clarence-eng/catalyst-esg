@@ -130,7 +130,14 @@ Generate a 12-month ESG Action Plan for the following portfolio company.
 
 Company: ${sanitize(ctx.name)}
 Sector: ${sanitize(ctx.sector)}
+Country/Jurisdiction: ${sanitize(ctx.country)}
 ESG Maturity: ${sanitize(ctx.maturity)}
+ESG Score: ${sanitize(ctx.esgScore)}
+Transition Risk: ${sanitize(ctx.transitionRisk)}
+Carbon Intensity: ${sanitize(ctx.carbonIntensity)}
+Green Revenue: ${sanitize(ctx.greenRevenuePct)}
+Net Zero Commitment: ${sanitize(ctx.netZeroCommitment)}
+Overdue Engagements: ${sanitize(ctx.overdueEngagements, 300)}
 Top Issues: ${sanitize(ctx.topIssues, 500)}
 Key Gaps: ${sanitizeBlock(ctx.keyGaps, 500)}
 Key Value Uplift Opportunities: ${sanitize(ctx.topUplift, 300)}
