@@ -8,7 +8,7 @@ import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://catalyst-neon-eight.vercel.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://catalyst-neon-eight.vercel.app"),
   title: "Catalyst by Temasek — ESG Investment Intelligence",
   description:
     "Temasek ESG Investment Intelligence platform — ESG due diligence, portfolio engagement, climate risk, and megatrend analysis for institutional investors.",

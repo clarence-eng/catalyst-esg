@@ -708,7 +708,7 @@ function PCAFFinancedEmissionsTable({ companies, totalActive }: { companies: Com
 
   const rows = companies.map(co => {
     const stake = totalActive > 0 ? (co.investmentValue / totalActive) * 100 : 0;
-    const hasEmissionsData = co.carbonIntensity > 0;
+    const hasEmissionsData = co.carbonIntensity > 0 && co.investmentValue > 0;
     const estimatedEmissions = hasEmissionsData && totalActive > 0 ? Math.round((co.investmentValue / totalActive) * co.carbonIntensity * 2500) : null;
     const score = hasEmissionsData ? pcafScore(co.netZeroCommitment) : null;
     return { co, stake, estimatedEmissions, score, hasEmissionsData };

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { type Megatrend } from "@/data/megatrends";
 import { Loader2, FileText, TrendingUp, AlertTriangle, Copy } from "lucide-react";
@@ -34,13 +34,14 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
   const pipelineSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Pipeline").map(c => c.slug)), [companies]);
   const activeSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug)), [companies]);
 
-  // Warn in dev if megatrend data references slugs not present in live portfolio
-  if (process.env.NODE_ENV !== "production" && companies.length > 0) {
-    const missingSlugs = t.portfolioExposure.map(p => p.slug).filter(s => !activeSlugs.has(s) && !pipelineSlugs.has(s));
-    if (missingSlugs.length > 0) {
-      console.warn(`[MegatrendDetail] ${t.slug}: portfolioExposure references unknown slugs: ${missingSlugs.join(", ")}`);
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production" && companies.length > 0) {
+      const missingSlugs = t.portfolioExposure.map(p => p.slug).filter(s => !activeSlugs.has(s) && !pipelineSlugs.has(s));
+      if (missingSlugs.length > 0) {
+        console.warn(`[MegatrendDetail] ${t.slug}: portfolioExposure references unknown slugs: ${missingSlugs.join(", ")}`);
+      }
     }
-  }
+  }, [companies, activeSlugs, pipelineSlugs, t.portfolioExposure, t.slug]);
   const [brief, setBrief] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
