@@ -395,7 +395,7 @@ export default function ScoutPage() {
                     <div className="flex-shrink-0" aria-label={`6-period ESG trend (${trend}): ${avgs.map(v => v.toFixed(1)).join(" → ")}`} role="img">
                       <svg width={W} height={H} className="overflow-visible" aria-hidden="true">
                         <polyline points={pts} fill="none" stroke={strokeColor} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
-                        <circle cx={(avgs.length - 1) / (avgs.length - 1) * W} cy={yOf(avgs[avgs.length-1])} r={2.5} fill={strokeColor} />
+                        <circle cx={W} cy={yOf(avgs[avgs.length-1])} r={2.5} fill={strokeColor} />
                       </svg>
                     </div>
                   );
