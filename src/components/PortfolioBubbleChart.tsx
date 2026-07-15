@@ -106,7 +106,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
             width={42}
             label={{ value: "tCO₂e/$M ↑", angle: -90, position: "insideLeft", offset: 12, fill: "#475569", fontSize: 10 }}
           />
-          <ZAxis dataKey="portfolioWeight" range={[80, 600]} name="Portfolio Weight (%)" />
+          <ZAxis dataKey="portfolioWeight" range={[80, 600]} domain={[0, 100]} name="Portfolio Weight (%)" />
           <Tooltip content={<CustomTooltip />} />
           <Scatter
             data={data}
