@@ -824,7 +824,7 @@ function OverviewTab({
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-medium text-gray-700">{label}</span>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-gray-500">vs portfolio avg: <span className={`font-medium ${vsPortfolio >= 0 ? "text-emerald-700" : "text-red-700"}`}>{vsPortfolio >= 0 ? "+" : ""}{vsPortfolio}</span></span>
+                      <span className="text-xs text-gray-500">vs portfolio avg <span className="font-medium text-gray-700">{portfolioAvg}</span>: <span className={`font-medium ${vsPortfolio >= 0 ? "text-emerald-700" : "text-red-700"}`}>{vsPortfolio >= 0 ? "+" : ""}{vsPortfolio}</span></span>
                       <span className="text-xs font-bold text-gray-900 w-6 text-right">{score}</span>
                     </div>
                   </div>

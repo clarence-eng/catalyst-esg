@@ -698,10 +698,10 @@ function PCAFFinancedEmissionsTable({ companies, totalActive }: { companies: Com
     <div className="bg-white rounded-xl border border-gray-200 mb-6">
       <div className="px-6 py-4 border-b border-gray-200">
         <h2 id="pcaf-table-heading" className="text-sm font-semibold text-gray-900">PCAF Financed Emissions</h2>
-        <p className="text-xs text-gray-500 mt-0.5">Simplified proxy — investment-weighted carbon intensity allocation</p>
+        <p id="pcaf-table-desc" className="text-xs text-gray-500 mt-0.5">Simplified proxy — investment-weighted carbon intensity allocation</p>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full" aria-labelledby="pcaf-table-heading">
+        <table className="w-full" aria-labelledby="pcaf-table-heading pcaf-table-desc">
           <thead>
             <tr className="border-b border-gray-200">
               <th scope="col" className="text-left text-xs text-gray-500 font-medium px-6 py-3">Company</th>

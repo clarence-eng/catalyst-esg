@@ -91,8 +91,13 @@ export default function StewardPage() {
         ))}
       </div>
 
+      {/* View-change status — sr-only, announces only the view name (not entire content) */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {view === "calendar" ? "Timeline view" : "Cards view"}
+      </div>
+
       {/* Calendar View */}
-      <div aria-live="polite" aria-atomic="false" aria-busy={companiesLoading}>
+      <div aria-busy={companiesLoading}>
       {view === "calendar" && (
         <div className="mb-8">
           <div className="bg-white rounded-xl border border-gray-200">
@@ -297,7 +302,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
     }`}>
       {/* Persistent sr-only live region — outside hidden panel so AT hears announcements even when panel is collapsed */}
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
-        {planLoading ? "Generating ESG action plan…" : plan && !planLoading ? "ESG action plan generated" : planError ? `Error: ${planError}` : ""}
+        {planLoading ? "Generating ESG action plan…" : plan && !planLoading ? "ESG action plan ready — expand the card to read" : planError ? `Action plan error: ${planError}` : ""}
       </div>
       {/* Card Header */}
       <div className="p-5">
