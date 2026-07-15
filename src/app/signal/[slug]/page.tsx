@@ -40,7 +40,7 @@ export default async function MegatrendPage({
           Back to Signal
         </Link>
       </div>
-      <MegatrendDetail trend={trend} />
+      <MegatrendDetail key={trend.slug} trend={trend} />
     </>
   );
 }

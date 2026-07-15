@@ -57,7 +57,7 @@ export default async function CompanyPage({
           Back to Scout
         </Link>
       </div>
-      <CompanyProfile company={company} />
+      <CompanyProfile key={company.slug} company={company} />
     </>
   );
 }

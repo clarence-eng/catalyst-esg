@@ -93,7 +93,11 @@ export function useCompanies() {
   // Session-level suppression: only show demo banner on the first page that triggers it per session
   const [showDemoBanner, setShowDemoBanner] = useState(false);
   useEffect(() => {
-    if (!liveDataError) return;
+    if (!liveDataError) {
+      // Supabase reconnected — hide the banner and clear session key so it can show again if needed
+      setShowDemoBanner(false);
+      return;
+    }
     try {
       if (sessionStorage.getItem(DEMO_BANNER_KEY)) return;
       sessionStorage.setItem(DEMO_BANNER_KEY, "1");
