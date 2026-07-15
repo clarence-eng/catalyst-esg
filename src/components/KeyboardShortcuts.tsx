@@ -49,11 +49,11 @@ export function KeyboardShortcuts() {
       const isInput = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement || target.contentEditable === "true";
       if (isInput) return;
 
-      // Don't fire when a blocking modal (search or shortcuts itself) is open
-      const hasOtherModal = document.querySelector("[data-modal='search']") || document.querySelector("[data-modal='shortcuts']");
+      // Don't fire when a search modal is open; but allow ? to toggle shortcuts even when it's open
+      const hasSearchModal = document.querySelector("[data-modal='search']");
 
       if (e.key === "?" && !e.metaKey && !e.ctrlKey) {
-        if (!hasOtherModal) setOpen(o => !o);
+        if (!hasSearchModal) setOpen(o => !o);
         return;
       }
       if (e.key === "Escape") { setOpen(false); setGPressed(false); gPressedRef.current = false; return; }
