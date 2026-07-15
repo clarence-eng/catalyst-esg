@@ -91,7 +91,12 @@ function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; on
       <h3 className="text-sm font-semibold text-gray-900">{initial.id ? "Edit Company" : "New Company"}</h3>
       <div className="grid grid-cols-2 gap-4">
         <CoField label="Company Name *" k="name" co={co} set={set} required />
-        <CoField label="Slug (auto-generated, read-only for edits)" k="slug" co={co} set={set} required />
+        <div className="flex flex-col gap-1">
+          <CoField label={`Slug${!co.id && !co.slug ? " (type a Latin slug manually)" : " (auto-generated, read-only for edits)"}`} k="slug" co={co} set={set} required />
+          {!co.id && !co.slug && co.name?.trim() && (
+            <p className="text-xs text-amber-600">Name produced an empty slug — enter a Latin-character slug manually (e.g. "company-name")</p>
+          )}
+        </div>
         <CoField label="Sector *" k="sector" co={co} set={set} required />
         <CoField label="Country *" k="country" co={co} set={set} required />
         <CoField label="Region" k="region" opts={["Southeast Asia", "Asia Pacific", "South Asia", "Global"]} co={co} set={set} />
@@ -401,7 +406,7 @@ export default function AdminPage() {
   const saveCompany = async (co: Partial<DbCompany>) => {
     if (savingCompanyRef.current) return;
     if (!co.name?.trim() || !co.slug?.trim() || !co.sector?.trim() || !co.country?.trim() || !co.description?.trim()) return showToast("Name, slug, sector, country, and description are required", true);
-    if (!/^[a-z0-9-]+$/.test(co.slug.trim())) return showToast("Slug must be lowercase alphanumeric with hyphens only (e.g. my-company)", true);
+    if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$|^[a-z0-9]$/.test(co.slug.trim())) return showToast("Slug must be lowercase alphanumeric with hyphens only, no leading/trailing hyphens (e.g. my-company)", true);
     const e = co.esg_environmental ?? 0, s = co.esg_social ?? 0, g = co.esg_governance ?? 0, ov = co.esg_overall ?? 0;
     if ([e,s,g,ov].some(v => v < 0 || v > 100)) return showToast("ESG scores must be between 0 and 100", true);
     if ((co.green_revenue_pct ?? 0) < 0 || (co.green_revenue_pct ?? 0) > 100) return showToast("Green revenue % must be between 0 and 100", true);
