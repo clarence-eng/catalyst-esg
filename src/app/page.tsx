@@ -712,7 +712,7 @@ function PCAFFinancedEmissionsTable({ companies, totalActiveAUM }: { companies: 
     5: "Modeled from sector averages",
   };
 
-  const rows = companies.map(co => {
+  const rows = [...companies].sort((a, b) => a.name.localeCompare(b.name, "en-SG")).map(co => {
     const stake = totalActiveAUM > 0 ? (co.investmentValue / totalActiveAUM) * 100 : 0;
     const hasEmissionsData = co.carbonIntensity > 0 && co.investmentValue > 0;
     const estimatedEmissions = hasEmissionsData && totalActiveAUM > 0 ? Math.round((co.investmentValue / totalActiveAUM) * co.carbonIntensity * 2500) : null;
