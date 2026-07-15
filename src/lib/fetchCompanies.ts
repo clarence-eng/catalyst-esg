@@ -414,7 +414,9 @@ function dbToCompany(
     "Some exposure to transition policies; monitoring required",
   ] : [];
 
-  const derivedPhysicalDetails = (isHighNature || transitionLevel === "High" || transitionLevel === "Critical") ? [
+  // Physical climate risk details are derived only from physical/transition risk levels,
+  // not from nature risk — nature risk is orthogonal to climate physical risk
+  const derivedPhysicalDetails = (transitionLevel === "High" || transitionLevel === "Critical") ? [
     "Operational exposure to climate-related physical risks in operating region",
   ] : [];
 

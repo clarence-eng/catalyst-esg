@@ -158,7 +158,7 @@ export default function OverviewPage() {
   // Compute portfolio weights server-side — never send raw S$M investmentValue to the client component
   const totalActiveInvestment = activeCompanies.reduce((s, c) => s + c.investmentValue, 0);
   // If all active companies have zero investment value, skip bubble chart to avoid ZAxis NaN
-  const bubbleData = totalActiveInvestment > 0 ? activeCompanies.map((c) => ({
+  const bubbleData = totalActiveInvestment > 0 ? [...activeCompanies].sort((a, b) => a.slug.localeCompare(b.slug)).map((c) => ({
     name: c.name,
     esgScore: c.esgScore.overall,
     carbonIntensity: c.carbonIntensity,
@@ -334,7 +334,7 @@ export default function OverviewPage() {
               </tr>
             </thead>
             <tbody>
-              {companies.map((co) => (
+              {[...companies].sort((a, b) => a.name.localeCompare(b.name, "en-SG")).map((co) => (
                 <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors">
                   <td className="px-6 py-4">
                     <Link href={`/scout/${co.slug}`} className="font-medium text-gray-900 text-sm hover:text-purple-700 transition-colors">{co.name}</Link>
@@ -495,7 +495,7 @@ function ESGDimensionHeatmap({ companies }: { companies: Array<{ name: string; s
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
-            {[...active].sort((a, b) => b.esgScore.overall - a.esgScore.overall).map(co => (
+            {[...active].sort((a, b) => b.esgScore.overall - a.esgScore.overall || a.name.localeCompare(b.name, "en-SG")).map(co => (
               <tr key={co.slug}>
                 <th scope="row" className="py-2.5 pr-4">
                   <Link href={`/scout/${co.slug}`} className="text-gray-800 font-medium hover:text-purple-700 transition-colors">{co.name}</Link>
