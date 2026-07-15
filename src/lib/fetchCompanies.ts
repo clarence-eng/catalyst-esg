@@ -551,9 +551,9 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
       supabase.from("engagements").select("*").order("date", { ascending: false }),
       supabase.from("material_issues").select("*").order("sort_order"),
     ]);
-    if (cosErr) console.warn("[Supabase] companies error:", cosErr.message);
-    if (engsErr) console.warn("[Supabase] engagements error:", engsErr.message);
-    if (misErr) console.warn("[Supabase] material_issues error:", misErr.message);
+    if (cosErr && process.env.NODE_ENV !== "production") console.warn("[Supabase] companies error:", cosErr.message);
+    if (engsErr && process.env.NODE_ENV !== "production") console.warn("[Supabase] engagements error:", engsErr.message);
+    if (misErr && process.env.NODE_ENV !== "production") console.warn("[Supabase] material_issues error:", misErr.message);
 
     if (!cos || cos.length === 0) return [];
 
@@ -562,7 +562,7 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
       try {
         companies.push(dbToCompany(co, (engs || []) as DbEngagement[], (mis || []) as DbMaterialIssue[]));
       } catch (err) {
-        console.warn("[Supabase] skipping malformed company row:", co.slug, err);
+        if (process.env.NODE_ENV !== "production") console.warn("[Supabase] skipping malformed company row:", co.slug, err);
       }
     }
 
