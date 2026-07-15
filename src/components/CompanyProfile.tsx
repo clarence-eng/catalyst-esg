@@ -676,6 +676,7 @@ function OverviewTab({
                 <h3 id="sasb-kpi-heading" className="text-sm font-semibold text-gray-900">SASB Material KPIs — {co.sasbCategory}</h3>
                 <p className="text-xs text-gray-500 mt-0.5">Most financially material ESG metrics for this industry</p>
               </div>
+              <div className="overflow-x-auto">
               <table className="w-full text-xs" aria-labelledby="sasb-kpi-heading">
                 <thead>
                   <tr className="border-b border-gray-200">
@@ -698,6 +699,7 @@ function OverviewTab({
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           );
         })()}
