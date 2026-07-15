@@ -56,12 +56,22 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
     }
   }
 
-  // Escape HTML first (XSS safety), then apply safe markdown-to-HTML transforms
+  // Render inline markdown to safe HTML.
+  // Apply markdown substitutions first (each substitution escapes its own capture group),
+  // then escape any remaining plain text that contains HTML metacharacters.
+  // This avoids double-encoding: &amp; inside **bold** stays as & not &amp;amp;
   function renderInline(s: string): string {
-    return escapeHtml(s)
-      .replace(/\*{3}(.+?)\*{3}/g, '<strong class="text-gray-900 font-semibold"><em class="text-gray-800">$1</em></strong>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong class="text-gray-900 font-semibold">$1</strong>')
-      .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-gray-800">$1</em>');
+    const urlRe = /(https?:\/\/[^\s<>"'*]+)/g;
+    const result = s
+      .replace(/\*{3}(.+?)\*{3}/g, (_, t) => `<strong class="text-gray-900 font-semibold"><em class="text-gray-800">${escapeHtml(t)}</em></strong>`)
+      .replace(/\*\*(.+?)\*\*/g, (_, t) => `<strong class="text-gray-900 font-semibold">${escapeHtml(t)}</strong>`)
+      .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, (_, t) => `<em class="text-gray-800">${escapeHtml(t)}</em>`)
+      .replace(urlRe, (url) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${escapeHtml(url)}</a>`);
+    // Escape remaining plain text segments (those not inside injected tags)
+    // Split on tag boundaries and escape non-tag segments
+    return result.replace(/(<[^>]+>)|([^<]+)/g, (_, tag, text) =>
+      tag ? tag : escapeHtml(text)
+    );
   }
 
   for (const line of lines) {
@@ -130,7 +140,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
   flushList();
 
   return (
-    <div className={`bg-gray-50 border border-gray-200 rounded-lg p-4 ${className}`}>
+    <div className={`bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-wrap-anywhere break-words ${className}`}>
       {elements}
     </div>
   );

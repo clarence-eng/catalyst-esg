@@ -74,7 +74,8 @@ export async function POST(req: NextRequest) {
     const esg_governance = Math.min(100, Math.max(0, coerceNumber(co.esg_governance)));
     const carbon_intensity = Math.max(0, coerceNumber(co.carbon_intensity));
     const green_revenue_pct = Math.min(100, Math.max(0, coerceNumber(co.green_revenue_pct)));
-    const investment_value = Math.max(0, coerceNumber(co.investment_value));
+    const investment_value = coerceNumber(co.investment_value);
+    if (investment_value <= 0) return badRequest("investmentValue must be greater than 0");
     const sasb_category = sanitizeString(co.sasb_category, 200).trim();
     const last_updated = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Singapore" });
     const payload = {

@@ -102,8 +102,11 @@ export default function OverviewPage() {
   const plannedCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Planned").length, 0);
 
   // Build portfolio trend — average E/S/G across active companies per period
+  // Normalise period strings to exactly one space between Q-digit and year to prevent
+  // whitespace variants (double-space, tab) from creating duplicate/orphan period buckets
+  const normalisePeriod = (p: string) => p.replace(/\s+/g, " ").trim();
   const allPeriods = [...new Set(
-    activeCompanies.flatMap((c) => c.historicalScores.map((s) => s.period))
+    activeCompanies.flatMap((c) => c.historicalScores.map((s) => normalisePeriod(s.period)))
   )].sort((a, b) => {
     const [aq, ay] = (a.match(/Q(\d) (\d{4})/) || ["", "0", "0"]).slice(1).map(Number);
     const [bq, by] = (b.match(/Q(\d) (\d{4})/) || ["", "0", "0"]).slice(1).map(Number);
@@ -111,7 +114,7 @@ export default function OverviewPage() {
   });
   const portfolioTrend = allPeriods.map((period) => {
     const scores = activeCompanies
-      .map((c) => c.historicalScores.find((s) => s.period === period))
+      .map((c) => c.historicalScores.find((s) => normalisePeriod(s.period) === period))
       .filter(Boolean) as { period: string; e: number; s: number; g: number }[];
     return {
       period,
