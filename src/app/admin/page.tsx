@@ -446,7 +446,7 @@ export default function AdminPage() {
     if ([e,s,g,ov].some(v => v < 0 || v > 100)) return showToast("ESG scores must be between 0 and 100", true);
     if ((co.green_revenue_pct ?? 0) < 0 || (co.green_revenue_pct ?? 0) > 100) return showToast("Green revenue % must be between 0 and 100", true);
     if ((co.carbon_intensity ?? 0) < 0) return showToast("Carbon intensity must be 0 or greater", true);
-    if ((co.investment_value ?? 0) < 0) return showToast("Investment value must be 0 or greater", true);
+    if ((co.investment_value ?? 0) <= 0) return showToast("Investment value must be greater than 0 (use a positive S$M figure)", true);
     savingCompanyRef.current = true;
     setSaving(true);
     try {

@@ -97,7 +97,7 @@ export function KeyboardShortcuts() {
   if (!open) return (
     <div className="fixed bottom-6 left-[280px] z-50">
       {gPressed && (
-        <div className="bg-gray-900 text-white text-xs px-3 py-2 rounded-lg shadow-lg flex items-center gap-2 ring-1 ring-white/20 animate-bounce-gentle">
+        <div role="status" aria-live="polite" aria-atomic="true" className="bg-gray-900 text-white text-xs px-3 py-2 rounded-lg shadow-lg flex items-center gap-2 ring-1 ring-white/20 animate-bounce-gentle">
           <Keyboard className="w-3 h-3" />
           Press O/S/T/I/L to navigate…
         </div>

@@ -33,6 +33,14 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
   const { companies, liveDataError } = useCompanies();
   const pipelineSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Pipeline").map(c => c.slug)), [companies]);
   const activeSlugs = useMemo(() => new Set(companies.filter(c => c.portfolioStatus === "Active").map(c => c.slug)), [companies]);
+
+  // Warn in dev if megatrend data references slugs not present in live portfolio
+  if (process.env.NODE_ENV !== "production" && companies.length > 0) {
+    const missingSlugs = t.portfolioExposure.map(p => p.slug).filter(s => !activeSlugs.has(s) && !pipelineSlugs.has(s));
+    if (missingSlugs.length > 0) {
+      console.warn(`[MegatrendDetail] ${t.slug}: portfolioExposure references unknown slugs: ${missingSlugs.join(", ")}`);
+    }
+  }
   const [brief, setBrief] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

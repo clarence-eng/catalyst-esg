@@ -759,7 +759,7 @@ function PCAFFinancedEmissionsTable({ companies, totalActive }: { companies: Com
               </tr>
             ))}
             <tr className="bg-gray-50 font-semibold">
-              <td className="px-6 py-3 text-xs text-gray-900" colSpan={3}>Portfolio Total {rows.some(r => !r.hasEmissionsData) && <span className="font-normal text-gray-400 italic ml-1">(excludes N/D companies)</span>}</td>
+              <td className="px-6 py-3 text-xs text-gray-900" colSpan={3}>Portfolio Total {rows.some(r => !r.hasEmissionsData) && <span className="font-normal text-gray-400 italic ml-1">(N/D companies not included — carbon intensity not disclosed)</span>}</td>
               <td className="px-4 py-3 text-xs text-gray-900 text-right">{totalEmissions.toLocaleString("en-SG")}</td>
               <td className="px-4 py-3" />
             </tr>

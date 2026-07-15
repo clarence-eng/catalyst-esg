@@ -34,9 +34,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const company = await getCompany(slug);
   if (!company) return { title: "Company Not Found" };
+  const title = `${company.name} — Catalyst ESG`;
+  const description = `ESG profile for ${company.name}: ${company.esgScore.rating} rating, ${company.maturity} maturity. ${company.description}`.slice(0, 160);
   return {
-    title: `${company.name} — Catalyst ESG`,
-    description: `ESG profile for ${company.name}: ${company.esgScore.rating} rating, ${company.maturity} maturity. ${company.description}`.slice(0, 160),
+    title,
+    description,
+    openGraph: { title, description, type: "website" },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 

@@ -17,9 +17,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const trend = getMegatrendBySlug(slug);
   if (!trend) return { title: "Megatrend Not Found" };
+  const title = `${trend.title} — Catalyst Signal`;
+  const description = trend.summary.slice(0, 160);
   return {
-    title: `${trend.title} — Catalyst Signal`,
-    description: trend.summary.slice(0, 160),
+    title,
+    description,
+    openGraph: { title, description, type: "website" },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
