@@ -94,8 +94,9 @@ export function useCompanies() {
   const [showDemoBanner, setShowDemoBanner] = useState(false);
   useEffect(() => {
     if (!liveDataError) {
-      // Supabase reconnected — hide the banner and clear session key so it can show again if needed
+      // Supabase reconnected — hide the banner and clear session key so it re-appears if Supabase goes down again
       setShowDemoBanner(false);
+      try { sessionStorage.removeItem(DEMO_BANNER_KEY); } catch { /* storage restricted */ }
       return;
     }
     try {
