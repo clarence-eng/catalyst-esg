@@ -67,6 +67,10 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       .replace(/\*{3}(.+?)\*{3}/g, '<strong class="text-gray-900 font-semibold"><em class="text-gray-800">$1</em></strong>')
       .replace(/\*\*(.+?)\*\*/g, '<strong class="text-gray-900 font-semibold">$1</strong>')
       .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-gray-800">$1</em>')
+      // Markdown [text](url) links — must run before bare-URL step so the URL inside () is consumed
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_, label, url) =>
+        `<a href="${url.replace(/&amp;/g, '&')}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${label}</a>`
+      )
       .replace(/(https?:\/\/[^\s<>"'*]+)/g, (rawUrl) => {
         // Strip trailing punctuation that belongs to the surrounding sentence, not the URL.
         // Handle unmatched closing ) — only strip if no matching ( exists in the URL path.

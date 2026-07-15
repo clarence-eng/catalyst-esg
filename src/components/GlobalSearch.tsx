@@ -198,7 +198,7 @@ export function GlobalSearch() {
 
         {query.length < 2 && (
           <div className="px-4 py-6 text-center">
-            {loading ? (
+            {loading && companies.length === 0 ? (
               <p className="text-sm text-gray-500">Loading companies…</p>
             ) : (
               <p className="text-sm text-gray-500">Type 2+ characters to search companies and frameworks</p>

@@ -121,7 +121,8 @@ export default function SignalPage() {
           {(() => {
             const calendarItems = urgencyView === "all" ? filteredUpdates : filteredUpdates.filter(r => r.urgency.toLowerCase() === urgencyView);
             if (filteredUpdates.length === 0) {
-              return <div className="py-8 text-center text-sm text-gray-500">No regulations match the selected filters.</div>;
+              // Empty state shown in Regulatory Radar section below — suppress duplicate here
+              return null;
             }
             if (calendarItems.length === 0) {
               return <div className="py-8 text-center text-sm text-gray-500">No {urgencyView} urgency regulations match the current filters.</div>;
