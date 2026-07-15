@@ -295,6 +295,10 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
         ? "border-blue-500/20 hover:border-blue-500/30"
         : "border-gray-200 hover:border-gray-200"
     }`}>
+      {/* Persistent sr-only live region — outside hidden panel so AT hears announcements even when panel is collapsed */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {planLoading ? "Generating ESG action plan…" : plan && !planLoading ? "ESG action plan generated" : planError ? `Error: ${planError}` : ""}
+      </div>
       {/* Card Header */}
       <div className="p-5">
         {/* Company name row — outside the expand button to avoid nested-interactive */}
