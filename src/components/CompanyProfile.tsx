@@ -427,7 +427,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
   const cat = co.sasbCategory.toLowerCase();
 
   if (cat.includes("marine") || cat.includes("shipping")) return [
-    { kpi: "Carbon Intensity", value: co.carbonIntensity.toString(), unit: "tCO₂e/$M revenue", benchmark: "Industry median: ~280", note: "Revenue-normalised; IMO AER uses gCO₂/dwt·nm" },
+    { kpi: "Carbon Intensity", value: co.carbonIntensity > 0 ? co.carbonIntensity.toString() : "N/D", unit: co.carbonIntensity > 0 ? "tCO₂e/$M revenue" : "", benchmark: "Industry median: ~280", note: "Revenue-normalised; IMO AER uses gCO₂/dwt·nm" },
     { kpi: "Fuel Mix Transition Status", value: co.netZeroCommitment !== "None" ? "Decarbonisation committed" : co.climateRisk.transition === "Critical" || co.climateRisk.transition === "High" ? "Predominantly HFO (high carbon)" : "Partial transition underway", unit: "", benchmark: "IMO 2030 target: <50% HFO", note: "Decarbonisation driver" },
     { kpi: "IMO ECA Compliance Status", value: co.engagement.some(e => e.notes && (e.notes.toLowerCase().includes("eca") || e.notes.toLowerCase().includes("emission control") || e.notes.toLowerCase().includes("imo") || e.notes.toLowerCase().includes("cii"))) ? "Monitored — engagement record" : co.netZeroCommitment !== "None" ? "In scope — under transition plan" : "Not formally disclosed", unit: "", benchmark: "Industry: 70% compliant" },
     { kpi: "Near-miss Safety Incidents", value: "Not disclosed", unit: "per year", benchmark: "ISM Code required", note: co.materialIssues.some(i => i.issue.toLowerCase().includes("safety")) ? "Material issue" : undefined },
@@ -449,7 +449,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
   ];
 
   if (cat.includes("electric util") || cat.includes("power")) return [
-    { kpi: "Carbon Intensity (Generation)", value: `${co.carbonIntensity} tCO₂e/$M rev`, unit: "", benchmark: "IEA ASEAN 2030: <500 tCO₂e/$M rev", note: "Revenue-normalised; generation intensity (gCO₂/kWh) in material issues" },
+    { kpi: "Carbon Intensity (Generation)", value: co.carbonIntensity > 0 ? `${co.carbonIntensity} tCO₂e/$M rev` : "N/D", unit: "", benchmark: "IEA ASEAN 2030: <500 tCO₂e/$M rev", note: "Revenue-normalised; generation intensity (gCO₂/kWh) in material issues" },
     { kpi: "Renewable Capacity Share", value: `${co.greenRevenuePct}%`, unit: "of total installed", benchmark: "Indonesia RUEN: 34% RE by 2030 (NDC revised up from 23% 2025 baseline)" },
     { kpi: "Just Transition Plan", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("just transition")) ? "In development" : "Not initiated", unit: "", benchmark: "JETP ETM requirement" },
     { kpi: "Coal Phase-out Target", value: co.netZeroCommitment !== "None" ? "Committed" : "Not committed", unit: "", benchmark: "Indonesia 2040 coal exit target" },
@@ -471,7 +471,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
 
   return [
     { kpi: "ESG Score", value: co.esgScore.overall.toString(), unit: "/100", benchmark: "Portfolio median: 59" },
-    { kpi: "Carbon Intensity", value: co.carbonIntensity.toString(), unit: "tCO₂e/$M", benchmark: "Portfolio median varies by sector" },
+    { kpi: "Carbon Intensity", value: co.carbonIntensity > 0 ? co.carbonIntensity.toString() : "N/D", unit: co.carbonIntensity > 0 ? "tCO₂e/$M" : "", benchmark: "Portfolio median varies by sector" },
   ];
 }
 
