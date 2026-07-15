@@ -957,7 +957,8 @@ function ClimateTab({ co }: { co: Company }) {
     },
   ];
 
-  const isFinancialSector = co.sector.toLowerCase().includes("bank") || co.sector.toLowerCase().includes("finance") || co.sector.toLowerCase().includes("insurance") || co.sector.toLowerCase().includes("asset");
+  // Use sasbCategory for precise financial sector detection — more reliable than sector string keywords
+  const isFinancialSector = co.sasbCategory.toLowerCase().includes("bank") || co.sasbCategory.toLowerCase().includes("financ") || co.sasbCategory.toLowerCase().includes("insurance") || co.sasbCategory.toLowerCase().includes("asset") || co.sasbCategory.toLowerCase().includes("capital") || co.sasbCategory.toLowerCase().includes("invest") || co.sasbCategory.toLowerCase().includes("securit");
   const hasPhysicalRisk = co.climateRisk.physicalDetails.length > 0 || co.climateRisk.physical !== "Low";
   const issbChecks = [
     { item: "Board climate oversight documented", status: co.boardComposition.esgCommittee ? "✓" : "✗", pass: co.boardComposition.esgCommittee, applicable: true },

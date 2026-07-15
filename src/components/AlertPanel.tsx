@@ -8,7 +8,7 @@ interface Alert {
   severity: 1 | 2 | 3; // 1 = highest
 }
 
-function generateAlerts(companies: Company[]): Alert[] {
+function generateAlerts(companies: Company[]): { visible: Alert[]; hiddenLower: number } {
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const alerts: Alert[] = [];
 
@@ -66,26 +66,24 @@ function generateAlerts(companies: Company[]): Alert[] {
   // Sort by severity (lowest number = highest severity first)
   alerts.sort((a, b) => a.severity - b.severity);
 
-  // Ensure at least 1 severity-2 and 1 severity-3 alert appear if they exist,
-  // even when severity-1 alerts fill most slots — reserve slots for lower-severity signals
+  // Critical (sev1) alerts are never truncated — missing a Critical ESG alert is a material gap.
+  // Lower-severity alerts are shown up to a cap of 6 total (sev1 + sev2 + sev3).
   const sev1 = alerts.filter(a => a.severity === 1);
   const sev2 = alerts.filter(a => a.severity === 2);
   const sev3 = alerts.filter(a => a.severity === 3);
-  // Reserve slots: 1 for sev2 (if any), 1 for sev3 (if any), rest for sev1
-  const reserved = (sev2.length > 0 ? 1 : 0) + (sev3.length > 0 ? 1 : 0);
-  const sev1Take = Math.min(sev1.length, 6 - reserved);
-  const remaining1 = 6 - sev1Take;
-  const sev2Take = Math.min(sev2.length, remaining1 - (sev3.length > 0 ? 1 : 0));
-  const sev3Take = Math.min(sev3.length, 6 - sev1Take - sev2Take);
-  return [
-    ...sev1.slice(0, sev1Take),
-    ...sev2.slice(0, sev2Take),
-    ...sev3.slice(0, sev3Take),
-  ];
+  const CAP = Math.max(6, sev1.length); // always show all Critical
+  const remaining = CAP - sev1.length;
+  const sev2Take = Math.min(sev2.length, remaining - (sev3.length > 0 && remaining > 0 ? 1 : 0));
+  const sev3Take = Math.min(sev3.length, CAP - sev1.length - sev2Take);
+  const hiddenLower = (sev2.length - sev2Take) + (sev3.length - sev3Take);
+  return {
+    visible: [...sev1, ...sev2.slice(0, sev2Take), ...sev3.slice(0, sev3Take)],
+    hiddenLower,
+  };
 }
 
 export function AlertPanel({ companies }: { companies: Company[] }) {
-  const alerts = generateAlerts(companies);
+  const { visible: alerts, hiddenLower } = generateAlerts(companies);
 
   if (alerts.length === 0) return (
     <div className="rounded-xl border border-emerald-300 bg-emerald-50 p-4 mb-6 flex items-center gap-2">
@@ -125,6 +123,11 @@ export function AlertPanel({ companies }: { companies: Company[] }) {
             </Link>
           </div>
         ))}
+        {hiddenLower > 0 && (
+          <div className="text-xs text-gray-500 text-center pt-1">
+            +{hiddenLower} lower-priority alert{hiddenLower > 1 ? "s" : ""} — view company profiles for full details
+          </div>
+        )}
       </div>
     </div>
   );
