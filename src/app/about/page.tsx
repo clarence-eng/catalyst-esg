@@ -202,8 +202,7 @@ export default function AboutPage() {
       <div className="text-xs text-gray-500 border-t border-gray-200 pt-4 flex items-center justify-between">
         <span>Built with Next.js 16, Tailwind CSS v4, and Gemini AI · 2026</span>
         <a
-          href="https://catalyst-neon-eight.vercel.app"
-          target="_blank"
+          href="/"
           rel="noopener noreferrer"
           className="text-purple-700 hover:underline font-medium"
         >

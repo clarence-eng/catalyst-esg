@@ -47,6 +47,7 @@ const TABS = [
 ] as const;
 
 export function CompanyProfile({ company: co }: { company: Company }) {
+  const { companies: liveCompanies } = useCompanies();
   const [tab, setTab] = useState<"overview" | "climate" | "nature" | "social" | "engagement">("overview");
   const [memo, setMemo] = useState("");
   const [memoLoading, setMemoLoading] = useState(false);
@@ -282,7 +283,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
       {/* Tab Content — all panels always in DOM so aria-controls targets always resolve
           and component state (generated memos, questions) survives tab switches */}
       <div role="tabpanel" id="tabpanel-overview" aria-labelledby="tab-overview" hidden={tab !== "overview"}>
-        <OverviewTab co={co} radarData={radarData} memo={memo} memoLoading={memoLoading} memoError={memoError} onGenerate={generateMemo} memoGeneratedAt={memoGeneratedAt} onSetMemoError={setMemoError} />
+        <OverviewTab co={co} radarData={radarData} memo={memo} memoLoading={memoLoading} memoError={memoError} onGenerate={generateMemo} memoGeneratedAt={memoGeneratedAt} onSetMemoError={setMemoError} portfolioCompanies={liveCompanies.length > 0 ? liveCompanies : allCompanies} />
       </div>
       <div role="tabpanel" id="tabpanel-climate" aria-labelledby="tab-climate" hidden={tab !== "climate"}>
         <ClimateTab co={co} />
@@ -475,7 +476,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
 }
 
 function OverviewTab({
-  co, radarData, memo, memoLoading, memoError, onGenerate, memoGeneratedAt, onSetMemoError,
+  co, radarData, memo, memoLoading, memoError, onGenerate, memoGeneratedAt, onSetMemoError, portfolioCompanies,
 }: {
   co: Company;
   radarData: { subject: string; score: number }[];
@@ -485,6 +486,7 @@ function OverviewTab({
   onGenerate: () => void;
   memoGeneratedAt: Date | null;
   onSetMemoError: (msg: string) => void;
+  portfolioCompanies: Company[];
 }) {
   // Initialize synchronously from matchMedia to avoid animation flash on remount for reduced-motion users
   const [reducedMotion, setReducedMotion] = useState(() =>
@@ -498,7 +500,6 @@ function OverviewTab({
     return () => mq.removeEventListener("change", onChange);
   }, []);
   // Use live companies for portfolio benchmark so admin edits are reflected immediately
-  const { companies: liveCompanies } = useCompanies();
   const [memoCopied, setMemoCopied] = useState(false);
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -810,7 +811,7 @@ function OverviewTab({
           <h3 className="text-sm font-semibold text-gray-900 mb-4">ESG Score Context</h3>
           <div className="space-y-3">
             {(() => {
-              const active = (liveCompanies.length > 0 ? liveCompanies : allCompanies).filter(c => c.portfolioStatus === "Active");
+              const active = portfolioCompanies.filter(c => c.portfolioStatus === "Active");
               const totalIV = active.reduce((s, c) => s + c.investmentValue, 0) || 1;
               const wtdE = Math.round(active.reduce((s, c) => s + c.esgScore.environmental * c.investmentValue, 0) / totalIV);
               const wtdS = Math.round(active.reduce((s, c) => s + c.esgScore.social * c.investmentValue, 0) / totalIV);

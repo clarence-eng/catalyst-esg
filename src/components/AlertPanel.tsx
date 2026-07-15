@@ -118,6 +118,7 @@ export function AlertPanel({ companies }: { companies: Company[] }) {
             <span className="text-xs text-gray-700 flex-1">{alert.message}</span>
             <Link
               href={`/scout/${alert.slug}`}
+              aria-label={`View — ${alert.message}`}
               className="text-xs text-purple-600 hover:text-purple-800"
             >
               View →
