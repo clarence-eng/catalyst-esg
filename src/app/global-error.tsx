@@ -16,8 +16,10 @@ export default function GlobalError({
 
   return (
     <html lang="en">
-      {/* Apply saved dark mode preference since layout.tsx FOUC script doesn't run here */}
-      <script dangerouslySetInnerHTML={{ __html: `(function(){try{var s=localStorage.getItem('catalyst-theme');var p=window.matchMedia('(prefers-color-scheme:dark)').matches;if(s==='dark'||(s===null&&p)){document.documentElement.classList.add('dark');}}catch(e){}})();` }} />
+      <head>
+        {/* Apply saved dark mode preference since layout.tsx FOUC script doesn't run here */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var s=localStorage.getItem('catalyst-theme');var p=window.matchMedia('(prefers-color-scheme:dark)').matches;if(s==='dark'||(s===null&&p)){document.documentElement.classList.add('dark');}}catch(e){}})();` }} />
+      </head>
       <body className="bg-[#F5F5F7] dark:bg-[#0a0f1e]" style={{ margin: 0, fontFamily: "system-ui, sans-serif" }}>
         <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
           <div className="bg-white dark:bg-[#141824] border border-gray-200 dark:border-gray-700" style={{ borderRadius: "16px", padding: "40px", maxWidth: "400px", width: "100%", textAlign: "center", boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>

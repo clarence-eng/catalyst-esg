@@ -99,6 +99,9 @@ export async function POST(req: NextRequest) {
     const id = typeof body.id === "string" ? body.id.trim() : "";
     const slug = typeof body.slug === "string" ? body.slug.trim() : "";
     if (!id || !slug) return badRequest("id and slug required");
+    // Verify id and slug belong to the same row to prevent cross-company child deletion
+    const { data: check } = await sb.from("companies").select("id").eq("id", id).eq("slug", slug).single();
+    if (!check) return badRequest("id/slug mismatch — company not found");
     const { error: miErr } = await sb.from("material_issues").delete().eq("company_slug", slug);
     const { error: engErr } = await sb.from("engagements").delete().eq("company_slug", slug);
     const { error: coErr } = await sb.from("companies").delete().eq("id", id);
@@ -113,6 +116,8 @@ export async function POST(req: NextRequest) {
     const e = body.engagement;
     const company_slug = typeof body.company_slug === "string" ? body.company_slug.trim() : "";
     if (!company_slug || !SLUG_RE.test(company_slug)) return badRequest("Invalid company_slug");
+    const { count: coCount } = await sb.from("companies").select("id", { count: "exact", head: true }).eq("slug", company_slug);
+    if (!coCount) return badRequest("Company not found");
     const date = typeof e.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(e.date) ? e.date : "";
     if (!date) return badRequest("Valid date required");
     const topic = sanitizeString(e.topic, 500).trim();
@@ -147,6 +152,8 @@ export async function POST(req: NextRequest) {
     const i = body.issue;
     const company_slug = typeof body.company_slug === "string" ? body.company_slug.trim() : "";
     if (!company_slug || !SLUG_RE.test(company_slug)) return badRequest("Invalid company_slug");
+    const { count: coCount2 } = await sb.from("companies").select("id", { count: "exact", head: true }).eq("slug", company_slug);
+    if (!coCount2) return badRequest("Company not found");
     const issue = sanitizeString(i.issue, 500).trim();
     if (!issue) return badRequest("issue name required");
     const VALID_SEV = ["Critical", "High", "Medium", "Low"];

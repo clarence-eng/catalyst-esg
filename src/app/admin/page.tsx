@@ -40,7 +40,10 @@ function useAdminAuth() {
     } catch { setErr(true); }
     finally { setChecking(false); }
   };
-  return { authed, pw, setPw, err, check, checking, logout: () => setAuthed(false) };
+  return { authed, pw, setPw, err, check, checking, logout: async () => {
+    try { await fetch("/api/admin/logout", { method: "POST", credentials: "same-origin" }); } catch { /* ignore */ }
+    setAuthed(false);
+  } };
 }
 
 // ─── Company Form ────────────────────────────────────────────────────────────
