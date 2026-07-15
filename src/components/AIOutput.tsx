@@ -67,7 +67,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       .replace(/\*{3}(.+?)\*{3}/g, '<strong class="text-gray-900 font-semibold"><em class="text-gray-800">$1</em></strong>')
       .replace(/\*\*(.+?)\*\*/g, '<strong class="text-gray-900 font-semibold">$1</strong>')
       .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-gray-800">$1</em>')
-      .replace(/(https?:\/\/[^\s&lt;&gt;"'*]+(?:&amp;[^\s&lt;&gt;"'*]*)*)/g, (url) => `<a href="${url.replace(/&amp;/g, '&')}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${url}</a>`);
+      .replace(/(https?:\/\/[^\s<>"'*]+(?:&amp;[^\s<>"'*]*)*)/g, (url) => `<a href="${url.replace(/&amp;/g, '&')}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${url}</a>`);
   }
 
   for (const line of lines) {

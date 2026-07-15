@@ -94,8 +94,8 @@ export default function AboutPage() {
       />
 
       {/* Investment Workflow Coverage */}
-      <div className="mb-8">
-        <h2 className="text-base font-semibold text-gray-900 mb-1">Investment Workflow Coverage</h2>
+      <section aria-labelledby="about-workflow" className="mb-8">
+        <h2 id="about-workflow" className="text-base font-semibold text-gray-900 mb-1">Investment Workflow Coverage</h2>
         <p className="text-xs text-gray-500 mb-3">Catalyst maps the end-to-end ESG investment workflow — from deal evaluation and risk assessment through post-investment engagement, thematic research, and portfolio reporting.</p>
         <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-3">
           {[
@@ -112,11 +112,11 @@ export default function AboutPage() {
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* Modules */}
-      <div className="mb-8">
-        <h2 className="text-base font-semibold text-gray-900 mb-3">Five Modules</h2>
+      <section aria-labelledby="about-modules" className="mb-8">
+        <h2 id="about-modules" className="text-base font-semibold text-gray-900 mb-3">Five Modules</h2>
         <div className="space-y-3">
           {modules.map((m) => (
             <Link
@@ -137,11 +137,11 @@ export default function AboutPage() {
             </Link>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* AI Features */}
-      <div className="mb-8">
-        <h2 className="text-base font-semibold text-gray-900 mb-1">Five AI Features</h2>
+      <section aria-labelledby="about-ai" className="mb-8">
+        <h2 id="about-ai" className="text-base font-semibold text-gray-900 mb-1">Five AI Features</h2>
         <p className="text-xs text-gray-500 mb-3">All powered by Google Gemini 2.5 Flash. Requires <code className="text-purple-700 bg-purple-50 px-1 rounded">GEMINI_API_KEY</code> in <code className="text-gray-700 bg-gray-100 px-1 rounded">.env.local</code></p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {aiFeatures.map((f) => (
@@ -155,11 +155,11 @@ export default function AboutPage() {
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* Portfolio data */}
-      <div className="mb-8">
-        <h2 className="text-base font-semibold text-gray-900 mb-3">Mock Portfolio ({companies.length} Companies)</h2>
+      <section aria-labelledby="about-portfolio" className="mb-8">
+        <h2 id="about-portfolio" className="text-base font-semibold text-gray-900 mb-3">Mock Portfolio ({companies.length} Companies)</h2>
         <div className="bg-white rounded-xl border border-gray-200 p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
             {companies.map((co) => (
@@ -174,7 +174,7 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Disclaimer — candidate context */}
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6">
@@ -187,8 +187,8 @@ export default function AboutPage() {
       </div>
 
       {/* Tech stack */}
-      <div className="mb-6">
-        <h2 className="text-base font-semibold text-gray-900 mb-3">Tech Stack</h2>
+      <section aria-labelledby="about-tech" className="mb-6">
+        <h2 id="about-tech" className="text-base font-semibold text-gray-900 mb-3">Tech Stack</h2>
         <div className="flex flex-wrap gap-2">
           {stack.map((s) => (
             <div key={s.name} className="bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5">
@@ -197,7 +197,7 @@ export default function AboutPage() {
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
       <div className="text-xs text-gray-500 border-t border-gray-200 pt-4 flex items-center justify-between">
         <span>Built with Next.js 16, Tailwind CSS v4, and Gemini AI · 2026</span>

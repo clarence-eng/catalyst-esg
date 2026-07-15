@@ -62,6 +62,10 @@ const PortfolioBubbleChart = dynamic(() => import("@/components/PortfolioBubbleC
 
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
+// Normalise ESG period strings to canonical "Q# YYYY" format (single space, trimmed)
+// Prevents whitespace variants from creating duplicate/orphan period buckets in trend charts
+const normalisePeriod = (p: string) => p.replace(/\s+/g, " ").trim();
+
 const overviewColorMap: Record<string, string> = {
   emerald: "border-emerald-600/20 bg-emerald-600/5",
   green: "border-green-600/20 bg-green-600/5",
@@ -102,9 +106,6 @@ export default function OverviewPage() {
   const plannedCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Planned").length, 0);
 
   // Build portfolio trend — average E/S/G across active companies per period
-  // Normalise period strings to exactly one space between Q-digit and year to prevent
-  // whitespace variants (double-space, tab) from creating duplicate/orphan period buckets
-  const normalisePeriod = (p: string) => p.replace(/\s+/g, " ").trim();
   const allPeriods = [...new Set(
     activeCompanies.flatMap((c) => c.historicalScores.map((s) => normalisePeriod(s.period)))
   )].sort((a, b) => {
@@ -603,11 +604,9 @@ function ParisPathwayWidget({ companies }: { companies: { pathwayAlignment: stri
 }
 
 function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
-  const normPeriod = (p: string) => p.replace(/\s+/g, " ").trim();
   // Use only periods where ALL companies have data to avoid composition bias
-  // (same principle as fullCoverageTrend in the avgDelta badge)
   const allPeriodsSorted = [...new Set(
-    companies.flatMap(co => co.historicalScores.map(s => normPeriod(s.period)))
+    companies.flatMap(co => co.historicalScores.map(s => normalisePeriod(s.period)))
   )].sort((a, b) => {
     const [aq, ay] = (a.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
     const [bq, by] = (b.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
@@ -616,7 +615,7 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
 
   // Filter to full-coverage periods (all companies have a score entry)
   const fullCoveragePeriods = allPeriodsSorted.filter(period =>
-    companies.every(co => co.historicalScores.some(s => normPeriod(s.period) === period))
+    companies.every(co => co.historicalScores.some(s => normalisePeriod(s.period) === period))
   );
 
   if (fullCoveragePeriods.length < 2) {
@@ -633,8 +632,8 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
 
   const rows = companies
     .map(co => {
-      const q1 = co.historicalScores.find(s => normPeriod(s.period) === Q1);
-      const q2 = co.historicalScores.find(s => normPeriod(s.period) === Q2);
+      const q1 = co.historicalScores.find(s => normalisePeriod(s.period) === Q1);
+      const q2 = co.historicalScores.find(s => normalisePeriod(s.period) === Q2);
       if (!q1 || !q2) return null;
       const avg1 = (q1.e + q1.s + q1.g) / 3;
       const avg2 = (q2.e + q2.s + q2.g) / 3;
