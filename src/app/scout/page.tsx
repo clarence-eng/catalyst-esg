@@ -90,8 +90,9 @@ export default function ScoutPage() {
   }, [compareSet]);
 
   // Persist filter state — only after initial restore values have rendered
+  // Uses restoredRef alone (not renderCountRef which only increments on compareSet changes)
   useEffect(() => {
-    if (!restoredRef.current || renderCountRef.current <= 1) return;
+    if (!restoredRef.current) return;
     try { sessionStorage.setItem(FILTER_KEY, JSON.stringify({ query, statusFilter, sortKey })); } catch { /* quota exceeded */ }
   }, [query, statusFilter, sortKey]);
 

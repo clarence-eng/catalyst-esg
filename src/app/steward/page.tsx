@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, memo } from "react";
+import { useState, useRef, useEffect, memo } from "react";
 import { useCompanies } from "@/lib/useCompanies";
 import type { Company } from "@/data/companies";
 import { RatingBadge, MaturityBadge, RiskBadge, PageHeader } from "@/components/ui-elements";
@@ -202,11 +202,13 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
   // and tnfdAligned so plan clears when issues are promoted/resolved or TNFD milestone is achieved
   const issueFingerprint = co.materialIssues.filter(i => !i.opportunity).map(i => `${i.issue}:${i.severity}`).join("|");
   const planKey = `${co.slug}:${co.esgScore.overall}:${co.maturity}:${co.climateRisk.transition}:${co.natureRisk.overall}:${co.natureRisk.tnfdAligned}:${co.netZeroCommitment}:${co.greenRevenuePct}:${issueFingerprint}`;
-  const prevKeyRef = useState(planKey);
-  if (prevKeyRef[0] !== planKey) {
-    prevKeyRef[1](planKey);
-    if (plan) { setPlan(""); setPlanGeneratedAt(null); }
-  }
+  const prevPlanKeyRef = useRef(planKey);
+  useEffect(() => {
+    if (prevPlanKeyRef.current !== planKey) {
+      prevPlanKeyRef.current = planKey;
+      if (plan) { setPlan(""); setPlanGeneratedAt(null); }
+    }
+  }, [planKey, plan]);
 
   const completedCount = co.engagement.filter((e) => e.status === "Completed").length;
   const plannedCount = co.engagement.filter((e) => e.status === "Planned").length;

@@ -137,12 +137,13 @@ function makeEmptyEng(): Partial<DbEngagement> {
 function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: string; initial: Partial<DbEngagement>; onSave: (e: Partial<DbEngagement>) => void; onCancel: () => void }) {
   const [eng, setEng] = useState({ ...initial });
   const [topicError, setTopicError] = useState(false);
+  const [dateError, setDateError] = useState(false);
   const set = (k: string, v: string) => setEng(p => ({ ...p, [k]: v }));
   const p = `eng-${companySlug}`;
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
       <div className="grid grid-cols-3 gap-3">
-        <div><label htmlFor={`${p}-date`} className="text-xs font-medium text-gray-700">Date</label><input id={`${p}-date`} type="date" value={eng.date||""} onChange={e=>set("date",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"/></div>
+        <div><label htmlFor={`${p}-date`} className="text-xs font-medium text-gray-700">Date <span aria-hidden="true">*</span></label><input id={`${p}-date`} type="date" aria-invalid={dateError || undefined} aria-describedby={dateError ? `${p}-date-err` : undefined} value={eng.date||""} onChange={e=>{set("date",e.target.value); if(/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) setDateError(false);}} className={`w-full mt-1 border rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40 ${dateError?"border-red-400":"border-gray-200"}`}/>{dateError && <p id={`${p}-date-err`} role="alert" className="text-xs text-red-600 mt-0.5">Valid date required (YYYY-MM-DD)</p>}</div>
         <div><label htmlFor={`${p}-type`} className="text-xs font-medium text-gray-700">Type</label><select id={`${p}-type`} value={eng.type||""} onChange={e=>set("type",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"><option>Meeting</option><option>Call</option><option>Email</option><option>Report Review</option><option>Site Visit</option></select></div>
         <div><label htmlFor={`${p}-status`} className="text-xs font-medium text-gray-700">Status</label><select id={`${p}-status`} value={eng.status||""} onChange={e=>set("status",e.target.value)} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"><option>Planned</option><option>Completed</option><option>Overdue</option></select></div>
       </div>
@@ -156,7 +157,7 @@ function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: stri
         <button type="button" onClick={onCancel} className="px-3 py-1 text-xs text-gray-600 border border-gray-200 rounded hover:bg-gray-100">Cancel</button>
         <button type="button" onClick={() => {
           if (!eng.topic?.trim()) { setTopicError(true); document.getElementById(`${p}-topic`)?.focus(); return; }
-          if (!eng.date || !/^\d{4}-\d{2}-\d{2}$/.test(eng.date)) { alert("Invalid date — use YYYY-MM-DD format"); document.getElementById(`${p}-date`)?.focus(); return; }
+          if (!eng.date || !/^\d{4}-\d{2}-\d{2}$/.test(eng.date)) { setDateError(true); document.getElementById(`${p}-date`)?.focus(); return; }
           onSave({ ...eng, company_slug: companySlug });
         }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
       </div>
