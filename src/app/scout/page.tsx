@@ -150,7 +150,7 @@ export default function ScoutPage() {
               type="button"
               key={s}
               onClick={() => setStatusFilter(s)}
-              aria-checked={statusFilter === s}
+              role="radio" aria-checked={statusFilter === s}
               className={`text-xs px-3 py-1.5 rounded-md transition-colors font-medium ${
                 statusFilter === s
                   ? s === "Pipeline"

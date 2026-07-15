@@ -105,7 +105,7 @@ function LearnContent() {
                 type="button"
                 key={cat}
                 onClick={() => setFrameworkFilter(cat)}
-                aria-checked={frameworkFilter === cat}
+                role="radio" aria-checked={frameworkFilter === cat}
                 className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                   frameworkFilter === cat
                     ? "bg-[#4B2580]/15 text-purple-700 border-purple-500/40"

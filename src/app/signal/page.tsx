@@ -229,7 +229,7 @@ export default function SignalPage() {
               type="button"
               key={j}
               onClick={() => setJurisdictionFilter(j)}
-              aria-checked={jurisdictionFilter === j}
+              role="radio" aria-checked={jurisdictionFilter === j}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 jurisdictionFilter === j
                   ? "bg-[#4B2580]/15 text-purple-700 border-purple-500/40"
@@ -247,7 +247,7 @@ export default function SignalPage() {
               type="button"
               key={c}
               onClick={() => setCategoryFilter(c)}
-              aria-checked={categoryFilter === c}
+              role="radio" aria-checked={categoryFilter === c}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 categoryFilter === c
                   ? "bg-[#4B2580]/15 text-purple-700 border-purple-500/40"
@@ -270,7 +270,7 @@ export default function SignalPage() {
             { key: "low", label: "Low", count: lowUrgency.length, color: "text-blue-700 bg-blue-50 border-blue-200" },
           ].map(tab => (
             <button key={tab.key} type="button"
-              aria-checked={urgencyView === tab.key}
+              role="radio" aria-checked={urgencyView === tab.key}
               onClick={() => setUrgencyView(tab.key as typeof urgencyView)}
               className={`text-xs px-3 py-1 rounded-full border font-medium transition-colors ${
                 urgencyView === tab.key ? (tab.color ?? "bg-[#4B2580]/10 border-purple-500/30 text-purple-700") : "text-gray-600 border-gray-200 hover:border-gray-300"
