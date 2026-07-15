@@ -222,14 +222,14 @@ export default function SignalPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-4">
-        <div className="flex items-center gap-1.5 flex-wrap" role="group" aria-label="Filter by jurisdiction">
+        <div className="flex items-center gap-1.5 flex-wrap" role="radiogroup" aria-label="Filter by jurisdiction">
           <span className="text-xs text-gray-500" aria-hidden="true">Jurisdiction:</span>
           {allJurisdictions.map((j) => (
             <button
               type="button"
               key={j}
               onClick={() => setJurisdictionFilter(j)}
-              aria-pressed={jurisdictionFilter === j}
+              aria-checked={jurisdictionFilter === j}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 jurisdictionFilter === j
                   ? "bg-[#4B2580]/15 text-purple-700 border-purple-500/40"
@@ -240,14 +240,14 @@ export default function SignalPage() {
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-1.5 flex-wrap" role="group" aria-label="Filter by category">
+        <div className="flex items-center gap-1.5 flex-wrap" role="radiogroup" aria-label="Filter by category">
           <span className="text-xs text-gray-500" aria-hidden="true">Category:</span>
           {allCategories.map((c) => (
             <button
               type="button"
               key={c}
               onClick={() => setCategoryFilter(c)}
-              aria-pressed={categoryFilter === c}
+              aria-checked={categoryFilter === c}
               className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                 categoryFilter === c
                   ? "bg-[#4B2580]/15 text-purple-700 border-purple-500/40"
@@ -262,7 +262,7 @@ export default function SignalPage() {
 
       <div className="space-y-3 mb-8">
         {/* Urgency filter tabs */}
-        <div className="flex items-center gap-2 mb-4" role="group" aria-label="Filter by urgency">
+        <div className="flex items-center gap-2 mb-4" role="radiogroup" aria-label="Filter by urgency">
           {[
             { key: "all", label: "All Regulations", count: filteredUpdates.length },
             { key: "high", label: "High", count: highUrgency.length, color: "text-red-700 bg-red-50 border-red-200" },
@@ -270,7 +270,7 @@ export default function SignalPage() {
             { key: "low", label: "Low", count: lowUrgency.length, color: "text-blue-700 bg-blue-50 border-blue-200" },
           ].map(tab => (
             <button key={tab.key} type="button"
-              aria-pressed={urgencyView === tab.key}
+              aria-checked={urgencyView === tab.key}
               onClick={() => setUrgencyView(tab.key as typeof urgencyView)}
               className={`text-xs px-3 py-1 rounded-full border font-medium transition-colors ${
                 urgencyView === tab.key ? (tab.color ?? "bg-[#4B2580]/10 border-purple-500/30 text-purple-700") : "text-gray-600 border-gray-200 hover:border-gray-300"

@@ -99,13 +99,13 @@ function LearnContent() {
           </div>
 
           {/* Filter pills */}
-          <div className="flex flex-wrap gap-1.5 mb-4">
+          <div className="flex flex-wrap gap-1.5 mb-4" role="radiogroup" aria-label="Filter by category">
             {filterCategories.map((cat) => (
               <button
                 type="button"
                 key={cat}
                 onClick={() => setFrameworkFilter(cat)}
-                aria-pressed={frameworkFilter === cat}
+                aria-checked={frameworkFilter === cat}
                 className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
                   frameworkFilter === cat
                     ? "bg-[#4B2580]/15 text-purple-700 border-purple-500/40"

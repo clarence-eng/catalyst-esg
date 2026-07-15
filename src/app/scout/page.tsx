@@ -144,13 +144,13 @@ export default function ScoutPage() {
 
       {/* Filters */}
       <div className="flex items-center gap-3 mb-4">
-        <div role="group" aria-label="Filter by portfolio status" className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
+        <div role="radiogroup" aria-label="Filter by portfolio status" className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
           {(["All", "Active", "Pipeline"] as StatusFilter[]).map((s) => (
             <button
               type="button"
               key={s}
               onClick={() => setStatusFilter(s)}
-              aria-pressed={statusFilter === s}
+              aria-checked={statusFilter === s}
               className={`text-xs px-3 py-1.5 rounded-md transition-colors font-medium ${
                 statusFilter === s
                   ? s === "Pipeline"
