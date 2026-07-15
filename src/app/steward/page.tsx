@@ -206,9 +206,10 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
   useEffect(() => {
     if (prevPlanKeyRef.current !== planKey) {
       prevPlanKeyRef.current = planKey;
-      if (plan) { setPlan(""); setPlanGeneratedAt(null); }
+      // Clear all plan state including any stale error banner
+      if (plan || planError) { setPlan(""); setPlanGeneratedAt(null); setPlanError(""); }
     }
-  }, [planKey, plan]);
+  }, [planKey, plan, planError]);
 
   const completedCount = co.engagement.filter((e) => e.status === "Completed").length;
   const plannedCount = co.engagement.filter((e) => e.status === "Planned").length;
