@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import { type Company, companies as allCompanies } from "@/data/companies";
 import { useCompanies } from "@/lib/useCompanies";
@@ -51,10 +51,12 @@ export function CompanyProfile({ company: co }: { company: Company }) {
   const [tab, setTab] = useState<"overview" | "climate" | "nature" | "social" | "engagement">("overview");
   const [memo, setMemo] = useState("");
   const [memoLoading, setMemoLoading] = useState(false);
+  const memoLoadingRef = useRef(false);
   const [memoError, setMemoError] = useState("");
   const [memoGeneratedAt, setMemoGeneratedAt] = useState<Date | null>(null);
   const [questions, setQuestions] = useState("");
   const [questionsLoading, setQuestionsLoading] = useState(false);
+  const questionsLoadingRef = useRef(false);
   const [questionsError, setQuestionsError] = useState("");
   const [questionsGeneratedAt, setQuestionsGeneratedAt] = useState<Date | null>(null);
 
@@ -75,7 +77,8 @@ export function CompanyProfile({ company: co }: { company: Company }) {
   }, [co.esgScore.environmental, co.esgScore.social, co.esgScore.governance, co.climateRisk.transition, co.climateRisk.physical, co.climateRisk.pathwayAlignment, co.natureRisk.overall]);
 
   async function generateMemo() {
-    if (memoLoading) return;
+    if (memoLoadingRef.current) return;
+    memoLoadingRef.current = true;
     setMemoLoading(true);
     setMemoError("");
     try {
@@ -129,12 +132,14 @@ export function CompanyProfile({ company: co }: { company: Company }) {
     } catch (e: unknown) {
       setMemoError(e instanceof Error ? e.message : "Failed to generate memo");
     } finally {
+      memoLoadingRef.current = false;
       setMemoLoading(false);
     }
   }
 
   async function generateQuestions() {
-    if (questionsLoading) return;
+    if (questionsLoadingRef.current) return;
+    questionsLoadingRef.current = true;
     setQuestionsLoading(true);
     setQuestionsError("");
     try {
@@ -175,6 +180,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
     } catch (e: unknown) {
       setQuestionsError(e instanceof Error ? e.message : "Failed to generate questions");
     } finally {
+      questionsLoadingRef.current = false;
       setQuestionsLoading(false);
     }
   }

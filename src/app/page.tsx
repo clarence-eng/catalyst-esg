@@ -236,7 +236,7 @@ export default function OverviewPage() {
       {/* KPI Row — scoped to Active portfolio */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
         <div>
-          <StatCard label="Portfolio ESG Score" value={avgScore} sub="Active companies · investment-weighted" color="green" />
+          <StatCard label="Portfolio ESG Score" value={avgScore} sub={activeCompanies.some(c => c.investmentValue === 0) ? "Investment-weighted · some companies have no AUM set" : "Active companies · investment-weighted"} color="green" />
           {(avgDelta !== 0 || eDelta !== 0 || sDelta !== 0 || gDelta !== 0) && (
             <div className="mt-1 flex flex-wrap gap-1">
               {avgDelta !== 0 && (
@@ -334,12 +334,24 @@ export default function OverviewPage() {
               </tr>
             </thead>
             <tbody>
-              {[...companies].sort((a, b) => {
-                // Active holdings first, then Pipeline — within each group alphabetical
-                if (a.portfolioStatus !== b.portfolioStatus) return a.portfolioStatus === "Active" ? -1 : 1;
-                return a.name.localeCompare(b.name, "en-SG");
-              }).map((co) => (
-                <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors">
+              {(() => {
+                const sorted = [...companies].sort((a, b) => {
+                  // Active holdings first, then Pipeline — within each group alphabetical
+                  if (a.portfolioStatus !== b.portfolioStatus) return a.portfolioStatus === "Active" ? -1 : 1;
+                  return a.name.localeCompare(b.name, "en-SG");
+                });
+                return sorted.map((co, i) => (
+                  <>
+                    {i > 0 && sorted[i - 1].portfolioStatus === "Active" && co.portfolioStatus === "Pipeline" && (
+                      <tr key="pipeline-divider">
+                        <td colSpan={10} className="px-6 py-2 bg-blue-50 border-y border-blue-100">
+                          <span className="text-[10px] font-semibold text-blue-700 uppercase tracking-wider flex items-center gap-1">
+                            <GitMerge className="w-3 h-3" /> Pipeline — Pre-Investment ESG Due Diligence
+                          </span>
+                        </td>
+                      </tr>
+                    )}
+                    <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors">
                   <td className="px-6 py-4">
                     <Link href={`/scout/${co.slug}`} className="font-medium text-gray-900 text-sm hover:text-purple-700 transition-colors">{co.name}</Link>
                     <div className="text-xs text-gray-500">{co.country}</div>
@@ -382,7 +394,9 @@ export default function OverviewPage() {
                     </Link>
                   </td>
                 </tr>
-              ))}
+                  </>
+                ));
+              })()}
             </tbody>
           </table>
         </div>
