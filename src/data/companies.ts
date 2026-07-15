@@ -1182,7 +1182,7 @@ export const companies: Company[] = [
         area: "Carbon-Neutral Telehealth",
         potential: "Medium",
         description:
-          "Achieve net zero Scope 1+2 by 2027 via I-REC + energy efficiency (post-close commitment). Enables access to European development finance and WHO digital health partnership programmes that require ESG baseline standards.",
+          "Target net zero Scope 1+2 by 2028 via I-REC renewable procurement and energy efficiency upgrades — investment condition precedent that would unlock European development finance and WHO digital health partnership access.",
       },
     ],
     engagement: [

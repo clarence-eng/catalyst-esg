@@ -109,7 +109,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
           {/* Key Stats */}
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <h3 className="text-sm font-semibold text-gray-900 mb-4">Key Data Points</h3>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {t.keyStats.map((stat, idx) => (
                 <div key={`${stat.label}-${idx}`} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
                   <div className="text-lg font-bold text-gray-900 mb-0.5">{stat.value}</div>

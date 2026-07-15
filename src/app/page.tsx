@@ -20,7 +20,7 @@ const PortfolioTrend = dynamic(() => import("@/components/PortfolioTrend").then(
         <div className="h-3 w-24 bg-gray-100 rounded animate-pulse" />
       </div>
       <div className="h-8 w-full bg-gray-100 rounded animate-pulse mb-2" />
-      <div className="h-32 w-full bg-gray-100 rounded animate-pulse" />
+      <div className="h-[140px] w-full bg-gray-100 rounded animate-pulse" />
     </div>
   ),
 });

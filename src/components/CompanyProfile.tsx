@@ -960,7 +960,7 @@ function ClimateTab({ co }: { co: Company }) {
   const issbScore = issbChecks.filter(c => c.pass).length;
 
   return (
-    <div className="grid grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="bg-white rounded-xl border border-gray-200 p-5">
         <div className="flex items-center gap-2 mb-4">
           <h3 className="text-sm font-semibold text-gray-900">Physical Climate Risk</h3>
@@ -1096,7 +1096,7 @@ function ClimateTab({ co }: { co: Company }) {
             {co.climateRisk.pathwayAlignment === "Not assessed" && "Climate pathway alignment has not been formally assessed. TCFD scenario analysis recommended."}
           </p>
         </div>
-        <div className="mt-4 grid grid-cols-3 gap-3">
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
           {["1.5°C", "2°C", "3°C+"].map((scenario) => (
             <div key={scenario} className={`p-3 rounded-lg border text-center ${
               co.climateRisk.pathwayAlignment === scenario
@@ -1128,7 +1128,7 @@ function ClimateTab({ co }: { co: Company }) {
             <h3 className="text-sm font-semibold text-gray-900">JETP / Energy Transition Mechanism</h3>
             <span className="text-xs bg-amber-50 text-amber-700 border border-amber-300 px-2 py-0.5 rounded">High Priority</span>
           </div>
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
               <div className="text-xs text-gray-600 mb-1">JETP Eligibility</div>
               <div className="text-sm font-semibold text-gray-900">{co.country === "Indonesia" ? "Indonesia JETP ($20B committed)" : co.country === "Philippines" ? "Philippines JETP" : "Not applicable"}</div>
@@ -1209,7 +1209,7 @@ function NatureTab({ co }: { co: Company }) {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* TNFD LEAP Assessment Progress */}
       <div className="col-span-2 bg-white rounded-xl border border-gray-200 p-5">
         <h3 className="text-sm font-semibold text-gray-900 mb-5">TNFD LEAP Assessment Progress</h3>
@@ -1260,7 +1260,7 @@ function NatureTab({ co }: { co: Company }) {
           <h3 className="text-sm font-semibold text-gray-900">Nature Risk Overview</h3>
           <RiskBadge level={co.natureRisk.overall} />
         </div>
-        <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
           {[
             { label: "Biodiversity Exposure", val: co.natureRisk.biodiversityExposure, isRisk: true },
             { label: "Water Stress", val: co.natureRisk.waterStress, isRisk: true },
@@ -1296,12 +1296,21 @@ function NatureTab({ co }: { co: Company }) {
           The Taskforce on Nature-related Financial Disclosures (TNFD) provides a risk management and disclosure framework for nature-related dependencies, impacts, risks, and opportunities. Final recommendations published September 2023.
         </p>
         <div className="space-y-3">
-          {(co.natureRisk.tnfdPillars != null && co.natureRisk.tnfdPillars.length > 0 ? co.natureRisk.tnfdPillars : [
-            { pillar: "Governance", status: co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const },
-            { pillar: "Strategy", status: co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const },
-            { pillar: "Risk & Impact Mgmt", status: co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const },
-            { pillar: "Metrics & Targets", status: co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const },
-          ]).map(({ pillar, status }) => {
+          {(!co.natureRisk.tnfdPillars || co.natureRisk.tnfdPillars.length === 0) && (
+            <p className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1 mb-1">
+              No company-disclosed TNFD assessment on record — pillar statuses are system-inferred from TNFD adoption status only.
+            </p>
+          )}
+          {(co.natureRisk.tnfdPillars != null && co.natureRisk.tnfdPillars.length > 0 ? co.natureRisk.tnfdPillars : (() => {
+            // No company-disclosed TNFD assessment — show inferred defaults based on tnfdAligned flag
+            const inferredStatus = co.natureRisk.tnfdAligned ? "Adopted" : "Gap" as const;
+            return [
+              { pillar: "Governance", status: inferredStatus },
+              { pillar: "Strategy", status: inferredStatus },
+              { pillar: "Risk & Impact Mgmt", status: inferredStatus },
+              { pillar: "Metrics & Targets", status: inferredStatus },
+            ];
+          })()).map(({ pillar, status }) => {
             const statusStyle = status === "Adopted"
               ? "text-emerald-700 bg-emerald-50 border-emerald-300"
               : status === "Partial"
@@ -1338,7 +1347,7 @@ function SocialTab({ co }: { co: Company }) {
   const bc = co.boardComposition;
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-4">Social Issues</h3>
           {social.length === 0 ? (
@@ -1381,7 +1390,7 @@ function SocialTab({ co }: { co: Company }) {
       {/* Governance Scorecard */}
       <div className="bg-white rounded-xl border border-gray-200 p-5">
         <h3 className="text-sm font-semibold text-gray-900 mb-4">Governance Scorecard</h3>
-        <div className="grid grid-cols-3 gap-3 mb-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
           <GovStatTile
             label="Board Size"
             value={`${bc.boardSize} directors`}

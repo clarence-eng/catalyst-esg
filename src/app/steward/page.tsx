@@ -320,7 +320,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
         >
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3 mb-2 flex-wrap">
               <RatingBadge rating={co.esgScore.rating} />
               <MaturityBadge level={co.maturity} />
               {!isPipeline && (() => {
@@ -348,7 +348,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
           </div>
 
           {/* Right side: scores + engagement counts */}
-          <div className="flex items-center gap-6 ml-4">
+          <div className="flex items-center gap-6 ml-4 flex-shrink-0">
             <div className="flex items-center gap-3">
               <ESGMini label="E" value={co.esgScore.environmental} />
               <ESGMini label="S" value={co.esgScore.social} />
