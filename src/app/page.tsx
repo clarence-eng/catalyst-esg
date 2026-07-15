@@ -84,10 +84,10 @@ export default function OverviewPage() {
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
   const pipelineCount = companies.filter((c) => c.portfolioStatus === "Pipeline").length;
 
-  const totalActive = activeCompanies.reduce((s, c) => s + c.investmentValue, 0);
+  const totalActiveAUM = activeCompanies.reduce((s, c) => s + c.investmentValue, 0);
 
-  const avgScore = totalActive > 0
-    ? Math.round(activeCompanies.reduce((s, c) => s + c.esgScore.overall * c.investmentValue, 0) / totalActive)
+  const avgScore = totalActiveAUM > 0
+    ? Math.round(activeCompanies.reduce((s, c) => s + c.esgScore.overall * c.investmentValue, 0) / totalActiveAUM)
     : 0;
   const highRisk = activeCompanies.filter((c) => ["High", "Critical"].includes(c.climateRisk.transition)).length;
   // Carbon intensity: investment-weighted avg excluding electric utilities (segmented separately in carbon reporting)
@@ -98,8 +98,8 @@ export default function OverviewPage() {
     ? Math.round(nonUtilityActive.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalNonUtility)
     : null;
   // Full weighted avg for AI context (more informative with the outlier noted)
-  const avgCarbonIntensityFull = totalActive > 0
-    ? Math.round(activeCompanies.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalActive)
+  const avgCarbonIntensityFull = totalActiveAUM > 0
+    ? Math.round(activeCompanies.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalActiveAUM)
     : 0;
   const utilityLabel = utilityCompanies.length > 0 ? utilityCompanies.map(c => c.name).join(", ") : "electric utilities";
   const overdueCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Overdue").length, 0);
@@ -181,7 +181,7 @@ export default function OverviewPage() {
       >
         <div className="flex items-center gap-2 text-xs text-gray-600 bg-gray-100 rounded-lg px-3 py-2 border border-gray-200">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
-          S${(totalActive / 1000).toFixed(1)}B active
+          S${(totalActiveAUM / 1000).toFixed(1)}B active
           {pipelineCount > 0 && (
             <span className="flex items-center gap-1 text-blue-700 ml-1">
               · <GitMerge className="w-3 h-3" /> {pipelineCount} pipeline
@@ -366,7 +366,7 @@ export default function OverviewPage() {
                   </td>
                   <td className="px-4 py-4">
                     <span className="text-xs text-gray-600">
-                      {co.portfolioStatus === "Pipeline" ? "Pipeline" : totalActive > 0 ? `${(co.investmentValue / totalActive * 100).toFixed(1)}%` : "—"}
+                      {co.portfolioStatus === "Pipeline" ? "Pipeline" : totalActiveAUM > 0 ? `${(co.investmentValue / totalActiveAUM * 100).toFixed(1)}%` : "—"}
                     </span>
                   </td>
                   <td className="px-4 py-4">
@@ -387,7 +387,7 @@ export default function OverviewPage() {
       {/* Portfolio ESG Brief — below table */}
       <RiskHeatmap companies={companies} />
       <ESGDimensionHeatmap companies={companies} />
-      <PCAFFinancedEmissionsTable companies={activeCompanies} totalActive={totalActive} />
+      <PCAFFinancedEmissionsTable companies={activeCompanies} totalActiveAUM={totalActiveAUM} />
       <PortfolioBrief portfolioSummary={portfolioSummary} companyNames={activeCompanies.map(c => c.name)} />
 
       {/* Megatrend Cards */}
@@ -697,7 +697,7 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
   );
 }
 
-function PCAFFinancedEmissionsTable({ companies, totalActive }: { companies: Company[]; totalActive: number }) {
+function PCAFFinancedEmissionsTable({ companies, totalActiveAUM }: { companies: Company[]; totalActiveAUM: number }) {
   const pcafScore = (commitment: string): number => {
     if (commitment === "SBTi Targets Set") return 2;
     if (commitment === "SBTi Committed") return 3;
@@ -713,9 +713,9 @@ function PCAFFinancedEmissionsTable({ companies, totalActive }: { companies: Com
   };
 
   const rows = companies.map(co => {
-    const stake = totalActive > 0 ? (co.investmentValue / totalActive) * 100 : 0;
+    const stake = totalActiveAUM > 0 ? (co.investmentValue / totalActiveAUM) * 100 : 0;
     const hasEmissionsData = co.carbonIntensity > 0 && co.investmentValue > 0;
-    const estimatedEmissions = hasEmissionsData && totalActive > 0 ? Math.round((co.investmentValue / totalActive) * co.carbonIntensity * 2500) : null;
+    const estimatedEmissions = hasEmissionsData && totalActiveAUM > 0 ? Math.round((co.investmentValue / totalActiveAUM) * co.carbonIntensity * 2500) : null;
     const score = hasEmissionsData ? pcafScore(co.netZeroCommitment) : null;
     return { co, stake, estimatedEmissions, score, hasEmissionsData };
   });
