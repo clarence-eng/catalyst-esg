@@ -127,24 +127,35 @@ export default function SignalPage() {
             if (calendarItems.length === 0) {
               return <div className="py-8 text-center text-sm text-gray-500">No {urgencyView} urgency regulations match the current filters.</div>;
             }
-            return calendarItems
+            return (
+              <table className="w-full text-xs" aria-labelledby="compliance-tracker-heading">
+                <caption id="compliance-tracker-heading" className="sr-only">Compliance Deadline Tracker</caption>
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-100">
+                    <th scope="col" className="text-left px-5 py-2 font-medium text-gray-500 w-28">Deadline</th>
+                    <th scope="col" className="text-left px-2 py-2 font-medium text-gray-500">Regulation</th>
+                    <th scope="col" className="text-left px-2 py-2 font-medium text-gray-500">Jurisdiction · Category</th>
+                    <th scope="col" className="text-left px-5 py-2 font-medium text-gray-500">Portfolio</th>
+                  </tr>
+                </thead>
+                <tbody>
+              {calendarItems
               .sort((a, b) => {
               const urgencyOrder = { High: 0, Medium: 1, Low: 2 };
               const urgencyDiff = (urgencyOrder[a.urgency as keyof typeof urgencyOrder] ?? 3) - (urgencyOrder[b.urgency as keyof typeof urgencyOrder] ?? 3);
               if (urgencyDiff !== 0) return urgencyDiff;
-              // Secondary: sort by id (data-authoring order = effectively chronological within urgency tier)
               return a.id.localeCompare(b.id, "en", { numeric: true });
             })
             .map((r, i) => (
-              <div key={r.id} className={`flex items-start gap-4 px-5 py-3 ${i % 2 === 0 ? "bg-gray-50" : "bg-white"} border-b border-gray-100 last:border-0`}>
-                <div className="w-28 flex-shrink-0">
+              <tr key={r.id} className={`${i % 2 === 0 ? "bg-gray-50" : "bg-white"} border-b border-gray-100 last:border-0`}>
+                <td className="px-5 py-3 align-top">
                   <div className={`text-xs font-semibold px-2 py-1 rounded text-center ${
                     r.status === "In Force" ? "text-emerald-700 bg-emerald-50 border border-emerald-300" :
                     r.status === "Effective 2026" ? "text-blue-700 bg-blue-50 border border-blue-300" :
                     "text-gray-600 bg-gray-100 border border-gray-300"
                   }`}>{r.effectiveDate}</div>
-                </div>
-                <div className="flex-1 min-w-0">
+                </td>
+                <td className="px-2 py-3 align-top min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-sm font-medium text-gray-900">{r.title}</span>
                     <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
@@ -153,9 +164,9 @@ export default function SignalPage() {
                       "text-blue-700 bg-blue-100"
                     }`}>{r.urgency}</span>
                   </div>
-                  <div className="text-xs text-gray-600">{r.jurisdiction} · {r.category}</div>
-                </div>
-                <div className="flex-shrink-0 text-xs text-gray-600">
+                </td>
+                <td className="px-2 py-3 align-top text-gray-600">{r.jurisdiction} · {r.category}</td>
+                <td className="px-5 py-3 align-top text-gray-600">
                   {(() => {
                     const activeCount = r.portfolioImpact?.filter(s => activePortfolioSlugs.has(s)).length ?? 0;
                     if (!activeCount) return "";
@@ -163,9 +174,12 @@ export default function SignalPage() {
                     const pipeline = total - activeCount;
                     return `${activeCount} co${activeCount > 1 ? "s" : ""}${pipeline > 0 ? `+${pipeline}p` : ""}`;
                   })()}
-                </div>
-              </div>
-            ));
+                </td>
+              </tr>
+            ))}
+                </tbody>
+              </table>
+            );
           })()}
         </div>
       </div>

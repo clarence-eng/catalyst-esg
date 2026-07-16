@@ -220,7 +220,7 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-0.5">
-              <span className="text-sm font-medium text-gray-900 truncate"><Highlight text={f.name} query={query} /></span>
+              <h3 className="text-sm font-medium text-gray-900 truncate"><Highlight text={f.name} query={query} /></h3>
               <span className={`text-xs px-1.5 py-0.5 rounded border flex-shrink-0 ${statusStyles[f.status] ?? "text-gray-600 bg-gray-100 border-gray-200"}`}>{f.status}</span>
             </div>
             <div className="flex items-center gap-2">

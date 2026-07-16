@@ -239,15 +239,15 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
 
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <h3 className="text-sm font-semibold text-gray-900 mb-3">Portfolio Exposure</h3>
-            <div className="space-y-2 max-h-64 overflow-y-auto">
+            <ul role="list" className="space-y-2 max-h-64 overflow-y-auto">
               {t.portfolioExposure.filter(p => (p.exposure === "High" || p.exposure === "Medium") && (activeSlugs.has(p.slug) || pipelineSlugs.has(p.slug))).map((p) => (
-                <div key={p.slug} className="flex items-center justify-between">
+                <li key={p.slug} className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 truncate mr-2">
                     <Link href={`/scout/${p.slug}`} className="text-xs text-gray-600 hover:text-purple-700 transition-colors truncate" title={p.name}>{p.name}</Link>
                     {pipelineSlugs.has(p.slug) && <span className="text-[10px] text-blue-600 flex-shrink-0">·Pipeline</span>}
                   </div>
                   <ExposureBadge level={p.exposure} />
-                </div>
+                </li>
               ))}
               {(() => {
                 const allPortfolioSlugs = new Set([...activeSlugs, ...pipelineSlugs]);
@@ -258,7 +258,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                   </div>
                 ) : null;
               })()}
-            </div>
+            </ul>
           </div>
         </div>
       </div>
