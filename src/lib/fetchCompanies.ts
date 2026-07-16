@@ -444,9 +444,20 @@ function dbToCompany(
       environmental: Math.min(100, Math.max(0, Number(co.esg_environmental) || 0)),
       social: Math.min(100, Math.max(0, Number(co.esg_social) || 0)),
       governance: Math.min(100, Math.max(0, Number(co.esg_governance) || 0)),
-      rating: (["AAA","AA","A","BBB","BB","B","CCC"] as const).includes(co.esg_rating as Company["esgScore"]["rating"])
-        ? co.esg_rating as Company["esgScore"]["rating"]
-        : "BBB",
+      rating: (() => {
+        const VALID_RATINGS = ["AAA","AA","A","BBB","BB","B","CCC"] as const;
+        if (VALID_RATINGS.includes(co.esg_rating as Company["esgScore"]["rating"])) {
+          return co.esg_rating as Company["esgScore"]["rating"];
+        }
+        // Derive from overall score when stored rating is invalid/null
+        const overall = Math.min(100, Math.max(0, Number(co.esg_overall) || 0));
+        if (overall >= 75) return "AA";
+        if (overall >= 65) return "A";
+        if (overall >= 50) return "BBB";
+        if (overall >= 35) return "BB";
+        if (overall >= 20) return "B";
+        return "CCC";
+      })(),
     },
     climateRisk: {
       transition: (["Low","Medium","High","Critical"] as const).includes(co.transition_risk as Company["climateRisk"]["transition"]) ? co.transition_risk as Company["climateRisk"]["transition"] : "Low",
@@ -493,7 +504,7 @@ function dbToCompany(
           ? e.type as Company["engagement"][0]["type"]
           : "Meeting",
         topic: e.topic ?? "",
-        status: (["Completed","Planned","Overdue"] as const).includes(e.status as Company["engagement"][0]["status"]) ? e.status as Company["engagement"][0]["status"] : "Planned",
+        status: (["Completed","Planned","Overdue"] as const).includes((e.status?.trim()) as Company["engagement"][0]["status"]) ? (e.status?.trim()) as Company["engagement"][0]["status"] : "Planned",
         notes: e.notes ?? "",
       })),
     // Map material issues
@@ -504,7 +515,7 @@ function dbToCompany(
         id: i.id,
         category: (["Environmental","Social","Governance"] as const).includes(i.category as Company["materialIssues"][0]["category"]) ? i.category as Company["materialIssues"][0]["category"] : "Environmental",
         issue: i.issue ?? "",
-        severity: (["Critical","High","Medium","Low"] as const).includes(i.severity as Company["materialIssues"][0]["severity"]) ? i.severity as Company["materialIssues"][0]["severity"] : "Medium",
+        severity: (["Critical","High","Medium","Low"] as const).includes((i.severity?.trim()) as Company["materialIssues"][0]["severity"]) ? (i.severity?.trim()) as Company["materialIssues"][0]["severity"] : "Medium",
         opportunity: i.opportunity ?? false,
         detail: i.detail ?? "",
       })),
@@ -527,15 +538,14 @@ function dbToCompany(
       const currentQ = currentQuarterLabel();
       const lastEntry = base[base.length - 1];
       const lastMatchesCurrent = lastEntry?.period === currentQ;
-      // Remove last entry only when it matches the current quarter AND there's more than one
-      // entry — single-entry base with matching period would otherwise produce a duplicate.
-      const withoutLast = lastMatchesCurrent && base.length > 1 ? base.slice(0, -1) : base;
-      // Also deduplicate: if single-entry base matches current quarter, don't append a duplicate
-      const alreadyHasCurrent = base.length === 1 && lastMatchesCurrent;
-      const liveEntry = { period: currentQ, e: co.esg_environmental ?? 0, s: co.esg_social ?? 0, g: co.esg_governance ?? 0 };
+      // When single-entry base already covers the current quarter, replace it with live values
+      // rather than keeping the stale enrichment data — live DB scores are authoritative.
+      const withoutLast = lastMatchesCurrent ? base.slice(0, -1) : base;
+      const clamp = (v: number | null) => Math.min(100, Math.max(0, Number(v) || 0));
+      const liveEntry = { period: currentQ, e: clamp(co.esg_environmental), s: clamp(co.esg_social), g: clamp(co.esg_governance) };
       const sorted = [
         ...withoutLast,
-        ...(alreadyHasCurrent ? [] : [liveEntry]),
+        liveEntry,
       ].sort((a, b) => {
         const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) ?? ["", "0", "0"]).slice(1).map(Number);
         const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) ?? ["", "0", "0"]).slice(1).map(Number);
