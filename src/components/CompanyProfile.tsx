@@ -747,6 +747,7 @@ function OverviewTab({
               onClick={onGenerate}
               disabled={memoLoading}
               aria-busy={memoLoading}
+              title={memo && !memoLoading ? "This will replace the existing memo with a new Gemini call" : undefined}
               className="flex items-center gap-2 text-sm bg-[#4B2580] hover:bg-[#3D1A6E] disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
             >
               {memoLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
@@ -1692,6 +1693,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
             onClick={onGenerateQuestions}
             disabled={questionsLoading}
             aria-busy={questionsLoading}
+            title={questions && !questionsLoading ? "This will replace the existing questions with a new Gemini call" : undefined}
             className="flex items-center gap-2 text-sm bg-[#4B2580] hover:bg-[#3D1A6E] disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors font-medium"
           >
             {questionsLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
