@@ -1431,7 +1431,7 @@ function SocialTab({ co }: { co: Company }) {
       <div className="bg-white rounded-xl border border-gray-200 p-5">
         <div className="flex items-start justify-between mb-4">
           <h3 className="text-sm font-semibold text-gray-900">Governance Scorecard</h3>
-          {bc.boardSize === 8 && !co.sasbCategory.includes("Bank") && !co.sasbCategory.includes("Financ") && (
+          {bc.estimated && (
             <span className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded italic">Estimated from ESG score — verify against disclosures</span>
           )}
         </div>

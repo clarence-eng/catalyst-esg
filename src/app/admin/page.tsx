@@ -97,8 +97,8 @@ function CoField({ label, k, type = "text", opts, co, set, required: isRequired 
                type === "number" && k === "carbon_intensity" ? { min: 0 } :
                type === "number" && k === "investment_value" ? { min: 1 } : {})}
           className={`border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400/50 ${k === "slug" && co.id ? "bg-gray-50 text-gray-600 cursor-not-allowed" : "focus:border-purple-400"}`} />
-        {k === "investment_value" && Number(((co as Record<string,unknown>)[k])) <= 0 && (
-          <p className="text-xs text-amber-600 mt-0.5">Must be &gt; 0 S$M</p>
+        {k === "investment_value" && co.portfolio_status !== "Pipeline" && Number(((co as Record<string,unknown>)[k])) <= 0 && (
+          <p className="text-xs text-amber-600 mt-0.5">Must be &gt; 0 S$M for Active companies</p>
         )}
         </>
       )}
@@ -451,7 +451,8 @@ export default function AdminPage() {
     if ([e,s,g,ov].some(v => v < 0 || v > 100)) return showToast("ESG scores must be between 0 and 100", true);
     if ((co.green_revenue_pct ?? 0) < 0 || (co.green_revenue_pct ?? 0) > 100) return showToast("Green revenue % must be between 0 and 100", true);
     if ((co.carbon_intensity ?? 0) < 0) return showToast("Carbon intensity must be 0 or greater", true);
-    if ((co.investment_value ?? 0) <= 0) return showToast("Investment value must be greater than 0 (use a positive S$M figure)", true);
+    // Pipeline companies may have no committed capital yet; Active holdings must have a positive investment value
+    if (co.portfolio_status !== "Pipeline" && (co.investment_value ?? 0) <= 0) return showToast("Investment value must be greater than 0 for Active companies (use a positive S$M figure)", true);
     savingCompanyRef.current = true;
     setSaving(true);
     try {

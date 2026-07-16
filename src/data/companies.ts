@@ -62,6 +62,7 @@ export interface BoardComposition {
   ceoChairSplit: boolean;
   auditCommittee: boolean;
   esgCommittee: boolean;
+  estimated?: boolean; // true when derived from ESG score thresholds, not actual disclosures
 }
 
 export interface Company {

@@ -524,6 +524,7 @@ function dbToCompany(
         ceoChairSplit: govScore >= 60,
         auditCommittee: govScore >= 50,
         esgCommittee: govScore >= 65,
+        estimated: true,
       };
     })(),
     valueUplift: enrichment?.valueUplift ?? [],

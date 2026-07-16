@@ -98,7 +98,9 @@ export async function POST(req: NextRequest) {
     const carbon_intensity = Math.max(0, coerceNumber(co.carbon_intensity));
     const green_revenue_pct = Math.min(100, Math.max(0, coerceNumber(co.green_revenue_pct)));
     const investment_value = coerceNumber(co.investment_value);
-    if (investment_value <= 0) return badRequest("investmentValue must be greater than 0");
+    if (investment_value < 0) return badRequest("investmentValue must be 0 or greater");
+    // Active holdings must have positive investment value; Pipeline companies may be 0 (no committed capital yet)
+    if (portfolio_status === "Active" && investment_value <= 0) return badRequest("investmentValue must be greater than 0 for Active companies");
     const sasb_category = sanitizeString(co.sasb_category, 200).trim();
     const last_updated = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Singapore" });
     const payload = {
