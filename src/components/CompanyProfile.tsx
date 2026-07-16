@@ -137,7 +137,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
             greenRevenuePct: co.greenRevenuePct,
             icVerdict: co.icRecommendation?.verdict ?? null,
             icEsgGating: co.icRecommendation?.esgGating ?? null,
-            icConditions: co.icRecommendation?.conditions.join("; ") ?? null,
+            icConditions: co.icRecommendation?.conditions.join("; ") || null,
           },
         }),
       });

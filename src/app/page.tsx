@@ -340,9 +340,9 @@ export default function OverviewPage() {
                 <th scope="col" className="text-left text-xs text-gray-500 font-medium px-6 py-3">Company</th>
                 <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Status</th>
                 <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Rating</th>
-                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">E</th>
-                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">S</th>
-                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">G</th>
+                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3"><abbr title="Environmental">E</abbr></th>
+                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3"><abbr title="Social">S</abbr></th>
+                <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3"><abbr title="Governance">G</abbr></th>
                 <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Maturity</th>
                 <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Portfolio Weight</th>
                 <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Transition Risk</th>
