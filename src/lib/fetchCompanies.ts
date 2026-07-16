@@ -522,7 +522,9 @@ function dbToCompany(
     // historicalScores: use enrichment for history, but always sync the final period
     // to live Supabase scores so there's no discontinuity between chart and score card
     historicalScores: (() => {
-      const base = enrichment?.historicalScores ?? (() => {
+      // Use enrichment historicalScores only when non-empty; empty array falls back to synthetic baseline
+      const enrichmentScores = enrichment?.historicalScores;
+      const base = (enrichmentScores && enrichmentScores.length > 0) ? enrichmentScores : (() => {
         const now = new Date();
         const qNow = Math.ceil((now.getMonth() + 1) / 3);
         const prevQ = qNow === 1 ? 4 : qNow - 1;

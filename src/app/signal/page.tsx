@@ -45,9 +45,8 @@ export default function SignalPage() {
   const filteredUpdates = regulatoryUpdates.filter((r) => {
     const matchJ = jurisdictionFilter === "All" ||
       (jurisdictionFilter === "Global"
-        // Match any jurisdiction that contains "Global" anywhere — handles "EU / Global" and "Global / ASEAN"
-        ? r.jurisdiction.split(/\s*\/\s*/).some(j => j.trim().startsWith("Global"))
-        : r.jurisdiction.split(/\s*\/\s*/).some(j => j.trim() === jurisdictionFilter));
+        ? (r.jurisdiction ?? "").split(/\s*\/\s*/).some(j => j.trim().startsWith("Global"))
+        : (r.jurisdiction ?? "").split(/\s*\/\s*/).some(j => j.trim() === jurisdictionFilter));
     const matchC = categoryFilter === "All" || r.category === categoryFilter;
     return matchJ && matchC;
   });

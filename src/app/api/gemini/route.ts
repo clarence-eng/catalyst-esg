@@ -14,7 +14,13 @@ function checkGeminiRateLimit(ip: string): boolean {
   if (!entry || now > entry.reset) {
     geminiRateMap.set(ip, { count: 1, reset: now + GEMINI_RATE_WINDOW_MS });
     if (geminiRateMap.size > 100) {
-      for (const [k, v] of geminiRateMap) { if (now > v.reset) geminiRateMap.delete(k); }
+      let deleted = 0;
+      for (const [k, v] of geminiRateMap) { if (now > v.reset) { geminiRateMap.delete(k); deleted++; } }
+      // Hard cap: if no expired entries found, trim oldest 50 to bound memory
+      if (deleted === 0 && geminiRateMap.size > 200) {
+        let i = 0;
+        for (const k of geminiRateMap.keys()) { if (i++ >= 50) break; geminiRateMap.delete(k); }
+      }
     }
     return true;
   }
