@@ -66,6 +66,7 @@ const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2
 // Normalise ESG period strings to canonical "Q# YYYY" format (single space, trimmed)
 // Prevents whitespace variants from creating duplicate/orphan period buckets in trend charts
 const normalisePeriod = (p: string) => p.replace(/\s+/g, " ").trim();
+const displayName = (name: string) => name.trim() || "Unnamed company";
 
 const overviewColorMap: Record<string, string> = {
   emerald: "border-emerald-600/20 bg-emerald-600/5",
@@ -186,7 +187,7 @@ export default function OverviewPage() {
       >
         <div className="flex items-center gap-2 text-xs text-gray-600 bg-gray-100 rounded-lg px-3 py-2 border border-gray-200">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
-          S${(totalActiveAUM / 1000).toFixed(1)}B active
+          S${(Math.max(0, totalActiveAUM) / 1000).toFixed(1)}B active
           {pipelineCount > 0 && (
             <span className="flex items-center gap-1 text-blue-700 ml-1">
               · <GitMerge className="w-3 h-3" /> {pipelineCount} pipeline
@@ -291,7 +292,7 @@ export default function OverviewPage() {
               const color = co.carbonIntensity < 100 ? "bg-emerald-500" : co.carbonIntensity < 500 ? "bg-amber-500" : "bg-red-500";
               return (
                 <div key={co.slug} className="flex items-center gap-3">
-                  <span className="text-xs text-gray-700 w-36 flex-shrink-0 truncate" title={co.name}>{co.name}</span>
+                  <span className="text-xs text-gray-700 w-36 flex-shrink-0 truncate" title={displayName(co.name)}>{displayName(co.name)}</span>
                   <div className="flex-1 h-5 bg-gray-100 rounded-sm overflow-hidden relative">
                     <div className={`h-full rounded-sm ${color} transition-all`} style={{ width: `${pct}%` }} />
                     {/* IEA benchmark line at 500/max */}
@@ -691,7 +692,7 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
           const isNeutral = delta === 0;
           return (
             <div key={slug} className="flex items-center gap-3">
-              <span className="text-xs text-gray-700 w-44 flex-shrink-0 truncate" title={name}>{name}</span>
+              <span className="text-xs text-gray-700 w-44 flex-shrink-0 truncate" title={displayName(name)}>{displayName(name)}</span>
               <div className="flex-1 flex items-center gap-2">
                 <div className="flex-1 h-4 bg-gray-100 rounded-sm overflow-hidden">
                   <div
