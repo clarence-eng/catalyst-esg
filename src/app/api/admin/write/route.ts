@@ -32,9 +32,9 @@ type WriteBody =
   | { action: "upsert_company"; company: Record<string, unknown> }
   | { action: "delete_company"; id: string; slug: string }
   | { action: "upsert_engagement"; engagement: Record<string, unknown>; company_slug: string }
-  | { action: "delete_engagement"; id: string }
+  | { action: "delete_engagement"; id: string; company_slug: string }
   | { action: "upsert_issue"; issue: Record<string, unknown>; company_slug: string }
-  | { action: "delete_issue"; id: string };
+  | { action: "delete_issue"; id: string; company_slug: string };
 
 const SLUG_RE = /^[a-z0-9][a-z0-9-]*[a-z0-9]$|^[a-z0-9]$/;
 
@@ -51,7 +51,10 @@ function coerceNumber(v: unknown, fallback = 0): number {
 export async function POST(req: NextRequest) {
   if (!verifyAdminRequest(req)) return forbidden();
 
-  const ip = req.headers.get("x-real-ip") ?? req.headers.get("x-forwarded-for")?.split(",").at(-1)?.trim() ?? "unknown";
+  // x-real-ip is set by the edge proxy and is trustworthy.
+  // x-forwarded-for is a comma-list; the leftmost entry is the original client IP — use that.
+  // The rightmost entry is the last proxy which can be forged by the client.
+  const ip = req.headers.get("x-real-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   if (!checkRateLimit(ip)) {
     return NextResponse.json({ error: "Too many requests — please wait before retrying" }, { status: 429 });
   }
@@ -134,13 +137,15 @@ export async function POST(req: NextRequest) {
     // Verify id and slug belong to the same row to prevent cross-company child deletion
     const { data: check } = await sb.from("companies").select("id").eq("id", id).eq("slug", slug).single();
     if (!check) return badRequest("id/slug mismatch — company not found");
+    // Delete children first; bail before touching the company row if either child delete fails.
+    // This prevents permanent orphan data loss: if children succeed but the company DELETE later
+    // fails, a retry would delete the company row while its children are already gone.
     const { error: miErr } = await sb.from("material_issues").delete().eq("company_slug", slug);
+    if (miErr) return NextResponse.json({ error: miErr.message }, { status: 500 });
     const { error: engErr } = await sb.from("engagements").delete().eq("company_slug", slug);
+    if (engErr) return NextResponse.json({ error: engErr.message }, { status: 500 });
     const { error: coErr } = await sb.from("companies").delete().eq("id", id);
-    if (miErr || engErr || coErr) {
-      const msgs = [miErr?.message, engErr?.message, coErr?.message].filter(Boolean).join("; ");
-      return NextResponse.json({ error: msgs }, { status: 500 });
-    }
+    if (coErr) return NextResponse.json({ error: coErr.message }, { status: 500 });
     return NextResponse.json({ ok: true });
   }
 
@@ -162,8 +167,9 @@ export async function POST(req: NextRequest) {
     const payload = { company_slug, date, type, topic, status, notes };
     const id = typeof e.id === "string" && e.id.trim() ? e.id.trim() : null;
     if (id) {
-      const { error } = await sb.from("engagements").update({ date, type, topic, status, notes }).eq("id", id).eq("company_slug", company_slug);
+      const { error, count } = await sb.from("engagements").update({ date, type, topic, status, notes }, { count: "exact" }).eq("id", id).eq("company_slug", company_slug);
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      if (!count) return NextResponse.json({ error: "Engagement not found or does not belong to this company" }, { status: 404 });
     } else {
       const { error } = await sb.from("engagements").insert(payload);
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -173,9 +179,12 @@ export async function POST(req: NextRequest) {
 
   if (body.action === "delete_engagement") {
     const id = typeof body.id === "string" ? body.id.trim() : "";
+    const company_slug = body.company_slug.trim();
     if (!id) return badRequest("id required");
-    const { error } = await sb.from("engagements").delete().eq("id", id);
+    if (!company_slug || !SLUG_RE.test(company_slug)) return badRequest("company_slug required");
+    const { error, count } = await sb.from("engagements").delete({ count: "exact" }).eq("id", id).eq("company_slug", company_slug);
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!count) return NextResponse.json({ error: "Engagement not found or does not belong to this company" }, { status: 404 });
     return NextResponse.json({ ok: true });
   }
 
@@ -197,8 +206,9 @@ export async function POST(req: NextRequest) {
     const payload = { company_slug, issue, severity, category, opportunity, detail, sort_order };
     const id = typeof i.id === "string" && i.id.trim() ? i.id.trim() : null;
     if (id) {
-      const { error } = await sb.from("material_issues").update({ issue, severity, category, opportunity, detail }).eq("id", id).eq("company_slug", company_slug);
+      const { error, count } = await sb.from("material_issues").update({ issue, severity, category, opportunity, detail }, { count: "exact" }).eq("id", id).eq("company_slug", company_slug);
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      if (!count) return NextResponse.json({ error: "Issue not found or does not belong to this company" }, { status: 404 });
     } else {
       const { error } = await sb.from("material_issues").insert(payload);
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -208,9 +218,12 @@ export async function POST(req: NextRequest) {
 
   if (body.action === "delete_issue") {
     const id = typeof body.id === "string" ? body.id.trim() : "";
+    const company_slug = body.company_slug.trim();
     if (!id) return badRequest("id required");
-    const { error } = await sb.from("material_issues").delete().eq("id", id);
+    if (!company_slug || !SLUG_RE.test(company_slug)) return badRequest("company_slug required");
+    const { error, count } = await sb.from("material_issues").delete({ count: "exact" }).eq("id", id).eq("company_slug", company_slug);
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!count) return NextResponse.json({ error: "Issue not found or does not belong to this company" }, { status: 404 });
     return NextResponse.json({ ok: true });
   }
 

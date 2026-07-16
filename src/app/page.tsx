@@ -673,6 +673,8 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
   const Q1 = fullCoveragePeriods[fullCoveragePeriods.length - 2];
   const Q2 = fullCoveragePeriods[fullCoveragePeriods.length - 1];
 
+  const totalAUM = companies.reduce((s, c) => s + c.investmentValue, 0);
+
   const rows = companies
     .map(co => {
       const q1 = co.historicalScores.find(s => normalisePeriod(s.period) === Q1);
@@ -680,30 +682,35 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
       if (!q1 || !q2) return null;
       const avg1 = (q1.e + q1.s + q1.g) / 3;
       const avg2 = (q2.e + q2.s + q2.g) / 3;
-      const delta = Math.round((avg2 - avg1) * 10) / 10;
-      return { name: co.name, slug: co.slug, delta };
+      const scoreDelta = Math.round((avg2 - avg1) * 10) / 10;
+      // Weight = portfolio share; falls back to equal-weight when AUM is unavailable
+      const weight = totalAUM > 0 ? co.investmentValue / totalAUM : 1 / companies.length;
+      // Weighted contribution: how much this company moved the portfolio-level score
+      const weightedDelta = Math.round(scoreDelta * weight * 10) / 10;
+      return { name: co.name, slug: co.slug, scoreDelta, weightedDelta, weight };
     })
-    .filter((r): r is { name: string; slug: string; delta: number } => r !== null)
-    .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+    .filter((r): r is { name: string; slug: string; scoreDelta: number; weightedDelta: number; weight: number } => r !== null)
+    .sort((a, b) => Math.abs(b.weightedDelta) - Math.abs(a.weightedDelta));
 
   if (rows.length === 0) return null;
 
-  const maxAbs = Math.max(...rows.map(r => Math.abs(r.delta)), 1);
+  const maxAbs = Math.max(...rows.map(r => Math.abs(r.weightedDelta)), 0.01);
+  const isEqualWeight = totalAUM === 0;
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
       <h2 className="text-sm font-semibold text-gray-900 mb-1">Portfolio ESG Change — {Q2} vs {Q1}</h2>
       <p className="text-xs text-gray-500 mb-4">
-        Average (E+S+G)/3 score delta per company, sorted by absolute change
+        {isEqualWeight ? "Equal-weight" : "Investment-weighted"} ESG score contribution per company, sorted by portfolio impact
         {rows.length < companies.length && (
           <span className="ml-1 text-amber-600">· {companies.length - rows.length} company(ies) excluded (missing {Q1}/{Q2} data)</span>
         )}
       </p>
       <div className="space-y-2.5">
-        {rows.map(({ name, slug, delta }) => {
-          const barPct = (Math.abs(delta) / maxAbs) * 100;
-          const isPositive = delta > 0;
-          const isNeutral = delta === 0;
+        {rows.map(({ name, slug, scoreDelta, weightedDelta }) => {
+          const barPct = (Math.abs(weightedDelta) / maxAbs) * 100;
+          const isPositive = weightedDelta > 0;
+          const isNeutral = weightedDelta === 0;
           return (
             <div key={slug} className="flex items-center gap-3">
               <span className="text-xs text-gray-700 w-44 flex-shrink-0 truncate" title={displayName(name)}>{displayName(name)}</span>
@@ -714,8 +721,9 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
                     style={{ width: `${barPct}%` }}
                   />
                 </div>
-                <span className={`text-xs font-semibold w-10 text-right flex-shrink-0 ${isPositive ? "text-emerald-700" : isNeutral ? "text-gray-500" : "text-red-700"}`}>
-                  {isPositive ? "+" : ""}{delta.toFixed(1)}
+                <span className={`text-xs font-semibold w-16 text-right flex-shrink-0 ${isPositive ? "text-emerald-700" : isNeutral ? "text-gray-500" : "text-red-700"}`}
+                  title={`Score delta: ${scoreDelta > 0 ? "+" : ""}${scoreDelta.toFixed(1)} pts`}>
+                  {isPositive ? "+" : ""}{weightedDelta.toFixed(2)} pts
                 </span>
               </div>
             </div>
@@ -775,7 +783,9 @@ function PCAFFinancedEmissionsTable({ companies, totalActiveAUM }: { companies: 
               <th scope="col" className="text-left text-xs text-gray-500 font-medium px-6 py-3">Company</th>
               <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">Sector</th>
               <th scope="col" className="text-right text-xs text-gray-500 font-medium px-4 py-3">Stake ~%</th>
-              <th scope="col" className="text-right text-xs text-gray-500 font-medium px-4 py-3">Est. Financed Emissions (tCO₂e)</th>
+              <th scope="col" className="text-right text-xs text-gray-500 font-medium px-4 py-3">
+                <abbr title="Proxy estimate: stake% × carbon intensity × S$2,500M assumed revenue. Not a PCAF-compliant calculation.">Proxy tCO₂e ⓘ</abbr>
+              </th>
               <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">PCAF Quality (1–5)</th>
             </tr>
           </thead>

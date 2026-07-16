@@ -387,6 +387,13 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
 
 // ---------------------------------------------------------------------------
 
+/** Returns the current quarter label e.g. "Q3 2026" based on server clock. */
+function currentQuarterLabel(): string {
+  const now = new Date();
+  const q = Math.ceil((now.getMonth() + 1) / 3);
+  return `Q${q} ${now.getFullYear()}`;
+}
+
 function dbToCompany(
   co: DbCompany,
   engagements: DbEngagement[],
@@ -499,14 +506,20 @@ function dbToCompany(
     // historicalScores: use enrichment for history, but always sync the final period
     // to live Supabase scores so there's no discontinuity between chart and score card
     historicalScores: (() => {
-      const base = enrichment?.historicalScores ?? [
-        { period: "Q1 2026", e: Math.max(0, (co.esg_environmental ?? 0) - 2), s: Math.max(0, (co.esg_social ?? 0) - 1), g: Math.max(0, (co.esg_governance ?? 0) - 2) },
-      ];
+      const base = enrichment?.historicalScores ?? (() => {
+        const now = new Date();
+        const qNow = Math.ceil((now.getMonth() + 1) / 3);
+        const prevQ = qNow === 1 ? 4 : qNow - 1;
+        const prevY = qNow === 1 ? now.getFullYear() - 1 : now.getFullYear();
+        return [
+          { period: `Q${prevQ} ${prevY}`, e: Math.max(0, (co.esg_environmental ?? 0) - 2), s: Math.max(0, (co.esg_social ?? 0) - 1), g: Math.max(0, (co.esg_governance ?? 0) - 2) },
+        ];
+      })();
       // Always ensure the last period reflects the authoritative live DB values.
       // When base has >1 entries, drop the last and replace it with live values.
       // When base has exactly 1 entry (fallback path), append Q2 with live values.
       const withoutLast = base.length > 1 ? base.slice(0, -1) : base;
-      const lastPeriod = base.length > 1 ? (base[base.length - 1]?.period ?? "Q2 2026") : "Q2 2026";
+      const lastPeriod = base.length > 1 ? (base[base.length - 1]?.period ?? currentQuarterLabel()) : currentQuarterLabel();
       const sorted = [
         ...withoutLast,
         { period: lastPeriod, e: co.esg_environmental ?? 0, s: co.esg_social ?? 0, g: co.esg_governance ?? 0 },

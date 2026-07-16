@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
+import { verifyAdminRequest } from "@/lib/adminAuth";
 
 const ALLOWED_TYPES = ["deal_memo", "action_plan", "thematic_brief", "portfolio_brief", "engagement_questions"] as const;
 type GenerationType = (typeof ALLOWED_TYPES)[number];
@@ -53,7 +54,12 @@ function validateContext(type: GenerationType, ctx: Record<string, unknown>): bo
 }
 
 export async function POST(req: NextRequest) {
-  // Restrict to same-origin requests — blocks external quota-abuse scripting.
+  // Require admin auth — Gemini calls consume API quota and must not be accessible anonymously.
+  if (!verifyAdminRequest(req)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  // Same-origin check retained as defence-in-depth against CSRF from a different admin session.
   // Use explicit allowlist (NOT the attacker-controllable Host header, NOT prefix matches).
   const origin = req.headers.get("origin") ?? "";
   const referer = req.headers.get("referer") ?? "";
