@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search, LayoutDashboard, Users, Radio, BookOpen, Info, Moon, Sun, Lock } from "lucide-react";
@@ -30,12 +30,20 @@ export function Navigation() {
     if (isWin) setModKey("Ctrl+K");
   }, []);
 
+  // Only announce overdue count changes — not the initial value on mount (would spam every navigation)
+  const prevOverdueRef = useRef<number | null>(null);
+  const [overdueAnnouncement, setOverdueAnnouncement] = useState("");
+  useEffect(() => {
+    if (prevOverdueRef.current !== null && prevOverdueRef.current !== overdueCount) {
+      setOverdueAnnouncement(overdueCount > 0 ? `${overdueCount} overdue engagement${overdueCount !== 1 ? "s" : ""} in portfolio` : "All overdue engagements resolved");
+    }
+    prevOverdueRef.current = overdueCount;
+  }, [overdueCount]);
+
   return (
     <aside className="fixed left-0 top-0 h-full w-64 bg-[#F9F8FA] border-r border-gray-200 flex flex-col z-50 text-gray-800">
-      {/* sr-only live region — announces overdue count changes proactively to AT on data refresh */}
-      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
-        {overdueCount > 0 ? `${overdueCount} overdue engagement${overdueCount !== 1 ? "s" : ""} in portfolio` : ""}
-      </div>
+      {/* sr-only live region — announces overdue count CHANGES to AT, not initial value */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">{overdueAnnouncement}</div>
       {/* Brand */}
       <div className="p-5 border-b border-gray-200">
         <div className="flex flex-col gap-1">

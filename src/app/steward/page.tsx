@@ -5,21 +5,14 @@ import type { Company } from "@/data/companies";
 import { RatingBadge, MaturityBadge, RiskBadge, PageHeader } from "@/components/ui-elements";
 import { Loader2, FileText, CheckCircle, Clock, ChevronDown, ChevronUp, Copy, GitMerge, AlertCircle, Sparkles } from "lucide-react";
 import { AIOutput } from "@/components/AIOutput";
+import { RelativeTime } from "@/components/RelativeTime";
 import Link from "next/link";
-import { formatRelativeTime, formatDate, copyToClipboard } from "@/lib/utils";
+import { formatDate, copyToClipboard } from "@/lib/utils";
 
 const displayName = (name: string) => name.trim() || "Unnamed company";
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
-function RelativeTime({ date }: { date: Date }) {
-  const [label, setLabel] = useState(() => `Generated ${formatRelativeTime(date)}`);
-  useEffect(() => {
-    setLabel(`Generated ${formatRelativeTime(date)}`);
-    const id = setInterval(() => setLabel(`Generated ${formatRelativeTime(date)}`), 60_000);
-    return () => clearInterval(id);
-  }, [date]);
-  return <>{label}</>;
-}
+// RelativeTime imported from @/components/RelativeTime
 
 export default function StewardPage() {
   const { companies, loading: companiesLoading, showDemoBanner } = useCompanies();

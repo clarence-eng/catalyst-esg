@@ -1,11 +1,12 @@
 "use client";
 import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
+import { RelativeTime } from "@/components/RelativeTime";
 import { type Company, companies as allCompanies } from "@/data/companies";
 import { useCompanies } from "@/lib/useCompanies";
 import { RiskBadge, RatingBadge, MaturityBadge, ScoreRing } from "@/components/ui-elements";
 import { AIOutput } from "@/components/AIOutput";
-import { formatRelativeTime, formatDate, copyToClipboard } from "@/lib/utils";
+import { formatDate, copyToClipboard } from "@/lib/utils";
 import {
   ResponsiveContainer,
   RadarChart,
@@ -30,17 +31,7 @@ const LEAP_PHASES = [
   { phase: "P", name: "Prepare", desc: "Prepare to respond and report" },
 ] as const;
 
-// Live-updating relative timestamp — re-renders every 60 s so "just now" advances to "2 minutes ago" etc.
-function RelativeTime({ date }: { date: Date }) {
-  const [label, setLabel] = useState(() => `Generated ${formatRelativeTime(date)}`);
-  useEffect(() => {
-    // Update immediately when date changes, then tick every 60 s
-    setLabel(`Generated ${formatRelativeTime(date)}`);
-    const id = setInterval(() => setLabel(`Generated ${formatRelativeTime(date)}`), 60_000);
-    return () => clearInterval(id);
-  }, [date]);
-  return <>{label}</>;
-}
+// RelativeTime imported from @/components/RelativeTime
 
 const MEGATREND_COLORS: Record<string, string> = {
   "Climate Transition": "text-emerald-700",
@@ -128,7 +119,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
             maturity: co.maturity,
             physicalRisk: co.climateRisk.physical,
             transitionRisk: co.climateRisk.transition,
-            transitionContext: co.climateRisk.transitionDetails.slice(0, 2).join("; "),
+            transitionContext: co.climateRisk.transitionDetails.slice(0, 2).join("; ") || "Not assessed",
             pathway: co.climateRisk.pathwayAlignment,
             natureRisk: co.natureRisk.overall,
             topIssues,
@@ -184,7 +175,9 @@ export function CompanyProfile({ company: co }: { company: Company }) {
           type: "engagement_questions",
           context: {
             name: displayName(co.name), sector: co.sector || "Unknown", country: co.country || "Unknown", maturity: co.maturity,
-            transitionRisk: co.climateRisk.transition, natureRisk: co.natureRisk.overall,
+            transitionRisk: co.climateRisk.transition, physicalRisk: co.climateRisk.physical,
+            physicalContext: co.climateRisk.physicalDetails.slice(0, 2).join("; ") || "Not assessed",
+            natureRisk: co.natureRisk.overall,
             pathway: co.climateRisk.pathwayAlignment, commitment: co.netZeroCommitment,
             topIssues, overdueEngagements: overdueEngs || "None",
             regulatoryContext: regulatoryContext || "Standard regulatory environment",

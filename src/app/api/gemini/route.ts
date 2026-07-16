@@ -184,6 +184,8 @@ Sector: ${sanitize(ctx.sector)}
 Country: ${sanitize(ctx.country)}
 ESG Maturity: ${sanitize(ctx.maturity)}
 Transition Risk Level: ${sanitize(ctx.transitionRisk)}
+Physical Risk Level: ${sanitize(ctx.physicalRisk)}
+Physical Risk Context: ${sanitize(ctx.physicalContext, 300)}
 Nature Risk Level: ${sanitize(ctx.natureRisk)}
 Pathway Alignment: ${sanitize(ctx.pathway)}
 Net Zero Commitment: ${sanitize(ctx.commitment)}

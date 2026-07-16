@@ -429,8 +429,8 @@ function dbToCompany(
     description: co.description ?? "",
     portfolioStatus: (["Active","Pipeline"] as const).includes(co.portfolio_status as Company["portfolioStatus"]) ? co.portfolio_status as Company["portfolioStatus"] : "Active",
     maturity: (["Leading","Advanced","Developing","Lagging"] as const).includes(co.maturity as Company["maturity"]) ? co.maturity as Company["maturity"] : "Developing",
-    investmentValue: co.investment_value ?? 0,
-    carbonIntensity: co.carbon_intensity ?? 0,
+    investmentValue: Math.max(0, Number(co.investment_value) || 0),
+    carbonIntensity: Math.max(0, Number(co.carbon_intensity) || 0),
     greenRevenuePct: co.green_revenue_pct ?? 0,
     esgScore: {
       overall: co.esg_overall ?? 0,
