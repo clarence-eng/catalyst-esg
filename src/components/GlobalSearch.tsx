@@ -22,7 +22,9 @@ export function GlobalSearch() {
       const target = e.target as HTMLElement;
       const isInput = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement || target.contentEditable === "true";
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        if (isInput) return;
+        // Allow Cmd+K to close the search even when the search input itself is focused
+        const isSearchInput = target === inputRef.current;
+        if (isInput && !isSearchInput) return;
         // Don't open if KeyboardShortcuts dialog is already open
         if (document.querySelector("[data-modal='shortcuts']")) return;
         e.preventDefault();

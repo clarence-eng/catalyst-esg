@@ -107,7 +107,15 @@ function CoField({ label, k, type = "text", opts, co, set, required: isRequired 
               v = e.target.value;
             }
             set(k, v);
-            if (k === "name" && !co.id) set("slug", slugify(e.target.value));
+            // Auto-generate slug from name only when: new company (no id) AND slug still
+            // matches the previously auto-generated value (user hasn't manually customized it)
+            if (k === "name" && !co.id) {
+              const currentSlug = (co as Record<string,unknown>).slug as string ?? "";
+              const prevAutoSlug = slugify(co.name ?? "");
+              if (currentSlug === prevAutoSlug || currentSlug === "") {
+                set("slug", slugify(e.target.value));
+              }
+            }
           }}
           readOnly={k === "slug" && !!co.id}
           aria-readonly={k === "slug" && !!co.id || undefined}
@@ -464,7 +472,8 @@ export default function AdminPage() {
 
   const loadCompanies = useCallback(async () => {
     setLoading(true);
-    setPendingDeleteCoId(null);
+    // Don't reset pendingDeleteCoId here — concurrent deletes on other companies would lose
+    // their 'Delete?' confirmation state silently when loadCompanies resolves.
     try {
       const { data, error } = await supabase.from("companies").select("*").order("created_at");
       if (error) { showToast("Database error: " + error.message, true); setCompanies([]); }
