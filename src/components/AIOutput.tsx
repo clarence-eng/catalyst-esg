@@ -78,14 +78,13 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       .replace(/(?<![>"=])(https?:\/\/[^\s<>"'*]+)/g, (rawUrl) => {
         // Strip trailing punctuation that belongs to the surrounding sentence, not the URL.
         let url = rawUrl.replace(/[.,;:!?]+$/, "");
-        // Strip unmatched trailing ) using paren-balance counting.
-        // Strips one ) for each unmatched close-paren at the end of the URL.
-        // e.g. "https://wiki/(molecule)" → keep; "https://wiki/path)" → strip.
-        // Also handles doubled parens: "(see https://wiki/(molecule))" → strip one trailing ).
+        // Strip unmatched trailing ) using paren-balance counting — but re-emit them AFTER the
+        // </a> tag so prose like "(https://example.com)" renders as "(<a>url</a>)" not "(<a>url</a".
         let open = 0, close = 0;
         for (const ch of url) { if (ch === "(") open++; else if (ch === ")") close++; }
-        while (close > open && url.endsWith(")")) { url = url.slice(0, -1); close--; }
-        return `<a href="${url.replace(/&amp;/g, '&')}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${url}</a>`;
+        let suffix = "";
+        while (close > open && url.endsWith(")")) { url = url.slice(0, -1); close--; suffix += ")"; }
+        return `<a href="${url.replace(/&amp;/g, '&')}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${url}</a>${suffix}`;
       });
   }
 
