@@ -89,7 +89,23 @@ function CoField({ label, k, type = "text", opts, co, set, required: isRequired 
       ) : (
         <>
         <input id={fieldId} aria-required={isRequired} type={type} value={((co as Record<string,unknown>)[k] ?? "") as string}
-          onChange={e => { const v = type === "number" ? (e.target.value === '' ? 0 : parseFloat(e.target.value) || 0) : e.target.value; set(k, v); if (k === "name" && !co.id) set("slug", slugify(e.target.value)); }}
+          onChange={e => {
+            let v: string | number;
+            if (type === "number") {
+              if (e.target.value === "") {
+                v = 0;
+              } else {
+                const n = parseFloat(e.target.value);
+                // Reject non-numeric input (NaN) — keep the previous value intact
+                if (isNaN(n)) return;
+                v = n;
+              }
+            } else {
+              v = e.target.value;
+            }
+            set(k, v);
+            if (k === "name" && !co.id) set("slug", slugify(e.target.value));
+          }}
           readOnly={k === "slug" && !!co.id}
           aria-readonly={k === "slug" && !!co.id || undefined}
           {...(type === "number" && k.startsWith("esg_") ? { min: 0, max: 100 } :
@@ -106,7 +122,7 @@ function CoField({ label, k, type = "text", opts, co, set, required: isRequired 
   );
 }
 
-function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; onSave: (c: Partial<DbCompany>) => void; onCancel: () => void }) {
+function CoForm({ initial, onSave, onCancel, saving }: { initial: Partial<DbCompany>; onSave: (c: Partial<DbCompany>) => void; onCancel: () => void; saving?: boolean }) {
   const [co, setCo] = useState({ ...initial });
   const set = useCallback((k: string, v: unknown) => setCo(p => ({ ...p, [k]: v })), []);
 
@@ -155,7 +171,7 @@ function CoForm({ initial, onSave, onCancel }: { initial: Partial<DbCompany>; on
       </div>
       <div className="flex gap-2 justify-end pt-2">
         <button type="button" onClick={onCancel} className="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">Cancel</button>
-        <button type="button" onClick={() => onSave(co)} className="flex items-center gap-2 px-4 py-2 text-sm bg-[#4B2580] text-white rounded-lg hover:bg-[#3D1A6E]"><Save className="w-3 h-3" /> Save Company</button>
+        <button type="button" onClick={() => onSave(co)} disabled={saving} aria-busy={saving} className={`flex items-center gap-2 px-4 py-2 text-sm bg-[#4B2580] text-white rounded-lg hover:bg-[#3D1A6E] disabled:opacity-60 disabled:cursor-not-allowed`}><Save className="w-3 h-3" /> {saving ? "Saving…" : "Save Company"}</button>
       </div>
     </div>
   );
@@ -253,8 +269,9 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
       if (misErr) console.warn("[Admin] material_issues load error:", misErr.message);
       setEngagements(engs || []);
       setIssues(mis || []);
-    } catch {
-      // silently fall back to empty lists
+    } catch (err) {
+      console.warn("[Admin] loadDetail error:", err);
+      showToast("Failed to refresh company data — please reload the page", true);
     } finally {
       loadingRef.current = false;
       detailLoadCount.current += 1; // force EngForm/IssueForm remount via key change
@@ -289,7 +306,10 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
     if (savingIssueRef.current) return;
     savingIssueRef.current = true;
     try {
-      const sort_order = issues.length > 0 ? Math.max(...issues.map(x => x.sort_order ?? 0)) + 1 : 0;
+      // Preserve existing sort_order on edits; only assign max+1 for new issues (no id)
+      const sort_order = i.id != null
+        ? (i.sort_order ?? 0)
+        : (issues.length > 0 ? Math.max(...issues.map(x => x.sort_order ?? 0)) + 1 : 0);
       const result = await adminWrite({ action: "upsert_issue", issue: { ...i, sort_order }, company_slug: co.slug });
       if (!result.ok) { showToast("Error saving issue: " + (result.error ?? ""), true); return; }
       setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();
@@ -475,8 +495,11 @@ export default function AdminPage() {
     setPendingDeleteCoId(null);
     try {
       const result = await adminWrite({ action: "delete_company", id, slug });
-      if (!result.ok) showToast("Partial deletion error — refresh to verify: " + (result.error ?? ""), true);
-      else showToast(`${name} deleted`);
+      if (!result.ok) {
+        showToast("Deletion failed — " + (result.error ?? "unknown error"), true);
+        return;
+      }
+      showToast(`${name} deleted`);
       clearCache();
       loadCompanies();
     } catch (err) {
@@ -619,7 +642,7 @@ export default function AdminPage() {
 
         {adding && (
           <div className="mb-6">
-            <CoForm initial={makeEmptyCo()} onSave={saveCompany} onCancel={() => setAdding(false)} />
+            <CoForm initial={makeEmptyCo()} onSave={saveCompany} onCancel={() => setAdding(false)} saving={saving} />
           </div>
         )}
 
@@ -628,7 +651,7 @@ export default function AdminPage() {
         ) : (
           <div className="space-y-3">
             {sortedAdminCompanies.map(co => editing?.id === co.id ? (
-              <CoForm key={co.id} initial={editing} onSave={saveCompany} onCancel={() => setEditing(null)} />
+              <CoForm key={co.id} initial={editing} onSave={saveCompany} onCancel={() => setEditing(null)} saving={saving} />
             ) : (
               <CompanyRow key={co.id} co={co} onEdit={() => { setEditing(co); setAdding(false); }} onDelete={() => deleteCompany(co.id, co.slug, co.name)} showToast={showToast} isPendingDelete={pendingDeleteCoId === co.id} onCancelDelete={() => setPendingDeleteCoId(null)} />
             ))}
