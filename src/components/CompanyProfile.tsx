@@ -224,12 +224,14 @@ export function CompanyProfile({ company: co }: { company: Company }) {
               )}
             </div>
             <p className="text-gray-600 text-sm max-w-2xl mb-2">{co.description}</p>
-            {co.sdgAlignment.length > 0 && (
+            {co.sdgAlignment.length > 0 ? (
               <div className="flex flex-wrap items-center gap-1.5 mb-3">
                 {co.sdgAlignment.map(({ sdg, label }) => (
                   <SDGBadge key={sdg} sdg={sdg} label={label} />
                 ))}
               </div>
+            ) : (
+              <p className="text-xs text-gray-400 italic mb-3">No SDG alignment data on record.</p>
             )}
             <div className="flex items-center gap-4 text-xs text-gray-500">
               <span>{co.sasbCategory || "Uncategorised"}</span>
@@ -1334,7 +1336,9 @@ function NatureTab({ co }: { co: Company }) {
           })}
         </div>
         <ul className="space-y-3">
-          {co.natureRisk.details.map((d, i) => (
+          {co.natureRisk.details.length === 0
+            ? <li className="text-xs text-gray-500 italic">No nature risk details on record for this company.</li>
+            : co.natureRisk.details.map((d, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-gray-600">
               <div className="w-1.5 h-1.5 rounded-full bg-green-400 mt-1.5 flex-shrink-0" />
               {d}

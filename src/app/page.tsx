@@ -359,7 +359,7 @@ export default function OverviewPage() {
                 return sorted.map((co, i) => (
                   <Fragment key={co.slug}>
                     {i > 0 && sorted[i - 1].portfolioStatus === "Active" && co.portfolioStatus === "Pipeline" && (
-                      <tr key="pipeline-divider">
+                      <tr key={`__divider-before-${co.slug}`}>
                         <td colSpan={10} className="px-6 py-2 bg-blue-50 border-y border-blue-100">
                           <span className="text-[10px] font-semibold text-blue-700 uppercase tracking-wider flex items-center gap-1">
                             <GitMerge className="w-3 h-3" /> Pipeline — Pre-Investment ESG Due Diligence
