@@ -147,7 +147,7 @@ function LearnContent() {
             <span className="text-xs text-gray-500">{filteredCaseStudies.length} of {caseStudies.length}</span>
           </div>
           {filteredCaseStudies.length === 0 && (
-            <p className="text-xs text-gray-500 py-4">No case studies match your search.</p>
+            <p className="text-xs text-gray-500 py-4">{frameworkFilter !== "All" ? "No case studies found for the selected framework category." : "No case studies match your search."}</p>
           )}
           <div className="space-y-3">
             {filteredCaseStudies.map((cs) => <CaseStudyCard key={cs.id} study={cs} />)}

@@ -33,7 +33,7 @@ export function formatDate(iso: string): string {
   return `${day} ${months[monthIdx]} ${y}`;
 }
 
-/** Copy text to clipboard with a window.prompt fallback for non-HTTPS contexts. Returns true on success. */
+/** Copy text to clipboard with a window.prompt fallback for non-HTTPS contexts. Returns true when content was made available to the user (either via clipboard or prompt), false only on unexpected errors. */
 export async function copyToClipboard(text: string): Promise<boolean> {
   try {
     if (navigator.clipboard) {
@@ -43,8 +43,9 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     window.prompt("Copy manually:", text);
     return true;
   } catch {
+    // navigator.clipboard rejected (e.g. permissions denied) — fall back to prompt
     window.prompt("Copy manually:", text);
-    return false;
+    return true; // prompt was shown; user can copy from it
   }
 }
 

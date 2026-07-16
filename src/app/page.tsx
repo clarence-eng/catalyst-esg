@@ -219,10 +219,11 @@ export default function OverviewPage() {
         <div className="flex-1 mx-8">
           <div className="h-3 bg-white/60 rounded-full overflow-hidden border border-white/40">
             <div className={`h-full rounded-full transition-all ${
+              totalActiveAUM === 0 ? "bg-gray-400 opacity-40" :
               avgScore >= 65 ? "bg-emerald-500" : avgScore >= 40 ? "bg-amber-500" : "bg-red-500"
-            }`} style={{ width: `${avgScore}%` }}
-            role="progressbar" aria-valuenow={avgScore} aria-valuemin={0} aria-valuemax={100}
-            aria-label={`Portfolio ESG Health: ${avgScore} out of 100`} />
+            }`} style={{ width: totalActiveAUM === 0 ? "100%" : `${avgScore}%` }}
+            role="progressbar" aria-valuenow={totalActiveAUM === 0 ? undefined : avgScore} aria-valuemin={0} aria-valuemax={100}
+            aria-label={totalActiveAUM === 0 ? "Portfolio ESG Health: no AUM set" : `Portfolio ESG Health: ${avgScore} out of 100`} />
           </div>
           <div className="flex justify-between mt-1 text-[10px] text-gray-500">
             <span>0</span><span>50</span><span>100</span>
