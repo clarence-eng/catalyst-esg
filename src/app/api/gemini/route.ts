@@ -110,7 +110,7 @@ Write exactly three paragraphs:
 3. Engagement & Monitoring: Recommended post-investment ESG action priorities
 Write in the style of a Temasek investment memo — precise, investment-grade, Singapore/Asia context-aware. No headers, just three paragraphs. Use frameworks like TCFD, TNFD, ISSB, and SASB appropriately. Reference "sustainable returns over the long term" and Temasek's mandate where relevant.`;
       userContent = `Company: ${sanitize(ctx.name)}
-Sector: ${sanitize(ctx.sector)} (${sanitize(ctx.sasbCategory)})
+Sector: ${sanitize(ctx.sector)}${ctx.sasbCategory ? ` (${sanitize(ctx.sasbCategory)})` : ""}
 Country/Region: ${sanitize(ctx.country)}, ${sanitize(ctx.region)}
 ESG Rating: ${sanitize(ctx.rating)} (Overall score: ${sanitize(ctx.overallScore)}/100, E: ${sanitize(ctx.eScore)}, S: ${sanitize(ctx.sScore)}, G: ${sanitize(ctx.gScore)})
 ESG Maturity: ${sanitize(ctx.maturity)}
