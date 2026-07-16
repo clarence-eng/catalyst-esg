@@ -245,8 +245,10 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
   useEffect(() => {
     if (prevPlanKeyRef.current !== planKey) {
       prevPlanKeyRef.current = planKey;
-      // Clear all plan state including any stale error banner
-      if (plan || planError) { setPlan(""); setPlanGeneratedAt(null); setPlanError(""); }
+      // Clear all plan state including loading — if a request was in-flight for the
+      // previous company, release the ref guard so the new company can generate immediately.
+      setPlan(""); setPlanGeneratedAt(null); setPlanError("");
+      setPlanLoading(false); planLoadingRef.current = false;
     }
   }, [planKey, plan, planError]);
 
@@ -334,7 +336,10 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
       setPlan(data.text);
       setPlanGeneratedAt(new Date());
     } catch (e: unknown) {
-      setPlanError(e instanceof Error ? e.message : "Failed to generate action plan");
+      // Only write error to the current company — discard if key changed while in flight
+      if (prevPlanKeyRef.current === capturedKey) {
+        setPlanError(e instanceof Error ? e.message : "Failed to generate action plan");
+      }
     } finally {
       planLoadingRef.current = false;
       setPlanLoading(false);
