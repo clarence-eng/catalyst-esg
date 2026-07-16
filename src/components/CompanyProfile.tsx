@@ -851,10 +851,9 @@ function OverviewTab({
               if (rawIV === 0) return (
                 <p className="text-xs text-gray-500 italic py-2">Investment values not set — portfolio benchmark unavailable</p>
               );
-              const totalIV = rawIV;
-              const wtdE = Math.round(active.reduce((s, c) => s + c.esgScore.environmental * c.investmentValue, 0) / totalIV);
-              const wtdS = Math.round(active.reduce((s, c) => s + c.esgScore.social * c.investmentValue, 0) / totalIV);
-              const wtdG = Math.round(active.reduce((s, c) => s + c.esgScore.governance * c.investmentValue, 0) / totalIV);
+              const wtdE = Math.round(active.reduce((s, c) => s + c.esgScore.environmental * c.investmentValue, 0) / rawIV);
+              const wtdS = Math.round(active.reduce((s, c) => s + c.esgScore.social * c.investmentValue, 0) / rawIV);
+              const wtdG = Math.round(active.reduce((s, c) => s + c.esgScore.governance * c.investmentValue, 0) / rawIV);
               return [
               { label: "Environmental", score: co.esgScore.environmental, portfolioAvg: wtdE },
               { label: "Social", score: co.esgScore.social, portfolioAvg: wtdS },
@@ -1652,7 +1651,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
           <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-100" />
           <div className="space-y-4">
             {[...co.engagement].sort((a, b) => a.date > b.date ? -1 : a.date < b.date ? 1 : 0).map((e, idx) => (
-              <div key={`${e.date}-${e.type}-${e.topic}-${idx}`} className="relative pl-10">
+              <div key={e.id ?? `${e.date}-${e.type}-${e.topic}-${idx}`} className="relative pl-10">
                 <div className={`absolute left-4 top-1.5 w-2 h-2 rounded-full -translate-x-1/2 ${
                   e.status === "Completed" ? "bg-emerald-500" :
                   e.status === "Planned" ? "bg-blue-500" : "bg-red-500"

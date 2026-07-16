@@ -43,6 +43,7 @@ export interface ValueUplift {
 }
 
 export interface EngagementRecord {
+  id?: string; // present for Supabase-sourced records; absent for static data
   date: string;
   type: "Meeting" | "Report Review" | "Site Visit" | "Call" | "Email";
   topic: string;

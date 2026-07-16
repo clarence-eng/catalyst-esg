@@ -475,6 +475,7 @@ function dbToCompany(
       .filter(e => e.company_slug === co.slug)
       .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))
       .map(e => ({
+        id: e.id,
         date: e.date ?? "",
         type: (["Meeting","Report Review","Site Visit","Call","Email"] as const).includes(e.type as Company["engagement"][0]["type"])
           ? e.type as Company["engagement"][0]["type"]
