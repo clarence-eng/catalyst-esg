@@ -92,7 +92,7 @@ export interface Company {
   historicalScores: { period: string; e: number; s: number; g: number }[];
   icRecommendation?: {
     verdict: "Invest" | "Invest Conditional" | "Pass";
-    conditions: string[];
+    conditions: string[] | null;
     esgGating: string;
   };
   sdgAlignment: SDGTag[];

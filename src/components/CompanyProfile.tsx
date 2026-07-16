@@ -563,9 +563,9 @@ function OverviewTab({
                 IC Recommendation: {co.icRecommendation.verdict}
               </span>
             </div>
-            {co.icRecommendation.conditions.length > 0 ? (
+            {(co.icRecommendation.conditions ?? []).length > 0 ? (
               <div className="space-y-1 mb-2">
-                {co.icRecommendation.conditions.map((c) => {
+                {(co.icRecommendation.conditions ?? []).map((c) => {
                   const bulletColor = co.icRecommendation!.verdict === "Invest" ? "text-emerald-700" : co.icRecommendation!.verdict === "Pass" ? "text-red-700" : "text-amber-700";
                   return (
                     <div key={c} className="flex items-start gap-2 text-xs text-gray-700">
