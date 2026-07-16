@@ -185,6 +185,7 @@ function makeEmptyEng(): Partial<DbEngagement> {
   return { date: todayISO(), type: "Meeting", topic: "", status: "Planned", notes: "" };
 }
 function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: string; initial: Partial<DbEngagement>; onSave: (e: Partial<DbEngagement>) => void; onCancel: () => void }) {
+  const [submitting, setSubmitting] = useState(false);
   const [eng, setEng] = useState({ ...initial });
   const [topicError, setTopicError] = useState(false);
   const [dateError, setDateError] = useState(false);
@@ -205,11 +206,12 @@ function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: stri
       <div><label htmlFor={`${p}-notes`} className="text-xs font-medium text-gray-700">Notes</label><textarea id={`${p}-notes`} value={eng.notes||""} onChange={e=>set("notes",e.target.value)} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"/></div>
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-3 py-1 text-xs text-gray-600 border border-gray-200 rounded hover:bg-gray-100">Cancel</button>
-        <button type="button" onClick={() => {
+        <button type="button" disabled={submitting} aria-busy={submitting} onClick={() => {
           if (!eng.topic?.trim()) { setTopicError(true); document.getElementById(`${p}-topic`)?.focus(); return; }
           if (!eng.date || !/^\d{4}-\d{2}-\d{2}$/.test(eng.date)) { setDateError(true); document.getElementById(`${p}-date`)?.focus(); return; }
+          setSubmitting(true);
           onSave({ ...eng, company_slug: companySlug });
-        }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
+        }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E] disabled:opacity-60 disabled:cursor-not-allowed">{submitting ? "Saving…" : "Save"}</button>
       </div>
     </div>
   );
@@ -218,6 +220,7 @@ function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: stri
 // ─── Material Issue Form ──────────────────────────────────────────────────────
 const EMPTY_MI: Partial<DbMaterialIssue> = { issue: "", severity: "Medium", category: "Environmental", opportunity: false, detail: "" };
 function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: string; initial: Partial<DbMaterialIssue>; onSave: (i: Partial<DbMaterialIssue>) => void; onCancel: () => void }) {
+  const [submitting, setSubmitting] = useState(false);
   const [mi, setMi] = useState({ ...initial });
   const [nameError, setNameError] = useState(false);
   const p = `issue-${companySlug}`;
@@ -236,7 +239,7 @@ function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: st
       <div><label htmlFor={`${p}-detail`} className="text-xs font-medium text-gray-700">Detail</label><textarea id={`${p}-detail`} value={mi.detail||""} onChange={e=>setMi(p=>({...p,detail:e.target.value}))} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"/></div>
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-3 py-1 text-xs text-gray-600 border border-gray-200 rounded hover:bg-gray-100">Cancel</button>
-        <button type="button" onClick={() => { if (!mi.issue?.trim()) { setNameError(true); document.getElementById(`${p}-name`)?.focus(); return; } onSave({ ...mi, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E]">Save</button>
+        <button type="button" disabled={submitting} aria-busy={submitting} onClick={() => { if (!mi.issue?.trim()) { setNameError(true); document.getElementById(`${p}-name`)?.focus(); return; } setSubmitting(true); onSave({ ...mi, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E] disabled:opacity-60 disabled:cursor-not-allowed">{submitting ? "Saving…" : "Save"}</button>
       </div>
     </div>
   );
@@ -270,8 +273,14 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
         supabase.from("engagements").select("*").eq("company_slug", co.slug).order("date", { ascending: false }),
         supabase.from("material_issues").select("*").eq("company_slug", co.slug).order("sort_order"),
       ]);
-      if (engsErr) console.warn("[Admin] engagements load error:", engsErr.message);
-      if (misErr) console.warn("[Admin] material_issues load error:", misErr.message);
+      if (engsErr) {
+        console.warn("[Admin] engagements load error:", engsErr.message);
+        showToastRef.current("Failed to load engagements — " + engsErr.message, true);
+      }
+      if (misErr) {
+        console.warn("[Admin] material_issues load error:", misErr.message);
+        showToastRef.current("Failed to load issues — " + misErr.message, true);
+      }
       setEngagements(engs || []);
       setIssues(mis || []);
     } catch (err) {
@@ -317,7 +326,10 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
         : (issues.length > 0 ? issues.reduce((m, x) => (x.sort_order ?? 0) > m ? (x.sort_order ?? 0) : m, 0) + 1 : 0);
       const result = await adminWrite({ action: "upsert_issue", issue: { ...i, sort_order }, company_slug: co.slug });
       if (!result.ok) { showToast("Error saving issue: " + (result.error ?? ""), true); return; }
-      setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();
+      setAddIssue(false); setEditIssue(null); clearCache();
+      // Await loadDetail before releasing savingIssueRef — prevents a second rapid add
+      // reading stale issues state and computing a duplicate sort_order.
+      await loadDetail();
     } catch (err) {
       showToast("Unexpected error saving issue", true);
       console.error("[Admin] saveIssue threw:", err);
