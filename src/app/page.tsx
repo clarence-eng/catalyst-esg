@@ -529,7 +529,9 @@ function ESGDimensionHeatmap({ companies }: { companies: Array<{ name: string; s
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
-            {[...active].sort((a, b) => b.esgScore.overall - a.esgScore.overall || a.name.localeCompare(b.name, "en-SG")).map(co => (
+            {active.length === 0 ? (
+              <tr><td colSpan={5} className="text-xs text-gray-400 text-center py-4 italic">No active companies to display</td></tr>
+            ) : [...active].sort((a, b) => b.esgScore.overall - a.esgScore.overall || a.name.localeCompare(b.name, "en-SG")).map(co => (
               <tr key={co.slug}>
                 <th scope="row" className="py-2.5 pr-4">
                   <Link href={`/scout/${co.slug}`} className="text-gray-800 font-medium hover:text-purple-700 transition-colors">{displayName(co.name)}</Link>

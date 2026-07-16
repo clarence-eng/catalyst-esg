@@ -256,7 +256,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
                 })()}
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4" role="group" aria-label="ESG pillar scores">
             <ScoreRing score={co.esgScore.environmental} label="E" size={72} />
             <ScoreRing score={co.esgScore.social} label="S" size={72} />
             <ScoreRing score={co.esgScore.governance} label="G" size={72} />
@@ -546,7 +546,7 @@ function OverviewTab({
                 IC Recommendation: {co.icRecommendation.verdict}
               </span>
             </div>
-            {co.icRecommendation.conditions.length > 0 && (
+            {co.icRecommendation.conditions.length > 0 ? (
               <div className="space-y-1 mb-2">
                 {co.icRecommendation.conditions.map((c, i) => {
                   const bulletColor = co.icRecommendation!.verdict === "Invest" ? "text-emerald-700" : co.icRecommendation!.verdict === "Pass" ? "text-red-700" : "text-amber-700";
@@ -557,7 +557,9 @@ function OverviewTab({
                   );
                 })}
               </div>
-            )}
+            ) : co.icRecommendation.verdict === "Invest Conditional" ? (
+              <p className="text-xs text-gray-400 italic mb-2">No specific conditions recorded.</p>
+            ) : null}
             <p className="text-xs text-gray-500 italic">{co.icRecommendation.esgGating}</p>
           </div>
         ) : co.portfolioStatus === "Active" ? (
