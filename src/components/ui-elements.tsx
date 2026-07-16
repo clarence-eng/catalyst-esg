@@ -62,7 +62,7 @@ export function ScoreRing({ score: rawScore, size = 80, label }: { score: number
     <div className="flex flex-col items-center gap-1">
       <svg width={size} height={size} className="-rotate-90 score-ring" role="img" aria-label={label ? `${label} score: ${score} out of 100` : `Score: ${score} out of 100`}>
         <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="rgba(0,0,0,0.10)" strokeWidth={6} className="score-ring-track" />
-        {score > 0 && (
+        {score > 0 ? (
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -72,6 +72,12 @@ export function ScoreRing({ score: rawScore, size = 80, label }: { score: number
           strokeWidth={6}
           strokeDasharray={`${progress} ${circumference}`}
           strokeLinecap="round"
+        />) : (
+        <circle
+          cx={size / 2} cy={size / 2} r={radius}
+          fill="none" stroke={color} strokeWidth={6}
+          strokeDasharray={`${circumference} ${circumference}`}
+          opacity={0.25}
         />
         )}
         <text
