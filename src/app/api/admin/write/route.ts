@@ -171,11 +171,11 @@ export async function POST(req: NextRequest) {
     // This prevents permanent orphan data loss: if children succeed but the company DELETE later
     // fails, a retry would delete the company row while its children are already gone.
     const { error: miErr } = await sb.from("material_issues").delete().eq("company_slug", slug);
-    if (miErr) return NextResponse.json({ error: miErr.message }, { status: 500 });
+    if (miErr) return dbError(miErr);
     const { error: engErr } = await sb.from("engagements").delete().eq("company_slug", slug);
-    if (engErr) return NextResponse.json({ error: engErr.message }, { status: 500 });
+    if (engErr) return dbError(engErr);
     const { error: coErr } = await sb.from("companies").delete().eq("id", id);
-    if (coErr) return NextResponse.json({ error: coErr.message }, { status: 500 });
+    if (coErr) return dbError(coErr);
     return NextResponse.json({ ok: true });
   }
 

@@ -22,7 +22,7 @@ export default function GlobalError({
       </head>
       <body className="bg-[#F5F5F7] dark:bg-[#0a0f1e]" style={{ margin: 0, fontFamily: "system-ui, sans-serif" }}>
         <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
-          <div className="bg-white dark:bg-[#141824] border border-gray-200 dark:border-gray-700" style={{ borderRadius: "16px", padding: "40px", maxWidth: "400px", width: "100%", textAlign: "center", boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
+          <div role="alert" aria-live="assertive" className="bg-white dark:bg-[#141824] border border-gray-200 dark:border-gray-700" style={{ borderRadius: "16px", padding: "40px", maxWidth: "400px", width: "100%", textAlign: "center", boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
             <div aria-hidden="true" style={{ fontSize: "40px", color: "#fca5a5", marginBottom: "16px" }}>⚠</div>
             <h1 className="text-gray-900 dark:text-gray-100" style={{ fontSize: "18px", fontWeight: "600", marginBottom: "8px" }}>Something went wrong</h1>
             <p className="text-gray-500 dark:text-gray-400" style={{ fontSize: "14px", marginBottom: "24px" }}>

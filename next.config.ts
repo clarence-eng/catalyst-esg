@@ -8,6 +8,9 @@ const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-XSS-Protection", value: "1; mode=block" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  // HSTS: instructs browsers to always use HTTPS for 1 year, preventing TLS-downgrade
+  // cookie theft on initial HTTP requests before server redirect fires.
+  { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
   {
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=()",
