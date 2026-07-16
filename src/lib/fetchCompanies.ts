@@ -395,7 +395,7 @@ function dbToCompany(
   const enrichment = ENRICHMENT[co.slug];
 
   // Derive nature risk flags from sector and nature_risk level (fallback for admin-added companies)
-  const sector = co.sector.toLowerCase();
+  const sector = (co.sector ?? "").toLowerCase();
   const isAgri = sector.includes("agri") || sector.includes("palm") || sector.includes("agriculture");
   const isMarine = sector.includes("marine") || sector.includes("shipping");
   const natureLevel = co.nature_risk as string;
@@ -425,7 +425,7 @@ function dbToCompany(
     name: co.name,
     sector: co.sector,
     country: co.country,
-    region: co.region,
+    region: co.region ?? "",
     description: co.description,
     portfolioStatus: (["Active","Pipeline"] as const).includes(co.portfolio_status as Company["portfolioStatus"]) ? co.portfolio_status as Company["portfolioStatus"] : "Active",
     maturity: (["Leading","Advanced","Developing","Lagging"] as const).includes(co.maturity as Company["maturity"]) ? co.maturity as Company["maturity"] : "Developing",
@@ -465,7 +465,7 @@ function dbToCompany(
       ],
     },
     netZeroCommitment: (["None","Net Zero Pledged","SBTi Committed","SBTi Targets Set"] as const).includes(co.net_zero_commitment as Company["netZeroCommitment"]) ? co.net_zero_commitment as Company["netZeroCommitment"] : "None",
-    sasbCategory: co.sasb_category,
+    sasbCategory: co.sasb_category ?? "General",
     temasekMegatrend: (["Climate Transition","Nature & Biodiversity","Just Transition & Inclusive Growth","AI & Digital Ethics","Longer Lifespans"] as const).includes(co.temasek_megatrend as Company["temasekMegatrend"])
       ? co.temasek_megatrend as Company["temasekMegatrend"]
       : "Climate Transition",

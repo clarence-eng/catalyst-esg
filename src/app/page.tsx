@@ -409,7 +409,7 @@ export default function OverviewPage() {
       <RiskHeatmap companies={companies} />
       <ESGDimensionHeatmap companies={companies} />
       <PCAFFinancedEmissionsTable companies={activeCompanies} totalActiveAUM={totalActiveAUM} />
-      <PortfolioBrief portfolioSummary={portfolioSummary} companyNames={activeCompanies.map(c => c.name)} />
+      <PortfolioBrief portfolioSummary={portfolioSummary} companyNames={[...activeCompanies].sort((a, b) => a.name.localeCompare(b.name, "en-SG")).map(c => c.name)} />
 
       {/* Megatrend Cards */}
       <div className="mb-3 flex items-center justify-between">
