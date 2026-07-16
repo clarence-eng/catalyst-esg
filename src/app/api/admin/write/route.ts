@@ -148,7 +148,8 @@ export async function POST(req: NextRequest) {
       // Verify slug is not being changed — slug is immutable after creation (child rows are keyed on it)
       const { data: existing } = await sb.from("companies").select("slug").eq("id", id).single();
       if (!existing) return badRequest("Company not found");
-      if (existing.slug !== slug) return badRequest("Slug is immutable — child records are keyed on the original slug. Create a new company instead of renaming.");
+      // existing.slug may be null for legacy/partial rows — allow update in that case
+      if (existing.slug !== null && existing.slug !== slug) return badRequest("Slug is immutable — child records are keyed on the original slug. Create a new company instead of renaming.");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { slug: _slug, ...updatePayload } = payload;
       const { error } = await sb.from("companies").update(updatePayload).eq("id", id);
@@ -183,8 +184,9 @@ export async function POST(req: NextRequest) {
     const e = body.engagement;
     const company_slug = typeof body.company_slug === "string" ? body.company_slug.trim() : "";
     if (!company_slug || !SLUG_RE.test(company_slug)) return badRequest("Invalid company_slug");
-    const { count: coCount } = await sb.from("companies").select("id", { count: "exact", head: true }).eq("slug", company_slug);
-    if (!coCount) return badRequest("Company not found");
+    const { count: coCount, error: coCountErr } = await sb.from("companies").select("id", { count: "exact", head: true }).eq("slug", company_slug);
+    if (coCountErr) return NextResponse.json({ error: "Database error checking company" }, { status: 500 });
+    if (coCount === 0) return badRequest("Company not found");
     const dateStr = typeof e.date === "string" ? e.date : "";
     // Validate ISO format AND calendar validity — /^\d{4}-\d{2}-\d{2}$/ alone accepts '2024-99-99'
     const dateObj = dateStr.match(/^\d{4}-\d{2}-\d{2}$/) ? new Date(`${dateStr}T00:00:00`) : null;
@@ -225,8 +227,9 @@ export async function POST(req: NextRequest) {
     const i = body.issue;
     const company_slug = typeof body.company_slug === "string" ? body.company_slug.trim() : "";
     if (!company_slug || !SLUG_RE.test(company_slug)) return badRequest("Invalid company_slug");
-    const { count: coCount2 } = await sb.from("companies").select("id", { count: "exact", head: true }).eq("slug", company_slug);
-    if (!coCount2) return badRequest("Company not found");
+    const { count: coCount2, error: coCount2Err } = await sb.from("companies").select("id", { count: "exact", head: true }).eq("slug", company_slug);
+    if (coCount2Err) return NextResponse.json({ error: "Database error checking company" }, { status: 500 });
+    if (coCount2 === 0) return badRequest("Company not found");
     const issue = sanitizeString(i.issue, 500).trim();
     if (!issue) return badRequest("issue name required");
     const VALID_SEV = ["Critical", "High", "Medium", "Low"];
