@@ -1,4 +1,5 @@
 "use client";
+const displayName = (name: string) => name.trim() || "Unnamed company";
 import { type Company } from "@/data/companies";
 import { X, BarChart3 } from "lucide-react";
 import Link from "next/link";
@@ -40,14 +41,14 @@ export function ComparisonDrawer({ companies, onRemove, onClear, onDismiss }: Pr
         </div>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-xs" aria-label={`ESG comparison: ${companies.map(c => c.name).join(", ")}`}>
+        <table className="w-full text-xs" aria-label={`ESG comparison: ${companies.map(c => displayName(c.name)).join(", ")}`}>
           <thead>
             <tr className="border-b border-gray-100">
               <th scope="col" className="text-left px-4 py-2 text-gray-500 font-medium w-36">Metric</th>
               {companies.map(c => (
                 <th key={c.slug} scope="col" className="px-4 py-2 min-w-[140px]">
                   <div className="flex items-center justify-between gap-2">
-                    <Link href={`/scout/${c.slug}`} className="font-semibold text-gray-900 hover:text-purple-700 truncate max-w-[100px]">{c.name}</Link>
+                    <Link href={`/scout/${c.slug}`} className="font-semibold text-gray-900 hover:text-purple-700 truncate max-w-[100px]">{displayName(c.name)}</Link>
                     <button type="button" onClick={() => onRemove(c.slug)} aria-label={`Remove ${c.name} from comparison`} className="text-gray-500 hover:text-gray-700 flex-shrink-0"><X className="w-3 h-3" /></button>
                   </div>
                   <div className="text-gray-500 font-normal truncate">{c.sector.split(" ")[0]}</div>

@@ -7,6 +7,7 @@ import { RatingBadge, MaturityBadge, PageHeader, RiskBadge } from "@/components/
 import { Search, ArrowRight, GitMerge } from "lucide-react";
 import { ComparisonDrawer } from "@/components/ComparisonDrawer";
 
+const displayName = (name: string) => name.trim() || "Unnamed company";
 type StatusFilter = "All" | "Active" | "Pipeline";
 type SortKey = "esg_desc" | "esg_asc" | "carbon_asc" | "carbon_desc" | "name_asc";
 
@@ -265,7 +266,7 @@ export default function ScoutPage() {
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="font-semibold text-gray-900">{co.name}</span>
+                  <span className="font-semibold text-gray-900">{displayName(co.name)}</span>
                   {co.portfolioStatus === "Pipeline" && (
                     <span className="flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-300 px-2 py-0.5 rounded-full font-medium">
                       <GitMerge className="w-2.5 h-2.5" /> Under Evaluation

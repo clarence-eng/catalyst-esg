@@ -22,6 +22,7 @@ import {
 import { Loader2, FileText, CheckCircle, AlertCircle, TrendingUp, Shield, Leaf, Users, Copy, GitMerge } from "lucide-react";
 
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+const displayName = (name: string) => name.trim() || "Unnamed company";
 
 // Live-updating relative timestamp — re-renders every 60 s so "just now" advances to "2 minutes ago" etc.
 function RelativeTime({ date }: { date: Date }) {
@@ -204,7 +205,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-2xl font-bold text-gray-900">{co.name}</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{displayName(co.name)}</h1>
               <RatingBadge rating={co.esgScore.rating} />
               <MaturityBadge level={co.maturity} />
               {co.netZeroCommitment !== "None" && (
@@ -606,7 +607,7 @@ function OverviewTab({
                 <p className="text-xs text-gray-600 leading-relaxed">{v.description}</p>
               </div>
             )) : (
-              <p className="text-xs text-gray-500 italic">No value uplift opportunities identified. Add via the admin panel or enrichment data.</p>
+              <p className="text-xs text-gray-500 italic">No value uplift opportunities identified. This data comes from the ENRICHMENT map in the source code — add entries for this company slug to populate this section.</p>
             )}
           </div>
         </div>

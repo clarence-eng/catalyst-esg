@@ -34,8 +34,9 @@ export async function generateMetadata({
   const { slug } = await params;
   const company = await getCompany(slug);
   if (!company) return { title: "Company Not Found" };
-  const title = `${company.name} — Catalyst ESG`;
-  const description = `ESG profile for ${company.name}: ${company.esgScore.rating} rating, ${company.maturity} maturity. ${company.description}`.slice(0, 160);
+  const dn = (name: string) => name.trim() || "Unnamed company";
+  const title = `${dn(company.name)} — Catalyst ESG`;
+  const description = `ESG profile for ${dn(company.name)}: ${company.esgScore.rating} rating, ${company.maturity} maturity. ${company.description}`.slice(0, 160);
   return {
     title,
     description,

@@ -153,7 +153,7 @@ export default function OverviewPage() {
       .filter((i) => !i.opportunity)
       .sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4))[0];
     return (
-      `${c.name} (${c.sector}, ${c.country}): ESG ${c.esgScore.overall}/100 [E:${c.esgScore.environmental} S:${c.esgScore.social} G:${c.esgScore.governance}], ` +
+      `${displayName(c.name)} (${c.sector}, ${c.country}): ESG ${c.esgScore.overall}/100 [E:${c.esgScore.environmental} S:${c.esgScore.social} G:${c.esgScore.governance}], ` +
       `Maturity: ${c.maturity}, Transition Risk: ${c.climateRisk.transition}, Nature Risk: ${c.natureRisk.overall}, ` +
       `Carbon Intensity: ${c.carbonIntensity > 0 ? `${c.carbonIntensity} tCO2e/$M` : "Not disclosed"} (non-utility portfolio avg: ${avgCarbonIntensity ?? "N/A"} tCO2e/$M, full portfolio avg incl. ${utilityLabel}: ${avgCarbonIntensityFull} tCO2e/$M), Green Revenue: ${c.greenRevenuePct}%, ` +
       `Overdue engagements: ${c.engagement.filter(e => e.status === "Overdue").length}, Planned: ${c.engagement.filter(e => e.status === "Planned").length}, ` +
@@ -361,7 +361,7 @@ export default function OverviewPage() {
                     )}
                     <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors">
                   <td className="px-6 py-4">
-                    <Link href={`/scout/${co.slug}`} className="font-medium text-gray-900 text-sm hover:text-purple-700 transition-colors">{co.name}</Link>
+                    <Link href={`/scout/${co.slug}`} className="font-medium text-gray-900 text-sm hover:text-purple-700 transition-colors">{displayName(co.name)}</Link>
                     <div className="text-xs text-gray-500">{co.country}</div>
                   </td>
                   <td className="px-4 py-4">
@@ -397,7 +397,7 @@ export default function OverviewPage() {
                     <TransitionRiskDot level={co.climateRisk.transition} />
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <Link href={`/scout/${co.slug}`} className="text-xs text-purple-700 hover:text-purple-800" aria-label={`View ${co.name} ESG profile`}>
+                    <Link href={`/scout/${co.slug}`} className="text-xs text-purple-700 hover:text-purple-800" aria-label={`View ${displayName(co.name)} ESG profile`}>
                       View →
                     </Link>
                   </td>
@@ -468,8 +468,8 @@ export default function OverviewPage() {
             <tbody>
               {activeCompanies.map(co => (
                 <tr key={co.slug} className="border-b border-gray-50 hover:bg-gray-50/50">
-                  <th scope="row" className="py-2 pr-4 font-medium text-gray-800 truncate max-w-[160px] text-left" title={co.name}>
-                    <Link href={`/scout/${co.slug}`} className="hover:text-purple-700 transition-colors">{co.name}</Link>
+                  <th scope="row" className="py-2 pr-4 font-medium text-gray-800 truncate max-w-[160px] text-left" title={displayName(co.name)}>
+                    <Link href={`/scout/${co.slug}`} className="hover:text-purple-700 transition-colors">{displayName(co.name)}</Link>
                   </th>
                   {megatrends.map(t => {
                     const exposure = t.portfolioExposure.find(p => p.slug === co.slug);
@@ -524,7 +524,7 @@ function ESGDimensionHeatmap({ companies }: { companies: Array<{ name: string; s
             {[...active].sort((a, b) => b.esgScore.overall - a.esgScore.overall || a.name.localeCompare(b.name, "en-SG")).map(co => (
               <tr key={co.slug}>
                 <th scope="row" className="py-2.5 pr-4">
-                  <Link href={`/scout/${co.slug}`} className="text-gray-800 font-medium hover:text-purple-700 transition-colors">{co.name}</Link>
+                  <Link href={`/scout/${co.slug}`} className="text-gray-800 font-medium hover:text-purple-700 transition-colors">{displayName(co.name)}</Link>
                 </th>
                 {(["environmental", "social", "governance", "overall"] as const).map(dim => (
                   <td key={dim} className="py-2.5 px-3 text-center">
@@ -618,7 +618,7 @@ function ParisPathwayWidget({ companies }: { companies: { pathwayAlignment: stri
                   <div className="flex-1 min-w-0">
                     <span className={`text-xs font-semibold ${tier.textColor}`}>{tier.label}</span>
                     <span className="text-xs text-gray-500 ml-2">{pct.toFixed(1)}% AUM</span>
-                    <span className="text-xs text-gray-600 ml-2">— {tier.companies.map(c => c.name).join(", ")}</span>
+                    <span className="text-xs text-gray-600 ml-2">— {tier.companies.map(c => displayName(c.name)).join(", ")}</span>
                   </div>
                 </div>
               );
@@ -768,7 +768,7 @@ function PCAFFinancedEmissionsTable({ companies, totalActiveAUM }: { companies: 
           <tbody>
             {rows.map(({ co, stake, estimatedEmissions, score, hasEmissionsData }) => (
               <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors">
-                <th scope="row" className="px-6 py-3 text-sm font-medium text-gray-900">{co.name}</th>
+                <th scope="row" className="px-6 py-3 text-sm font-medium text-gray-900">{displayName(co.name)}</th>
                 <td className="px-4 py-3 text-xs text-gray-600">{co.sector}</td>
                 <td className="px-4 py-3 text-xs text-gray-600 text-right">{stake.toFixed(1)}%</td>
                 <td className="px-4 py-3 text-xs text-gray-800 text-right font-medium">

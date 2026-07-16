@@ -8,6 +8,7 @@ import { AIOutput } from "@/components/AIOutput";
 import Link from "next/link";
 import { formatRelativeTime, formatDate, copyToClipboard } from "@/lib/utils";
 
+const displayName = (name: string) => name.trim() || "Unnamed company";
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
 export default function StewardPage() {
@@ -326,7 +327,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
       <div className="p-5">
         {/* Company name row — outside the expand button to avoid nested-interactive */}
         <div className="flex items-center gap-2 mb-3">
-          <span className="font-semibold text-gray-900">{co.name}</span>
+          <span className="font-semibold text-gray-900">{displayName(co.name)}</span>
           <Link
             href={`/scout/${co.slug}`}
             className="text-xs text-purple-700 hover:text-purple-900 transition-colors"
