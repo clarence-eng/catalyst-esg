@@ -17,17 +17,22 @@ export function getSupabaseClient(): SupabaseClient {
 
 // Admin client — uses service_role key which bypasses RLS.
 // MUST only be used in server-side route handlers, never in client components.
-// Falls back to anon key with a warning if SUPABASE_SERVICE_ROLE_KEY is not set
-// (acceptable in local dev; required in production for secure write operations).
+// Does NOT cache the fallback anon client — each call re-checks the env var so that
+// a container that starts without SUPABASE_SERVICE_ROLE_KEY picks it up on next request
+// once it is injected, rather than permanently serving admin writes with the anon key.
 export function getSupabaseAdminClient(): SupabaseClient {
-  if (_adminClient) return _adminClient;
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url) throw new Error("NEXT_PUBLIC_SUPABASE_URL not configured");
   if (!serviceKey) {
-    console.warn("[Supabase] SUPABASE_SERVICE_ROLE_KEY not set — falling back to anon key for admin writes. Set this env var in production.");
-    return (_adminClient = getSupabaseClient());
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("SUPABASE_SERVICE_ROLE_KEY is required in production for secure admin writes");
+    }
+    console.warn("[Supabase] SUPABASE_SERVICE_ROLE_KEY not set — falling back to anon key. Set this env var in production.");
+    return getSupabaseClient();
   }
+  // Cache the real admin client (service_role key) for performance
+  if (_adminClient) return _adminClient;
   _adminClient = createClient(url, serviceKey, { auth: { persistSession: false } });
   return _adminClient;
 }
@@ -57,7 +62,7 @@ export type DbCompany = {
   esg_environmental: number;
   esg_social: number;
   esg_governance: number;
-  esg_rating: string;
+  esg_rating: "AAA" | "AA" | "A" | "BBB" | "BB" | "B" | "CCC" | string;
   transition_risk: "Low" | "Medium" | "High" | "Critical";
   physical_risk: "Low" | "Medium" | "High" | "Critical";
   pathway_alignment: "1.5°C" | "2°C" | "3°C+" | "Not assessed";
@@ -73,7 +78,7 @@ export type DbEngagement = {
   id: string;
   company_slug: string;
   date: string;
-  type: string;
+  type: "Meeting" | "Report Review" | "Site Visit" | "Call" | "Email" | string;
   topic: string;
   status: "Completed" | "Planned" | "Overdue";
   notes: string;
@@ -88,6 +93,6 @@ export type DbMaterialIssue = {
   category: "Environmental" | "Social" | "Governance";
   opportunity: boolean;
   detail: string;
-  sort_order: number;
+  sort_order: number | null;
   created_at: string;
 };

@@ -231,7 +231,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
         "Peat soil subsidence risk in drainage areas following peat conservation commitments",
       ],
     },
-    boardComposition: { boardSize: 8, independentPct: 38, womenPct: 25, ceoChairSplit: true, auditCommittee: true, esgCommittee: true },
+    boardComposition: { boardSize: 8, independentPct: 50, womenPct: 25, ceoChairSplit: true, auditCommittee: true, esgCommittee: true },
     historicalScores: [
       { period: "Q1 2024", e: 38, s: 55, g: 55 },
       { period: "Q2 2024", e: 40, s: 57, g: 58 },
