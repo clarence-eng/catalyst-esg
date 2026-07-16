@@ -35,18 +35,23 @@ export function GlobalSearch() {
   }, []);
 
   useEffect(() => {
+    let t1: ReturnType<typeof setTimeout> | null = null;
     if (open) {
       navigatingRef.current = false;
       triggerRef.current = document.activeElement as HTMLElement;
-      setTimeout(() => inputRef.current?.focus(), 50);
+      t1 = setTimeout(() => inputRef.current?.focus(), 50);
     } else {
       setQuery("");
-      // Only restore focus if not navigating away (navigation = new page handles focus)
+      setActiveIdx(-1);
       if (!navigatingRef.current) {
-        setTimeout(() => triggerRef.current?.focus(), 50);
+        t1 = setTimeout(() => triggerRef.current?.focus(), 50);
       }
-      navigatingRef.current = false;
+      // Reset after scheduling restore, not before — avoids StrictMode double-invocation race
     }
+    return () => {
+      navigatingRef.current = false;
+      if (t1) clearTimeout(t1);
+    };
   }, [open]);
 
   const q = query.toLowerCase();
@@ -112,6 +117,7 @@ export function GlobalSearch() {
             ref={inputRef}
             type="text"
             role="combobox"
+            aria-haspopup="listbox"
             aria-expanded={query.length >= 2}
             aria-controls={query.length >= 2 ? "search-listbox" : undefined}
             aria-activedescendant={activeIdx >= 0 ? resultItems[activeIdx]?.id : undefined}
@@ -153,7 +159,7 @@ export function GlobalSearch() {
             ) : null}
             <div id="search-listbox" role="listbox" aria-label="Search results" className="max-h-80 overflow-y-auto">
             {matchedCompanies.length > 0 && (
-              <div>
+              <div role="presentation">
                 <div className="px-4 pt-3 pb-1 text-[10px] font-semibold text-gray-500 uppercase tracking-wider" aria-hidden="true">Companies</div>
                 {matchedCompanies.map((c, i) => {
                   const isActive = activeIdx === i;
@@ -178,7 +184,7 @@ export function GlobalSearch() {
               </div>
             )}
             {matchedFrameworks.length > 0 && (
-              <div>
+              <div role="presentation">
                 <div className="px-4 pt-3 pb-1 text-[10px] font-semibold text-gray-500 uppercase tracking-wider" aria-hidden="true">Frameworks</div>
                 {matchedFrameworks.map((f, i) => {
                   const idx = matchedCompanies.length + i;

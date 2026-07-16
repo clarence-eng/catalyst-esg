@@ -3,8 +3,15 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { X, Keyboard } from "lucide-react";
 
+// Detect platform at module level — safe in client component (no SSR mismatch risk since
+// navigator is only accessed inside useEffect-driven logic, and the label is only rendered
+// inside the KeyboardShortcuts dialog which opens on user interaction).
+const isMac = typeof navigator !== "undefined"
+  ? ((navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform ?? navigator.platform ?? "").toLowerCase().includes("mac")
+  : true; // default to Mac for SSR
+
 const SHORTCUTS = [
-  { keys: ["⌘", "K"], desc: "Open global search" },
+  { keys: [isMac ? "⌘" : "Ctrl", "K"], desc: "Open global search" },
   { keys: ["Esc"], desc: "Close modal / search" },
   { keys: ["?"], desc: "Show keyboard shortcuts" },
   { keys: ["G", "then", "O"], desc: "Go to Overview" },
@@ -36,7 +43,14 @@ export function KeyboardShortcuts() {
     let raf1: number, raf2: number;
     if (open) {
       const active = document.activeElement as HTMLElement;
-      triggerRef.current = (active && active !== document.body && active.tabIndex >= -1) ? active : null;
+      // Only capture elements that are genuinely interactive (button, a[href], input, etc.)
+      // tabIndex >= -1 is always true for any DOM element, so check tag/role instead.
+      const isInteractive = active && active !== document.body &&
+        (active instanceof HTMLButtonElement || active instanceof HTMLAnchorElement ||
+         active instanceof HTMLInputElement || active instanceof HTMLSelectElement ||
+         active instanceof HTMLTextAreaElement || active.getAttribute("role") === "button" ||
+         (active.tabIndex > 0));
+      triggerRef.current = isInteractive ? active : null;
       raf1 = requestAnimationFrame(() => { raf2 = requestAnimationFrame(() => closeButtonRef.current?.focus()); });
     } else {
       if (triggerRef.current) {
@@ -81,8 +95,16 @@ export function KeyboardShortcuts() {
           router.push(url);
           setGPressed(false);
           gPressedRef.current = false;
-          // Move focus to main content so keyboard users start from the right position on the new page
-          setTimeout(() => { document.getElementById("main-content")?.focus(); }, 50);
+          // Focus main content on navigation; fall back to first focusable element if
+          // id=main-content is absent on the target page rather than silently dropping focus
+          setTimeout(() => {
+            const main = document.getElementById("main-content");
+            if (main) { main.focus(); return; }
+            const firstFocusable = document.querySelector<HTMLElement>(
+              'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+            );
+            firstFocusable?.focus();
+          }, 50);
         }
       }
     };
