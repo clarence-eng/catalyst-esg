@@ -372,7 +372,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
               <span>·</span>
               <span>{co.country}</span>
               <span>·</span>
-              <span>Last updated: {formatDate(co.lastUpdated)}</span>
+              <span>Last updated: {co.lastUpdated ? formatDate(co.lastUpdated) : "—"}</span>
             </div>
           </div>
 

@@ -469,7 +469,7 @@ function dbToCompany(
     temasekMegatrend: (["Climate Transition","Nature & Biodiversity","Just Transition & Inclusive Growth","AI & Digital Ethics","Longer Lifespans"] as const).includes(co.temasek_megatrend as Company["temasekMegatrend"])
       ? co.temasek_megatrend as Company["temasekMegatrend"]
       : "Climate Transition",
-    lastUpdated: co.last_updated,
+    lastUpdated: co.last_updated ?? "",
     // Map engagements
     engagement: engagements
       .filter(e => e.company_slug === co.slug)
@@ -561,6 +561,12 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
 
     const companies: Company[] = [];
     for (const co of cos as DbCompany[]) {
+      // Skip fundamentally corrupt rows — a company without a slug produces /scout/null links
+      // and duplicate key="null" React reconciliation bugs
+      if (!co.slug?.trim()) {
+        if (process.env.NODE_ENV !== "production") console.warn("[Supabase] skipping company row with missing slug:", co.name);
+        continue;
+      }
       try {
         companies.push(dbToCompany(co, (engs || []) as DbEngagement[], (mis || []) as DbMaterialIssue[]));
       } catch (err) {
