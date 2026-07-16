@@ -331,8 +331,8 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
     try { const result = await adminWrite({ action: "delete_issue", id, company_slug: co.slug }); if (!result.ok) { showToast("Error deleting issue: " + (result.error ?? ""), true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting issue", true); console.error("[Admin] delIssue threw:", err); }
   };
 
-  const statusColor = co.portfolio_status === "Active" ? "text-emerald-700 bg-emerald-50 border-emerald-300" : "text-blue-700 bg-blue-50 border-blue-300";
-  const riskColor = { Low: "text-emerald-700", Medium: "text-amber-700", High: "text-orange-700", Critical: "text-red-700" }[co.transition_risk] || "text-gray-600";
+  const statusColor = (co.portfolio_status ?? "Pipeline") === "Active" ? "text-emerald-700 bg-emerald-50 border-emerald-300" : "text-blue-700 bg-blue-50 border-blue-300";
+  const riskColor = { Low: "text-emerald-700", Medium: "text-amber-700", High: "text-orange-700", Critical: "text-red-700" }[(co.transition_risk ?? "Low") as string] || "text-gray-600";
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
@@ -374,10 +374,10 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
               <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Engagements ({engagements.length})</h4>
               <button type="button" onClick={() => { setAddEng(true); setEditEng(null); }} aria-label="Add engagement" className="flex items-center gap-1 text-xs text-purple-700 hover:text-purple-900"><Plus className="w-3 h-3" aria-hidden="true"/> Add</button>
             </div>
-            {addEng && <div className="mb-3"><EngForm companySlug={co.slug} initial={makeEmptyEng()} onSave={saveEng} onCancel={() => setAddEng(false)}/></div>}
+            {addEng && <div className="mb-3"><EngForm companySlug={co.slug ?? ""} initial={makeEmptyEng()} onSave={saveEng} onCancel={() => setAddEng(false)}/></div>}
             <div className="space-y-2">
               {engagements.map(e => editEng?.id === e.id ? (
-                <EngForm key={`${e.id}-${detailLoadCount.current}`} companySlug={co.slug} initial={e} onSave={saveEng} onCancel={() => setEditEng(null)}/>
+                <EngForm key={`${e.id}-${detailLoadCount.current}`} companySlug={co.slug ?? ""} initial={e} onSave={saveEng} onCancel={() => setEditEng(null)}/>
               ) : (
                 <div key={e.id} className="flex items-center gap-3 text-xs bg-gray-50 rounded-lg px-3 py-2">
                   <span className="text-gray-500 w-24 flex-shrink-0">{e.date}</span>
@@ -400,10 +400,10 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
               <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Material Issues ({issues.length})</h4>
               <button type="button" onClick={() => { setAddIssue(true); setEditIssue(null); }} aria-label="Add material issue" className="flex items-center gap-1 text-xs text-purple-700 hover:text-purple-900"><Plus className="w-3 h-3" aria-hidden="true"/> Add</button>
             </div>
-            {addIssue && <div className="mb-3"><IssueForm companySlug={co.slug} initial={EMPTY_MI} onSave={saveIssue} onCancel={() => setAddIssue(false)}/></div>}
+            {addIssue && <div className="mb-3"><IssueForm companySlug={co.slug ?? ""} initial={EMPTY_MI} onSave={saveIssue} onCancel={() => setAddIssue(false)}/></div>}
             <div className="space-y-2">
               {issues.map(i => editIssue?.id === i.id ? (
-                <IssueForm key={`${i.id}-${detailLoadCount.current}`} companySlug={co.slug} initial={i} onSave={saveIssue} onCancel={() => setEditIssue(null)}/>
+                <IssueForm key={`${i.id}-${detailLoadCount.current}`} companySlug={co.slug ?? ""} initial={i} onSave={saveIssue} onCancel={() => setEditIssue(null)}/>
               ) : (
                 <div key={i.id} className="flex items-center gap-3 text-xs bg-gray-50 rounded-lg px-3 py-2">
                   <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${i.severity==="Critical"?"bg-red-50 text-red-700":i.severity==="High"?"bg-orange-50 text-orange-700":i.severity==="Medium"?"bg-amber-50 text-amber-700":"bg-gray-100 text-gray-600"}`}>{i.severity}</span>
@@ -552,14 +552,14 @@ export default function AdminPage() {
   const adminSearchTrimmed = adminSearch.trim().toLowerCase();
   const filteredAdminCompanies = adminSearchTrimmed
     ? companies.filter(co =>
-        co.name.toLowerCase().includes(adminSearchTrimmed) ||
-        co.sector.toLowerCase().includes(adminSearchTrimmed) ||
+        (co.name ?? "").toLowerCase().includes(adminSearchTrimmed) ||
+        (co.sector ?? "").toLowerCase().includes(adminSearchTrimmed) ||
         // Always include the company being edited to prevent losing unsaved changes
         (editing && co.id === editing.id)
       )
     : companies;
   const sortedAdminCompanies = [...filteredAdminCompanies].sort((a, b) => {
-    if (adminSort === "name") return a.name.localeCompare(b.name);
+    if (adminSort === "name") return (a.name ?? "").localeCompare(b.name ?? "");
     if (adminSort === "esg") {
       const av = a.esg_overall ?? 0;
       const bv = b.esg_overall ?? 0;
@@ -661,7 +661,7 @@ export default function AdminPage() {
             {sortedAdminCompanies.map(co => editing?.id === co.id ? (
               <CoForm key={co.id} initial={editing} onSave={saveCompany} onCancel={() => setEditing(null)} saving={saving} />
             ) : (
-              <CompanyRow key={co.id} co={co} onEdit={() => { setEditing(co); setAdding(false); }} onDelete={() => deleteCompany(co.id, co.slug, co.name)} showToast={showToast} isPendingDelete={pendingDeleteCoId === co.id} onCancelDelete={() => setPendingDeleteCoId(null)} />
+              <CompanyRow key={co.id} co={co} onEdit={() => { setEditing(co); setAdding(false); }} onDelete={() => deleteCompany(co.id, co.slug ?? "", co.name ?? "")} showToast={showToast} isPendingDelete={pendingDeleteCoId === co.id} onCancelDelete={() => setPendingDeleteCoId(null)} />
             ))}
             {sortedAdminCompanies.length === 0 && !adding && !adminSearch && (
               <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-2xl">

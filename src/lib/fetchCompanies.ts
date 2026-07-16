@@ -149,7 +149,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
         "Establish financed emissions measurement baseline (Scope 3 Category 15) within 18 months",
         "Board ESG oversight charter adopted with dedicated ESG committee or clear mandate",
       ],
-      esgGating: "ESG-linked value creation thesis requires confirmed trajectory toward financed emissions disclosure — absence of PCAF baseline within 24 months should trigger portfolio review.",
+      esgGating: "ESG-linked value creation thesis requires confirmed trajectory toward financed emissions disclosure — an absence of any PCAF reporting baseline within 24 months should trigger portfolio review.",
     },
   },
 
@@ -206,7 +206,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
         "Carbon Management SaaS product to achieve APAC ISSB S2 compliance endorsement by Q4 2026",
         "I-REC procurement to reach 60% renewable electricity by Q4 2026",
       ],
-      esgGating: "No hard veto conditions — Leading ESG maturity with clear value creation catalysts. Milestones tracked at quarterly portfolio reviews.",
+      esgGating: "No hard veto conditions — Leading ESG maturity with clear value creation catalysts. Investment proceeds on current terms; engagement milestones tracked at quarterly portfolio reviews.",
     },
   },
 
@@ -264,10 +264,10 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       verdict: "Invest Conditional",
       conditions: [
         "EUDR-compliant traceability system deployed across 100% of Sabah and Sarawak supply chain before close",
-        "Board independence increased to ≥50% as a pre-close governance condition",
-        "SBTi FLAG target submitted within 12 months of close",
+        "Board independence maintained at ≥50% (currently 4 of 8 independent directors) — monitor and improve to ≥62% within 18 months of close",
+        "SBTi FLAG target submitted within 12 months of close — covering Scope 1, 2, and land-use emissions",
       ],
-      esgGating: "EUDR non-compliance represents a binary European market access risk. Supply chain traceability is a hard pre-close condition.",
+      esgGating: "EUDR non-compliance represents a binary European market access risk. Supply chain traceability certification is a hard pre-close condition. Board independence uplift is required to meet DFI co-investment standards.",
     },
   },
 
@@ -326,7 +326,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
         "Geothermal development capex ringfenced at S$150M minimum for Sumatra pipeline within 24 months",
         "Paris-aligned TCFD scenario analysis (1.5°C and 2°C) disclosed in next annual report",
       ],
-      esgGating: "Coal phase-out commitment is a hard pre-close condition — without a credible 2034 retirement schedule, the Paris-misaligned carbon pathway creates stranded-asset risk.",
+      esgGating: "Coal phase-out commitment is a hard pre-close condition — without a credible 2034 retirement schedule, the Paris-misaligned carbon pathway creates stranded-asset risk that cannot be mitigated post-investment.",
     },
   },
 
@@ -365,7 +365,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
     valueUplift: [
       { area: "Inclusive Finance Integration", potential: "High", description: "Partner with Nusantara Bank (portfolio company) to offer embedded microinsurance and health savings products to MediLink's 40M+ patient base. Creates synergistic value across Temasek's portfolio aligned with inclusive growth mandate." },
       { area: "Responsible AI Certification", potential: "High", description: "Achieve MOH AI in Healthcare accreditation and MAS FEAT compliance across financial health products. Positions MediLink as the only certified AI health platform in ASEAN — critical differentiator for government and insurer contracts." },
-      { area: "Carbon-Neutral Telehealth", potential: "Medium", description: "Achieve net zero Scope 1+2 by 2027 via I-REC + energy efficiency (post-close commitment). Enables access to European development finance and WHO digital health partnership programmes that require ESG baseline standards." },
+      { area: "Carbon-Neutral Telehealth", potential: "Medium", description: "Achieve net zero Scope 1+2 by 2028 via I-REC + energy efficiency (post-close commitment). Enables access to European development finance and WHO digital health partnership programmes that require ESG baseline standards." },
     ],
     tnfdPillars: [
       { pillar: "Governance", status: "Gap" },
@@ -399,7 +399,7 @@ function dbToCompany(
   engagements: DbEngagement[],
   issues: DbMaterialIssue[]
 ): Company {
-  const enrichment = ENRICHMENT[co.slug];
+  const enrichment = co.slug ? ENRICHMENT[co.slug] : undefined;
 
   // Derive nature risk flags from sector and nature_risk level (fallback for admin-added companies)
   const sector = (co.sector ?? "").toLowerCase();
@@ -428,7 +428,7 @@ function dbToCompany(
   ] : [];
 
   return {
-    slug: co.slug,
+    slug: co.slug ?? "",
     name: co.name ?? "",
     sector: co.sector ?? "",
     country: co.country ?? "",
