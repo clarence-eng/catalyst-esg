@@ -564,6 +564,7 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
     if (!cos || cos.length === 0) return [];
 
     const companies: Company[] = [];
+    const seenSlugs = new Set<string>();
     for (const co of cos as DbCompany[]) {
       // Skip fundamentally corrupt rows — a company without a slug produces /scout/null links
       // and duplicate key="null" React reconciliation bugs
@@ -571,6 +572,12 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
         if (process.env.NODE_ENV !== "production") console.warn("[Supabase] skipping company row with missing slug:", co.name);
         continue;
       }
+      // Skip duplicate slugs — prevents React duplicate-key warnings and non-deterministic rendering
+      if (seenSlugs.has(co.slug)) {
+        if (process.env.NODE_ENV !== "production") console.warn("[Supabase] skipping duplicate slug:", co.slug);
+        continue;
+      }
+      seenSlugs.add(co.slug);
       try {
         companies.push(dbToCompany(co, (engs || []) as DbEngagement[], (mis || []) as DbMaterialIssue[]));
       } catch (err) {

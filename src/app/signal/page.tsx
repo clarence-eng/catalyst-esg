@@ -194,7 +194,7 @@ export default function SignalPage() {
               <tr className="bg-gray-50 border-b border-gray-200">
                 <th scope="col" className="text-left px-4 py-3 text-gray-600 font-medium w-36">Company</th>
                 {megatrends.map(t => (
-                  <th key={t.slug} scope="col" className="text-center px-2 py-3 text-gray-600 font-medium w-28" title={t.title}>{t.title.split(" ")[0]}</th>
+                  <th key={t.slug} scope="col" className="text-center px-2 py-3 text-gray-600 font-medium w-28"><abbr title={t.title}>{t.title.split(" ")[0]}</abbr></th>
                 ))}
               </tr>
             </thead>
