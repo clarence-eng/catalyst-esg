@@ -100,9 +100,11 @@ export default function OverviewPage() {
   const avgCarbonIntensity = totalNonUtilityDisclosing > 0
     ? Math.round(nonUtilityDisclosing.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalNonUtilityDisclosing)
     : null;
-  // Full weighted avg for AI context (more informative with the outlier noted)
-  const avgCarbonIntensityFull = totalActiveAUM > 0
-    ? Math.round(activeCompanies.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalActiveAUM)
+  // Full weighted avg for AI context (disclosing only — same guard as avgCarbonIntensity)
+  const disclosingActive = activeCompanies.filter(c => c.carbonIntensity > 0 && c.investmentValue > 0);
+  const totalDisclosingAUM = disclosingActive.reduce((s, c) => s + c.investmentValue, 0);
+  const avgCarbonIntensityFull = totalDisclosingAUM > 0
+    ? Math.round(disclosingActive.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalDisclosingAUM)
     : 0;
   const utilityLabel = utilityCompanies.length > 0 ? utilityCompanies.map(c => c.name).join(", ") : "electric utilities";
   const overdueCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Overdue").length, 0);

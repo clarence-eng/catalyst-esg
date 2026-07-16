@@ -95,7 +95,7 @@ function CoField({ label, k, type = "text", opts, co, set, required: isRequired 
           {...(type === "number" && k.startsWith("esg_") ? { min: 0, max: 100 } :
                type === "number" && k === "green_revenue_pct" ? { min: 0, max: 100 } :
                type === "number" && k === "carbon_intensity" ? { min: 0 } :
-               type === "number" && k === "investment_value" ? { min: 1 } : {})}
+               type === "number" && k === "investment_value" ? { min: co.portfolio_status === "Pipeline" ? 0 : 1 } : {})}
           className={`border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400/50 ${k === "slug" && co.id ? "bg-gray-50 text-gray-600 cursor-not-allowed" : "focus:border-purple-400"}`} />
         {k === "investment_value" && co.portfolio_status !== "Pipeline" && Number(((co as Record<string,unknown>)[k])) <= 0 && (
           <p className="text-xs text-amber-600 mt-0.5">Must be &gt; 0 S$M for Active companies</p>
