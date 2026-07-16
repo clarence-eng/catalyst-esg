@@ -236,7 +236,7 @@ export default function OverviewPage() {
           }`}>
             {avgScore >= 65 ? "Strong" : avgScore >= 40 ? "Developing" : "Needs Attention"}
           </div>
-          <div className="text-[10px] text-gray-500 mt-1">{activeCompanies.length} active companies</div>
+          <div className="text-[10px] text-gray-500 mt-1">{activeCompanies.length} active {activeCompanies.some(c => c.investmentValue === 0) ? "· some excluded from weighted avg" : "companies"}</div>
         </div>
       </div>
       )}
