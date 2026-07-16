@@ -106,11 +106,15 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       continue;
     }
 
-    // Section headers: entire line wrapped in exactly one bold span (**text**), or ##/### style
+    // Section headers: entire line wrapped in exactly one bold span (**text**), or ##/### style.
+    // For # (single hash), require the first character after "# " to be uppercase to avoid matching
+    // GRI codes (#305-1), statistics (#incidents), or comments (#this).
     const isSingleBoldWrap = line.startsWith("**") && line.endsWith("**") && line.length > 4 &&
       !line.startsWith("***") && !line.endsWith("***") &&
       line.slice(2, -2).indexOf("**") === -1 && line.slice(2, -2).length <= 160;
-    if (isSingleBoldWrap || line.startsWith("### ") || line.startsWith("## ") || line.startsWith("# ")) {
+    const isHashHeading = (line.startsWith("### ") || line.startsWith("## ")) ||
+      (line.startsWith("# ") && /^# [A-Z]/.test(line) && line.length <= 160);
+    if (isSingleBoldWrap || isHashHeading) {
       flushList();
       const content = line.replace(/^#{1,3}\s*/, "").replace(/^\*\*|\*\*$/g, "");
       elements.push(

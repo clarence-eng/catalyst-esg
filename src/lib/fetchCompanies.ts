@@ -444,7 +444,7 @@ function dbToCompany(
     climateRisk: {
       transition: co.transition_risk as Company["climateRisk"]["transition"],
       physical: co.physical_risk as Company["climateRisk"]["physical"],
-      pathwayAlignment: co.pathway_alignment as Company["climateRisk"]["pathwayAlignment"],
+      pathwayAlignment: (["1.5°C","2°C","3°C+","Not assessed"] as const).includes(co.pathway_alignment as Company["climateRisk"]["pathwayAlignment"]) ? co.pathway_alignment as Company["climateRisk"]["pathwayAlignment"] : "Not assessed",
       transitionDetails: enrichment?.climateRisk.transitionDetails ?? derivedTransitionDetails,
       physicalDetails: enrichment?.climateRisk.physicalDetails ?? derivedPhysicalDetails,
     },
