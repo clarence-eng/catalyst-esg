@@ -663,8 +663,8 @@ function OverviewTab({
             },
             {
               label: "No overdue Critical engagements",
-              concern: co.engagement.filter(e => e.status === "Overdue").length > 0 && co.materialIssues.some(i => i.severity === "Critical"),
-              note: co.engagement.filter(e => e.status === "Overdue").length > 0 && co.materialIssues.some(i => i.severity === "Critical") ? "Critical ESG issues present with overdue engagement commitments" : null,
+              concern: co.engagement.filter(e => e.status === "Overdue").length > 0 && co.materialIssues.some(i => i.severity === "Critical" && !i.opportunity),
+              note: co.engagement.filter(e => e.status === "Overdue").length > 0 && co.materialIssues.some(i => i.severity === "Critical" && !i.opportunity) ? "Critical ESG issues present with overdue engagement commitments" : null,
             },
             {
               label: "TNFD assessment consistent with nature risk level",
@@ -1171,8 +1171,8 @@ function ClimateTab({ co }: { co: Company }) {
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
           {["1.5°C", "2°C", "3°C+"].map((scenario) => (
             <div key={scenario}
-              aria-selected={co.climateRisk.pathwayAlignment === scenario ? true : undefined}
-              aria-label={`${scenario} Scenario${co.climateRisk.pathwayAlignment === scenario ? " — current alignment" : ""}`}
+              role="img"
+              aria-label={`${scenario} Scenario${co.climateRisk.pathwayAlignment === scenario ? " — current alignment" : " — not current alignment"}`}
               className={`p-3 rounded-lg border text-center ${
               co.climateRisk.pathwayAlignment === scenario
                 ? scenario === "1.5°C" ? "bg-emerald-500/10 border-emerald-500/20" :
@@ -1672,7 +1672,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
         <div className="relative">
           <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-100" />
           <div className="space-y-4">
-            {[...co.engagement].sort((a, b) => a.date > b.date ? -1 : a.date < b.date ? 1 : 0).map((e, idx) => (
+            {[...co.engagement].sort((a, b) => (a.date || "") > (b.date || "") ? -1 : (a.date || "") < (b.date || "") ? 1 : 0).map((e, idx) => (
               <div key={e.id ?? `${e.date}-${e.type}-${e.topic}-${idx}`} className="relative pl-10">
                 <div className={`absolute left-4 top-1.5 w-2 h-2 rounded-full -translate-x-1/2 ${
                   e.status === "Completed" ? "bg-emerald-500" :

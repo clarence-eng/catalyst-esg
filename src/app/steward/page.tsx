@@ -237,7 +237,8 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
   // and tnfdAligned so plan clears when issues are promoted/resolved or TNFD milestone is achieved
   const issueFingerprint = co.materialIssues.filter(i => !i.opportunity).map(i => `${i.issue}:${i.severity}`).join("|");
   const engFingerprint = co.engagement.map(e => `${e.topic ?? ""}:${e.status}`).join("|");
-  const planKey = `${co.slug}:${co.esgScore.overall}:${co.maturity}:${co.sector}:${co.country}:${co.carbonIntensity}:${co.climateRisk.transition}:${co.natureRisk.overall}:${co.natureRisk.tnfdAligned}:${co.netZeroCommitment}:${co.greenRevenuePct}:${issueFingerprint}:${engFingerprint}`;
+  const upliftFingerprint = co.valueUplift.map(v => `${v.area}:${v.potential}`).join("|");
+  const planKey = `${co.slug}:${co.esgScore.overall}:${co.maturity}:${co.sector}:${co.country}:${co.carbonIntensity}:${co.climateRisk.transition}:${co.natureRisk.overall}:${co.natureRisk.tnfdAligned}:${co.netZeroCommitment}:${co.greenRevenuePct}:${issueFingerprint}:${engFingerprint}:${upliftFingerprint}`;
   const prevPlanKeyRef = useRef(planKey);
   useEffect(() => {
     if (prevPlanKeyRef.current !== planKey) {
@@ -284,7 +285,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
       const keyGaps = keyGapsArr.length > 0
         ? keyGapsArr.join("; ")
         : "No material gaps — focus on reporting quality uplift, stakeholder engagement, and ESG value creation";
-      const overdueEngagements = co.engagement.filter(e => e.status === "Overdue").map(e => e.topic).filter(t => t.trim() !== "").join(", ") || "None";
+      const overdueEngagements = co.engagement.filter(e => e.status === "Overdue").map(e => e.topic ?? "").filter(t => t.trim() !== "").join(", ") || "None";
 
       const res = await fetch("/api/gemini", {
         method: "POST",
