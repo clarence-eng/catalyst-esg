@@ -5,7 +5,7 @@ import { frameworks, caseStudies } from "@/data/learn";
 import { PageHeader } from "@/components/ui-elements";
 import { ExternalLink, ChevronRight, ChevronDown, ChevronUp, Search } from "lucide-react";
 
-type FrameworkFilter = "All" | "Climate" | "Nature" | "Cross-cutting" | "Reporting" | "Social";
+type FrameworkFilter = "All" | "Climate" | "Nature" | "Cross-cutting" | "Reporting" | "Social" | "Governance";
 
 function LearnContent() {
   const [frameworkFilter, setFrameworkFilter] = useState<FrameworkFilter>("All");
@@ -38,9 +38,10 @@ function LearnContent() {
 
   // Map framework categories to related case study themes for cross-column filtering
   const categoryToThemes: Record<string, string[]> = {
-    Climate: ["Climate Transition", "Sustainable Finance"], // PCAF/TCFD case studies fall under Sustainable Finance
+    Climate: ["Climate Transition", "Sustainable Finance"],
     Nature: ["Nature & Biodiversity"],
     Social: ["Just Transition"],
+    Governance: ["Governance"],
     Reporting: ["Climate Transition", "Nature & Biodiversity", "Just Transition", "Governance", "Sustainable Finance"],
     "Cross-cutting": ["Climate Transition", "Nature & Biodiversity", "Just Transition", "Governance", "Sustainable Finance"],
   };
@@ -59,7 +60,7 @@ function LearnContent() {
     );
   });
 
-  const filterCategories: FrameworkFilter[] = ["All", "Climate", "Nature", "Reporting", "Cross-cutting", "Social"];
+  const filterCategories: FrameworkFilter[] = ["All", "Climate", "Nature", "Governance", "Reporting", "Cross-cutting", "Social"];
 
   return (
     <div className="p-8">

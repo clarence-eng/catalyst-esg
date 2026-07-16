@@ -489,7 +489,7 @@ export const companies: Company[] = [
     sector: "Cloud Infrastructure & SaaS",
     sasbCategory: "Software & IT Services",
     country: "Singapore",
-    region: "Asia Pacific",
+    region: "Southeast Asia",
     description:
       "A Singapore-headquartered B2B cloud infrastructure and SaaS provider serving financial services, healthcare, and government clients across APAC, with data centres in Singapore, Australia, and Japan.",
     portfolioStatus: "Active",
@@ -765,7 +765,7 @@ export const companies: Company[] = [
         severity: "Medium",
         opportunity: false,
         detail:
-          "Board independence at 50% (4 of 8 directors) meets the minimum best-practice threshold. Continued ESG board oversight strengthening needed given two Critical issues involving European buyer compliance. CEO/Chair roles are separated, a governance positive. Continued focus needed to further strengthen ESG board oversight given two Critical ESG issues involving European buyer compliance. DFI co-investment standards typically require ≥50% independent directors — current structure qualifies.",
+          "Board independence at 50% (4 of 8 directors) meets the minimum best-practice threshold. CEO/Chair roles are separated, a governance positive. Continued ESG board oversight strengthening needed given two Critical issues involving European buyer compliance and EUDR exposure. DFI co-investment standards typically require ≥50% independent directors — current structure qualifies.",
       },
       {
         category: "Environmental",
@@ -1096,7 +1096,7 @@ export const companies: Company[] = [
       environmental: 41,
       social: 72,
       governance: 56,
-      rating: "A",
+      rating: "BBB",
     },
     maturity: "Developing",
     climateRisk: {
