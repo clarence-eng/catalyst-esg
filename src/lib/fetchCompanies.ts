@@ -414,9 +414,9 @@ function dbToCompany(
     "Some exposure to transition policies; monitoring required",
   ] : [];
 
-  // Physical climate risk details are derived only from physical/transition risk levels,
-  // not from nature risk — nature risk is orthogonal to climate physical risk
-  const derivedPhysicalDetails = (transitionLevel === "High" || transitionLevel === "Critical") ? [
+  // Physical climate risk details are derived from physical_risk level, not transition risk
+  const physicalLevel = co.physical_risk as string;
+  const derivedPhysicalDetails = (physicalLevel === "High" || physicalLevel === "Critical") ? [
     "Operational exposure to climate-related physical risks in operating region",
   ] : [];
 
@@ -465,7 +465,7 @@ function dbToCompany(
       ],
     },
     netZeroCommitment: (["None","Net Zero Pledged","SBTi Committed","SBTi Targets Set"] as const).includes(co.net_zero_commitment as Company["netZeroCommitment"]) ? co.net_zero_commitment as Company["netZeroCommitment"] : "None",
-    sasbCategory: co.sasb_category ?? "General",
+    sasbCategory: co.sasb_category ?? "",
     temasekMegatrend: (["Climate Transition","Nature & Biodiversity","Just Transition & Inclusive Growth","AI & Digital Ethics","Longer Lifespans"] as const).includes(co.temasek_megatrend as Company["temasekMegatrend"])
       ? co.temasek_megatrend as Company["temasekMegatrend"]
       : "Climate Transition",

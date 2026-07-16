@@ -233,7 +233,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
               </div>
             )}
             <div className="flex items-center gap-4 text-xs text-gray-500">
-              <span>{co.sasbCategory}</span>
+              <span>{co.sasbCategory || "Uncategorised"}</span>
               <span>·</span>
               <span>{co.country}, {co.region}</span>
               <span>·</span>
@@ -701,7 +701,7 @@ function OverviewTab({
           return (
             <div className="bg-white rounded-xl border border-gray-200 p-5">
               <div className="mb-4">
-                <h3 id="sasb-kpi-heading" className="text-sm font-semibold text-gray-900">SASB Material KPIs — {co.sasbCategory}</h3>
+                <h3 id="sasb-kpi-heading" className="text-sm font-semibold text-gray-900">SASB Material KPIs{co.sasbCategory ? ` — ${co.sasbCategory}` : " — Generic Metrics"}</h3>
                 <p className="text-xs text-gray-500 mt-0.5">Most financially material ESG metrics for this industry</p>
               </div>
               <div className="overflow-x-auto">
