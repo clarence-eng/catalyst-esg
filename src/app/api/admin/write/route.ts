@@ -41,6 +41,23 @@ function badRequest(msg: string) {
   return NextResponse.json({ error: msg }, { status: 400 });
 }
 
+// Sanitize Supabase errors before returning to client — raw messages can reveal
+// schema details (table names, constraint names, UUID type errors).
+function dbError(err: { message: string }) {
+  if (process.env.NODE_ENV !== "production") {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+  // Map known constraint types to user-friendly messages; fall back to generic
+  const m = err.message.toLowerCase();
+  if (m.includes("duplicate") || m.includes("unique")) {
+    return NextResponse.json({ error: "A record with those values already exists" }, { status: 409 });
+  }
+  if (m.includes("uuid") || m.includes("invalid input syntax")) {
+    return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
+  }
+  return NextResponse.json({ error: "Database operation failed" }, { status: 500 });
+}
+
 type WriteBody =
   | { action: "upsert_company"; company: Record<string, unknown> }
   | { action: "delete_company"; id: string; slug: string }
@@ -135,10 +152,10 @@ export async function POST(req: NextRequest) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { slug: _slug, ...updatePayload } = payload;
       const { error } = await sb.from("companies").update(updatePayload).eq("id", id);
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      if (error) return dbError(error);
     } else {
       const { error } = await sb.from("companies").insert(payload);
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      if (error) return dbError(error);
     }
     return NextResponse.json({ ok: true });
   }
@@ -184,11 +201,11 @@ export async function POST(req: NextRequest) {
     const id = typeof e.id === "string" && e.id.trim() ? e.id.trim() : null;
     if (id) {
       const { error, count } = await sb.from("engagements").update({ date, type, topic, status, notes }, { count: "exact" }).eq("id", id).eq("company_slug", company_slug);
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      if (error) return dbError(error);
       if (!count) return NextResponse.json({ error: "Engagement not found or does not belong to this company" }, { status: 404 });
     } else {
       const { error } = await sb.from("engagements").insert(payload);
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      if (error) return dbError(error);
     }
     return NextResponse.json({ ok: true });
   }
@@ -199,7 +216,7 @@ export async function POST(req: NextRequest) {
     if (!id) return badRequest("id required");
     if (!company_slug || !SLUG_RE.test(company_slug)) return badRequest("company_slug required");
     const { error, count } = await sb.from("engagements").delete({ count: "exact" }).eq("id", id).eq("company_slug", company_slug);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return dbError(error);
     if (!count) return NextResponse.json({ error: "Engagement not found or does not belong to this company" }, { status: 404 });
     return NextResponse.json({ ok: true });
   }
@@ -216,18 +233,19 @@ export async function POST(req: NextRequest) {
     const VALID_CAT = ["Environmental", "Social", "Governance"];
     const severity = VALID_SEV.includes(String(i.severity)) ? String(i.severity) : "Medium";
     const category = VALID_CAT.includes(String(i.category)) ? String(i.category) : "Environmental";
-    const opportunity = Boolean(i.opportunity);
+    // Strict boolean: accept actual boolean, "true"/"false" strings, 1/0 — reject truthy-string false like "false"→true
+    const opportunity = i.opportunity === true || i.opportunity === "true" || i.opportunity === 1;
     const detail = sanitizeString(i.detail, 2000);
     const sort_order = coerceNumber(i.sort_order, 0);
     const payload = { company_slug, issue, severity, category, opportunity, detail, sort_order };
     const id = typeof i.id === "string" && i.id.trim() ? i.id.trim() : null;
     if (id) {
       const { error, count } = await sb.from("material_issues").update({ issue, severity, category, opportunity, detail, sort_order }, { count: "exact" }).eq("id", id).eq("company_slug", company_slug);
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      if (error) return dbError(error);
       if (!count) return NextResponse.json({ error: "Issue not found or does not belong to this company" }, { status: 404 });
     } else {
       const { error } = await sb.from("material_issues").insert(payload);
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      if (error) return dbError(error);
     }
     return NextResponse.json({ ok: true });
   }
@@ -238,7 +256,7 @@ export async function POST(req: NextRequest) {
     if (!id) return badRequest("id required");
     if (!company_slug || !SLUG_RE.test(company_slug)) return badRequest("company_slug required");
     const { error, count } = await sb.from("material_issues").delete({ count: "exact" }).eq("id", id).eq("company_slug", company_slug);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return dbError(error);
     if (!count) return NextResponse.json({ error: "Issue not found or does not belong to this company" }, { status: 404 });
     return NextResponse.json({ ok: true });
   }

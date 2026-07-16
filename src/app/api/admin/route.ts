@@ -18,7 +18,13 @@ function checkLoginRateLimit(ip: string): boolean {
   if (!entry || now > entry.reset) {
     loginRateMap.set(ip, { count: 1, reset: now + LOGIN_RATE_WINDOW_MS });
     if (loginRateMap.size > 200) {
-      for (const [k, v] of loginRateMap) { if (now > v.reset) loginRateMap.delete(k); }
+      let deleted = 0;
+      for (const [k, v] of loginRateMap) { if (now > v.reset) { loginRateMap.delete(k); deleted++; } }
+      // Hard cap: if no expired entries found, trim oldest 100 to bound memory
+      if (deleted === 0 && loginRateMap.size > 400) {
+        let i = 0;
+        for (const k of loginRateMap.keys()) { if (i++ >= 100) break; loginRateMap.delete(k); }
+      }
     }
     return true;
   }
