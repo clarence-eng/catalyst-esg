@@ -90,8 +90,8 @@ export function RiskHeatmap({ companies = staticCompanies }: { companies?: Compa
             ))}
           </tbody>
         </table>
-        <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-200">
-          <span className="text-xs text-gray-500 font-medium">Legend:</span>
+        <div role="group" aria-label="Risk level legend" className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-200">
+          <span className="text-xs text-gray-500 font-medium" aria-hidden="true">Legend:</span>
           {(["Critical", "High", "Medium", "Low"] as RiskLevel[]).map((level) => (
             <div key={level} className="flex items-center gap-1.5">
               <RiskCell level={level} />

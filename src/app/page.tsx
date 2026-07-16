@@ -220,7 +220,9 @@ export default function OverviewPage() {
           <div className="h-3 bg-white/60 rounded-full overflow-hidden border border-white/40">
             <div className={`h-full rounded-full transition-all ${
               avgScore >= 65 ? "bg-emerald-500" : avgScore >= 40 ? "bg-amber-500" : "bg-red-500"
-            }`} style={{ width: `${avgScore}%` }} />
+            }`} style={{ width: `${avgScore}%` }}
+            role="progressbar" aria-valuenow={avgScore} aria-valuemin={0} aria-valuemax={100}
+            aria-label={`Portfolio ESG Health: ${avgScore} out of 100`} />
           </div>
           <div className="flex justify-between mt-1 text-[10px] text-gray-500">
             <span>0</span><span>50</span><span>100</span>
@@ -286,31 +288,37 @@ export default function OverviewPage() {
           <div className="space-y-2.5">
             {(() => {
               const maxIntensity = Math.max(...activeCompanies.map(c => c.carbonIntensity), 1);
-              return [...activeCompanies].sort((a, b) => b.carbonIntensity - a.carbonIntensity).map(co => {
+              return (
+                <>
+                {[...activeCompanies].sort((a, b) => b.carbonIntensity - a.carbonIntensity).map(co => {
               const pct = Math.min((co.carbonIntensity / maxIntensity) * 100, 100);
               const isHighEmitter = co.carbonIntensity > 500;
               const color = co.carbonIntensity < 100 ? "bg-emerald-500" : co.carbonIntensity < 500 ? "bg-amber-500" : "bg-red-500";
               return (
                 <div key={co.slug} className="flex items-center gap-3">
                   <span className="text-xs text-gray-700 w-36 flex-shrink-0 truncate" title={displayName(co.name)}>{displayName(co.name)}</span>
-                  <div className="flex-1 h-5 bg-gray-100 rounded-sm overflow-hidden relative">
+                  <div className="flex-1 h-5 bg-gray-100 rounded-sm overflow-hidden relative" aria-hidden="true">
                     <div className={`h-full rounded-sm ${color} transition-all`} style={{ width: `${pct}%` }} />
-                    {/* IEA benchmark line at 500/max */}
+                    {/* IEA benchmark line at 500/max — always rendered when maxIntensity > 500 */}
                     {maxIntensity > 500 && (
-                      <div className="absolute top-0 bottom-0 w-px bg-gray-400 opacity-60" style={{ left: `${Math.min((500 / maxIntensity) * 100, 100)}%` }} />
+                      <div className="absolute top-0 bottom-0 w-px bg-gray-400 opacity-60" style={{ left: `${Math.min((500 / maxIntensity) * 100, 100)}%` }}
+                        title="IEA ASEAN 2030 benchmark: 500 tCO₂e/$M" />
                     )}
                   </div>
-                  <span className={`text-xs font-medium w-20 text-right flex-shrink-0 ${isHighEmitter ? "text-red-700" : "text-gray-700"}`}>
+                  <span className={`text-xs font-medium w-20 text-right flex-shrink-0 ${isHighEmitter ? "text-red-700" : "text-gray-700"}`}
+                    aria-label={`${displayName(co.name)}: ${(co.carbonIntensity ?? 0).toLocaleString("en-SG")} tCO₂e per S$M revenue${isHighEmitter ? " — above IEA 2030 benchmark" : ""}`}>
                     {(co.carbonIntensity ?? 0).toLocaleString("en-SG")} tCO₂/$M
                   </span>
                 </div>
               );
-            });
+            })}
+            {maxIntensity > 500 && (
+              <p className="text-[10px] text-gray-500 mt-3" aria-hidden="true">│ = IEA ASEAN 2030 benchmark (500 tCO₂e/$M)</p>
+            )}
+                </>
+              );
             })()}
           </div>
-          {activeCompanies.some(c => c.carbonIntensity > 500) && (
-            <p className="text-[10px] text-gray-500 mt-3">│ = IEA ASEAN 2030 benchmark (500 tCO₂e/$M)</p>
-          )}
         </div>
       )}
 
@@ -593,7 +601,7 @@ function ParisPathwayWidget({ companies }: { companies: { pathwayAlignment: stri
       {total > 0 ? (
         <>
           {/* Stacked bar */}
-          <div role="img" aria-label="Paris Pathway alignment stacked bar" className="w-full h-4 rounded-full overflow-hidden flex mb-4">
+          <div role="img" aria-label="Paris Pathway alignment stacked bar" aria-describedby="paris-pathway-legend" className="w-full h-4 rounded-full overflow-hidden flex mb-4">
             {tiers.map(tier => {
               const tierAUM = tier.companies.reduce((s, c) => s + c.investmentValue, 0);
               const pct = (tierAUM / total) * 100;
@@ -608,7 +616,7 @@ function ParisPathwayWidget({ companies }: { companies: { pathwayAlignment: stri
             })}
           </div>
           {/* Legend */}
-          <div className="space-y-2">
+          <div id="paris-pathway-legend" className="space-y-2">
             {tiers.map(tier => {
               const tierAUM = tier.companies.reduce((s, c) => s + c.investmentValue, 0);
               const pct = total > 0 ? (tierAUM / total) * 100 : 0;

@@ -1261,7 +1261,11 @@ function NatureTab({ co }: { co: Company }) {
       {/* TNFD LEAP Assessment Progress */}
       <div className="col-span-2 bg-white rounded-xl border border-gray-200 p-5">
         <h3 className="text-sm font-semibold text-gray-900 mb-5">TNFD LEAP Assessment Progress</h3>
-        <div className="flex items-start gap-0">
+        {/* sr-only progress summary for AT users navigating without visual color context */}
+        <p className="sr-only">
+          TNFD LEAP progress: {leapStage === 0 ? "Not started" : leapStage === 4 ? "All 4 phases complete" : `${leapPhases.slice(0, leapStage).map(p => p.name).join(", ")} complete — currently in ${leapPhases[leapStage]?.name ?? "final phase"}`}
+        </p>
+        <div className="flex items-start gap-0" role="list" aria-label="TNFD LEAP phases">
           {leapPhases.map(({ phase, name, desc }, index) => {
             const completed = leapStage > index;
             const current = leapStage > 0 && leapStage === index;
@@ -1273,13 +1277,14 @@ function NatureTab({ co }: { co: Company }) {
             const labelColor = completed ? "text-emerald-700" : current ? "text-amber-700" : "text-gray-500";
             const lineColor = completed ? "bg-emerald-600" : "bg-gray-200";
             return (
-              <div key={phase} className="flex items-start flex-1">
+              <div key={phase} role="listitem" aria-current={current ? "step" : undefined} className="flex items-start flex-1">
                 <div className="flex flex-col items-center flex-1">
-                  <div className={`w-9 h-9 rounded-full border-2 flex items-center justify-center text-sm font-bold flex-shrink-0 ${circleStyle}`}>
+                  <div className={`w-9 h-9 rounded-full border-2 flex items-center justify-center text-sm font-bold flex-shrink-0 ${circleStyle}`}
+                    aria-label={`${name}: ${completed ? "complete" : current ? "in progress" : "not started"}`}>
                     {phase}
                   </div>
                   <div className="mt-2 text-center">
-                    <div className={`text-xs font-semibold ${labelColor}`}>{name}</div>
+                    <div className={`text-xs font-semibold ${labelColor}`} aria-hidden="true">{name}</div>
                     <div className="text-xs text-gray-500 mt-0.5 max-w-[90px] leading-relaxed">{desc}</div>
                   </div>
                 </div>
@@ -1540,8 +1545,8 @@ function GovStatTile({ label, value, note, status }: { label: string; value: str
   const bgColor = status === "ok" ? "bg-emerald-500/5" : status === "gap" ? "bg-red-500/5" : "bg-amber-500/5";
   const valueColor = status === "ok" ? "text-emerald-700" : status === "gap" ? "text-red-700" : "text-amber-700";
   const iconEl = status === "ok"
-    ? <CheckCircle className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
-    : <AlertCircle className={`w-3.5 h-3.5 flex-shrink-0 ${status === "gap" ? "text-red-700" : "text-amber-700"}`} />;
+    ? <CheckCircle className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" aria-hidden="true" />
+    : <AlertCircle className={`w-3.5 h-3.5 flex-shrink-0 ${status === "gap" ? "text-red-700" : "text-amber-700"}`} aria-hidden="true" />;
   return (
     <div className={`p-3 rounded-lg border ${borderColor} ${bgColor}`}>
       <div className="flex items-start gap-2 mb-1">

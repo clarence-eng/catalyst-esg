@@ -549,8 +549,8 @@ export default function AdminPage() {
             <span aria-hidden="true" className="text-gray-400">|</span>
             <span className="text-sm font-semibold text-gray-900">Portfolio Admin</span>
             <div className="flex items-center gap-3 text-xs">
-              <span className="flex items-center gap-1 text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full"><Building2 className="w-3 h-3"/>{activeCount} Active</span>
-              <span className="flex items-center gap-1 text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full"><Users className="w-3 h-3"/>{pipelineCount} Pipeline</span>
+              <span className="flex items-center gap-1 text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full"><Building2 className="w-3 h-3" aria-hidden="true"/>{activeCount} Active</span>
+              <span className="flex items-center gap-1 text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full"><Users className="w-3 h-3" aria-hidden="true"/>{pipelineCount} Pipeline</span>
             </div>
           </div>
           <div className="flex items-center gap-3">
