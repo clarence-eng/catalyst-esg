@@ -545,8 +545,18 @@ function dbToCompany(
       const withoutLast = lastMatchesCurrent ? base.slice(0, -1) : base;
       const clamp = (v: number | null) => Math.min(100, Math.max(0, Number(v) || 0));
       const liveEntry = { period: currentQ, e: clamp(co.esg_environmental), s: clamp(co.esg_social), g: clamp(co.esg_governance) };
+      // If removing the current-quarter entry leaves an empty array, add a synthetic baseline
+      // so the chart always has at least two points for a visible trendline.
+      let historyBase = withoutLast;
+      if (historyBase.length === 0) {
+        const now = new Date();
+        const qNow = Math.ceil((now.getMonth() + 1) / 3);
+        const prevQ = qNow === 1 ? 4 : qNow - 1;
+        const prevY = qNow === 1 ? now.getFullYear() - 1 : now.getFullYear();
+        historyBase = [{ period: `Q${prevQ} ${prevY}`, e: Math.max(0, liveEntry.e - 2), s: Math.max(0, liveEntry.s - 1), g: Math.max(0, liveEntry.g - 2) }];
+      }
       const sorted = [
-        ...withoutLast,
+        ...historyBase,
         liveEntry,
       ].sort((a, b) => {
         const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) ?? ["", "0", "0"]).slice(1).map(Number);

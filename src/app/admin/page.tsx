@@ -106,12 +106,12 @@ function CoField({ label, k, type = "text", opts, co, set, required: isRequired 
             } else {
               v = e.target.value;
             }
+            // Capture the previous auto-slug BEFORE set() mutates co.name
+            const prevName = (co as Record<string,unknown>).name as string ?? "";
             set(k, v);
-            // Auto-generate slug from name only when: new company (no id) AND slug still
-            // matches the previously auto-generated value (user hasn't manually customized it)
             if (k === "name" && !co.id) {
               const currentSlug = (co as Record<string,unknown>).slug as string ?? "";
-              const prevAutoSlug = slugify(co.name ?? "");
+              const prevAutoSlug = slugify(prevName);
               if (currentSlug === prevAutoSlug || currentSlug === "") {
                 set("slug", slugify(e.target.value));
               }
