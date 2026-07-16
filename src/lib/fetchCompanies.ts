@@ -569,14 +569,18 @@ function dbToCompany(
       return sorted;
     })(),
     boardComposition: enrichment?.boardComposition ?? (() => {
-      const govScore = co.esg_governance ?? 0;
+      const rawGov = co.esg_governance;
+      const govScore = rawGov != null ? Math.min(100, Math.max(0, Number(rawGov) || 0)) : null;
+      // When governance score is null (not disclosed), use conservative defaults rather than
+      // deriving from 0 which would fabricate compliance failures.
+      const gs = govScore ?? 50; // 50 = neutral/developing baseline when unknown
       return {
         boardSize: 8,
-        independentPct: govScore >= 65 ? 63 : govScore >= 50 ? 50 : 38,
-        womenPct: govScore >= 65 ? 38 : 25,
-        ceoChairSplit: govScore >= 60,
-        auditCommittee: govScore >= 50,
-        esgCommittee: govScore >= 65,
+        independentPct: gs >= 65 ? 63 : gs >= 50 ? 50 : 38,
+        womenPct: gs >= 65 ? 38 : 25,
+        ceoChairSplit: gs >= 60,
+        auditCommittee: gs >= 50,
+        esgCommittee: gs >= 65,
         estimated: true,
       };
     })(),
