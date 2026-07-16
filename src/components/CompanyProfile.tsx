@@ -23,6 +23,16 @@ import { Loader2, FileText, CheckCircle, AlertCircle, TrendingUp, Shield, Leaf, 
 
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
+// Live-updating relative timestamp — re-renders every 60 s so "just now" advances to "2 minutes ago" etc.
+function RelativeTime({ date }: { date: Date }) {
+  const [label, setLabel] = useState(() => `Generated ${formatRelativeTime(date)}`);
+  useEffect(() => {
+    const id = setInterval(() => setLabel(`Generated ${formatRelativeTime(date)}`), 60_000);
+    return () => clearInterval(id);
+  }, [date]);
+  return <>{label}</>;
+}
+
 const MEGATREND_COLORS: Record<string, string> = {
   "Climate Transition": "text-emerald-700",
   "Nature & Biodiversity": "text-green-700",
@@ -731,8 +741,9 @@ function OverviewTab({
             </button>
           </div>
           {memoError && (
-            <div role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-lg p-3 mb-3">
-              {memoError}
+            <div role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-lg p-3 mb-3 flex items-start justify-between gap-2">
+              <span>{memoError}</span>
+              <button type="button" onClick={() => onSetMemoError("")} aria-label="Dismiss error" className="text-red-500 hover:text-red-700 flex-shrink-0 text-base leading-none">×</button>
             </div>
           )}
           {memo ? (
@@ -783,7 +794,7 @@ function OverviewTab({
                   Export PDF
                 </button>
                 <span className="text-xs text-gray-500 ml-auto">
-                  {memoGeneratedAt ? `Generated ${formatRelativeTime(memoGeneratedAt)}` : ""}
+                  {memoGeneratedAt ? <RelativeTime date={memoGeneratedAt} /> : ""}
                 </span>
               </div>
             </>
@@ -1672,7 +1683,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
                 {questionsCopied ? "Copied!" : "Copy question pack"}
               </button>
               <span className="text-xs text-gray-500 ml-auto">
-                {questionsGeneratedAt ? `Generated ${formatRelativeTime(questionsGeneratedAt)}` : ""}
+                {questionsGeneratedAt ? <RelativeTime date={questionsGeneratedAt} /> : ""}
               </span>
             </div>
           </>

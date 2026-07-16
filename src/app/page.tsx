@@ -1,4 +1,5 @@
 "use client";
+import { Fragment } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCompanies } from "@/lib/useCompanies";
@@ -341,7 +342,7 @@ export default function OverviewPage() {
                   return a.name.localeCompare(b.name, "en-SG");
                 });
                 return sorted.map((co, i) => (
-                  <>
+                  <Fragment key={co.slug}>
                     {i > 0 && sorted[i - 1].portfolioStatus === "Active" && co.portfolioStatus === "Pipeline" && (
                       <tr key="pipeline-divider">
                         <td colSpan={10} className="px-6 py-2 bg-blue-50 border-y border-blue-100">
@@ -394,7 +395,7 @@ export default function OverviewPage() {
                     </Link>
                   </td>
                 </tr>
-                  </>
+                  </Fragment>
                 ));
               })()}
             </tbody>
