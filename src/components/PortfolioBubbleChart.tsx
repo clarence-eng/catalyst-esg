@@ -47,7 +47,7 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
       <div className="font-semibold text-gray-900 mb-1">{d.name}</div>
       <div className="text-gray-600">ESG Score: <span className="text-gray-900">{d.esgScore}</span></div>
       <div className="text-gray-600">Carbon Intensity: <span className="text-gray-900">{d.carbonIntensity} tCO₂e/$M</span></div>
-      <div className="text-gray-600">Portfolio Weight: <span className="text-gray-900">{d.portfolioWeight.toFixed(1)}%</span></div>
+      <div className="text-gray-600">Portfolio Weight: <span className="text-gray-900">{isFinite(d.portfolioWeight) ? d.portfolioWeight.toFixed(1) : "—"}%</span></div>
       <div className="text-gray-600">Transition Risk: <span className={riskTextClass[d.transitionRisk] ?? "text-gray-700"}>{d.transitionRisk}</span></div>
     </div>
   );
@@ -55,10 +55,12 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
 
 export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
   const router = useRouter();
-  if (data.length === 0) return null;
+  if (!data || data.length === 0) return null;
   const maxCarbon = data.reduce((m, d) => d.carbonIntensity > m ? d.carbonIntensity : m, 0);
   const yMax = Math.min(Math.max(maxCarbon * 1.15, 100), 2000);
   const offChart = data.filter(d => d.carbonIntensity > yMax);
+  // Detect ESG score outliers outside the fixed [20,100] X-axis domain
+  const offChartX = data.filter(d => d.esgScore < 20 || d.esgScore > 100);
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
       <div className="flex items-center justify-between mb-1">
@@ -82,8 +84,18 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
             ))}
           </div>
         )}
+        {offChartX.length > 0 && (
+          <div className="ml-auto flex items-center gap-2 flex-shrink-0">
+            {offChartX.map(d => (
+              <span key={d.slug} className="text-xs text-amber-700 bg-amber-50 border border-amber-300 px-2 py-0.5 rounded">
+                ← {d.name} (ESG {d.esgScore}) — off chart X
+              </span>
+            ))}
+          </div>
+        )}
       </div>
-      <div role="img" aria-label="Portfolio positioning chart — ESG Score vs Carbon Intensity; bubble size represents portfolio weight percentage">
+      {/* Wrapper is a plain div — role=img would suppress all interactive Recharts content from AT */}
+      <div aria-label="Portfolio positioning chart — ESG Score vs Carbon Intensity; bubble size represents portfolio weight percentage">
       <ResponsiveContainer width="100%" height={240}>
         <ScatterChart margin={{ top: 8, right: 24, bottom: 16, left: 8 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
@@ -132,7 +144,7 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
       <ul className="sr-only">
         {data.map(d => (
           <li key={d.slug}>
-            <a href={`/scout/${d.slug}`}>{d.name} — ESG {d.esgScore}, Carbon {d.carbonIntensity} tCO₂e/$M, Portfolio weight {d.portfolioWeight.toFixed(1)}%, {d.transitionRisk} transition risk</a>
+            <a href={`/scout/${d.slug}`}>{d.name} — ESG {d.esgScore}, Carbon {d.carbonIntensity} tCO₂e/$M, Portfolio weight {isFinite(d.portfolioWeight) ? d.portfolioWeight.toFixed(1) : "—"}%, {d.transitionRisk} transition risk</a>
           </li>
         ))}
       </ul>

@@ -31,7 +31,7 @@ function generateAlerts(companies: Company[]): { visible: Alert[]; hiddenLower: 
   for (const co of activeCompanies) {
     const overdueEngs = co.engagement
       .filter(e => e.status === "Overdue")
-      .sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0); // ascending: oldest first
+      .sort((a, b) => (a.date || "").localeCompare(b.date || "")); // ascending: oldest first; localeCompare is locale-independent for ISO 8601
     if (overdueEngs.length > 0) {
       const count = overdueEngs.length;
       const topic = overdueEngs[0].topic;
@@ -102,7 +102,7 @@ export function AlertPanel({ companies }: { companies: Company[] }) {
       <div className="space-y-2">
         {alerts.map((alert) => (
           <div
-            key={`${alert.slug}-${alert.severity}-${alert.message}`}
+            key={`${alert.slug}-${alert.severity}`}
             className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200"
           >
             {alert.severity === 1
