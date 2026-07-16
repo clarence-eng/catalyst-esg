@@ -152,6 +152,7 @@ export default function OverviewPage() {
   // Dynamic period label derived from data — never stale as new periods are added
   const deltaLabel = lastTrend && prevTrend ? `${lastTrend.period} vs ${prevTrend.period}` : "";
 
+  const carbonFootnote = `Portfolio carbon avg: ${avgCarbonIntensity !== null ? `${avgCarbonIntensity} tCO2e/$M (non-utility)` : "no disclosures"}${utilityCompanies.length > 0 && avgCarbonIntensityFull !== null ? `, ${avgCarbonIntensityFull} tCO2e/$M (full incl. ${utilityLabel})` : ""}.`;
   const portfolioSummary = activeCompanies.map((c) => {
     const topIssue = [...c.materialIssues]
       .filter((i) => !i.opportunity && i.issue.trim() !== "")
@@ -159,11 +160,11 @@ export default function OverviewPage() {
     return (
       `${displayName(c.name)} (${c.sector || "Unknown"}, ${c.country || "Unknown"}): ESG ${c.esgScore.overall}/100 [E:${c.esgScore.environmental} S:${c.esgScore.social} G:${c.esgScore.governance}], ` +
       `Maturity: ${c.maturity}, Transition Risk: ${c.climateRisk.transition}, Nature Risk: ${c.natureRisk.overall}, ` +
-      `Carbon Intensity: ${c.carbonIntensity > 0 ? `${c.carbonIntensity} tCO2e/$M` : "Not disclosed"} (non-utility portfolio avg: ${avgCarbonIntensity !== null ? `${avgCarbonIntensity} tCO2e/$M` : "N/A — no disclosures"}${utilityCompanies.length > 0 && avgCarbonIntensityFull !== null ? `, full portfolio avg incl. ${utilityLabel}: ${avgCarbonIntensityFull} tCO2e/$M` : ""}), Green Revenue: ${c.greenRevenuePct}%, ` +
+      `Carbon Intensity: ${c.carbonIntensity > 0 ? `${c.carbonIntensity} tCO2e/$M` : "Not disclosed"}, Green Revenue: ${c.greenRevenuePct}%, ` +
       `Overdue engagements: ${c.engagement.filter(e => e.status === "Overdue").length}, Planned: ${c.engagement.filter(e => e.status === "Planned").length}, ` +
       `Top issue: ${topIssue ? `${topIssue.issue} (${topIssue.severity})` : "None"}`
     );
-  }).join(" || ");
+  }).join(" || ") + (activeCompanies.length > 0 ? ` || ${carbonFootnote}` : "");
 
   // Compute portfolio weights server-side — never send raw S$M investmentValue to the client component
   const totalActiveInvestment = activeCompanies.reduce((s, c) => s + c.investmentValue, 0);
@@ -389,8 +390,19 @@ export default function OverviewPage() {
                 });
                 return sorted.map((co, i) => (
                   <Fragment key={co.slug}>
+                    {/* Divider between Active and Pipeline sections */}
                     {i > 0 && sorted[i - 1].portfolioStatus === "Active" && co.portfolioStatus === "Pipeline" && (
                       <tr key={`__divider-before-${co.slug}`}>
+                        <td colSpan={10} className="px-6 py-2 bg-blue-50 border-y border-blue-100">
+                          <span className="text-[10px] font-semibold text-blue-700 uppercase tracking-wider flex items-center gap-1">
+                            <GitMerge className="w-3 h-3" /> Pipeline — Pre-Investment ESG Due Diligence
+                          </span>
+                        </td>
+                      </tr>
+                    )}
+                    {/* Show pipeline header at top when portfolio has no active companies */}
+                    {i === 0 && co.portfolioStatus === "Pipeline" && sorted.every(c => c.portfolioStatus === "Pipeline") && (
+                      <tr key="__pipeline-only-header">
                         <td colSpan={10} className="px-6 py-2 bg-blue-50 border-y border-blue-100">
                           <span className="text-[10px] font-semibold text-blue-700 uppercase tracking-wider flex items-center gap-1">
                             <GitMerge className="w-3 h-3" /> Pipeline — Pre-Investment ESG Due Diligence
@@ -458,7 +470,9 @@ export default function OverviewPage() {
       <RiskHeatmap companies={companies} />
       <ESGDimensionHeatmap companies={companies} />
       <PCAFFinancedEmissionsTable companies={activeCompanies} totalActiveAUM={totalActiveAUM} />
-      <PortfolioBrief portfolioSummary={portfolioSummary} companyNames={[...activeCompanies].sort((a, b) => a.name.localeCompare(b.name, "en-SG")).map(c => c.name)} />
+      {activeCompanies.length > 0 && (
+        <PortfolioBrief portfolioSummary={portfolioSummary} companyNames={[...activeCompanies].sort((a, b) => a.name.localeCompare(b.name, "en-SG")).map(c => c.name)} />
+      )}
 
       {/* Megatrend Cards */}
       <div className="mb-3 flex items-center justify-between">
@@ -849,7 +863,7 @@ function PCAFFinancedEmissionsTable({ companies, totalActiveAUM }: { companies: 
             ))}
             <tr className="bg-gray-50 font-semibold">
               <td className="px-6 py-3 text-xs text-gray-900" colSpan={3}>Portfolio Total {rows.some(r => !r.hasEmissionsData) && <span className="font-normal text-gray-400 italic ml-1">(N/D companies not included — carbon intensity not disclosed)</span>}</td>
-              <td className="px-4 py-3 text-xs text-gray-900 text-right">{totalEmissions.toLocaleString("en-SG")}</td>
+              <td className="px-4 py-3 text-xs text-gray-900 text-right">{totalEmissions > 0 ? totalEmissions.toLocaleString("en-SG") : <span className="text-gray-400 italic">N/D</span>}</td>
               <td className="px-4 py-3" />
             </tr>
           </tbody>
