@@ -123,17 +123,18 @@ export function CompanyProfile({ company: co }: { company: Company }) {
             natureRisk: co.natureRisk.overall,
             topIssues,
             topUplift,
-            carbonIntensity: co.carbonIntensity,
+            carbonIntensity: co.carbonIntensity > 0 ? `${co.carbonIntensity} tCO₂e/$M revenue` : "Not disclosed",
             greenRevenuePct: co.greenRevenuePct,
             icVerdict: co.icRecommendation?.verdict ?? null,
             icEsgGating: co.icRecommendation?.esgGating ?? null,
-            icConditions: co.icRecommendation?.conditions.join("; ") || null,
+            icConditions: (co.icRecommendation?.conditions ?? []).join("; ") || null,
           },
         }),
       });
       if (!res.ok) {
         let errMsg = `Request failed: ${res.status} ${res.statusText}`;
-        if (res.status === 429) errMsg = "API quota exceeded — please try again in a moment";
+        if (res.status === 403) errMsg = "Admin login required — sign in to the admin panel to use AI generation";
+        else if (res.status === 429) errMsg = "API quota exceeded — please try again in a moment";
         else if (res.status === 400) { try { const e = await res.json(); errMsg = e.error ?? errMsg; } catch { /* ignore */ } }
         throw new Error(errMsg);
       }
@@ -185,7 +186,8 @@ export function CompanyProfile({ company: co }: { company: Company }) {
       });
       if (!res.ok) {
         let errMsg = `Request failed: ${res.status} ${res.statusText}`;
-        if (res.status === 429) errMsg = "API quota exceeded — please try again in a moment";
+        if (res.status === 403) errMsg = "Admin login required — sign in to the admin panel to use AI generation";
+        else if (res.status === 429) errMsg = "API quota exceeded — please try again in a moment";
         else if (res.status === 400) { try { const e = await res.json(); errMsg = e.error ?? errMsg; } catch { /* ignore */ } }
         throw new Error(errMsg);
       }

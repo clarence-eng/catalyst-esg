@@ -237,7 +237,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
   // and tnfdAligned so plan clears when issues are promoted/resolved or TNFD milestone is achieved
   const issueFingerprint = co.materialIssues.filter(i => !i.opportunity).map(i => `${i.issue}:${i.severity}`).join("|");
   const engFingerprint = co.engagement.map(e => `${e.topic ?? ""}:${e.status}`).join("|");
-  const planKey = `${co.slug}:${co.esgScore.overall}:${co.maturity}:${co.climateRisk.transition}:${co.natureRisk.overall}:${co.natureRisk.tnfdAligned}:${co.netZeroCommitment}:${co.greenRevenuePct}:${issueFingerprint}:${engFingerprint}`;
+  const planKey = `${co.slug}:${co.esgScore.overall}:${co.maturity}:${co.sector}:${co.country}:${co.carbonIntensity}:${co.climateRisk.transition}:${co.natureRisk.overall}:${co.natureRisk.tnfdAligned}:${co.netZeroCommitment}:${co.greenRevenuePct}:${issueFingerprint}:${engFingerprint}`;
   const prevPlanKeyRef = useRef(planKey);
   useEffect(() => {
     if (prevPlanKeyRef.current !== planKey) {

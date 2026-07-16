@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AlertCircle, AlertTriangle, Info, CheckCircle2 } from "lucide-react";
 import { type Company } from "@/data/companies";
-import { displayName } from "@/lib/utils";
+import { displayName, comparePeriods } from "@/lib/utils";
 
 
 interface Alert {
@@ -47,11 +47,7 @@ function generateAlerts(companies: Company[]): { visible: Alert[]; hiddenLower: 
 
   // 3. Declining E score (last < second-to-last) — sort by period to ensure chronological order
   for (const co of activeCompanies) {
-    const scores = [...co.historicalScores].sort((a, b) => {
-      const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) || ["", "0", "0"]).slice(1).map(Number);
-      const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) || ["", "0", "0"]).slice(1).map(Number);
-      return ay !== by ? ay - by : aq - bq;
-    });
+    const scores = [...co.historicalScores].sort((a, b) => comparePeriods(a.period, b.period));
     if (scores.length >= 2) {
       const last = scores[scores.length - 1];
       const prev = scores[scores.length - 2];

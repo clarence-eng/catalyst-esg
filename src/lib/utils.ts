@@ -53,3 +53,17 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 
 /** Returns the company display name or "Unnamed company" when name is blank. */
 export const displayName = (name: string): string => name.trim() || "Unnamed company";
+
+/** Parse "Q# YYYY" → [quarter, year]. Non-matching periods return [0, 9999] to sort last. */
+export function parsePeriod(p: string): [number, number] {
+  const m = p.match(/Q(\d) (\d{4})/);
+  if (!m) return [0, 9999];
+  return [Number(m[1]), Number(m[2])];
+}
+
+/** Chronological comparator for "Q# YYYY" period strings. Use with Array.sort(). */
+export function comparePeriods(a: string, b: string): number {
+  const [aq, ay] = parsePeriod(a);
+  const [bq, by] = parsePeriod(b);
+  return ay !== by ? ay - by : aq - bq;
+}

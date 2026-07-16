@@ -532,7 +532,9 @@ function dbToCompany(
       ].sort((a, b) => {
         const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) ?? ["", "0", "0"]).slice(1).map(Number);
         const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) ?? ["", "0", "0"]).slice(1).map(Number);
-        return ay !== by ? ay - by : aq - bq;
+        // Non-standard periods get year 9999 so they sort last, not first (year 0 bug)
+        const safeAy = ay || 9999, safeBY = by || 9999;
+        return safeAy !== safeBY ? safeAy - safeBY : aq - bq;
       });
       return sorted;
     })(),

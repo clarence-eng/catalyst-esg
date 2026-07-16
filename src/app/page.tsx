@@ -1,5 +1,5 @@
 "use client";
-import { displayName } from "@/lib/utils";
+import { displayName, comparePeriods } from "@/lib/utils";
 import { Fragment } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -115,11 +115,7 @@ export default function OverviewPage() {
   // Equal-weight averaging would diverge from the KPI for skewed AUM distributions.
   const allPeriods = [...new Set(
     activeCompanies.flatMap((c) => c.historicalScores.map((s) => normalisePeriod(s.period)))
-  )].sort((a, b) => {
-    const [aq, ay] = (a.match(/Q(\d) (\d{4})/) || ["", "0", "0"]).slice(1).map(Number);
-    const [bq, by] = (b.match(/Q(\d) (\d{4})/) || ["", "0", "0"]).slice(1).map(Number);
-    return ay !== by ? ay - by : aq - bq;
-  });
+  )].sort(comparePeriods);
   const portfolioTrend = allPeriods.map((period) => {
     const entries = activeCompanies
       .map((c) => {
@@ -682,11 +678,7 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
   // Use only periods where ALL companies have data to avoid composition bias
   const allPeriodsSorted = [...new Set(
     companies.flatMap(co => co.historicalScores.map(s => normalisePeriod(s.period)))
-  )].sort((a, b) => {
-    const [aq, ay] = (a.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
-    const [bq, by] = (b.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
-    return ay !== by ? ay - by : aq - bq;
-  });
+  )].sort(comparePeriods);
 
   // Filter to full-coverage periods (all companies have a score entry)
   const fullCoveragePeriods = allPeriodsSorted.filter(period =>
