@@ -561,7 +561,7 @@ function ScoreBar({ value }: { value: number }) {
     value >= 65 ? "bg-emerald-500" : value >= 40 ? "bg-amber-500" : value >= 25 ? "bg-orange-500" : "bg-red-500";
   return (
     <div className="flex items-center gap-2">
-      <div className="w-14 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+      <div className="w-14 h-1.5 bg-gray-200 rounded-full overflow-hidden" aria-hidden="true">
         <div className={`h-full rounded-full ${color}`} style={{ width: `${value}%` }} />
       </div>
       <span className="text-xs text-gray-600">{value}</span>
@@ -610,7 +610,7 @@ function ParisPathwayWidget({ companies }: { companies: { pathwayAlignment: stri
                   key={tier.label}
                   className={tier.color}
                   style={{ width: `${pct}%` }}
-                  title={`${tier.label}: ${pct.toFixed(1)}%`}
+                  aria-hidden="true"
                 />
               );
             })}
