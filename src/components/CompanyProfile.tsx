@@ -101,7 +101,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         .slice(0, 3)
         .map((i) => `${i.issue} (${i.severity})`)
         .join(", ") || "No material risk issues identified";
-      const topUpliftRaw = [...co.valueUplift].sort((a, b) => ({ High: 0, Medium: 1, Low: 2 }[a.potential] ?? 3) - ({ High: 0, Medium: 1, Low: 2 }[b.potential] ?? 3)).slice(0, 2).map((u) => u.area).join(", ");
+      const topUpliftRaw = [...co.valueUplift].sort((a, b) => ({ High: 0, Medium: 1, Low: 2 }[a.potential] ?? 3) - ({ High: 0, Medium: 1, Low: 2 }[b.potential] ?? 3)).slice(0, 2).filter(u => u.area.trim() !== "").map((u) => u.area).join(", ");
       const topUplift = topUpliftRaw || "Not yet assessed — value uplift opportunities to be determined during engagement";
       const res = await fetch("/api/gemini", {
         method: "POST",

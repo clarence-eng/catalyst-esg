@@ -286,7 +286,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
             topIssues,
             keyGaps,
             topUplift: co.valueUplift
-              .filter(v => v.potential === "High" || v.potential === "Medium")
+              .filter(v => (v.potential === "High" || v.potential === "Medium") && v.area.trim() !== "")
               .slice(0, 3)
               .map(v => `${v.area} (${v.potential} potential)`)
               .join(", ") || "No specific value creation opportunities flagged",

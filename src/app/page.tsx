@@ -153,7 +153,7 @@ export default function OverviewPage() {
       .filter((i) => !i.opportunity)
       .sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4))[0];
     return (
-      `${displayName(c.name)} (${c.sector}, ${c.country}): ESG ${c.esgScore.overall}/100 [E:${c.esgScore.environmental} S:${c.esgScore.social} G:${c.esgScore.governance}], ` +
+      `${displayName(c.name)} (${c.sector || "Unknown"}, ${c.country || "Unknown"}): ESG ${c.esgScore.overall}/100 [E:${c.esgScore.environmental} S:${c.esgScore.social} G:${c.esgScore.governance}], ` +
       `Maturity: ${c.maturity}, Transition Risk: ${c.climateRisk.transition}, Nature Risk: ${c.natureRisk.overall}, ` +
       `Carbon Intensity: ${c.carbonIntensity > 0 ? `${c.carbonIntensity} tCO2e/$M` : "Not disclosed"} (non-utility portfolio avg: ${avgCarbonIntensity ?? "N/A"} tCO2e/$M, full portfolio avg incl. ${utilityLabel}: ${avgCarbonIntensityFull} tCO2e/$M), Green Revenue: ${c.greenRevenuePct}%, ` +
       `Overdue engagements: ${c.engagement.filter(e => e.status === "Overdue").length}, Planned: ${c.engagement.filter(e => e.status === "Planned").length}, ` +
