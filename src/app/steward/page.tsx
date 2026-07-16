@@ -122,7 +122,9 @@ export default function StewardPage() {
                 {" "}&middot; header stats reflect active portfolio only
               </p>
             </div>
-            {calendarEngagements.length === 0 && !companiesLoading && sortedActive.length > 0 ? (
+            {companiesLoading ? (
+              <div className="text-xs text-gray-400 text-center py-8 animate-pulse">Loading engagements…</div>
+            ) : calendarEngagements.length === 0 && sortedActive.length > 0 ? (
               <div className="text-xs text-gray-500 text-center py-8">No planned or overdue engagements</div>
             ) : (
               <div className="divide-y divide-gray-100">
@@ -349,7 +351,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
           aria-label includes company name so screen readers can attribute the announcement to the correct card
           when multiple cards are mounted simultaneously. */}
       <div role="status" aria-live="polite" aria-atomic="true" aria-label={`${displayName(co.name)} plan status`} className="sr-only">
-        {planLoading ? `Generating ESG action plan for ${co.name}…` : plan && !planLoading ? `${co.name}: ESG action plan ready — expand the card to read` : planError ? `${co.name} action plan error: ${planError}` : ""}
+        {planLoading ? `Generating ESG action plan for ${displayName(co.name)}…` : plan && !planLoading ? `${displayName(co.name)}: ESG action plan ready — expand the card to read` : planError ? `${displayName(co.name)} action plan error: ${planError}` : ""}
       </div>
       {/* Card Header */}
       <div className="p-5">
@@ -470,8 +472,9 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
                 const statusPriority = { Overdue: 0, Planned: 1, Completed: 2 };
                 const sp = (statusPriority[a.status] ?? 2) - (statusPriority[b.status] ?? 2);
                 if (sp !== 0) return sp;
-                // Within same status: most recent first; null/undefined dates sort last
                 const da = a.date || "", db = b.date || "";
+                // Planned: ascending (nearest deadline first); Completed/Overdue: descending (most recent first)
+                if (a.status === "Planned") return da < db ? -1 : da > db ? 1 : 0;
                 return da > db ? -1 : da < db ? 1 : 0;
               }).map((e) => (
                 <div key={e.id ?? `${e.date}-${e.topic}-${e.status}`} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">

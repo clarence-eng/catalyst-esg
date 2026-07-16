@@ -118,7 +118,7 @@ export default function SignalPage() {
       <div className="mb-8">
         <h2 id="compliance-tracker-heading" className="text-sm font-semibold text-gray-900 mb-2">
           Compliance Deadline Tracker
-          {urgencyView !== "all" && <span className="ml-2 text-xs font-normal text-gray-500">· {urgencyView} urgency only</span>}
+          {urgencyView !== "all" && <span className="ml-2 text-xs font-normal text-gray-500">· {urgencyView.charAt(0).toUpperCase() + urgencyView.slice(1)} urgency only</span>}
         </h2>
         <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
           {(() => {
