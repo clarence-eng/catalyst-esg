@@ -605,7 +605,7 @@ function OverviewTab({
           <h3 className="text-sm font-semibold text-gray-900 mb-4">Value Uplift Opportunities</h3>
           <div className="space-y-3">
             {co.valueUplift.length > 0 ? co.valueUplift.map((v) => (
-              <div key={v.area} className="p-3 rounded-lg bg-emerald-600/5 border border-emerald-600/15">
+              <div key={v.id ?? v.area} className="p-3 rounded-lg bg-emerald-600/5 border border-emerald-600/15">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-sm font-medium text-gray-900">{v.area}</span>
                   <span className={`text-xs px-2 py-0.5 rounded border ${

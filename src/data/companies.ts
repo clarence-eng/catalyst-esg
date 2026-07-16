@@ -38,6 +38,7 @@ export interface MaterialIssue {
 }
 
 export interface ValueUplift {
+  id?: string; // present for Supabase-sourced records; absent for static data
   area: string;
   potential: "High" | "Medium" | "Low";
   description: string;

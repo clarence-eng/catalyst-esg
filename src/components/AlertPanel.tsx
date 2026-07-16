@@ -102,9 +102,9 @@ export function AlertPanel({ companies }: { companies: Company[] }) {
         </span>
       </div>
       <div className="space-y-2">
-        {alerts.map((alert, i) => (
+        {alerts.map((alert) => (
           <div
-            key={`${alert.slug}-${alert.severity}-${i}`}
+            key={`${alert.slug}-${alert.severity}-${alert.message}`}
             className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200"
           >
             {alert.severity === 1
