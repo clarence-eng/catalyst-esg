@@ -309,7 +309,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
       // Preserve existing sort_order on edits; only assign max+1 for new issues (no id)
       const sort_order = i.id != null
         ? (i.sort_order ?? 0)
-        : (issues.length > 0 ? Math.max(...issues.map(x => x.sort_order ?? 0)) + 1 : 0);
+        : (issues.length > 0 ? issues.reduce((m, x) => (x.sort_order ?? 0) > m ? (x.sort_order ?? 0) : m, 0) + 1 : 0);
       const result = await adminWrite({ action: "upsert_issue", issue: { ...i, sort_order }, company_slug: co.slug });
       if (!result.ok) { showToast("Error saving issue: " + (result.error ?? ""), true); return; }
       setAddIssue(false); setEditIssue(null); clearCache(); loadDetail();

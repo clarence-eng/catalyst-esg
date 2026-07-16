@@ -56,7 +56,7 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
 export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
   const router = useRouter();
   if (data.length === 0) return null;
-  const maxCarbon = Math.max(...data.map(d => d.carbonIntensity));
+  const maxCarbon = data.reduce((m, d) => d.carbonIntensity > m ? d.carbonIntensity : m, 0);
   const yMax = Math.min(Math.max(maxCarbon * 1.15, 100), 2000);
   const offChart = data.filter(d => d.carbonIntensity > yMax);
   return (
