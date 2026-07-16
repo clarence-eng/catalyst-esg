@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
 
   if (!process.env.GEMINI_API_KEY) {
     return NextResponse.json(
-      { error: "Gemini API key not configured. Add GEMINI_API_KEY to .env.local" },
+      { error: "AI generation is not available — contact your administrator" },
       { status: 503 }
     );
   }

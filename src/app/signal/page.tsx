@@ -138,7 +138,7 @@ export default function SignalPage() {
                   </tr>
                 </thead>
                 <tbody>
-              {calendarItems
+              {[...calendarItems]
               .sort((a, b) => {
               const urgencyOrder = { High: 0, Medium: 1, Low: 2 };
               const urgencyDiff = (urgencyOrder[a.urgency as keyof typeof urgencyOrder] ?? 3) - (urgencyOrder[b.urgency as keyof typeof urgencyOrder] ?? 3);
@@ -371,7 +371,7 @@ function RegUpdateCard({ update: r, companyNameMap = Object.fromEntries(staticCo
     <div className="bg-white rounded-xl border border-gray-200 p-4">
       <div className="flex items-start gap-4">
         <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-          {r.urgency === "High" && <AlertCircle className="w-4 h-4 text-amber-600" />}
+          {r.urgency === "High" && <AlertCircle aria-hidden="true" className="w-4 h-4 text-amber-600" />}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-start gap-3 flex-wrap mb-1.5">
@@ -380,9 +380,9 @@ function RegUpdateCard({ update: r, companyNameMap = Object.fromEntries(staticCo
             <span className={`text-xs font-medium ${categoryColors[r.category] ?? "text-gray-600"}`}>{r.category}</span>
             {r.portfolioImpact && r.portfolioImpact.length > 0 && (() => {
               const activeImpactCount = r.portfolioImpact.filter(s => activePortfolioSlugs.has(s)).length;
-              const totalImpactCount = r.portfolioImpact.length;
-              // Only show badge if at least one active company is affected
-              if (activeImpactCount === 0 && totalImpactCount === 0) return null;
+              const pipelineImpactCount = r.portfolioImpact.filter(s => pipelinePortfolioSlugs.has(s)).length;
+              // Hide badge when no active AND no pipeline companies are actually affected
+              if (activeImpactCount === 0 && pipelineImpactCount === 0) return null;
               const label = activeImpactCount === 1 ? "company" : "companies";
               return (
                 <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${
@@ -392,7 +392,7 @@ function RegUpdateCard({ update: r, companyNameMap = Object.fromEntries(staticCo
                     ? "text-amber-700 bg-amber-50 border-amber-300"
                     : "text-orange-700 bg-orange-50 border-orange-300"
                 }`}>
-                  {activeImpactCount > 0 ? `Affects ${activeImpactCount} active ${label}` : "Pipeline only"}{totalImpactCount > activeImpactCount ? ` (+${totalImpactCount - activeImpactCount} pipeline)` : ""}
+                  {activeImpactCount > 0 ? `Affects ${activeImpactCount} active ${label}` : "Pipeline only"}{pipelineImpactCount > 0 ? ` (+${pipelineImpactCount} pipeline)` : ""}
                 </span>
               );
             })()}
