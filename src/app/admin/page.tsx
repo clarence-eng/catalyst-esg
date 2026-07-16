@@ -449,6 +449,7 @@ export default function AdminPage() {
     if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$|^[a-z0-9]$/.test(co.slug.trim())) return showToast("Slug must be lowercase alphanumeric with hyphens only, no leading/trailing hyphens (e.g. my-company)", true);
     const e = co.esg_environmental ?? 0, s = co.esg_social ?? 0, g = co.esg_governance ?? 0, ov = co.esg_overall ?? 0;
     if ([e,s,g,ov].some(v => v < 0 || v > 100)) return showToast("ESG scores must be between 0 and 100", true);
+    if (!co.esg_rating || !["AAA","AA","A","BBB","BB","B","CCC"].includes(co.esg_rating)) return showToast("ESG rating is required — select a valid rating (AAA–CCC)", true);
     if ((co.green_revenue_pct ?? 0) < 0 || (co.green_revenue_pct ?? 0) > 100) return showToast("Green revenue % must be between 0 and 100", true);
     if ((co.carbon_intensity ?? 0) < 0) return showToast("Carbon intensity must be 0 or greater", true);
     // Pipeline companies may have no committed capital yet; Active holdings must have a positive investment value

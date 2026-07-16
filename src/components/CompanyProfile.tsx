@@ -1323,7 +1323,7 @@ function NatureTab({ co }: { co: Company }) {
                 <span className="text-xs text-gray-700">{label}</span>
               </div>
               <div className={`text-xs font-medium mt-1 ${isWarning ? "text-amber-700 font-semibold" : "text-emerald-700 font-semibold"}`}>
-                {val ? "Yes" : "No"}
+                {val ? "Yes" : "Not yet"}
               </div>
             </div>
             );
