@@ -23,6 +23,12 @@ import { Loader2, FileText, CheckCircle, AlertCircle, TrendingUp, Shield, Leaf, 
 
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 const displayName = (name: string) => name.trim() || "Unnamed company";
+const LEAP_PHASES = [
+  { phase: "L", name: "Locate", desc: "Identify interfaces with nature" },
+  { phase: "E", name: "Evaluate", desc: "Understand dependencies & impacts" },
+  { phase: "A", name: "Assess", desc: "Assess material nature-related risks" },
+  { phase: "P", name: "Prepare", desc: "Prepare to respond and report" },
+] as const;
 
 // Live-updating relative timestamp — re-renders every 60 s so "just now" advances to "2 minutes ago" etc.
 function RelativeTime({ date }: { date: Date }) {
@@ -1146,7 +1152,10 @@ function ClimateTab({ co }: { co: Company }) {
         </div>
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
           {["1.5°C", "2°C", "3°C+"].map((scenario) => (
-            <div key={scenario} className={`p-3 rounded-lg border text-center ${
+            <div key={scenario}
+              aria-current={co.climateRisk.pathwayAlignment === scenario ? true : undefined}
+              aria-label={`${scenario} Scenario${co.climateRisk.pathwayAlignment === scenario ? " — current alignment" : ""}`}
+              className={`p-3 rounded-lg border text-center ${
               co.climateRisk.pathwayAlignment === scenario
                 ? scenario === "1.5°C" ? "bg-emerald-500/10 border-emerald-500/20" :
                   scenario === "2°C" ? "bg-amber-500/10 border-amber-500/20" :
@@ -1249,13 +1258,6 @@ function NatureTab({ co }: { co: Company }) {
     co.natureRisk.tnfdPillars?.some(p => p.pillar === "Strategy" && (p.status === "Partial" || p.status === "Adopted")) ? 2 :
     (co.natureRisk.biodiversityExposure || co.natureRisk.waterStress || co.natureRisk.deforestationRisk) ? 1 : 0;
 
-  const leapPhases = [
-    { phase: "L", name: "Locate", desc: "Identify interfaces with nature" },
-    { phase: "E", name: "Evaluate", desc: "Understand dependencies & impacts" },
-    { phase: "A", name: "Assess", desc: "Assess material nature-related risks" },
-    { phase: "P", name: "Prepare", desc: "Prepare to respond and report" },
-  ];
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* TNFD LEAP Assessment Progress */}
@@ -1263,10 +1265,10 @@ function NatureTab({ co }: { co: Company }) {
         <h3 className="text-sm font-semibold text-gray-900 mb-5">TNFD LEAP Assessment Progress</h3>
         {/* sr-only progress summary for AT users navigating without visual color context */}
         <p className="sr-only">
-          TNFD LEAP progress: {leapStage === 0 ? "Not started" : leapStage === 4 ? "All 4 phases complete" : `${leapPhases.slice(0, leapStage).map(p => p.name).join(", ")} complete — currently in ${leapPhases[leapStage]?.name ?? "final phase"}`}
+          TNFD LEAP progress: {leapStage === 0 ? "Not started" : leapStage === 4 ? "All 4 phases complete" : `${LEAP_PHASES.slice(0, leapStage).map(p => p.name).join(", ")} complete — currently in ${LEAP_PHASES[leapStage]?.name ?? "final phase"}`}
         </p>
         <div className="flex items-start gap-0" role="list" aria-label="TNFD LEAP phases">
-          {leapPhases.map(({ phase, name, desc }, index) => {
+          {LEAP_PHASES.map(({ phase, name, desc }, index) => {
             const completed = leapStage > index;
             const current = leapStage > 0 && leapStage === index;
             const circleStyle = completed
@@ -1288,7 +1290,7 @@ function NatureTab({ co }: { co: Company }) {
                     <div className="text-xs text-gray-500 mt-0.5 max-w-[90px] leading-relaxed">{desc}</div>
                   </div>
                 </div>
-                {index < leapPhases.length - 1 && (
+                {index < LEAP_PHASES.length - 1 && (
                   <div className={`h-0.5 flex-1 mt-4 ${lineColor}`} />
                 )}
               </div>
