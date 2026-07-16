@@ -44,8 +44,10 @@ export function verifyAdminRequest(req: NextRequest): boolean {
   if (token.length !== 64) return false;
   try {
     const tokenBuf = Buffer.from(token, "hex");
-    // Accept current hour and the immediately prior hour (handles boundary clock skew)
-    for (const offset of [0, -1]) {
+    // Accept current hour and up to 8 prior hours to cover the full 8-hour cookie lifetime.
+    // Each hour boundary would otherwise silently invalidate a valid session mid-work.
+    // The 1-hour rotation still limits a captured cookie to at most 9 hours of server validity.
+    for (let offset = 0; offset >= -8; offset--) {
       const expected = Buffer.from(computeToken(hourBucket(offset)), "hex");
       if (timingSafeEqual(tokenBuf, expected)) return true;
     }

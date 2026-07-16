@@ -35,7 +35,12 @@ export function Navigation() {
   const [overdueAnnouncement, setOverdueAnnouncement] = useState("");
   useEffect(() => {
     if (prevOverdueRef.current !== null && prevOverdueRef.current !== overdueCount) {
-      setOverdueAnnouncement(overdueCount > 0 ? `${overdueCount} overdue engagement${overdueCount !== 1 ? "s" : ""} in portfolio` : "All overdue engagements resolved");
+      const msg = overdueCount > 0 ? `${overdueCount} overdue engagement${overdueCount !== 1 ? "s" : ""} in portfolio` : "All overdue engagements resolved";
+      setOverdueAnnouncement(msg);
+      // Reset to empty after a brief delay so AT doesn't re-announce the stale message
+      // when the virtual cursor re-enters the live region on subsequent navigations.
+      const t = setTimeout(() => setOverdueAnnouncement(""), 2500);
+      return () => clearTimeout(t);
     }
     prevOverdueRef.current = overdueCount;
   }, [overdueCount]);

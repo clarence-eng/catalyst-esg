@@ -283,7 +283,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
   const delEng = async (id: string) => {
     if (pendingDelEngId !== id) { setPendingDelEngId(id); return; }
     setPendingDelEngId(null);
-    try { const result = await adminWrite({ action: "delete_engagement", id }); if (!result.ok) { showToast("Error deleting engagement: " + (result.error ?? ""), true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting engagement", true); console.error("[Admin] delEng threw:", err); }
+    try { const result = await adminWrite({ action: "delete_engagement", id, company_slug: co.slug }); if (!result.ok) { showToast("Error deleting engagement: " + (result.error ?? ""), true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting engagement", true); console.error("[Admin] delEng threw:", err); }
   };
   const saveIssue = async (i: Partial<DbMaterialIssue>) => {
     if (savingIssueRef.current) return;
@@ -303,7 +303,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
   const delIssue = async (id: string) => {
     if (pendingDelIssueId !== id) { setPendingDelIssueId(id); return; }
     setPendingDelIssueId(null);
-    try { const result = await adminWrite({ action: "delete_issue", id }); if (!result.ok) { showToast("Error deleting issue: " + (result.error ?? ""), true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting issue", true); console.error("[Admin] delIssue threw:", err); }
+    try { const result = await adminWrite({ action: "delete_issue", id, company_slug: co.slug }); if (!result.ok) { showToast("Error deleting issue: " + (result.error ?? ""), true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting issue", true); console.error("[Admin] delIssue threw:", err); }
   };
 
   const statusColor = co.portfolio_status === "Active" ? "text-emerald-700 bg-emerald-50 border-emerald-300" : "text-blue-700 bg-blue-50 border-blue-300";

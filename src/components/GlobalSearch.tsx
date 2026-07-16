@@ -112,8 +112,8 @@ export function GlobalSearch() {
             ref={inputRef}
             type="text"
             role="combobox"
-            aria-expanded={hasResults}
-            aria-controls="search-listbox"
+            aria-expanded={query.length >= 2}
+            aria-controls={query.length >= 2 ? "search-listbox" : undefined}
             aria-activedescendant={activeIdx >= 0 ? resultItems[activeIdx]?.id : undefined}
             aria-autocomplete="list"
             value={query}
@@ -146,7 +146,7 @@ export function GlobalSearch() {
         {query.length >= 2 && (
           <div id="search-listbox" role="listbox" aria-label="Search results" className="max-h-80 overflow-y-auto">
             {!hasResults && (
-              <p role="option" aria-selected="false" className="text-sm text-gray-500 text-center py-8">No results for &ldquo;{query}&rdquo;</p>
+              <p role="status" aria-live="polite" className="text-sm text-gray-500 text-center py-8">No results for &ldquo;{query}&rdquo;</p>
             )}
             {matchedCompanies.length > 0 && (
               <div>

@@ -31,16 +31,19 @@ export function KeyboardShortcuts() {
 
   // Move focus into dialog on open; restore focus to trigger element on close (WCAG 2.4.3)
   useEffect(() => {
+    // Use double-rAF to guarantee focus moves after the browser has painted the new DOM.
+    // A fixed 50ms setTimeout can fire before paint on CPU-throttled or Suspense-deferred renders.
+    let raf1: number, raf2: number;
     if (open) {
       const active = document.activeElement as HTMLElement;
-      // Only capture focusable elements — body/main have no .focus() effect
       triggerRef.current = (active && active !== document.body && active.tabIndex >= -1) ? active : null;
-      setTimeout(() => closeButtonRef.current?.focus(), 50);
+      raf1 = requestAnimationFrame(() => { raf2 = requestAnimationFrame(() => closeButtonRef.current?.focus()); });
     } else {
       if (triggerRef.current) {
-        setTimeout(() => triggerRef.current?.focus(), 50);
+        raf1 = requestAnimationFrame(() => { raf2 = requestAnimationFrame(() => triggerRef.current?.focus()); });
       }
     }
+    return () => { cancelAnimationFrame(raf1); cancelAnimationFrame(raf2); };
   }, [open]);
 
   useEffect(() => {

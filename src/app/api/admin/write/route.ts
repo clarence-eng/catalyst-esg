@@ -13,6 +13,13 @@ function checkRateLimit(ip: string): boolean {
   const entry = rateLimitMap.get(ip);
   if (!entry || now > entry.reset) {
     rateLimitMap.set(ip, { count: 1, reset: now + RATE_WINDOW_MS });
+    // Evict all expired entries periodically to prevent unbounded memory growth
+    // on long-lived container instances with many unique IPs.
+    if (rateLimitMap.size > 500) {
+      for (const [k, v] of rateLimitMap) {
+        if (now > v.reset) rateLimitMap.delete(k);
+      }
+    }
     return true;
   }
   if (entry.count >= RATE_LIMIT) return false;
