@@ -265,7 +265,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
       const keyGaps = keyGapsArr.length > 0
         ? keyGapsArr.join("; ")
         : "No material gaps — focus on reporting quality uplift, stakeholder engagement, and ESG value creation";
-      const overdueEngagements = co.engagement.filter(e => e.status === "Overdue").map(e => e.topic).filter(Boolean).join(", ") || "None";
+      const overdueEngagements = co.engagement.filter(e => e.status === "Overdue").map(e => e.topic).filter(t => t.trim() !== "").join(", ") || "None";
 
       const res = await fetch("/api/gemini", {
         method: "POST",
