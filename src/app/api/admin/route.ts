@@ -6,10 +6,36 @@ import { setAdminCookie } from "@/lib/adminAuth";
 // Using a fixed pad length hides the true password length from timing analysis.
 const CMP_LEN = 256;
 
+// Strict rate limiter for login — 10 attempts per minute per IP.
+// Stricter than the write-route limiter (30/min) since login is the primary brute-force target.
+const loginRateMap = new Map<string, { count: number; reset: number }>();
+const LOGIN_RATE_LIMIT = 10;
+const LOGIN_RATE_WINDOW_MS = 60_000;
+
+function checkLoginRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = loginRateMap.get(ip);
+  if (!entry || now > entry.reset) {
+    loginRateMap.set(ip, { count: 1, reset: now + LOGIN_RATE_WINDOW_MS });
+    if (loginRateMap.size > 200) {
+      for (const [k, v] of loginRateMap) { if (now > v.reset) loginRateMap.delete(k); }
+    }
+    return true;
+  }
+  if (entry.count >= LOGIN_RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-real-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!checkLoginRateLimit(ip)) {
+    return NextResponse.json({ error: "Too many login attempts — please wait before retrying" }, { status: 429 });
+  }
+
   const correct = process.env.ADMIN_PASSWORD;
   if (!correct) {
-    return NextResponse.json({ error: "Admin access not configured — set ADMIN_PASSWORD in environment variables" }, { status: 503 });
+    return NextResponse.json({ error: "Admin access not configured — contact your administrator" }, { status: 503 });
   }
   let body: unknown;
   try { body = await req.json(); } catch {

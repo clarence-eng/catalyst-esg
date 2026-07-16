@@ -33,6 +33,8 @@ export function useCompanies() {
       setCompanies(cachedResult.companies);
       setSource(cachedResult.source);
       if (cachedResult.source === "static") setLiveDataError(true);
+      // Always clear loading — the caller may have been in loading=true state
+      setLoading(false);
       return;
     }
 
@@ -41,7 +43,10 @@ export function useCompanies() {
       // Capture epoch now — reject if clearCache() fires before the promise settles
       const subscriberEpoch = cacheEpoch;
       inFlight.then(() => {
-        if (cacheEpoch !== subscriberEpoch) { setLoading(true); return; } // stale — new fetch starting, stay in loading state
+        // Stale: a new epoch started while we were waiting. doFetch will be called again
+        // via the subscriber tick — do NOT set loading=true here or the new fetch will
+        // never clear it (the new fetch's .finally only clears its own epoch).
+        if (cacheEpoch !== subscriberEpoch) return;
         if (cachedResult) {
           setCompanies(cachedResult.companies);
           setSource(cachedResult.source);

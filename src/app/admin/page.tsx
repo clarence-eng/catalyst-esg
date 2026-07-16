@@ -278,7 +278,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
       // If a mutation fired while this fetch was in-flight, reload now
       if (pendingReloadRef.current) loadDetail();
     }
-  }, [co.slug]);
+  }, [co.slug, showToast]);
 
   useEffect(() => { if (expanded) loadDetail(); }, [expanded, loadDetail]);
   useEffect(() => { if (!expanded) { setPendingDelEngId(null); setPendingDelIssueId(null); } }, [expanded]);
@@ -578,7 +578,7 @@ export default function AdminPage() {
           </div>
           <div className="flex items-center gap-3">
             <Link href="/" className="text-xs text-gray-500 hover:text-purple-700 transition-colors">← Back to App</Link>
-            <button type="button" onClick={auth.logout} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700"><LogOut className="w-3 h-3"/>Sign out</button>
+            <button type="button" onClick={() => { setAdding(false); setEditing(null); auth.logout(); }} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700"><LogOut className="w-3 h-3"/>Sign out</button>
           </div>
         </div>
       </div>
