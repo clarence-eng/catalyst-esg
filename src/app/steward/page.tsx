@@ -27,7 +27,7 @@ export default function StewardPage() {
     if (overdueB !== overdueA) return overdueB - overdueA;
     const plannedDiff = b.engagement.filter(e => e.status === "Planned").length - a.engagement.filter(e => e.status === "Planned").length;
     if (plannedDiff !== 0) return plannedDiff;
-    return a.name.localeCompare(b.name);
+    return a.name.localeCompare(b.name, "en-SG");
   });
 
   // Calendar view: flatten all engagements (Planned + Overdue) from active AND pipeline companies

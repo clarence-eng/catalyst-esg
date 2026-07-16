@@ -427,8 +427,8 @@ function dbToCompany(
     country: co.country,
     region: co.region,
     description: co.description,
-    portfolioStatus: co.portfolio_status as Company["portfolioStatus"],
-    maturity: co.maturity as Company["maturity"],
+    portfolioStatus: (["Active","Pipeline"] as const).includes(co.portfolio_status as Company["portfolioStatus"]) ? co.portfolio_status as Company["portfolioStatus"] : "Active",
+    maturity: (["Leading","Advanced","Developing","Lagging"] as const).includes(co.maturity as Company["maturity"]) ? co.maturity as Company["maturity"] : "Developing",
     investmentValue: co.investment_value,
     carbonIntensity: co.carbon_intensity,
     greenRevenuePct: co.green_revenue_pct,
@@ -442,14 +442,14 @@ function dbToCompany(
         : "BBB",
     },
     climateRisk: {
-      transition: co.transition_risk as Company["climateRisk"]["transition"],
-      physical: co.physical_risk as Company["climateRisk"]["physical"],
+      transition: (["Low","Medium","High","Critical"] as const).includes(co.transition_risk as Company["climateRisk"]["transition"]) ? co.transition_risk as Company["climateRisk"]["transition"] : "Low",
+      physical: (["Low","Medium","High","Critical"] as const).includes(co.physical_risk as Company["climateRisk"]["physical"]) ? co.physical_risk as Company["climateRisk"]["physical"] : "Low",
       pathwayAlignment: (["1.5°C","2°C","3°C+","Not assessed"] as const).includes(co.pathway_alignment as Company["climateRisk"]["pathwayAlignment"]) ? co.pathway_alignment as Company["climateRisk"]["pathwayAlignment"] : "Not assessed",
       transitionDetails: enrichment?.climateRisk.transitionDetails ?? derivedTransitionDetails,
       physicalDetails: enrichment?.climateRisk.physicalDetails ?? derivedPhysicalDetails,
     },
     natureRisk: {
-      overall: co.nature_risk as Company["natureRisk"]["overall"],
+      overall: (["Low","Medium","High","Critical"] as const).includes(co.nature_risk as Company["natureRisk"]["overall"]) ? co.nature_risk as Company["natureRisk"]["overall"] : "Low",
       biodiversityExposure: enrichment?.natureRisk.biodiversityExposure ?? (isHighNature && (isAgri || isMarine)),
       waterStress: enrichment?.natureRisk.waterStress ?? (isHighNature && isAgri),
       deforestationRisk: enrichment?.natureRisk.deforestationRisk ?? (isAgri && isHighNature),
@@ -464,7 +464,7 @@ function dbToCompany(
         { pillar: "Metrics & Targets", status: "Gap" },
       ],
     },
-    netZeroCommitment: co.net_zero_commitment as Company["netZeroCommitment"],
+    netZeroCommitment: (["None","Net Zero Pledged","SBTi Committed","SBTi Targets Set"] as const).includes(co.net_zero_commitment as Company["netZeroCommitment"]) ? co.net_zero_commitment as Company["netZeroCommitment"] : "None",
     sasbCategory: co.sasb_category,
     temasekMegatrend: (["Climate Transition","Nature & Biodiversity","Just Transition & Inclusive Growth","AI & Digital Ethics","Longer Lifespans"] as const).includes(co.temasek_megatrend as Company["temasekMegatrend"])
       ? co.temasek_megatrend as Company["temasekMegatrend"]
