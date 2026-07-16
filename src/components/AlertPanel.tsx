@@ -2,6 +2,8 @@ import Link from "next/link";
 import { AlertCircle, AlertTriangle, Info, CheckCircle2 } from "lucide-react";
 import { type Company } from "@/data/companies";
 
+const displayName = (name: string) => name.trim() || "Unnamed company";
+
 interface Alert {
   message: string;
   slug: string;
@@ -17,7 +19,7 @@ function generateAlerts(companies: Company[]): { visible: Alert[]; hiddenLower: 
     for (const issue of co.materialIssues) {
       if (issue.severity === "Critical" && !issue.opportunity) {
         alerts.push({
-          message: `${co.name}: Critical ESG issue — ${issue.issue}`,
+          message: `${displayName(co.name)}: Critical ESG issue — ${issue.issue}`,
           slug: co.slug,
           severity: 1,
         });
@@ -35,8 +37,8 @@ function generateAlerts(companies: Company[]): { visible: Alert[]; hiddenLower: 
       const topic = overdueEngs[0].topic;
       alerts.push({
         message: count > 1
-          ? `${co.name}: ${count} overdue engagements (oldest: "${topic}")`
-          : `${co.name}: Overdue engagement — "${topic}"`,
+          ? `${displayName(co.name)}: ${count} overdue engagements (oldest: "${topic}")`
+          : `${displayName(co.name)}: Overdue engagement — "${topic}"`,
         slug: co.slug,
         severity: 2,
       });
@@ -55,7 +57,7 @@ function generateAlerts(companies: Company[]): { visible: Alert[]; hiddenLower: 
       const prev = scores[scores.length - 2];
       if (last.e < prev.e) {
         alerts.push({
-          message: `${co.name}: E score declining (${prev.e} → ${last.e} in ${last.period})`,
+          message: `${displayName(co.name)}: E score declining (${prev.e} → ${last.e} in ${last.period})`,
           slug: co.slug,
           severity: 3,
         });
