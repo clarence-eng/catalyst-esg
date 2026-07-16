@@ -179,7 +179,7 @@ export async function POST(req: NextRequest) {
 
   if (body.action === "delete_engagement") {
     const id = typeof body.id === "string" ? body.id.trim() : "";
-    const company_slug = body.company_slug.trim();
+    const company_slug = typeof body.company_slug === "string" ? body.company_slug.trim() : "";
     if (!id) return badRequest("id required");
     if (!company_slug || !SLUG_RE.test(company_slug)) return badRequest("company_slug required");
     const { error, count } = await sb.from("engagements").delete({ count: "exact" }).eq("id", id).eq("company_slug", company_slug);
@@ -206,7 +206,7 @@ export async function POST(req: NextRequest) {
     const payload = { company_slug, issue, severity, category, opportunity, detail, sort_order };
     const id = typeof i.id === "string" && i.id.trim() ? i.id.trim() : null;
     if (id) {
-      const { error, count } = await sb.from("material_issues").update({ issue, severity, category, opportunity, detail }, { count: "exact" }).eq("id", id).eq("company_slug", company_slug);
+      const { error, count } = await sb.from("material_issues").update({ issue, severity, category, opportunity, detail, sort_order }, { count: "exact" }).eq("id", id).eq("company_slug", company_slug);
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
       if (!count) return NextResponse.json({ error: "Issue not found or does not belong to this company" }, { status: 404 });
     } else {
@@ -218,7 +218,7 @@ export async function POST(req: NextRequest) {
 
   if (body.action === "delete_issue") {
     const id = typeof body.id === "string" ? body.id.trim() : "";
-    const company_slug = body.company_slug.trim();
+    const company_slug = typeof body.company_slug === "string" ? body.company_slug.trim() : "";
     if (!id) return badRequest("id required");
     if (!company_slug || !SLUG_RE.test(company_slug)) return badRequest("company_slug required");
     const { error, count } = await sb.from("material_issues").delete({ count: "exact" }).eq("id", id).eq("company_slug", company_slug);

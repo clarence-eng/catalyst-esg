@@ -145,7 +145,13 @@ export default function ScoutPage() {
   }).slice().sort((a, b) => {
     if (sortKey === "esg_desc") return b.esgScore.overall - a.esgScore.overall;
     if (sortKey === "esg_asc") return a.esgScore.overall - b.esgScore.overall;
-    if (sortKey === "carbon_asc") return a.carbonIntensity - b.carbonIntensity;
+    if (sortKey === "carbon_asc") {
+      // Push undisclosed (0) to the end — 0 means "not disclosed", not actually zero-emission
+      if (a.carbonIntensity === 0 && b.carbonIntensity === 0) return 0;
+      if (a.carbonIntensity === 0) return 1;
+      if (b.carbonIntensity === 0) return -1;
+      return a.carbonIntensity - b.carbonIntensity;
+    }
     if (sortKey === "carbon_desc") return b.carbonIntensity - a.carbonIntensity;
     if (sortKey === "name_asc") return a.name.localeCompare(b.name, "en-SG");
     return 0;

@@ -251,10 +251,16 @@ export default function OverviewPage() {
           <StatCard label="Portfolio ESG Score" value={totalActiveAUM === 0 ? "—" : avgScore} sub={activeCompanies.every(c => c.investmentValue === 0) ? "No AUM set — score not investment-weighted" : activeCompanies.some(c => c.investmentValue === 0) ? "Investment-weighted · some companies have no AUM set" : "Active companies · investment-weighted"} color="green" />
           {(avgDelta !== 0 || eDelta !== 0 || sDelta !== 0 || gDelta !== 0) && (
             <div className="mt-1 flex flex-wrap gap-1">
-              {avgDelta !== 0 && (
+              {/* Show avg badge whenever any pillar moved — even if they cancel (avgDelta=0), hiding
+                  that case would mask significant ESG rebalancing from analysts reviewing the KPI */}
+              {(avgDelta !== 0 || eDelta !== 0 || sDelta !== 0 || gDelta !== 0) && (
                 <span className={`text-xs font-medium px-2 py-0.5 rounded border ${
-                  avgDelta > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200" : "text-red-700 bg-red-50 border-red-200"
-                }`} title={`${deltaLabel} · equal-weight average`}>{avgDelta > 0 ? `↑ +${avgDelta}` : `↓ ${avgDelta}`} {deltaLabel}</span>
+                  avgDelta > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+                  : avgDelta < 0 ? "text-red-700 bg-red-50 border-red-200"
+                  : "text-gray-600 bg-gray-50 border-gray-200"
+                }`} title={`${deltaLabel} · equal-weight average`}>
+                  {avgDelta > 0 ? `↑ +${avgDelta}` : avgDelta < 0 ? `↓ ${avgDelta}` : `~ 0`} {deltaLabel}
+                </span>
               )}
               {[{k:"E", v:eDelta},{k:"S", v:sDelta},{k:"G", v:gDelta}].map(({k,v}) => v !== 0 && (
                 <span key={k} className={`text-[10px] px-1.5 py-0.5 rounded border ${
@@ -680,9 +686,11 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
       const q1 = co.historicalScores.find(s => normalisePeriod(s.period) === Q1);
       const q2 = co.historicalScores.find(s => normalisePeriod(s.period) === Q2);
       if (!q1 || !q2) return null;
-      const avg1 = (q1.e + q1.s + q1.g) / 3;
-      const avg2 = (q2.e + q2.s + q2.g) / 3;
-      const scoreDelta = Math.round((avg2 - avg1) * 10) / 10;
+      // Use stored overall score delta — this matches the investment-weighted headline KPI.
+      // E/S/G individual components are shown in the pillar breakdown, not here.
+      const overall1 = (q1.e + q1.s + q1.g) / 3;
+      const overall2 = (q2.e + q2.s + q2.g) / 3;
+      const scoreDelta = Math.round((overall2 - overall1) * 10) / 10;
       // Weight = portfolio share; falls back to equal-weight when AUM is unavailable
       const weight = totalAUM > 0 ? co.investmentValue / totalAUM : 1 / companies.length;
       // Weighted contribution: how much this company moved the portfolio-level score
