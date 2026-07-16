@@ -45,15 +45,18 @@ export default function SignalPage() {
   const filteredUpdates = regulatoryUpdates.filter((r) => {
     const matchJ = jurisdictionFilter === "All" ||
       (jurisdictionFilter === "Global"
-        ? r.jurisdiction.startsWith("Global")
+        // Match any jurisdiction that contains "Global" anywhere — handles "EU / Global" and "Global / ASEAN"
+        ? r.jurisdiction.split(/\s*\/\s*/).some(j => j.trim().startsWith("Global"))
         : r.jurisdiction.split(/\s*\/\s*/).some(j => j.trim() === jurisdictionFilter));
     const matchC = categoryFilter === "All" || r.category === categoryFilter;
     return matchJ && matchC;
   });
 
-  const highUrgency = filteredUpdates.filter((r) => r.urgency === "High");
-  const mediumUrgency = filteredUpdates.filter((r) => r.urgency === "Medium");
-  const lowUrgency = filteredUpdates.filter((r) => r.urgency === "Low");
+  const sortByDate = (a: typeof filteredUpdates[0], b: typeof filteredUpdates[0]) =>
+    (a.effectiveDate || "").localeCompare(b.effectiveDate || "");
+  const highUrgency = filteredUpdates.filter((r) => r.urgency === "High").sort(sortByDate);
+  const mediumUrgency = filteredUpdates.filter((r) => r.urgency === "Medium").sort(sortByDate);
+  const lowUrgency = filteredUpdates.filter((r) => r.urgency === "Low").sort(sortByDate);
 
   return (
     <div className="p-8">
@@ -432,7 +435,7 @@ function RegUpdateCard({ update: r, companyNameMap = Object.fromEntries(staticCo
                       : "text-gray-500 bg-gray-50 border border-gray-200 hover:bg-gray-100"
                   }`}
                 >
-                  {companyNameMap[slug] ?? slug}{isPipeline ? " ·Pipeline" : !isKnown ? " ·Exited" : ""}
+                  {companyNameMap[slug] ?? slug}{isPipeline ? " · Pipeline" : !isKnown ? " · Exited" : ""}
                 </Link>
                 );
               })}

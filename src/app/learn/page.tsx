@@ -198,6 +198,7 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
     "Cross-cutting": "text-purple-700",
     Reporting: "text-amber-700",
     Social: "text-blue-700",
+    Governance: "text-slate-700",
   };
   const statusStyles: Record<string, string> = {
     Mandatory: "text-red-700 bg-red-50 border-red-300",
@@ -262,8 +263,8 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
             <div>
               <div className="text-xs text-gray-500 font-medium mb-1">Key Requirements</div>
               <ul className="space-y-1">
-                {f.keyRequirements.slice(0, 3).map((req) => (
-                  <li key={req} className="flex items-start gap-2 text-xs text-gray-600">
+                {f.keyRequirements.slice(0, 3).map((req, reqIdx) => (
+                  <li key={`${req}-${reqIdx}`} className="flex items-start gap-2 text-xs text-gray-600">
                     <ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0 text-gray-500" />
                     {req}
                   </li>
