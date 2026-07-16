@@ -29,6 +29,7 @@ export interface NatureRisk {
 }
 
 export interface MaterialIssue {
+  id?: string; // present for Supabase-sourced records; absent for static data
   category: "Environmental" | "Social" | "Governance";
   issue: string;
   severity: RiskLevel;

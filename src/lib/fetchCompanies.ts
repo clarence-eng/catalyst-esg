@@ -489,6 +489,7 @@ function dbToCompany(
       .filter(i => i.company_slug === co.slug)
       .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
       .map(i => ({
+        id: i.id,
         category: (["Environmental","Social","Governance"] as const).includes(i.category as Company["materialIssues"][0]["category"]) ? i.category as Company["materialIssues"][0]["category"] : "Environmental",
         issue: i.issue ?? "",
         severity: (["Critical","High","Medium","Low"] as const).includes(i.severity as Company["materialIssues"][0]["severity"]) ? i.severity as Company["materialIssues"][0]["severity"] : "Medium",
