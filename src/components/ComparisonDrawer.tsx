@@ -22,8 +22,8 @@ export function ComparisonDrawer({ companies, onRemove, onClear, onDismiss }: Pr
     { label: "Governance", fn: (c: Company) => c.esgScore.governance, unit: "", lowerIsBetter: false, color: (v: number) => v >= 65 ? "text-emerald-700" : v >= 40 ? "text-amber-700" : "text-red-700" },
     { label: "Carbon Intensity", fn: (c: Company) => c.carbonIntensity, unit: " tCO₂/$M", lowerIsBetter: true, color: (v: number) => v < 100 ? "text-emerald-700" : v < 500 ? "text-amber-700" : "text-red-700" },
     { label: "Green Revenue", fn: (c: Company) => c.greenRevenuePct, unit: "%", lowerIsBetter: false, color: (v: number) => v >= 30 ? "text-emerald-700" : v >= 10 ? "text-amber-700" : "text-red-700" },
-    { label: "Transition Risk", fn: (c: Company) => c.climateRisk.transition, unit: "", lowerIsBetter: false, color: () => "text-gray-700" },
-    { label: "Nature Risk", fn: (c: Company) => c.natureRisk.overall, unit: "", lowerIsBetter: false, color: () => "text-gray-700" },
+    { label: "Transition Risk", fn: (c: Company) => c.climateRisk?.transition ?? "Unknown", unit: "", lowerIsBetter: false, color: () => "text-gray-700" },
+    { label: "Nature Risk", fn: (c: Company) => c.natureRisk?.overall ?? "Unknown", unit: "", lowerIsBetter: false, color: () => "text-gray-700" },
   ];
 
   return (
@@ -61,7 +61,10 @@ export function ComparisonDrawer({ companies, onRemove, onClear, onDismiss }: Pr
             {metrics.map(m => {
               const values = companies.map(c => m.fn(c));
               const numVals = values.filter(v => typeof v === "number") as number[];
-              const best = numVals.length > 1 ? (m.lowerIsBetter ? Math.min(...numVals) : Math.max(...numVals)) : null;
+              const bestVal = numVals.length > 1 ? (m.lowerIsBetter ? Math.min(...numVals) : Math.max(...numVals)) : null;
+              // Only badge the best when there is a unique winner — ties get no badge
+              const bestCount = bestVal !== null ? numVals.filter(v => v === bestVal).length : 0;
+              const best = bestCount === 1 ? bestVal : null;
               return (
                 <tr key={m.label} className="border-b border-gray-50 hover:bg-gray-50/50">
                   <th scope="row" className="px-4 py-2 text-gray-500 font-medium text-left">{m.label}</th>

@@ -144,10 +144,14 @@ export function GlobalSearch() {
 
         {/* Results */}
         {query.length >= 2 && (
-          <div id="search-listbox" role="listbox" aria-label="Search results" className="max-h-80 overflow-y-auto">
-            {!hasResults && (
+          <>
+            {/* Status messages live outside role=listbox — listbox only permits option/group children */}
+            {loading && companies.length === 0 ? (
+              <p role="status" aria-live="polite" className="text-sm text-gray-500 text-center py-8">Loading companies…</p>
+            ) : !hasResults ? (
               <p role="status" aria-live="polite" className="text-sm text-gray-500 text-center py-8">No results for &ldquo;{query}&rdquo;</p>
-            )}
+            ) : null}
+            <div id="search-listbox" role="listbox" aria-label="Search results" className="max-h-80 overflow-y-auto">
             {matchedCompanies.length > 0 && (
               <div>
                 <div className="px-4 pt-3 pb-1 text-[10px] font-semibold text-gray-500 uppercase tracking-wider" aria-hidden="true">Companies</div>
@@ -194,6 +198,7 @@ export function GlobalSearch() {
               </div>
             )}
           </div>
+          </>
         )}
 
         {query.length < 2 && (
