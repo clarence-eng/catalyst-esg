@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import { type Megatrend } from "@/data/megatrends";
 import { Loader2, FileText, TrendingUp, AlertTriangle, Copy } from "lucide-react";
@@ -47,9 +47,11 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
   const [error, setError] = useState("");
   const [briefGeneratedAt, setBriefGeneratedAt] = useState<Date | null>(null);
   const [briefCopied, setBriefCopied] = useState(false);
+  const generateBriefRef = useRef(false);
 
   async function generateBrief() {
-    if (loading) return;
+    if (generateBriefRef.current) return;
+    generateBriefRef.current = true;
     setLoading(true);
     setError("");
     try {
@@ -83,6 +85,7 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to generate brief");
     } finally {
+      generateBriefRef.current = false;
       setLoading(false);
     }
   }

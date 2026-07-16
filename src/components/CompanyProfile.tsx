@@ -27,6 +27,8 @@ const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2
 function RelativeTime({ date }: { date: Date }) {
   const [label, setLabel] = useState(() => `Generated ${formatRelativeTime(date)}`);
   useEffect(() => {
+    // Update immediately when date changes, then tick every 60 s
+    setLabel(`Generated ${formatRelativeTime(date)}`);
     const id = setInterval(() => setLabel(`Generated ${formatRelativeTime(date)}`), 60_000);
     return () => clearInterval(id);
   }, [date]);
@@ -311,7 +313,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         <SocialTab co={co} />
       </div>
       <div role="tabpanel" id="tabpanel-engagement" aria-labelledby="tab-engagement" hidden={tab !== "engagement"}>
-        <EngagementTab co={co} onGenerateQuestions={generateQuestions} questions={questions} questionsLoading={questionsLoading} questionsError={questionsError} questionsGeneratedAt={questionsGeneratedAt} />
+        <EngagementTab co={co} onGenerateQuestions={generateQuestions} questions={questions} questionsLoading={questionsLoading} questionsError={questionsError} questionsGeneratedAt={questionsGeneratedAt} onSetQuestionsError={setQuestionsError} />
       </div>
     </div>
   );
@@ -1535,13 +1537,14 @@ function GovStatTile({ label, value, note, status }: { label: string; value: str
   );
 }
 
-function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, questionsError, questionsGeneratedAt }: {
+function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, questionsError, questionsGeneratedAt, onSetQuestionsError }: {
   co: Company;
   onGenerateQuestions: () => void;
   questions: string;
   questionsLoading: boolean;
   questionsError: string;
   questionsGeneratedAt: Date | null;
+  onSetQuestionsError: (msg: string) => void;
 }) {
   const total = co.engagement.length;
   const completed = co.engagement.filter((e) => e.status === "Completed").length;
@@ -1663,8 +1666,9 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
           </button>
         </div>
         {questionsError && (
-          <div role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-lg p-3 mb-3">
-            {questionsError}
+          <div role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-lg p-3 mb-3 flex items-start justify-between gap-2">
+            <span>{questionsError}</span>
+            <button type="button" onClick={() => onSetQuestionsError("")} aria-label="Dismiss error" className="text-red-500 hover:text-red-700 flex-shrink-0 text-base leading-none">×</button>
           </div>
         )}
         {questions ? (
