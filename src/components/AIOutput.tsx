@@ -99,8 +99,9 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       .replace(/\*{3}(.+?)\*{3}/g, '<strong class="text-gray-900 font-semibold"><em class="text-gray-800">$1</em></strong>')
       .replace(/\*\*(.+?)\*\*/g, '<strong class="text-gray-900 font-semibold">$1</strong>')
       .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-gray-800">$1</em>')
-      // Bare-URL step: skip URLs already inside href="" to prevent double-wrapping
-      .replace(/(?<![>"=])(https?:\/\/[^\s<>"'*]+)/g, (rawUrl) => {
+      // Bare-URL step: skip URLs already inside href/src attributes (preceded by >").
+      // Removed '=' from the lookbehind — it blocked prose like 'endpoint=https://...'
+      .replace(/(?<![>"])(https?:\/\/[^\s<>"'*]+)/g, (rawUrl) => {
         // Strip trailing punctuation that belongs to the surrounding sentence, not the URL.
         let url = rawUrl.replace(/[.,;:!?]+$/, "");
         // Strip unmatched trailing ) using paren-balance counting — but re-emit them AFTER the
