@@ -184,7 +184,7 @@ function CoForm({ initial, onSave, onCancel, saving }: { initial: Partial<DbComp
 function makeEmptyEng(): Partial<DbEngagement> {
   return { date: todayISO(), type: "Meeting", topic: "", status: "Planned", notes: "" };
 }
-function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: string; initial: Partial<DbEngagement>; onSave: (e: Partial<DbEngagement>) => void; onCancel: () => void }) {
+function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: string; initial: Partial<DbEngagement>; onSave: (e: Partial<DbEngagement>, onError: () => void) => void; onCancel: () => void }) {
   const [submitting, setSubmitting] = useState(false);
   const [eng, setEng] = useState({ ...initial });
   const [topicError, setTopicError] = useState(false);
@@ -210,7 +210,7 @@ function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: stri
           if (!eng.topic?.trim()) { setTopicError(true); document.getElementById(`${p}-topic`)?.focus(); return; }
           if (!eng.date || !/^\d{4}-\d{2}-\d{2}$/.test(eng.date)) { setDateError(true); document.getElementById(`${p}-date`)?.focus(); return; }
           setSubmitting(true);
-          onSave({ ...eng, company_slug: companySlug });
+          onSave({ ...eng, company_slug: companySlug }, () => setSubmitting(false));
         }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E] disabled:opacity-60 disabled:cursor-not-allowed">{submitting ? "Saving…" : "Save"}</button>
       </div>
     </div>
@@ -219,7 +219,7 @@ function EngForm({ companySlug, initial, onSave, onCancel }: { companySlug: stri
 
 // ─── Material Issue Form ──────────────────────────────────────────────────────
 const EMPTY_MI: Partial<DbMaterialIssue> = { issue: "", severity: "Medium", category: "Environmental", opportunity: false, detail: "" };
-function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: string; initial: Partial<DbMaterialIssue>; onSave: (i: Partial<DbMaterialIssue>) => void; onCancel: () => void }) {
+function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: string; initial: Partial<DbMaterialIssue>; onSave: (i: Partial<DbMaterialIssue>, onError: () => void) => void; onCancel: () => void }) {
   const [submitting, setSubmitting] = useState(false);
   const [mi, setMi] = useState({ ...initial });
   const [nameError, setNameError] = useState(false);
@@ -239,7 +239,7 @@ function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: st
       <div><label htmlFor={`${p}-detail`} className="text-xs font-medium text-gray-700">Detail</label><textarea id={`${p}-detail`} value={mi.detail||""} onChange={e=>setMi(p=>({...p,detail:e.target.value}))} rows={2} className="w-full mt-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-purple-400/40"/></div>
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-3 py-1 text-xs text-gray-600 border border-gray-200 rounded hover:bg-gray-100">Cancel</button>
-        <button type="button" disabled={submitting} aria-busy={submitting} onClick={() => { if (!mi.issue?.trim()) { setNameError(true); document.getElementById(`${p}-name`)?.focus(); return; } setSubmitting(true); onSave({ ...mi, company_slug: companySlug }); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E] disabled:opacity-60 disabled:cursor-not-allowed">{submitting ? "Saving…" : "Save"}</button>
+        <button type="button" disabled={submitting} aria-busy={submitting} onClick={() => { if (!mi.issue?.trim()) { setNameError(true); document.getElementById(`${p}-name`)?.focus(); return; } setSubmitting(true); onSave({ ...mi, company_slug: companySlug }, () => setSubmitting(false)); }} className="px-3 py-1 text-xs bg-[#4B2580] text-white rounded hover:bg-[#3D1A6E] disabled:opacity-60 disabled:cursor-not-allowed">{submitting ? "Saving…" : "Save"}</button>
       </div>
     </div>
   );
@@ -297,16 +297,17 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
   useEffect(() => { if (expanded) loadDetail(); }, [expanded, loadDetail]);
   useEffect(() => { if (!expanded) { setPendingDelEngId(null); setPendingDelIssueId(null); } }, [expanded]);
 
-  const saveEng = async (e: Partial<DbEngagement>) => {
+  const saveEng = async (e: Partial<DbEngagement>, onError?: () => void) => {
     if (savingEngRef.current) return;
     savingEngRef.current = true;
     try {
       const result = await adminWrite({ action: "upsert_engagement", engagement: e, company_slug: co.slug });
-      if (!result.ok) { showToast("Error saving engagement: " + (result.error ?? ""), true); return; }
+      if (!result.ok) { showToast("Error saving engagement: " + (result.error ?? ""), true); onError?.(); return; }
       setAddEng(false); setEditEng(null); clearCache(); loadDetail();
     } catch (err) {
       showToast("Unexpected error saving engagement", true);
       console.error("[Admin] saveEng threw:", err);
+      onError?.();
     } finally {
       savingEngRef.current = false;
     }
@@ -316,7 +317,7 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
     setPendingDelEngId(null);
     try { const result = await adminWrite({ action: "delete_engagement", id, company_slug: co.slug }); if (!result.ok) { showToast("Error deleting engagement: " + (result.error ?? ""), true); return; } clearCache(); loadDetail(); } catch (err) { showToast("Unexpected error deleting engagement", true); console.error("[Admin] delEng threw:", err); }
   };
-  const saveIssue = async (i: Partial<DbMaterialIssue>) => {
+  const saveIssue = async (i: Partial<DbMaterialIssue>, onError?: () => void) => {
     if (savingIssueRef.current) return;
     savingIssueRef.current = true;
     try {
@@ -325,14 +326,13 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
         ? (i.sort_order ?? 0)
         : (issues.length > 0 ? issues.reduce((m, x) => (x.sort_order ?? 0) > m ? (x.sort_order ?? 0) : m, 0) + 1 : 0);
       const result = await adminWrite({ action: "upsert_issue", issue: { ...i, sort_order }, company_slug: co.slug });
-      if (!result.ok) { showToast("Error saving issue: " + (result.error ?? ""), true); return; }
+      if (!result.ok) { showToast("Error saving issue: " + (result.error ?? ""), true); onError?.(); return; }
       setAddIssue(false); setEditIssue(null); clearCache();
-      // Await loadDetail before releasing savingIssueRef — prevents a second rapid add
-      // reading stale issues state and computing a duplicate sort_order.
       await loadDetail();
     } catch (err) {
       showToast("Unexpected error saving issue", true);
       console.error("[Admin] saveIssue threw:", err);
+      onError?.();
     } finally {
       savingIssueRef.current = false;
     }
