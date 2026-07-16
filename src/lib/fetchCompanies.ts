@@ -520,12 +520,15 @@ function dbToCompany(
           { period: `Q${prevQ} ${prevY}`, e: Math.max(0, (co.esg_environmental ?? 0) - 2), s: Math.max(0, (co.esg_social ?? 0) - 1), g: Math.max(0, (co.esg_governance ?? 0) - 2) },
         ];
       })();
-      // Always ensure the last period reflects the authoritative live DB values.
-      // When base has >1 entries, drop the last and replace it with the current quarter label.
-      // Using currentQuarterLabel() (not the static entry's label) ensures the chart X-axis
-      // stays accurate after a calendar quarter rolls over.
-      const withoutLast = base.length > 1 ? base.slice(0, -1) : base;
-      const lastPeriod = currentQuarterLabel();
+      // Always inject live DB scores for the current quarter.
+      // If the last enrichment entry already covers the current quarter, replace it
+      // (so the chart stays continuous). If not, append a new entry — don't silently
+      // drop the previous quarter's historical data.
+      const currentQ = currentQuarterLabel();
+      const lastEntry = base[base.length - 1];
+      const lastMatchesCurrent = lastEntry?.period === currentQ;
+      const withoutLast = lastMatchesCurrent && base.length > 1 ? base.slice(0, -1) : base;
+      const lastPeriod = currentQ;
       const sorted = [
         ...withoutLast,
         { period: lastPeriod, e: co.esg_environmental ?? 0, s: co.esg_social ?? 0, g: co.esg_governance ?? 0 },

@@ -1,5 +1,5 @@
 "use client";
-import { displayName } from "@/lib/utils";
+import { displayName, comparePeriods } from "@/lib/utils";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -281,11 +281,7 @@ export default function ScoutPage() {
                   <RatingBadge rating={co.esgScore.rating} />
                   <MaturityBadge level={co.maturity} />
                   {(() => {
-                    const scores = [...co.historicalScores].sort((a, b) => {
-                      const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
-                      const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
-                      return ay !== by ? ay - by : aq - bq;
-                    });
+                    const scores = [...co.historicalScores].sort((a, b) => comparePeriods(a.period, b.period));
                     const last = scores[scores.length - 1];
                     const prev = scores[scores.length - 2];
                     if (last && prev) {
@@ -421,11 +417,7 @@ export default function ScoutPage() {
                 })()}
                 <ESGScoreSet e={co.esgScore.environmental} s={co.esgScore.social} g={co.esgScore.governance} />
                 {(() => {
-                  const scores = [...co.historicalScores].sort((a, b) => {
-                    const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
-                    const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) || ["","0","0"]).slice(1).map(Number);
-                    return ay !== by ? ay - by : aq - bq;
-                  }).slice(-6);
+                  const scores = [...co.historicalScores].sort((a, b) => comparePeriods(a.period, b.period)).slice(-6);
                   if (scores.length < 2) return null;
                   const avgs = scores.map(s => (s.e + s.s + s.g) / 3);
                   const min = Math.min(...avgs); const max = Math.max(...avgs);
