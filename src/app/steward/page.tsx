@@ -171,7 +171,7 @@ export default function StewardPage() {
       {/* Cards View — Active Portfolio */}
       {view === "cards" && (
       <div className="space-y-4">
-        {sortedActive.length === 0 ? (
+        {sortedActive.length === 0 && !companiesLoading ? (
           <div className="text-sm text-gray-500 text-center py-8 border border-dashed border-gray-200 rounded-xl">
             No active portfolio companies — add companies via the admin panel or promote a Pipeline company to Active.
           </div>
