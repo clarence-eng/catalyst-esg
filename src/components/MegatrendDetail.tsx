@@ -179,8 +179,9 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
               </button>
             </div>
             {error && (
-              <div role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-lg p-3 mb-3">
-                {error}
+              <div role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-lg p-3 mb-3 flex items-start justify-between gap-2">
+                <span>{error}</span>
+                <button type="button" onClick={() => setError("")} aria-label="Dismiss error" className="text-red-500 hover:text-red-700 flex-shrink-0 text-base leading-none">×</button>
               </div>
             )}
             <div aria-live="polite" aria-atomic="false">
@@ -207,8 +208,8 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                   onClick={async () => {
                     const date = (briefGeneratedAt ?? new Date()).toLocaleDateString("en-SG", { day: "numeric", month: "long", year: "numeric" });
                     const header = `CATALYST ESG INTELLIGENCE\nThematic Brief: ${t.title}\nPrepared: ${date}\n${"─".repeat(60)}\n\n`;
-                    await copyToClipboard(header + brief);
-                    setBriefCopied(true); setTimeout(() => setBriefCopied(false), 2000);
+                    const ok = await copyToClipboard(header + brief);
+                    if (ok) { setBriefCopied(true); setTimeout(() => setBriefCopied(false), 2000); }
                   }}
                   className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                 >

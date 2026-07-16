@@ -76,8 +76,9 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
         </button>
       </div>
       {error && (
-        <div role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-lg p-3 mb-3">
-          {error}
+        <div role="alert" className="text-xs text-red-700 bg-red-50 border border-red-300 rounded-lg p-3 mb-3 flex items-start justify-between gap-2">
+          <span>{error}</span>
+          <button type="button" onClick={() => setError("")} aria-label="Dismiss error" className="text-red-500 hover:text-red-700 flex-shrink-0 text-base leading-none">×</button>
         </div>
       )}
       <div aria-live="polite" aria-atomic="false">
@@ -96,8 +97,8 @@ export function PortfolioBrief({ portfolioSummary, companyNames = [] }: Portfoli
                 const names = count > 0 ? companyNames.join(", ") : "Active Portfolio Companies";
                 const countLabel = count > 0 ? `${count} ` : "";
                 const header = `CATALYST ESG INTELLIGENCE\n${quarter} Portfolio ESG Brief\nPrepared: ${date}\nPortfolio: ${countLabel}Active Companies (${names})\n${"─".repeat(60)}\n\n`;
-                await copyToClipboard(header + brief);
-                setCopied(true); setTimeout(() => setCopied(false), 2000);
+                const ok = await copyToClipboard(header + brief);
+                setCopied(ok); if (ok) setTimeout(() => setCopied(false), 2000);
               }}
               className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
             >

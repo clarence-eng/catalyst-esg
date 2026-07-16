@@ -67,11 +67,13 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       .replace(/\*{3}(.+?)\*{3}/g, '<strong class="text-gray-900 font-semibold"><em class="text-gray-800">$1</em></strong>')
       .replace(/\*\*(.+?)\*\*/g, '<strong class="text-gray-900 font-semibold">$1</strong>')
       .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-gray-800">$1</em>')
-      // Markdown [text](url) links — must run before bare-URL step so the URL inside () is consumed
+      // Markdown [text](url) links — must run before bare-URL step so the URL inside () is consumed.
+      // The bare-URL step below uses a negative lookbehind (?<!href=") to skip URLs already
+      // inside href attribute values produced by this step, preventing double-wrapping.
       .replace(/\[([^\]]+)\]\((https?:\/\/[^\s<>"']+)\)/g, (_, label, url) =>
         `<a href="${url.replace(/&amp;/g, '&')}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${label}</a>`
       )
-      .replace(/(https?:\/\/[^\s<>"'*]+)/g, (rawUrl) => {
+      .replace(/(?<!href=")(https?:\/\/[^\s<>"'*]+)/g, (rawUrl) => {
         // Strip trailing punctuation that belongs to the surrounding sentence, not the URL.
         let url = rawUrl.replace(/[.,;:!?]+$/, "");
         // Strip unmatched trailing ) using paren-balance counting.
