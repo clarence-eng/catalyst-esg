@@ -11,6 +11,16 @@ import { formatRelativeTime, formatDate, copyToClipboard } from "@/lib/utils";
 const displayName = (name: string) => name.trim() || "Unnamed company";
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
+function RelativeTime({ date }: { date: Date }) {
+  const [label, setLabel] = useState(() => `Generated ${formatRelativeTime(date)}`);
+  useEffect(() => {
+    setLabel(`Generated ${formatRelativeTime(date)}`);
+    const id = setInterval(() => setLabel(`Generated ${formatRelativeTime(date)}`), 60_000);
+    return () => clearInterval(id);
+  }, [date]);
+  return <>{label}</>;
+}
+
 export default function StewardPage() {
   const { companies, loading: companiesLoading, showDemoBanner } = useCompanies();
   const activeCompanies = companies.filter((c) => c.portfolioStatus === "Active");
@@ -544,7 +554,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
                     Export PDF
                   </button>
                   <span className="text-xs text-gray-500 ml-auto">
-                    {planGeneratedAt ? `Generated ${formatRelativeTime(planGeneratedAt)}` : ""}
+                    {planGeneratedAt ? <RelativeTime date={planGeneratedAt} /> : ""}
                   </span>
                 </div>
               </>

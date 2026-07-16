@@ -1456,36 +1456,42 @@ function SocialTab({ co }: { co: Company }) {
             value={`${bc.boardSize} directors`}
             note={bc.boardSize >= 7 && bc.boardSize <= 12 ? "Within optimal range" : bc.boardSize < 7 ? "Below optimal range (7-12)" : "Above optimal range (7-12)"}
             status={bc.boardSize >= 7 && bc.boardSize <= 12 ? "ok" : "warn"}
+          estimated={bc.estimated}
           />
           <GovStatTile
             label="Independent Directors"
             value={`${bc.independentPct}%`}
             note={bc.independentPct >= 50 ? "Meets best practice (50%+ independent)" : `${bc.independentPct}% — below 50% best practice threshold`}
             status={bc.independentPct >= 50 ? "ok" : "warn"}
+          estimated={bc.estimated}
           />
           <GovStatTile
             label="Women on Board"
             value={`${bc.womenPct}%`}
             note={bc.womenPct >= 33 ? "Meets 33% gender diversity target (MSCI/EU standard)" : `${bc.womenPct}% — below 33% target`}
             status={bc.womenPct >= 33 ? "ok" : "warn"}
+          estimated={bc.estimated}
           />
           <GovStatTile
             label="CEO/Chair Split"
             value={bc.ceoChairSplit ? "Separated" : "Combined"}
             note={bc.ceoChairSplit ? "Good governance practice" : "Combined role — concentration risk"}
             status={bc.ceoChairSplit ? "ok" : "warn"}
+          estimated={bc.estimated}
           />
           <GovStatTile
             label="Audit Committee"
             value={bc.auditCommittee ? "Established" : "None"}
             note={bc.auditCommittee ? "Meets regulatory requirement" : "Gap — required for listed entities"}
             status={bc.auditCommittee ? "ok" : "gap"}
+          estimated={bc.estimated}
           />
           <GovStatTile
             label="ESG Committee"
             value={bc.esgCommittee ? "Established" : "None"}
             note={bc.esgCommittee ? "Board-level ESG oversight in place" : "No ESG Committee — gap for a company of this risk profile"}
             status={bc.esgCommittee ? "ok" : "gap"}
+          estimated={bc.estimated}
           />
         </div>
       </div>
@@ -1542,7 +1548,7 @@ function SocialTab({ co }: { co: Company }) {
   );
 }
 
-function GovStatTile({ label, value, note, status }: { label: string; value: string; note: string; status: "ok" | "warn" | "gap" }) {
+function GovStatTile({ label, value, note, status, estimated }: { label: string; value: string; note: string; status: "ok" | "warn" | "gap"; estimated?: boolean }) {
   const borderColor = status === "ok" ? "border-emerald-500/20" : status === "gap" ? "border-red-500/20" : "border-amber-500/20";
   const bgColor = status === "ok" ? "bg-emerald-500/5" : status === "gap" ? "bg-red-500/5" : "bg-amber-500/5";
   const valueColor = status === "ok" ? "text-emerald-700" : status === "gap" ? "text-red-700" : "text-amber-700";
@@ -1556,7 +1562,7 @@ function GovStatTile({ label, value, note, status }: { label: string; value: str
         <span className="text-xs text-gray-600 font-medium">{label}</span>
       </div>
       <div className={`text-sm font-bold ${valueColor} mb-1`}>{value}</div>
-      <div className="text-xs text-gray-500 leading-relaxed">{note}</div>
+      <div className="text-xs text-gray-500 leading-relaxed">{note}{estimated && <span className="ml-1 italic text-gray-400">(est.)</span>}</div>
     </div>
   );
 }

@@ -565,11 +565,12 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
 
     const companies: Company[] = [];
     const seenSlugs = new Set<string>();
-    for (const co of cos as DbCompany[]) {
+    for (const coRaw of cos as DbCompany[]) {
+      const co = { ...coRaw, slug: coRaw.slug?.trim() ?? "" };
       // Skip fundamentally corrupt rows — a company without a slug produces /scout/null links
       // and duplicate key="null" React reconciliation bugs
-      if (!co.slug?.trim()) {
-        if (process.env.NODE_ENV !== "production") console.warn("[Supabase] skipping company row with missing slug:", co.name);
+      if (!co.slug) {
+        if (process.env.NODE_ENV !== "production") console.warn("[Supabase] skipping company row with missing slug:", coRaw.name);
         continue;
       }
       // Skip duplicate slugs — prevents React duplicate-key warnings and non-deterministic rendering
