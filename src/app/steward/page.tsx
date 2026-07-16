@@ -320,7 +320,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
       {/* Persistent sr-only live region — outside hidden panel so AT hears announcements even when panel is collapsed.
           aria-label includes company name so screen readers can attribute the announcement to the correct card
           when multiple cards are mounted simultaneously. */}
-      <div role="status" aria-live="polite" aria-atomic="true" aria-label={`${co.name} plan status`} className="sr-only">
+      <div role="status" aria-live="polite" aria-atomic="true" aria-label={`${displayName(co.name)} plan status`} className="sr-only">
         {planLoading ? `Generating ESG action plan for ${co.name}…` : plan && !planLoading ? `${co.name}: ESG action plan ready — expand the card to read` : planError ? `${co.name} action plan error: ${planError}` : ""}
       </div>
       {/* Card Header */}
@@ -331,7 +331,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
           <Link
             href={`/scout/${co.slug}`}
             className="text-xs text-purple-700 hover:text-purple-900 transition-colors"
-            aria-label={`View ${co.name} ESG profile`}
+            aria-label={`View ${displayName(co.name)} ESG profile`}
           >
             Profile ↗
           </Link>
@@ -344,7 +344,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
           tabIndex={0}
           aria-expanded={expanded}
           aria-controls={`steward-card-${co.slug}`}
-          aria-label={`${co.name} engagement details`}
+          aria-label={`${displayName(co.name)} engagement details`}
           onClick={() => { const wasExpanded = expanded; setExpanded(!expanded); if (wasExpanded) triggerRef.current?.focus(); }}
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); const wasExpanded = expanded; setExpanded(!expanded); if (wasExpanded) triggerRef.current?.focus(); } }}
         >
