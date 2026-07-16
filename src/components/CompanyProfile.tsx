@@ -854,7 +854,7 @@ function OverviewTab({
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-medium text-gray-700">{label}</span>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-gray-500">vs portfolio avg <span className="font-medium text-gray-700">{portfolioAvg}</span>: <span className={`font-medium ${vsPortfolio >= 0 ? "text-emerald-700" : "text-red-700"}`}>{vsPortfolio >= 0 ? "+" : ""}{vsPortfolio}</span></span>
+                      <span className="text-xs text-gray-500">vs portfolio avg <span className="font-medium text-gray-700">{portfolioAvg}</span>: <span className={`font-medium ${vsPortfolio > 0 ? "text-emerald-700" : vsPortfolio < 0 ? "text-red-700" : "text-gray-500"}`}>{vsPortfolio > 0 ? "+" : ""}{vsPortfolio}</span></span>
                       <span className="text-xs font-bold text-gray-900 w-6 text-right">{score}</span>
                     </div>
                   </div>
@@ -1565,7 +1565,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
     .sort((a, b) => (a.date || "").localeCompare(b.date || "")); // oldest overdue first — highest urgency
   const plannedItems = co.engagement
     .filter((e) => e.status === "Planned")
-    .sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0); // earliest planned first
+    .sort((a, b) => (a.date || "").localeCompare(b.date || "")); // earliest planned first — null/empty dates sort to front
   const nextDue = overdueItems[0] ?? plannedItems[0] ?? null;
 
   const stewardshipStatus: "Not Started" | "On Track" | "Attention Needed" | "Action Required" =
