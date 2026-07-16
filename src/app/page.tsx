@@ -236,7 +236,7 @@ export default function OverviewPage() {
           }`}>
             {avgScore >= 65 ? "Strong" : avgScore >= 40 ? "Developing" : "Needs Attention"}
           </div>
-          <div className="text-[10px] text-gray-500 mt-1">{activeCompanies.length} active {activeCompanies.some(c => c.investmentValue === 0) ? "· some excluded from weighted avg" : "companies"}</div>
+          <div className="text-[10px] text-gray-500 mt-1">{activeCompanies.length} active {activeCompanies.every(c => c.investmentValue === 0) ? "· all excluded — no AUM set" : activeCompanies.some(c => c.investmentValue === 0) ? "· some excluded from weighted avg" : "companies"}</div>
         </div>
       </div>
       )}
@@ -244,7 +244,7 @@ export default function OverviewPage() {
       {/* KPI Row — scoped to Active portfolio */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
         <div>
-          <StatCard label="Portfolio ESG Score" value={avgScore} sub={activeCompanies.some(c => c.investmentValue === 0) ? "Investment-weighted · some companies have no AUM set" : "Active companies · investment-weighted"} color="green" />
+          <StatCard label="Portfolio ESG Score" value={avgScore} sub={activeCompanies.every(c => c.investmentValue === 0) ? "No AUM set — score not investment-weighted" : activeCompanies.some(c => c.investmentValue === 0) ? "Investment-weighted · some companies have no AUM set" : "Active companies · investment-weighted"} color="green" />
           {(avgDelta !== 0 || eDelta !== 0 || sDelta !== 0 || gDelta !== 0) && (
             <div className="mt-1 flex flex-wrap gap-1">
               {avgDelta !== 0 && (

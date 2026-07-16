@@ -171,7 +171,11 @@ export default function StewardPage() {
       {/* Cards View — Active Portfolio */}
       {view === "cards" && (
       <div className="space-y-4">
-        {sortedActive.map((co) => (
+        {sortedActive.length === 0 ? (
+          <div className="text-sm text-gray-500 text-center py-8 border border-dashed border-gray-200 rounded-xl">
+            No active portfolio companies — add companies via the admin panel or promote a Pipeline company to Active.
+          </div>
+        ) : sortedActive.map((co) => (
           <PortfolioCard key={co.slug} company={co} />
         ))}
       </div>

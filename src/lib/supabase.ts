@@ -26,7 +26,7 @@ export function getSupabaseAdminClient(): SupabaseClient {
   if (!url) throw new Error("NEXT_PUBLIC_SUPABASE_URL not configured");
   if (!serviceKey) {
     console.warn("[Supabase] SUPABASE_SERVICE_ROLE_KEY not set — falling back to anon key for admin writes. Set this env var in production.");
-    return getSupabaseClient();
+    return (_adminClient = getSupabaseClient());
   }
   _adminClient = createClient(url, serviceKey, { auth: { persistSession: false } });
   return _adminClient;
