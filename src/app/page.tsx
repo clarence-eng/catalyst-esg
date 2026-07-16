@@ -335,7 +335,7 @@ export default function OverviewPage() {
                 </div>
               );
             })}
-            {maxIntensity > 500 && (
+            {maxIntensity >= 500 && (
               <p className="text-[10px] text-gray-500 mt-3" aria-hidden="true">│ = IEA ASEAN 2030 benchmark (500 tCO₂e/$M)</p>
             )}
                 </>
@@ -348,8 +348,12 @@ export default function OverviewPage() {
       {/* Portfolio Positioning Bubble Chart */}
       {bubbleData.length > 0 ? (
         <PortfolioBubbleChart data={bubbleData} />
-      ) : totalActiveInvestment > 0 && activeCompanies.length > 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6 text-center text-xs text-gray-400 italic">Portfolio Positioning chart not available — no active companies have disclosed carbon intensity.</div>
+      ) : activeCompanies.length > 0 ? (
+        <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6 text-center text-xs text-gray-400 italic">
+          {totalActiveInvestment === 0
+            ? "Portfolio Positioning chart not available — no AUM values set for active companies."
+            : "Portfolio Positioning chart not available — no active companies have disclosed carbon intensity."}
+        </div>
       ) : null}
 
       {/* Portfolio Companies Table */}
@@ -404,8 +408,10 @@ export default function OverviewPage() {
                       <span className="flex items-center gap-1 text-xs text-blue-700 bg-blue-50 border border-blue-300 px-1.5 py-0.5 rounded w-fit">
                         <GitMerge className="w-2.5 h-2.5" /> Pipeline
                       </span>
-                    ) : (
+                    ) : co.portfolioStatus === "Active" ? (
                       <span className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-300 px-1.5 py-0.5 rounded">Active</span>
+                    ) : (
+                      <span className="text-xs text-gray-600 bg-gray-100 border border-gray-300 px-1.5 py-0.5 rounded">{co.portfolioStatus}</span>
                     )}
                   </td>
                   <td className="px-4 py-4">
@@ -523,6 +529,9 @@ export default function OverviewPage() {
                   })}
                 </tr>
               ))}
+              {activeCompanies.length === 0 && (
+                <tr><td colSpan={megatrends.length + 1} className="py-6 text-center text-xs text-gray-400 italic">No active companies — add active holdings to see megatrend exposure</td></tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -620,11 +629,13 @@ function ParisPathwayWidget({ companies }: { companies: { pathwayAlignment: stri
   const active = companies;
   const total = active.reduce((s, c) => s + c.investmentValue, 0);
 
+  const VALID_ALIGNMENTS = ["1.5°C", "2°C", "3°C+", "Not assessed"];
   const tiers = [
     { label: "1.5°C", color: "bg-emerald-600", textColor: "text-emerald-700", companies: active.filter(c => c.pathwayAlignment === "1.5°C") },
     { label: "2°C", color: "bg-amber-500", textColor: "text-amber-700", companies: active.filter(c => c.pathwayAlignment === "2°C") },
     { label: "3°C+", color: "bg-red-600", textColor: "text-red-700", companies: active.filter(c => c.pathwayAlignment === "3°C+") },
-    { label: "Not assessed", color: "bg-gray-400", textColor: "text-gray-600", companies: active.filter(c => c.pathwayAlignment === "Not assessed") },
+    // Bucket unrecognised values with "Not assessed" so bar always fills 100%
+    { label: "Not assessed", color: "bg-gray-400", textColor: "text-gray-600", companies: active.filter(c => !VALID_ALIGNMENTS.includes(c.pathwayAlignment) || c.pathwayAlignment === "Not assessed") },
   ].filter(t => t.companies.length > 0);
 
   return (
