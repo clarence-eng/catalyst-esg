@@ -574,7 +574,7 @@ function OverviewTab({
               <p className="text-xs text-gray-500 py-2">No material issues identified.</p>
             )}
             {[...co.materialIssues].sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4)).map((issue) => (
-              <div key={issue.issue} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
+              <div key={issue.id ?? issue.issue} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
                 <div className="flex-shrink-0 mt-0.5">
                   {issue.opportunity ? (
                     <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
@@ -1413,7 +1413,7 @@ function SocialTab({ co }: { co: Company }) {
           ) : (
             <div className="space-y-3">
               {social.map((issue) => (
-                <div key={issue.issue} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <div key={issue.id ?? issue.issue} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-sm font-medium text-gray-900">{issue.issue}</span>
                     <RiskBadge level={issue.severity} />
@@ -1432,7 +1432,7 @@ function SocialTab({ co }: { co: Company }) {
           ) : (
             <div className="space-y-3">
               {gov.map((issue) => (
-                <div key={issue.issue} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <div key={issue.id ?? issue.issue} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-sm font-medium text-gray-900">{issue.issue}</span>
                     <RiskBadge level={issue.severity} />
