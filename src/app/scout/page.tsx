@@ -364,7 +364,7 @@ export default function ScoutPage() {
                     }`}>{co.greenRevenuePct}%</span>
                   </div>
                   <div className="text-xs text-gray-500">
-                    Carbon Intensity: <span className="text-gray-700">{co.carbonIntensity} tCO₂e/$M</span>
+                    Carbon Intensity: <span className={co.carbonIntensity === 0 ? "text-gray-400 italic" : "text-gray-700"}>{co.carbonIntensity === 0 ? "Not disclosed" : `${co.carbonIntensity} tCO₂e/$M`}</span>
                   </div>
                   {(() => {
                     const lastEng = co.engagement.filter(e => e.status === "Completed").sort((a,b) => b.date.localeCompare(a.date))[0];
@@ -462,7 +462,7 @@ export default function ScoutPage() {
                 <button
                   type="button"
                   aria-label={compareSet.has(co.slug) ? `Remove ${co.name} from comparison` : compareSet.size >= 3 ? `Max 3 companies selected — ${co.name}` : `Add ${co.name} to comparison`}
-                  aria-disabled={!compareSet.has(co.slug) && compareSet.size >= 3}
+                  disabled={!compareSet.has(co.slug) && compareSet.size >= 3}
                   title={!compareSet.has(co.slug) && compareSet.size >= 3 ? "Maximum 3 companies can be compared" : undefined}
                   onClick={(e) => {
                     e.preventDefault();

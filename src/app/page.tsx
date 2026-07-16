@@ -224,7 +224,8 @@ export default function OverviewPage() {
               totalActiveAUM === 0 ? "bg-gray-400 opacity-40" :
               avgScore >= 65 ? "bg-emerald-500" : avgScore >= 40 ? "bg-amber-500" : "bg-red-500"
             }`} style={{ width: totalActiveAUM === 0 ? "100%" : `${avgScore}%` }}
-            role="progressbar" aria-valuenow={totalActiveAUM === 0 ? undefined : avgScore} aria-valuemin={0} aria-valuemax={100}
+            role="progressbar" aria-valuenow={totalActiveAUM === 0 ? 0 : avgScore} aria-valuemin={0} aria-valuemax={100}
+            aria-valuetext={totalActiveAUM === 0 ? "No AUM set" : `${avgScore} out of 100`}
             aria-label={totalActiveAUM === 0 ? "Portfolio ESG Health: no AUM set" : `Portfolio ESG Health: ${avgScore} out of 100`} />
           </div>
           <div className="flex justify-between mt-1 text-[10px] text-gray-500">
@@ -297,10 +298,16 @@ export default function OverviewPage() {
           <p className="text-xs text-gray-500 mb-4">tCO₂e per S$M revenue — lower is better · IEA ASEAN 2030 target: &lt;500 tCO₂e/$M</p>
           <div className="space-y-2.5">
             {(() => {
-              const maxIntensity = Math.max(...activeCompanies.map(c => c.carbonIntensity), 1);
+              const maxIntensity = Math.max(...activeCompanies.filter(c => c.carbonIntensity > 0).map(c => c.carbonIntensity), 1);
               return (
                 <>
-                {[...activeCompanies].sort((a, b) => b.carbonIntensity - a.carbonIntensity).map(co => {
+                {[...activeCompanies].sort((a, b) => {
+                  // Undisclosed (0) always sort last
+                  if (a.carbonIntensity === 0 && b.carbonIntensity === 0) return 0;
+                  if (a.carbonIntensity === 0) return 1;
+                  if (b.carbonIntensity === 0) return -1;
+                  return b.carbonIntensity - a.carbonIntensity;
+                }).map(co => {
               const pct = Math.min((co.carbonIntensity / maxIntensity) * 100, 100);
               const isHighEmitter = co.carbonIntensity > 500;
               const color = co.carbonIntensity < 100 ? "bg-emerald-500" : co.carbonIntensity < 500 ? "bg-amber-500" : "bg-red-500";
@@ -315,9 +322,9 @@ export default function OverviewPage() {
                         title="IEA ASEAN 2030 benchmark: 500 tCO₂e/$M" />
                     )}
                   </div>
-                  <span className={`text-xs font-medium w-20 text-right flex-shrink-0 ${isHighEmitter ? "text-red-700" : "text-gray-700"}`}
-                    aria-label={`${displayName(co.name)}: ${(co.carbonIntensity ?? 0).toLocaleString("en-SG")} tCO₂e per S$M revenue${isHighEmitter ? " — above IEA 2030 benchmark" : ""}`}>
-                    {(co.carbonIntensity ?? 0).toLocaleString("en-SG")} tCO₂/$M
+                  <span className={`text-xs font-medium w-20 text-right flex-shrink-0 ${isHighEmitter ? "text-red-700" : co.carbonIntensity === 0 ? "text-gray-400" : "text-gray-700"}`}
+                    aria-label={co.carbonIntensity === 0 ? `${displayName(co.name)}: carbon intensity not disclosed` : `${displayName(co.name)}: ${(co.carbonIntensity).toLocaleString("en-SG")} tCO₂e per S$M revenue${isHighEmitter ? " — above IEA 2030 benchmark" : ""}`}>
+                    {co.carbonIntensity === 0 ? <span className="italic text-gray-400">N/D</span> : <>{(co.carbonIntensity).toLocaleString("en-SG")} tCO₂/$M</>}
                   </span>
                 </div>
               );
@@ -754,16 +761,12 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
 }
 
 function PCAFFinancedEmissionsTable({ companies, totalActiveAUM }: { companies: Company[]; totalActiveAUM: number }) {
-  const pcafScore = (commitment: string): number => {
-    if (commitment === "SBTi Targets Set") return 2;
-    if (commitment === "SBTi Committed") return 3;
-    if (commitment === "Net Zero Pledged") return 4;
-    return 5;
-  };
-
+  // PCAF data-quality score: reflects how the carbon intensity value was sourced.
+  // Net-zero commitment is orthogonal to data quality and must NOT be used as a proxy.
+  // Without verified source metadata in the DB, we assign score 4 (estimated from company
+  // data) for any company with a disclosed carbon intensity, and null otherwise.
+  // Score 1–3 require audited absolute-emission source data not yet stored in the system.
   const pcafLabel: Record<number, string> = {
-    2: "Reported, 3rd-party verified",
-    3: "Reported",
     4: "Estimated from company data",
     5: "Modeled from sector averages",
   };
@@ -772,7 +775,8 @@ function PCAFFinancedEmissionsTable({ companies, totalActiveAUM }: { companies: 
     const stake = totalActiveAUM > 0 ? (co.investmentValue / totalActiveAUM) * 100 : 0;
     const hasEmissionsData = co.carbonIntensity > 0 && co.investmentValue > 0;
     const estimatedEmissions = hasEmissionsData && totalActiveAUM > 0 ? Math.round((co.investmentValue / totalActiveAUM) * co.carbonIntensity * 2500) : null;
-    const score = hasEmissionsData ? pcafScore(co.netZeroCommitment) : null;
+    // Score 4 = company-reported intensity used; null = no disclosure
+    const score = hasEmissionsData ? 4 : null;
     return { co, stake, estimatedEmissions, score, hasEmissionsData };
   });
 
@@ -794,7 +798,9 @@ function PCAFFinancedEmissionsTable({ companies, totalActiveAUM }: { companies: 
               <th scope="col" className="text-right text-xs text-gray-500 font-medium px-4 py-3">
                 <abbr title="Proxy estimate: stake% × carbon intensity × S$2,500M assumed revenue. Not a PCAF-compliant calculation.">Proxy tCO₂e ⓘ</abbr>
               </th>
-              <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">PCAF Quality (1–5)</th>
+              <th scope="col" className="text-left text-xs text-gray-500 font-medium px-4 py-3">
+                <abbr title="PCAF data quality score (4 = estimated from company-reported intensity; scores 1–3 require audited absolute emissions, not yet available)">Data Quality</abbr>
+              </th>
             </tr>
           </thead>
           <tbody>

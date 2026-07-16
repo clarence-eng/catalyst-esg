@@ -578,6 +578,10 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
 
     if (!cos || cos.length === 0) return [];
 
+    // Don't cache when child queries failed — a partial result (companies with no engagements/issues)
+    // would suppress overdue badges and alert panels for the full 500 ms TTL window.
+    const partialResult = !!(engsErr || misErr);
+
     const companies: Company[] = [];
     const seenSlugs = new Set<string>();
     for (const coRaw of cos as DbCompany[]) {
@@ -601,8 +605,10 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
       }
     }
 
-    cachedCompanies = companies;
-    cacheTime = Date.now();
+    if (!partialResult) {
+      cachedCompanies = companies;
+      cacheTime = Date.now();
+    }
     return companies;
   } catch {
     return [];
