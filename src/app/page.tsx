@@ -165,7 +165,7 @@ export default function OverviewPage() {
   const totalActiveInvestment = activeCompanies.reduce((s, c) => s + c.investmentValue, 0);
   // If all active companies have zero investment value, skip bubble chart to avoid ZAxis NaN
   const bubbleData = totalActiveInvestment > 0 ? [...activeCompanies].sort((a, b) => a.slug.localeCompare(b.slug)).map((c) => ({
-    name: c.name,
+    name: displayName(c.name),
     esgScore: c.esgScore.overall,
     carbonIntensity: c.carbonIntensity,
     portfolioWeight: (c.investmentValue / totalActiveInvestment) * 100,
@@ -362,7 +362,7 @@ export default function OverviewPage() {
                     <tr key={co.slug} className="border-b border-gray-200 last:border-0 hover:bg-gray-100 transition-colors">
                   <td className="px-6 py-4">
                     <Link href={`/scout/${co.slug}`} className="font-medium text-gray-900 text-sm hover:text-purple-700 transition-colors">{displayName(co.name)}</Link>
-                    <div className="text-xs text-gray-500">{co.country}</div>
+                    <div className="text-xs text-gray-500">{co.country || "—"}</div>
                   </td>
                   <td className="px-4 py-4">
                     {co.portfolioStatus === "Pipeline" ? (

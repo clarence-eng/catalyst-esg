@@ -1,8 +1,9 @@
 "use client";
-const displayName = (name: string) => name.trim() || "Unnamed company";
 import { type Company } from "@/data/companies";
 import { X, BarChart3 } from "lucide-react";
 import Link from "next/link";
+
+const displayName = (name: string) => name.trim() || "Unnamed company";
 
 interface Props {
   companies: Company[];

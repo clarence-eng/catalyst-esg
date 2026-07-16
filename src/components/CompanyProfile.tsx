@@ -133,8 +133,10 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         }),
       });
       if (!res.ok) {
-        const msg = res.status === 429 ? "API quota exceeded — please try again in a moment" : `Request failed: ${res.status} ${res.statusText}`;
-        throw new Error(msg);
+        let errMsg = `Request failed: ${res.status} ${res.statusText}`;
+        if (res.status === 429) errMsg = "API quota exceeded — please try again in a moment";
+        else if (res.status === 400) { try { const e = await res.json(); errMsg = e.error ?? errMsg; } catch { /* ignore */ } }
+        throw new Error(errMsg);
       }
       let data: { error?: string; text?: string };
       try { data = await res.json(); } catch { throw new Error(`Request failed: ${res.status} (unexpected response format)`); }
@@ -181,8 +183,10 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         }),
       });
       if (!res.ok) {
-        const msg = res.status === 429 ? "API quota exceeded — please try again in a moment" : `Request failed: ${res.status} ${res.statusText}`;
-        throw new Error(msg);
+        let errMsg = `Request failed: ${res.status} ${res.statusText}`;
+        if (res.status === 429) errMsg = "API quota exceeded — please try again in a moment";
+        else if (res.status === 400) { try { const e = await res.json(); errMsg = e.error ?? errMsg; } catch { /* ignore */ } }
+        throw new Error(errMsg);
       }
       let data: { error?: string; text?: string };
       try { data = await res.json(); } catch { throw new Error(`Request failed: ${res.status}`); }

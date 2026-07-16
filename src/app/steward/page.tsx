@@ -36,7 +36,7 @@ export default function StewardPage() {
     .flatMap((co) =>
       co.engagement
         .filter((e) => e.status === "Planned" || e.status === "Overdue")
-        .map((e) => ({ ...e, companyName: co.name, companySlug: co.slug, isPipeline: co.portfolioStatus === "Pipeline" }))
+        .map((e) => ({ ...e, companyName: displayName(co.name), companySlug: co.slug, isPipeline: co.portfolioStatus === "Pipeline" }))
     )
     .sort((a, b) => {
       // Overdue first (action required), then Planned by date ascending
