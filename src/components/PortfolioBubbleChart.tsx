@@ -75,17 +75,13 @@ export function PortfolioBubbleChart({ data }: { data: BubblePoint[] }) {
           </div>
         ))}
         <span className="text-xs text-gray-500 ml-2">Transition Risk</span>
-        {offChart.length > 0 && (
-          <div className="ml-auto flex items-center gap-2 flex-shrink-0">
+        {(offChart.length > 0 || offChartX.length > 0) && (
+          <div className="ml-auto flex flex-col gap-1 flex-shrink-0 max-w-xs">
             {offChart.map(d => (
               <span key={d.slug} className="text-xs text-red-700 bg-red-50 border border-red-300 px-2 py-0.5 rounded">
                 ↑ {d.name} ({d.carbonIntensity} tCO₂e/$M) — off chart Y
               </span>
             ))}
-          </div>
-        )}
-        {offChartX.length > 0 && (
-          <div className="ml-auto flex items-center gap-2 flex-shrink-0">
             {offChartX.map(d => (
               <span key={d.slug} className="text-xs text-amber-700 bg-amber-50 border border-amber-300 px-2 py-0.5 rounded">
                 ← {d.name} (ESG {d.esgScore}) — off chart X

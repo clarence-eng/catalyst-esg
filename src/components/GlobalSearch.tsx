@@ -37,19 +37,21 @@ export function GlobalSearch() {
   useEffect(() => {
     let t1: ReturnType<typeof setTimeout> | null = null;
     if (open) {
+      // Reset navigation flag when search opens — ensures close-on-navigate path works
       navigatingRef.current = false;
       triggerRef.current = document.activeElement as HTMLElement;
       t1 = setTimeout(() => inputRef.current?.focus(), 50);
     } else {
       setQuery("");
       setActiveIdx(-1);
+      // Check navigatingRef BEFORE scheduling — cleanup of prior effect must NOT reset it
       if (!navigatingRef.current) {
         t1 = setTimeout(() => triggerRef.current?.focus(), 50);
       }
-      // Reset after scheduling restore, not before — avoids StrictMode double-invocation race
     }
     return () => {
-      navigatingRef.current = false;
+      // Do NOT reset navigatingRef here — it would fire before the open=false branch reads it,
+      // causing spurious focus restoration on navigation
       if (t1) clearTimeout(t1);
     };
   }, [open]);
@@ -68,7 +70,7 @@ export function GlobalSearch() {
   // Flat ordered list of all result items for keyboard navigation
   const resultItems: Array<{ id: string; href: string }> = [
     ...matchedCompanies.map(c => ({ id: `co-${c.slug}`, href: `/scout/${c.slug}` })),
-    ...matchedFrameworks.map(f => ({ id: `fw-${f.id}`, href: `/learn?q=${encodeURIComponent(query)}` })),
+    ...matchedFrameworks.map(f => ({ id: `fw-${f.id}`, href: `/learn?q=${encodeURIComponent(f.name)}` })),
   ];
 
   // Reset active index when results change
@@ -191,7 +193,7 @@ export function GlobalSearch() {
                   const isActive = activeIdx === idx;
                   return (
                     <button key={f.id} id={`fw-${f.id}`} role="option" aria-selected={isActive} type="button"
-                      onClick={() => navigateTo(`/learn?q=${encodeURIComponent(query)}`)}
+                      onClick={() => navigateTo(`/learn?q=${encodeURIComponent(f.name)}`)}
                       className={`w-full flex items-center gap-3 px-4 py-2.5 transition-colors text-left ${isActive ? "bg-purple-50" : "hover:bg-gray-50"}`}>
                       <BookOpen className="w-4 h-4 text-gray-400 flex-shrink-0" />
                       <div className="min-w-0">

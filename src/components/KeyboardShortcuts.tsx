@@ -49,7 +49,7 @@ export function KeyboardShortcuts() {
         (active instanceof HTMLButtonElement || active instanceof HTMLAnchorElement ||
          active instanceof HTMLInputElement || active instanceof HTMLSelectElement ||
          active instanceof HTMLTextAreaElement || active.getAttribute("role") === "button" ||
-         (active.tabIndex > 0));
+         (active.tabIndex >= 0));
       triggerRef.current = isInteractive ? active : null;
       raf1 = requestAnimationFrame(() => { raf2 = requestAnimationFrame(() => closeButtonRef.current?.focus()); });
     } else {
