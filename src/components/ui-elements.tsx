@@ -114,11 +114,11 @@ export function StatCard({
     red: "border-red-500/20 bg-red-500/5",
   };
   return (
-    <div role="figure" aria-label={`${label}: ${value}${sub ? ` (${sub})` : ""}`} className={`bg-white rounded-xl border p-4 transition-all duration-200 ${colorStyles[color]}`}>
-      <div className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1" aria-hidden="true">{label}</div>
+    <figure aria-label={`${label}: ${value}${sub ? ` (${sub})` : ""}`} className={`bg-white rounded-xl border p-4 transition-all duration-200 ${colorStyles[color]}`}>
+      <figcaption className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1" aria-hidden="true">{label}</figcaption>
       <div className="text-2xl font-bold text-gray-900" aria-hidden="true">{value}</div>
       {sub && <div className="text-xs text-gray-600 mt-0.5" aria-hidden="true">{sub}</div>}
-    </div>
+    </figure>
   );
 }
 

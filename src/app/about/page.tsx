@@ -105,8 +105,8 @@ export default function AboutPage() {
             { icon: BookOpen, text: "ESG knowledge repository — frameworks, guidelines, and case studies for the Investment Group" },
             { icon: BarChart2, text: "Portfolio-level ESG health summaries for internal review — copyable formatted document" },
             { icon: Cpu, text: "Practical AI integration across five distinct investment workflow use cases" },
-          ].map(({ icon: Icon, text }) => (
-            <div key={text} className="flex items-start gap-3">
+          ].map(({ icon: Icon, text }, idx) => (
+            <div key={idx} className="flex items-start gap-3">
               <Icon className="w-4 h-4 flex-shrink-0 text-purple-700" />
               <p className="text-sm text-gray-700">{text}</p>
             </div>
