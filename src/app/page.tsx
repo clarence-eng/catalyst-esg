@@ -206,6 +206,7 @@ export default function OverviewPage() {
         </div>
       ) : (
       <div className={`mb-6 rounded-xl px-6 py-4 border flex items-center justify-between ${
+        totalActiveAUM === 0 ? "bg-gray-50 border-gray-200" :
         avgScore >= 65 ? "bg-emerald-50 border-emerald-200" :
         avgScore >= 40 ? "bg-amber-50 border-amber-200" :
         "bg-red-50 border-red-200"
@@ -213,8 +214,9 @@ export default function OverviewPage() {
         <div>
           <div className="text-xs font-medium text-gray-600 mb-0.5">Portfolio ESG Health</div>
           <div className={`text-2xl font-bold ${
+            totalActiveAUM === 0 ? "text-gray-400" :
             avgScore >= 65 ? "text-emerald-700" : avgScore >= 40 ? "text-amber-700" : "text-red-700"
-          }`}>{avgScore}<span className="text-sm font-normal text-gray-500">/100</span></div>
+          }`}>{totalActiveAUM === 0 ? "—" : avgScore}<span className="text-sm font-normal text-gray-500">{totalActiveAUM === 0 ? "" : "/100"}</span></div>
         </div>
         <div className="flex-1 mx-8">
           <div className="h-3 bg-white/60 rounded-full overflow-hidden border border-white/40">
@@ -231,11 +233,12 @@ export default function OverviewPage() {
         </div>
         <div className="text-right">
           <div className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
+            totalActiveAUM === 0 ? "text-gray-500 bg-gray-100 border-gray-200" :
             avgScore >= 65 ? "text-emerald-700 bg-emerald-100 border-emerald-300" :
             avgScore >= 40 ? "text-amber-700 bg-amber-100 border-amber-300" :
             "text-red-700 bg-red-100 border-red-300"
           }`}>
-            {avgScore >= 65 ? "Strong" : avgScore >= 40 ? "Developing" : "Needs Attention"}
+            {totalActiveAUM === 0 ? "No AUM Set" : avgScore >= 65 ? "Strong" : avgScore >= 40 ? "Developing" : "Needs Attention"}
           </div>
           <div className="text-[10px] text-gray-500 mt-1">{activeCompanies.length} active {activeCompanies.every(c => c.investmentValue === 0) ? "· all excluded — no AUM set" : activeCompanies.some(c => c.investmentValue === 0) ? "· some excluded from weighted avg" : "companies"}</div>
         </div>
@@ -245,7 +248,7 @@ export default function OverviewPage() {
       {/* KPI Row — scoped to Active portfolio */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
         <div>
-          <StatCard label="Portfolio ESG Score" value={avgScore} sub={activeCompanies.every(c => c.investmentValue === 0) ? "No AUM set — score not investment-weighted" : activeCompanies.some(c => c.investmentValue === 0) ? "Investment-weighted · some companies have no AUM set" : "Active companies · investment-weighted"} color="green" />
+          <StatCard label="Portfolio ESG Score" value={totalActiveAUM === 0 ? "—" : avgScore} sub={activeCompanies.every(c => c.investmentValue === 0) ? "No AUM set — score not investment-weighted" : activeCompanies.some(c => c.investmentValue === 0) ? "Investment-weighted · some companies have no AUM set" : "Active companies · investment-weighted"} color="green" />
           {(avgDelta !== 0 || eDelta !== 0 || sDelta !== 0 || gDelta !== 0) && (
             <div className="mt-1 flex flex-wrap gap-1">
               {avgDelta !== 0 && (
