@@ -203,6 +203,7 @@ export default function AboutPage() {
         <span>Built with Next.js 16, Tailwind CSS v4, and Gemini AI · 2026</span>
         <a
           href="/"
+          target="_blank"
           rel="noopener noreferrer"
           className="text-purple-700 hover:underline font-medium"
         >

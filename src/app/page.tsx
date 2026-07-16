@@ -171,15 +171,19 @@ export default function OverviewPage() {
 
   // Compute portfolio weights server-side — never send raw S$M investmentValue to the client component
   const totalActiveInvestment = activeCompanies.reduce((s, c) => s + c.investmentValue, 0);
-  // If all active companies have zero investment value, skip bubble chart to avoid ZAxis NaN
-  const bubbleData = totalActiveInvestment > 0 ? [...activeCompanies].sort((a, b) => a.slug.localeCompare(b.slug)).map((c) => ({
-    name: displayName(c.name),
-    esgScore: c.esgScore.overall,
-    carbonIntensity: c.carbonIntensity,
-    portfolioWeight: (c.investmentValue / totalActiveInvestment) * 100,
-    transitionRisk: c.climateRisk.transition,
-    slug: c.slug,
-  })) : [];
+  // Exclude undisclosed carbon (0) from bubble chart — plotting at y=0 implies zero-emission
+  // rather than absence of disclosure, which is misleading for positioning analysis.
+  // Also skip if all active companies have zero investment value (avoid ZAxis NaN).
+  const bubbleData = totalActiveInvestment > 0 ? [...activeCompanies]
+    .filter(c => c.carbonIntensity > 0)
+    .sort((a, b) => a.slug.localeCompare(b.slug)).map((c) => ({
+      name: displayName(c.name),
+      esgScore: c.esgScore.overall,
+      carbonIntensity: c.carbonIntensity,
+      portfolioWeight: (c.investmentValue / totalActiveInvestment) * 100,
+      transitionRisk: c.climateRisk.transition,
+      slug: c.slug,
+    })) : [];
 
   return (
     <div className="p-8">
@@ -348,7 +352,11 @@ export default function OverviewPage() {
       )}
 
       {/* Portfolio Positioning Bubble Chart */}
-      <PortfolioBubbleChart data={bubbleData} />
+      {bubbleData.length > 0 ? (
+        <PortfolioBubbleChart data={bubbleData} />
+      ) : totalActiveInvestment > 0 && activeCompanies.length > 0 ? (
+        <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6 text-center text-xs text-gray-400 italic">Portfolio Positioning chart not available — no active companies have disclosed carbon intensity.</div>
+      ) : null}
 
       {/* Portfolio Companies Table */}
       <div className="bg-white rounded-xl border border-gray-200 mb-8">
@@ -438,6 +446,9 @@ export default function OverviewPage() {
                   </Fragment>
                 ));
               })()}
+              {companies.length === 0 && (
+                <tr><td colSpan={10} className="px-6 py-8 text-center text-sm text-gray-400 italic">No companies in portfolio</td></tr>
+              )}
             </tbody>
           </table>
         </div>
