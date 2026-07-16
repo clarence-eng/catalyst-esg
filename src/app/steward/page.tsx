@@ -251,7 +251,6 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
   const plannedCount = co.engagement.filter((e) => e.status === "Planned").length;
   const overdueCount = co.engagement.filter((e) => e.status === "Overdue").length;
 
-  const total = completedCount + plannedCount + overdueCount;
   // Progress ring shows completed vs. intended (completed + planned only).
   // Overdue engagements are missed appointments, not pending completions — including them
   // in the denominator would deflate the ring and make the aria-label semantically wrong.
@@ -265,6 +264,9 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
     planLoadingRef.current = true;
     setPlanLoading(true);
     setPlanError("");
+    // Capture key at call-time: if company data changes while the request is in-flight,
+    // prevPlanKeyRef will have already been updated by the useEffect — we discard the result.
+    const capturedKey = planKey;
     try {
       const topIssues = [...co.materialIssues]
         .filter((i) => !i.opportunity && i.issue.trim() !== "")
@@ -318,6 +320,8 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
       try { data = await res.json(); } catch { throw new Error(`Request failed: ${res.status} (unexpected response format)`); }
       if (data.error) throw new Error(data.error);
       if (!data.text?.trim()) throw new Error("No content received from AI");
+      // Discard result if company data changed while the request was in flight
+      if (prevPlanKeyRef.current !== capturedKey) return;
       setPlan(data.text);
       setPlanGeneratedAt(new Date());
     } catch (e: unknown) {
@@ -404,7 +408,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
             <div role="img" className="flex flex-col items-center" aria-label={`${completionPct}% of planned engagements completed${overdueCount > 0 ? `, ${overdueCount} overdue` : ""}`}>
               <svg aria-hidden="true" width="44" height="44" className="-rotate-90">
                 <circle cx="22" cy="22" r={radius} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth={5} />
-                {total > 0 && <circle cx="22" cy="22" r={radius} fill="none"
+                {ringTotal > 0 && <circle cx="22" cy="22" r={radius} fill="none"
                   stroke={overdueCount > 0 ? "#f97316" : "#10b981"}
                   strokeWidth={5}
                   strokeDasharray={`${filled} ${circ}`}

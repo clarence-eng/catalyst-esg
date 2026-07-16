@@ -349,10 +349,15 @@ function getASEANTaxonomy(co: Company): { activity: string; tier: TaxonomyTier; 
     return all.filter(a => a.pct > 0);
   }
   if (sector.includes("bank") || sector.includes("finance")) {
+    const greenPct = Math.min(100, Math.max(0, co.greenRevenuePct));
+    // Tier-1 = green/transition finance; Tier-2 = general corporate lending (capped at remaining 60%);
+    // Not classified = carbon-intensive lending = remainder after both Tier-1 and Tier-2
+    const tier2Pct = Math.max(0, Math.min(60 - greenPct, 100 - greenPct));
+    const carbonIntensivePct = Math.max(0, 100 - greenPct - tier2Pct);
     const all: { activity: string; tier: TaxonomyTier; pct: number }[] = [
-      { activity: "Green/Transition Finance Products", tier: "Tier 1", pct: co.greenRevenuePct },
-      { activity: "General Corporate Lending", tier: "Tier 2", pct: Math.max(0, Math.min(60, 60 - co.greenRevenuePct)) },
-      { activity: "Carbon-intensive Sector Lending", tier: "Not classified", pct: Math.max(0, 100 - co.greenRevenuePct - Math.max(0, Math.min(60, 60 - co.greenRevenuePct))) },
+      { activity: "Green/Transition Finance Products", tier: "Tier 1", pct: greenPct },
+      { activity: "General Corporate Lending", tier: "Tier 2", pct: tier2Pct },
+      { activity: "Carbon-intensive Sector Lending", tier: "Not classified", pct: carbonIntensivePct },
     ];
     return all.filter(a => a.pct > 0);
   }
@@ -470,7 +475,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
   if (cat.includes("agriculture") || cat.includes("agri")) return [
     { kpi: "Deforestation-Free Supply Chain", value: co.natureRisk.deforestationRisk ? "Partial (gaps remain)" : "Certified", unit: "", benchmark: "EUDR Dec 2026 deadline", note: "NDPE policy verification critical" },
     { kpi: "Water Intensity", value: co.natureRisk.waterStress ? "High water footprint" : "Within local limits", unit: "m³/$M revenue", benchmark: "TNFD/SBTN watershed threshold" },
-    { kpi: "Smallholder Certification", value: `${co.greenRevenuePct}%`, unit: "of supply base certified", benchmark: "RSPO P&C: 100% target" },
+    { kpi: "Smallholder Certification", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("certif") || i.issue.toLowerCase().includes("smallholder")) ? "Partial — supply chain gaps flagged" : "Not disclosed", unit: "of supply base", benchmark: "RSPO P&C: 100% target", note: "Verify against company CDP/annual report" },
     { kpi: "Land Under NDPE Policy", value: co.natureRisk.deforestationRisk ? "Partial coverage" : "Full concession coverage", unit: "", benchmark: "RSPO 2018 P&C required" },
   ];
 
@@ -484,7 +489,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
   if (cat.includes("health care") || cat.includes("health delivery") || cat.includes("telehealth")) return [
     { kpi: "Patient Safety Incidents", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("safety") || i.issue.toLowerCase().includes("patient")) ? "Material concern" : "No disclosed incidents", unit: "last 12 months", benchmark: "SASB HC-DY-250a.1" },
     { kpi: "Data Privacy & Patient Data", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("data") || i.issue.toLowerCase().includes("privacy")) ? "Material concern" : "No disclosed breaches", unit: "", benchmark: "PDPA/PDPL/HIPAA compliance" },
-    { kpi: "Care Access Coverage", value: `${co.greenRevenuePct > 20 ? ">20%" : "≤20%"}`, unit: "of target population served", benchmark: "OJK inclusion mandate" },
+    { kpi: "Care Access Coverage", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("access") || i.issue.toLowerCase().includes("inclusion")) ? "Access gaps flagged — see material issues" : "Not disclosed", unit: "", benchmark: "OJK inclusion mandate", note: "Verify against company impact/sustainability report" },
     { kpi: "AI Clinical Safety Policy", value: co.materialIssues.some(i => i.issue.toLowerCase().includes("ai") || i.issue.toLowerCase().includes("algorithm") || i.issue.toLowerCase().includes("clinical")) ? "Under development (AI safety gap active)" : co.boardComposition.esgCommittee ? "Board-level oversight in place" : "Not in place", unit: "", benchmark: "MOH AI in Healthcare / MAS FEAT" },
   ];
 
@@ -1580,8 +1585,11 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
 }) {
   const total = co.engagement.length;
   const completed = co.engagement.filter((e) => e.status === "Completed").length;
+  const planned = co.engagement.filter((e) => e.status === "Planned").length;
   const overdue = co.engagement.filter((e) => e.status === "Overdue").length;
-  const completionPct = total > 0 ? Math.round((completed / total) * 100) : 0;
+  // Completion rate = completed / (completed + planned) — overdue are missed appointments, not pending
+  const ringTotal = completed + planned;
+  const completionPct = ringTotal > 0 ? Math.round((completed / ringTotal) * 100) : 0;
   const [questionsCopied, setQuestionsCopied] = useState(false);
   const overdueItems = co.engagement
     .filter((e) => e.status === "Overdue")
@@ -1612,7 +1620,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
           <div className="flex-1 min-w-[180px]">
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-xs text-gray-600 font-medium">Completion Rate</span>
-              <span className="text-xs text-gray-700 font-semibold">{completed}/{total} ({completionPct}%)</span>
+              <span className="text-xs text-gray-700 font-semibold">{completed}/{ringTotal} ({completionPct}%){overdue > 0 ? <span className="ml-1 text-red-600">· {overdue} overdue</span> : null}</span>
             </div>
             <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
@@ -1765,7 +1773,7 @@ function SDGBadge({ sdg, label }: { sdg: number; label: string }) {
   const bg = sdgColors[sdg] ?? "bg-slate-600";
   const textClass = darkTextSdgs.has(sdg) ? "text-gray-900" : "text-white";
   return (
-    <div className={`flex items-center gap-1 ${bg} rounded px-1.5 py-0.5`} aria-label={`SDG ${sdg}: ${label}`}>
+    <div role="img" className={`flex items-center gap-1 ${bg} rounded px-1.5 py-0.5`} aria-label={`SDG ${sdg}: ${label}`}>
       <span className={`${textClass} text-[10px] font-bold leading-none`} aria-hidden="true">{sdg}</span>
       <span className={`${textClass} text-[9px] leading-none opacity-90 hidden sm:inline`} aria-hidden="true">{label}</span>
     </div>
