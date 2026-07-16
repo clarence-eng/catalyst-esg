@@ -145,7 +145,7 @@ export const frameworks: FrameworkCard[] = [
     name: "EUDR",
     fullName: "EU Deforestation Regulation",
     category: "Nature",
-    status: "Mandatory",
+    status: "Emerging",
     adoptionYear: "2023",
     description:
       "EUDR prohibits placing key commodities (palm oil, soy, cattle, wood, cocoa, coffee, rubber, and derived products) on the EU market if produced on land deforested after December 2020. Requires geo-coordinates and due diligence statements from operators. Enforcement deadline: 30 December 2026 for large/medium operators, 30 June 2027 for small operators (delayed twice from the original December 2024 date).",
@@ -285,7 +285,7 @@ export const caseStudies: CaseStudy[] = [
       "Coal plant retired 7 years ahead of scheduled end-of-life. Proceeds funded 400MW solar + storage pipeline. Reduced 2.4 million tCO₂e annually. First ETM transaction in Southeast Asia.",
     lessonLearned:
       "ESG value creation through coal retirement requires early engagement with multilateral DFIs, a credible just transition plan for workers, and careful structuring of the renewable replacement pipeline to maintain investor returns.",
-    frameworks: ["JETP/ETM", "TCFD", "ILO Just Transition", "SBTi"],
+    frameworks: ["JETP/ETM", "TCFD", "ILO Just Transition Guidelines", "SBTi"],
     year: "2024",
   },
   {

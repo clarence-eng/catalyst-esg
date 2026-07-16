@@ -208,7 +208,7 @@ export const regulatoryUpdates: RegulatoryUpdate[] = [
       "Listed portfolio companies must report climate risks, opportunities, and metrics under ISSB S1/S2. Unlisted portfolio companies should prepare voluntarily to avoid disclosure readiness gap at IPO.",
     relevantSectors: ["All listed companies", "Financial Services", "Energy", "Real Estate"],
     urgency: "High",
-    portfolioImpact: ["seaport-logistics", "cloudmesh-technologies", "medilink-health"],
+    portfolioImpact: ["seaport-logistics", "cloudmesh-technologies"],
   },
   {
     id: "mas-gfap-2-0",
