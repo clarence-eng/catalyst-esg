@@ -85,7 +85,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
     icRecommendation: {
       verdict: "Invest Conditional",
       conditions: [
-        "Publish IMO-aligned fleet decarbonisation pathway with interim 2027 milestones before Q3 2026",
+        "Publish IMO-aligned fleet decarbonisation pathway with interim 2027 milestones (originally required pre-Q3 2026 — deadline elapsed; escalation review required)",
         "Commit to third-party CII rating audit across owned fleet within 12 months of investment",
         "Establish TNFD-aligned nature risk assessment for two port expansion sites",
       ],
@@ -147,7 +147,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       conditions: [
         "Publish TCFD-aligned climate risk assessment for corporate lending book by Q2 2027",
         "Establish financed emissions measurement baseline (Scope 3 Category 15) within 18 months",
-        "Board ESG oversight charter adopted with dedicated ESG committee or clear mandate",
+        "Formalise ESG committee mandate with documented climate oversight charter (committee is in place; charter documentation required as pre-close condition)",
       ],
       esgGating: "ESG-linked value creation thesis requires confirmed trajectory toward financed emissions disclosure — an absence of any PCAF reporting baseline within 24 months should trigger portfolio review.",
     },
@@ -301,7 +301,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
       { period: "Q3 2025", e: 36, s: 57, g: 54 },
       { period: "Q4 2025", e: 35, s: 55, g: 52 },
       { period: "Q1 2026", e: 36, s: 56, g: 53 },
-      { period: "Q2 2026", e: 32, s: 55, g: 52 },
+      { period: "Q2 2026", e: 37, s: 57, g: 54 },
     ],
     sdgAlignment: [
       { sdg: 7, label: "Clean Energy" },
@@ -376,7 +376,7 @@ const ENRICHMENT: Record<string, EnrichmentEntry> = {
     icRecommendation: {
       verdict: "Invest Conditional",
       conditions: [
-        "Independent audit committee chair appointed (pre-close condition)",
+        "Audit committee established with independent chair appointed (committee currently absent — full structure required pre-close)",
         "AI bias testing expanded to Indonesia and Vietnam patient cohorts",
         "PDPA cross-border data transfer policy updated and externally audited",
       ],
