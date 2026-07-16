@@ -296,7 +296,7 @@ export default function OverviewPage() {
                     )}
                   </div>
                   <span className={`text-xs font-medium w-20 text-right flex-shrink-0 ${isHighEmitter ? "text-red-700" : "text-gray-700"}`}>
-                    {co.carbonIntensity.toLocaleString("en-SG")} tCO₂/$M
+                    {(co.carbonIntensity ?? 0).toLocaleString("en-SG")} tCO₂/$M
                   </span>
                 </div>
               );

@@ -488,7 +488,7 @@ function getSASBKPIs(co: Company): { kpi: string; value: string; unit: string; b
   ];
 
   return [
-    { kpi: "ESG Score", value: co.esgScore.overall.toString(), unit: "/100", benchmark: "Portfolio median: 59" },
+    { kpi: "ESG Score", value: (co.esgScore.overall ?? 0).toString(), unit: "/100", benchmark: "Portfolio median: 59" },
     { kpi: "Carbon Intensity", value: co.carbonIntensity > 0 ? co.carbonIntensity.toString() : "N/D", unit: co.carbonIntensity > 0 ? "tCO₂e/$M" : "", benchmark: "Portfolio median varies by sector" },
   ];
 }
