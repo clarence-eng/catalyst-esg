@@ -305,7 +305,7 @@ export default function OverviewPage() {
           <p className="text-xs text-gray-500 mb-4">tCO₂e per S$M revenue — lower is better · IEA ASEAN 2030 target: &lt;500 tCO₂e/$M</p>
           <div className="space-y-2.5">
             {(() => {
-              const maxIntensity = activeCompanies.filter(c => c.carbonIntensity > 0).reduce((m, c) => c.carbonIntensity > m ? c.carbonIntensity : m, 1);
+              const maxIntensity = activeCompanies.filter(c => c.carbonIntensity > 0).reduce((m, c) => c.carbonIntensity > m ? c.carbonIntensity : m, 0);
               return (
                 <>
                 {[...activeCompanies].sort((a, b) => {
@@ -315,9 +315,9 @@ export default function OverviewPage() {
                   if (b.carbonIntensity === 0) return -1;
                   return b.carbonIntensity - a.carbonIntensity;
                 }).map(co => {
-              const pct = Math.min((co.carbonIntensity / maxIntensity) * 100, 100);
+              const pct = maxIntensity > 0 ? Math.min((co.carbonIntensity / maxIntensity) * 100, 100) : 0;
               const isHighEmitter = co.carbonIntensity > 500;
-              const color = co.carbonIntensity < 100 ? "bg-emerald-500" : co.carbonIntensity < 500 ? "bg-amber-500" : "bg-red-500";
+              const color = co.carbonIntensity === 0 ? "bg-gray-200" : co.carbonIntensity < 100 ? "bg-emerald-500" : co.carbonIntensity < 500 ? "bg-amber-500" : "bg-red-500";
               return (
                 <div key={co.slug} className="flex items-center gap-3">
                   <span className="text-xs text-gray-700 w-36 flex-shrink-0 truncate" title={displayName(co.name)}>{displayName(co.name)}</span>
