@@ -36,7 +36,9 @@ export async function generateMetadata({
   if (!company) return { title: "Company Not Found" };
   const dn = (name: string) => name.trim() || "Unnamed company";
   const title = `${dn(company.name)} — Catalyst ESG`;
-  const description = `ESG profile for ${dn(company.name)}: ${company.esgScore?.rating ?? ""} rating, ${company.maturity} maturity. ${company.description}`.slice(0, 160);
+  const rawDesc = `ESG profile for ${dn(company.name)}: ${company.esgScore?.rating ?? ""} rating, ${company.maturity} maturity. ${company.description}`;
+  // Trim at word boundary to avoid mid-word cuts in OG/search snippets
+  const description = rawDesc.length <= 160 ? rawDesc : rawDesc.slice(0, 157).replace(/\s+\S*$/, "") + "…";
   return {
     title,
     description,
