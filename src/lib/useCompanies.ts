@@ -77,12 +77,13 @@ export function useCompanies() {
       .then(({ companies: cos, source: src }: { companies: Company[]; source: "static" | "supabase" }) => {
         // Discard result if cache was cleared after this fetch started
         if (cacheEpoch !== epochAtStart) return;
-        if (cos && cos.length > 0) {
+        if (cos) {
           cachedResult = { companies: cos, source: src };
           setCompanies(cos);
           setSource(src);
+          // Only show error banner when falling back to static — empty live DB is valid state
           if (src === "static") setLiveDataError(true);
-          else setLiveDataError(false); // reset error if Supabase reconnected
+          else setLiveDataError(false);
         } else {
           setLiveDataError(true);
         }

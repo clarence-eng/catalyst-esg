@@ -56,7 +56,9 @@ export const displayName = (name: string): string => name.trim() || "Unnamed com
 
 /** Parse "Q# YYYY" → [quarter, year]. Only Q1–Q4 and exactly 4-digit years are valid; others return [0, 9999] to sort last. */
 export function parsePeriod(p: string): [number, number] {
-  const m = p.match(/^Q([1-4]) (\d{4})$/) ?? p.match(/Q([1-4]) (\d{4})(?!\d)/);
+  // Both regexes require the pattern at the start or with a non-digit after the year
+  // to reject strings that merely contain a valid period (e.g. 'legacy Q1 2024 data')
+  const m = p.match(/^Q([1-4]) (\d{4})$/) ?? p.match(/^Q([1-4]) (\d{4})(?!\d)/);
   if (!m) return [0, 9999];
   return [Number(m[1]), Number(m[2])];
 }
