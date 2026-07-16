@@ -159,7 +159,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         .filter((i) => !i.opportunity)
         .sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4))
         .slice(0, 4).map((i) => `${i.issue} (${i.severity}, ${i.category})`).join("; ");
-      const overdueEngs = co.engagement.filter(e => e.status === "Overdue").map(e => e.topic).join("; ");
+      const overdueEngs = co.engagement.filter(e => e.status === "Overdue").map(e => e.topic).filter(Boolean).join("; ");
       const regulatoryContext = [
         co.climateRisk.transition !== "Low" && "Climate transition regulatory pressure",
         co.natureRisk.deforestationRisk && "EUDR deforestation compliance",
@@ -1553,7 +1553,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
   const [questionsCopied, setQuestionsCopied] = useState(false);
   const overdueItems = co.engagement
     .filter((e) => e.status === "Overdue")
-    .sort((a, b) => a.date > b.date ? -1 : a.date < b.date ? 1 : 0); // newest overdue first
+    .sort((a, b) => (a.date || "").localeCompare(b.date || "")); // oldest overdue first — highest urgency
   const plannedItems = co.engagement
     .filter((e) => e.status === "Planned")
     .sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0); // earliest planned first

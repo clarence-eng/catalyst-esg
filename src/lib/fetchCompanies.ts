@@ -422,7 +422,7 @@ function dbToCompany(
 
   return {
     slug: co.slug,
-    name: co.name,
+    name: co.name ?? "",
     sector: co.sector,
     country: co.country,
     region: co.region ?? "",
@@ -486,13 +486,13 @@ function dbToCompany(
     // Map material issues
     materialIssues: issues
       .filter(i => i.company_slug === co.slug)
-      .sort((a, b) => a.sort_order - b.sort_order)
+      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
       .map(i => ({
-        category: i.category as Company["materialIssues"][0]["category"],
-        issue: i.issue,
-        severity: i.severity as Company["materialIssues"][0]["severity"],
-        opportunity: i.opportunity,
-        detail: i.detail,
+        category: (["Environmental","Social","Governance"] as const).includes(i.category as Company["materialIssues"][0]["category"]) ? i.category as Company["materialIssues"][0]["category"] : "Environmental",
+        issue: i.issue ?? "",
+        severity: (["Critical","High","Medium","Low"] as const).includes(i.severity as Company["materialIssues"][0]["severity"]) ? i.severity as Company["materialIssues"][0]["severity"] : "Medium",
+        opportunity: i.opportunity ?? false,
+        detail: i.detail ?? "",
       })),
     // historicalScores: use enrichment for history, but always sync the final period
     // to live Supabase scores so there's no discontinuity between chart and score card
