@@ -488,9 +488,9 @@ function dbToCompany(
       ? co.temasek_megatrend as Company["temasekMegatrend"]
       : "Climate Transition",
     lastUpdated: co.last_updated ?? "",
-    // Map engagements
+    // Map engagements — require non-null slug match to prevent null===null cross-company assignment
     engagement: engagements
-      .filter(e => e.company_slug === co.slug)
+      .filter(e => co.slug && e.company_slug === co.slug)
       .sort((a, b) => {
         const dateCmp = (b.date ?? "").localeCompare(a.date ?? "");
         if (dateCmp !== 0) return dateCmp;
@@ -509,7 +509,7 @@ function dbToCompany(
       })),
     // Map material issues
     materialIssues: issues
-      .filter(i => i.company_slug === co.slug)
+      .filter(i => co.slug && i.company_slug === co.slug)
       .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
       .map(i => ({
         id: i.id,

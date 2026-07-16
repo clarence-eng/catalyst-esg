@@ -257,11 +257,31 @@ export default function ScoutPage() {
         </div>
       )}
 
+      {/* Loading skeleton */}
+      {companiesLoading && filtered.length === 0 && (
+        <div className="grid grid-cols-1 gap-4">
+          {[1,2,3].map(i => (
+            <div key={i} className="bg-white border border-gray-200 rounded-xl p-5 animate-pulse">
+              <div className="flex items-start justify-between mb-3">
+                <div className="h-4 w-48 bg-gray-200 rounded" />
+                <div className="h-5 w-12 bg-gray-200 rounded" />
+              </div>
+              <div className="h-3 w-32 bg-gray-100 rounded mb-4" />
+              <div className="flex gap-4">
+                <div className="h-3 w-20 bg-gray-100 rounded" />
+                <div className="h-3 w-20 bg-gray-100 rounded" />
+                <div className="h-3 w-20 bg-gray-100 rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Company Cards */}
       <div className={`grid grid-cols-1 gap-4 ${compareSet.size > 0 && !drawerDismissed ? "pb-96" : ""}`}>
         {filtered.map((co) => (
           <Link
-            key={co.slug}
+            key={co.slug || `__no-slug-${co.name}`}
             href={`/scout/${co.slug}`}
             className={`bg-white border rounded-xl p-5 transition-all group ${
               co.portfolioStatus === "Pipeline"
