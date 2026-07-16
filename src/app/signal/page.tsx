@@ -121,8 +121,7 @@ export default function SignalPage() {
           {(() => {
             const calendarItems = urgencyView === "all" ? filteredUpdates : filteredUpdates.filter(r => r.urgency.toLowerCase() === urgencyView);
             if (filteredUpdates.length === 0) {
-              // Empty state shown in Regulatory Radar section below — suppress duplicate here
-              return null;
+              return <div className="py-8 text-center text-sm text-gray-400 italic">No regulations match the current filters.</div>;
             }
             if (calendarItems.length === 0) {
               return <div className="py-8 text-center text-sm text-gray-500">No {urgencyView} urgency regulations match the current filters.</div>;
@@ -417,19 +416,26 @@ function RegUpdateCard({ update: r, companyNameMap = Object.fromEntries(staticCo
           {r.portfolioImpact && r.portfolioImpact.length > 0 && (
             <div className="flex items-center gap-2 mt-2 flex-wrap">
               <span className="text-xs text-gray-500">Portfolio:</span>
-              {r.portfolioImpact.map((slug) => (
+              {r.portfolioImpact.map((slug) => {
+                const isActive = activePortfolioSlugs.has(slug);
+                const isPipeline = pipelinePortfolioSlugs.has(slug);
+                const isKnown = isActive || isPipeline;
+                return (
                 <Link
                   key={slug}
                   href={`/scout/${slug}`}
                   className={`text-xs px-2 py-0.5 rounded transition-colors ${
-                    pipelinePortfolioSlugs.has(slug)
+                    isPipeline
                       ? "text-blue-700 bg-blue-50 border border-blue-300 hover:bg-blue-100"
-                      : "text-purple-700 bg-purple-50 border border-purple-300 hover:bg-purple-100"
+                      : isActive
+                      ? "text-purple-700 bg-purple-50 border border-purple-300 hover:bg-purple-100"
+                      : "text-gray-500 bg-gray-50 border border-gray-200 hover:bg-gray-100"
                   }`}
                 >
-                  {companyNameMap[slug] ?? slug}{pipelinePortfolioSlugs.has(slug) ? " ·Pipeline" : ""}
+                  {companyNameMap[slug] ?? slug}{isPipeline ? " ·Pipeline" : !isKnown ? " ·Exited" : ""}
                 </Link>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

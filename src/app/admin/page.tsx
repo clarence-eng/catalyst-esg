@@ -27,7 +27,10 @@ function useAdminAuth() {
   const [pw, setPw] = useState("");
   const [err, setErr] = useState(false);
   const [checking, setChecking] = useState(false);
+  const checkingRef = useRef(false); // ref guard prevents concurrent requests on rapid Enter presses
   const check = async () => {
+    if (checkingRef.current) return;
+    checkingRef.current = true;
     setChecking(true);
     try {
       const res = await fetch("/api/admin", {
@@ -35,10 +38,10 @@ function useAdminAuth() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password: pw }),
       });
-      if (res.ok) { setAuthed(true); setErr(false); }
+      if (res.ok) { setAuthed(true); setErr(false); setPw(""); } // clear pw from state on success
       else setErr(true);
     } catch { setErr(true); }
-    finally { setChecking(false); }
+    finally { checkingRef.current = false; setChecking(false); }
   };
   return { authed, pw, setPw, err, check, checking, logout: async () => {
     try { await fetch("/api/admin/logout", { method: "POST", credentials: "same-origin" }); } catch { /* ignore */ }
@@ -241,6 +244,8 @@ function IssueForm({ companySlug, initial, onSave, onCancel }: { companySlug: st
 
 // ─── Company Row ──────────────────────────────────────────────────────────────
 function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancelDelete }: { co: DbCompany; onEdit: () => void; onDelete: () => void; showToast: (msg: string, isError?: boolean) => void; isPendingDelete: boolean; onCancelDelete: () => void }) {
+  const showToastRef = useRef(showToast);
+  useEffect(() => { showToastRef.current = showToast; }, [showToast]);
   const [expanded, setExpanded] = useState(false);
   const [engagements, setEngagements] = useState<DbEngagement[]>([]);
   const [issues, setIssues] = useState<DbMaterialIssue[]>([]);
@@ -271,14 +276,14 @@ function CompanyRow({ co, onEdit, onDelete, showToast, isPendingDelete, onCancel
       setIssues(mis || []);
     } catch (err) {
       console.warn("[Admin] loadDetail error:", err);
-      showToast("Failed to refresh company data — please reload the page", true);
+      showToastRef.current("Failed to refresh company data — please reload the page", true);
     } finally {
       loadingRef.current = false;
       detailLoadCount.current += 1; // force EngForm/IssueForm remount via key change
       // If a mutation fired while this fetch was in-flight, reload now
       if (pendingReloadRef.current) loadDetail();
     }
-  }, [co.slug, showToast]);
+  }, [co.slug]); // showToast accessed via ref — stable across renders, not a dep
 
   useEffect(() => { if (expanded) loadDetail(); }, [expanded, loadDetail]);
   useEffect(() => { if (!expanded) { setPendingDelEngId(null); setPendingDelIssueId(null); } }, [expanded]);
@@ -435,12 +440,15 @@ export default function AdminPage() {
   const [adminSort, setAdminSort] = useState<"name"|"esg"|"recent">("recent");
   const [pendingDeleteCoId, setPendingDeleteCoId] = useState<string | null>(null);
 
-  const showToast = (msg: string, isError = false) => {
+  const showToastRef = useRef<(msg: string, isError?: boolean) => void>(() => {});
+  const showToast = useCallback((msg: string, isError = false) => {
     setToast(msg);
     setToastIsError(isError);
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     toastTimerRef.current = setTimeout(() => { setToast(""); setToastIsError(false); }, 5000);
-  };
+  }, []);
+  // Keep ref in sync so loadDetail always calls the latest version without being in its deps
+  useEffect(() => { showToastRef.current = showToast; }, [showToast]);
 
   const loadCompanies = useCallback(async () => {
     setLoading(true);
