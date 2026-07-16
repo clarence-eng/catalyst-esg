@@ -96,11 +96,11 @@ export function CompanyProfile({ company: co }: { company: Company }) {
     setMemoError("");
     try {
       const topIssues = [...co.materialIssues]
-        .filter((i) => !i.opportunity)
+        .filter((i) => !i.opportunity && i.issue.trim() !== "")
         .sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4))
         .slice(0, 3)
         .map((i) => `${i.issue} (${i.severity})`)
-        .join(", ");
+        .join(", ") || "No material risk issues identified";
       const topUpliftRaw = [...co.valueUplift].sort((a, b) => ({ High: 0, Medium: 1, Low: 2 }[a.potential] ?? 3) - ({ High: 0, Medium: 1, Low: 2 }[b.potential] ?? 3)).slice(0, 2).map((u) => u.area).join(", ");
       const topUplift = topUpliftRaw || "Not yet assessed — value uplift opportunities to be determined during engagement";
       const res = await fetch("/api/gemini", {
@@ -113,7 +113,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
             sector: co.sector || "Unknown",
             sasbCategory: co.sasbCategory,
             country: co.country || "Unknown",
-            region: co.region,
+            region: co.region || "Southeast Asia",
             rating: co.esgScore.rating,
             overallScore: co.esgScore.overall,
             eScore: co.esgScore.environmental,
@@ -159,9 +159,9 @@ export function CompanyProfile({ company: co }: { company: Company }) {
     setQuestionsError("");
     try {
       const topIssues = [...co.materialIssues]
-        .filter((i) => !i.opportunity)
+        .filter((i) => !i.opportunity && i.issue.trim() !== "")
         .sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4))
-        .slice(0, 4).map((i) => `${i.issue} (${i.severity}, ${i.category})`).join("; ");
+        .slice(0, 4).map((i) => `${i.issue} (${i.severity}, ${i.category})`).join("; ") || "No material risk issues identified";
       const overdueEngs = co.engagement.filter(e => e.status === "Overdue").map(e => e.topic).filter(Boolean).join("; ");
       const regulatoryContext = [
         co.climateRisk.transition !== "Low" && "Climate transition regulatory pressure",

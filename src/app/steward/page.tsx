@@ -250,7 +250,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
     setPlanError("");
     try {
       const topIssues = [...co.materialIssues]
-        .filter((i) => !i.opportunity)
+        .filter((i) => !i.opportunity && i.issue.trim() !== "")
         .sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4))
         .slice(0, 3)
         .map((i) => `${i.issue} (${i.severity})`)
