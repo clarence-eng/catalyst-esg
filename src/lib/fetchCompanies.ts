@@ -440,10 +440,10 @@ function dbToCompany(
     carbonIntensity: Math.max(0, Number(co.carbon_intensity) || 0),
     greenRevenuePct: Math.min(100, Math.max(0, Number(co.green_revenue_pct) || 0)),
     esgScore: {
-      overall: co.esg_overall ?? 0,
-      environmental: co.esg_environmental ?? 0,
-      social: co.esg_social ?? 0,
-      governance: co.esg_governance ?? 0,
+      overall: Math.min(100, Math.max(0, Number(co.esg_overall) || 0)),
+      environmental: Math.min(100, Math.max(0, Number(co.esg_environmental) || 0)),
+      social: Math.min(100, Math.max(0, Number(co.esg_social) || 0)),
+      governance: Math.min(100, Math.max(0, Number(co.esg_governance) || 0)),
       rating: (["AAA","AA","A","BBB","BB","B","CCC"] as const).includes(co.esg_rating as Company["esgScore"]["rating"])
         ? co.esg_rating as Company["esgScore"]["rating"]
         : "BBB",
@@ -527,11 +527,15 @@ function dbToCompany(
       const currentQ = currentQuarterLabel();
       const lastEntry = base[base.length - 1];
       const lastMatchesCurrent = lastEntry?.period === currentQ;
+      // Remove last entry only when it matches the current quarter AND there's more than one
+      // entry — single-entry base with matching period would otherwise produce a duplicate.
       const withoutLast = lastMatchesCurrent && base.length > 1 ? base.slice(0, -1) : base;
-      const lastPeriod = currentQ;
+      // Also deduplicate: if single-entry base matches current quarter, don't append a duplicate
+      const alreadyHasCurrent = base.length === 1 && lastMatchesCurrent;
+      const liveEntry = { period: currentQ, e: co.esg_environmental ?? 0, s: co.esg_social ?? 0, g: co.esg_governance ?? 0 };
       const sorted = [
         ...withoutLast,
-        { period: lastPeriod, e: co.esg_environmental ?? 0, s: co.esg_social ?? 0, g: co.esg_governance ?? 0 },
+        ...(alreadyHasCurrent ? [] : [liveEntry]),
       ].sort((a, b) => {
         const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) ?? ["", "0", "0"]).slice(1).map(Number);
         const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) ?? ["", "0", "0"]).slice(1).map(Number);
@@ -587,7 +591,15 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
     if (engsErr && process.env.NODE_ENV !== "production") console.warn("[Supabase] engagements error:", engsErr.message);
     if (misErr && process.env.NODE_ENV !== "production") console.warn("[Supabase] material_issues error:", misErr.message);
 
-    if (!cos || cos.length === 0) return [];
+    if (!cos || cos.length === 0) {
+      // Cache the empty result for a short window to prevent thundering-herd on concurrent
+      // requests during DB migrations or temporary RLS misconfiguration.
+      if (!cosErr) {
+        cachedCompanies = [];
+        cacheTime = Date.now();
+      }
+      return [];
+    }
 
     // Don't cache when any query failed — a partial result would suppress overdue badges,
     // alert panels, or hide companies entirely for the full 500 ms TTL window.
