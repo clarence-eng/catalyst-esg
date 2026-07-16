@@ -473,15 +473,15 @@ function dbToCompany(
     // Map engagements
     engagement: engagements
       .filter(e => e.company_slug === co.slug)
-      .sort((a, b) => b.date.localeCompare(a.date))
+      .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))
       .map(e => ({
-        date: e.date,
+        date: e.date ?? "",
         type: (["Meeting","Report Review","Site Visit","Call","Email"] as const).includes(e.type as Company["engagement"][0]["type"])
           ? e.type as Company["engagement"][0]["type"]
           : "Meeting",
-        topic: e.topic,
-        status: e.status as Company["engagement"][0]["status"],
-        notes: e.notes,
+        topic: e.topic ?? "",
+        status: (["Completed","Planned","Overdue"] as const).includes(e.status as Company["engagement"][0]["status"]) ? e.status as Company["engagement"][0]["status"] : "Planned",
+        notes: e.notes ?? "",
       })),
     // Map material issues
     materialIssues: issues

@@ -41,7 +41,7 @@ export default function StewardPage() {
       // Overdue first (action required), then Planned by date ascending
       if (a.status === "Overdue" && b.status !== "Overdue") return -1;
       if (a.status !== "Overdue" && b.status === "Overdue") return 1;
-      return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
+      return (a.date || "").localeCompare(b.date || "");
     });
 
   return (
@@ -132,7 +132,7 @@ export default function StewardPage() {
                           ? "bg-red-50 text-red-700 border border-red-300"
                           : "bg-blue-50 text-blue-700 border border-blue-300"
                       }`}>
-                        {formatDate(e.date)}
+                        {e.date ? formatDate(e.date) : "—"}
                       </div>
                     </div>
                     {/* Company */}
@@ -453,7 +453,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
                     <div className="flex items-center gap-2 flex-wrap mb-1">
                       <span className="text-sm font-medium text-gray-900">{e.topic}</span>
                       <span className="text-xs text-gray-600">{e.type}</span>
-                      <span className="text-xs text-gray-600">{formatDate(e.date)}</span>
+                      <span className="text-xs text-gray-600">{e.date ? formatDate(e.date) : "—"}</span>
                       <span className={`text-xs px-1.5 py-0.5 rounded border ${
                         e.status === "Completed" ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
                         e.status === "Planned" ? "text-blue-700 bg-blue-50 border-blue-300" :
