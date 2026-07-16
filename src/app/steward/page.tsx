@@ -130,7 +130,7 @@ export default function StewardPage() {
                 {" "}&middot; header stats reflect active portfolio only
               </p>
             </div>
-            {calendarEngagements.length === 0 ? (
+            {calendarEngagements.length === 0 && !companiesLoading ? (
               <div className="text-xs text-gray-500 text-center py-8">No planned or overdue engagements</div>
             ) : (
               <div className="divide-y divide-gray-100">
@@ -189,6 +189,13 @@ export default function StewardPage() {
           <PortfolioCard key={co.slug} company={co} />
         ))}
       </div>
+      )}
+
+      {/* Onboarding prompt — shown in both views when there are no active companies */}
+      {sortedActive.length === 0 && !companiesLoading && view === "calendar" && (
+        <div className="text-sm text-gray-500 text-center py-4 border border-dashed border-gray-200 rounded-xl mb-4">
+          No active portfolio companies — add companies via the admin panel or promote a Pipeline company to Active.
+        </div>
       )}
 
       {/* Pipeline: Pre-Investment Due Diligence */}

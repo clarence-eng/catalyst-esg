@@ -1562,7 +1562,7 @@ function GovStatTile({ label, value, note, status, estimated }: { label: string;
         <span className="text-xs text-gray-600 font-medium">{label}</span>
       </div>
       <div className={`text-sm font-bold ${valueColor} mb-1`}>{value}</div>
-      <div className="text-xs text-gray-500 leading-relaxed">{note}{estimated && <span className="ml-1 italic text-gray-400">(est.)</span>}</div>
+      <div className="text-xs text-gray-500 leading-relaxed">{note}{estimated && <abbr title="Estimated from governance score — not sourced from primary disclosure" className="ml-1 italic text-gray-400 no-underline">(est.)</abbr>}</div>
     </div>
   );
 }
