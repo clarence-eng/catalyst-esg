@@ -50,11 +50,12 @@ function sanitizeBlock(value: unknown, maxLen = 5000): string {
 
 function validateContext(type: GenerationType, ctx: Record<string, unknown>): boolean {
   if (type === "deal_memo") {
-    const strOk = ["name", "sector", "country", "rating", "maturity"].every((k) => typeof ctx[k] === "string" && (ctx[k] as string).trim().length > 0);
-    // Require numeric scores — reject objects, booleans, arrays which produce "[object Object]" or "false" in the prompt
+    const strOk = ["name", "sector", "country", "region", "rating", "maturity"].every((k) => typeof ctx[k] === "string" && (ctx[k] as string).trim().length > 0);
+    // Require numeric scores in [0, 100] — reject objects, booleans, out-of-range values
     const numOk = ["overallScore", "eScore", "sScore", "gScore"].every((k) => {
       const v = ctx[k];
-      return (typeof v === "number" && isFinite(v)) || (typeof v === "string" && v.trim() !== "" && !isNaN(Number(v)));
+      const n = typeof v === "number" ? v : (typeof v === "string" && v.trim() !== "" ? Number(v) : NaN);
+      return isFinite(n) && n >= 0 && n <= 100;
     });
     return strOk && numOk;
   }
@@ -68,8 +69,8 @@ function validateContext(type: GenerationType, ctx: Record<string, unknown>): bo
     return typeof ctx.portfolioSummary === "string" && ctx.portfolioSummary.trim().length > 0;
   }
   if (type === "engagement_questions") {
-    // Required: name/sector/maturity/country (structural); transitionRisk/natureRisk (risk context)
-    const required = ["name", "sector", "maturity", "country", "transitionRisk", "natureRisk"];
+    // Required: name/sector/maturity/country (structural); transitionRisk/natureRisk/physicalRisk (risk context)
+    const required = ["name", "sector", "maturity", "country", "transitionRisk", "natureRisk", "physicalRisk"];
     return required.every((k) => typeof ctx[k] === "string" && (ctx[k] as string).trim().length > 0);
   }
   return false;
@@ -124,7 +125,7 @@ export async function POST(req: NextRequest) {
     if (!ALLOWED_TYPES.includes(type as GenerationType)) {
       return NextResponse.json({ error: "Unknown generation type" }, { status: 400 });
     }
-    if (!context || typeof context !== "object") {
+    if (!context || typeof context !== "object" || Array.isArray(context)) {
       return NextResponse.json({ error: "Invalid context" }, { status: 400 });
     }
     if (!validateContext(type as GenerationType, context as Record<string, unknown>)) {
