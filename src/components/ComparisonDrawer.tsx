@@ -16,12 +16,12 @@ export function ComparisonDrawer({ companies, onRemove, onClear, onDismiss }: Pr
   if (companies.length === 0) return null;
 
   const metrics = [
-    { label: "ESG Score", fn: (c: Company) => c.esgScore.overall, unit: "/100", lowerIsBetter: false, color: (v: number) => v >= 65 ? "text-emerald-700" : v >= 40 ? "text-amber-700" : "text-red-700" },
-    { label: "Environmental", fn: (c: Company) => c.esgScore.environmental, unit: "", lowerIsBetter: false, color: (v: number) => v >= 65 ? "text-emerald-700" : v >= 40 ? "text-amber-700" : "text-red-700" },
-    { label: "Social", fn: (c: Company) => c.esgScore.social, unit: "", lowerIsBetter: false, color: (v: number) => v >= 65 ? "text-emerald-700" : v >= 40 ? "text-amber-700" : "text-red-700" },
-    { label: "Governance", fn: (c: Company) => c.esgScore.governance, unit: "", lowerIsBetter: false, color: (v: number) => v >= 65 ? "text-emerald-700" : v >= 40 ? "text-amber-700" : "text-red-700" },
-    { label: "Carbon Intensity", fn: (c: Company) => c.carbonIntensity, unit: " tCO₂/$M", lowerIsBetter: true, color: (v: number) => v < 100 ? "text-emerald-700" : v < 500 ? "text-amber-700" : "text-red-700" },
-    { label: "Green Revenue", fn: (c: Company) => c.greenRevenuePct, unit: "%", lowerIsBetter: false, color: (v: number) => v >= 30 ? "text-emerald-700" : v >= 10 ? "text-amber-700" : "text-red-700" },
+    { label: "ESG Score", fn: (c: Company) => c.esgScore?.overall ?? null, unit: "/100", lowerIsBetter: false, color: (v: number) => v >= 65 ? "text-emerald-700" : v >= 40 ? "text-amber-700" : "text-red-700" },
+    { label: "Environmental", fn: (c: Company) => c.esgScore?.environmental ?? null, unit: "", lowerIsBetter: false, color: (v: number) => v >= 65 ? "text-emerald-700" : v >= 40 ? "text-amber-700" : "text-red-700" },
+    { label: "Social", fn: (c: Company) => c.esgScore?.social ?? null, unit: "", lowerIsBetter: false, color: (v: number) => v >= 65 ? "text-emerald-700" : v >= 40 ? "text-amber-700" : "text-red-700" },
+    { label: "Governance", fn: (c: Company) => c.esgScore?.governance ?? null, unit: "", lowerIsBetter: false, color: (v: number) => v >= 65 ? "text-emerald-700" : v >= 40 ? "text-amber-700" : "text-red-700" },
+    { label: "Carbon Intensity", fn: (c: Company) => c.carbonIntensity > 0 ? c.carbonIntensity : null, unit: " tCO₂/$M", lowerIsBetter: true, color: (v: number) => v < 100 ? "text-emerald-700" : v < 500 ? "text-amber-700" : "text-red-700" },
+    { label: "Green Revenue", fn: (c: Company) => c.greenRevenuePct ?? null, unit: "%", lowerIsBetter: false, color: (v: number) => v >= 30 ? "text-emerald-700" : v >= 10 ? "text-amber-700" : "text-red-700" },
     { label: "Transition Risk", fn: (c: Company) => c.climateRisk?.transition ?? "Unknown", unit: "", lowerIsBetter: false, color: () => "text-gray-700" },
     { label: "Nature Risk", fn: (c: Company) => c.natureRisk?.overall ?? "Unknown", unit: "", lowerIsBetter: false, color: () => "text-gray-700" },
   ];
@@ -52,7 +52,7 @@ export function ComparisonDrawer({ companies, onRemove, onClear, onDismiss }: Pr
                     <Link href={`/scout/${c.slug}`} className="font-semibold text-gray-900 hover:text-purple-700 truncate max-w-[100px]">{displayName(c.name)}</Link>
                     <button type="button" onClick={() => onRemove(c.slug)} aria-label={`Remove ${c.name} from comparison`} className="text-gray-500 hover:text-gray-700 flex-shrink-0"><X className="w-3 h-3" /></button>
                   </div>
-                  <div className="text-gray-500 font-normal truncate">{c.sector.split(" ")[0]}</div>
+                  <div className="text-gray-500 font-normal truncate">{(c.sector || "—").split(" ")[0]}</div>
                 </th>
               ))}
             </tr>
@@ -70,10 +70,12 @@ export function ComparisonDrawer({ companies, onRemove, onClear, onDismiss }: Pr
                   <th scope="row" className="px-4 py-2 text-gray-500 font-medium text-left">{m.label}</th>
                   {companies.map((c, i) => {
                     const v = values[i];
+                    const isNull = v === null || v === undefined;
                     const isBest = typeof v === "number" && v === best && numVals.length > 1;
+                    const colorClass = isNull ? "text-gray-400" : typeof v === "number" ? m.color(v) : "text-gray-700";
                     return (
-                      <td key={c.slug} className={`px-4 py-2 font-semibold ${m.color(v as number)}`}>
-                        {v}{m.unit}
+                      <td key={c.slug} className={`px-4 py-2 font-semibold ${colorClass}`}>
+                        {isNull ? <span className="italic font-normal">N/D</span> : <>{v}{m.unit}</>}
                         {isBest && <span className="ml-1 text-[9px] text-emerald-600 bg-emerald-50 px-1 rounded">best</span>}
                       </td>
                     );

@@ -54,9 +54,9 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 /** Returns the company display name or "Unnamed company" when name is blank. */
 export const displayName = (name: string): string => name.trim() || "Unnamed company";
 
-/** Parse "Q# YYYY" → [quarter, year]. Only Q1–Q4 are valid; others return [0, 9999] to sort last. */
+/** Parse "Q# YYYY" → [quarter, year]. Only Q1–Q4 and exactly 4-digit years are valid; others return [0, 9999] to sort last. */
 export function parsePeriod(p: string): [number, number] {
-  const m = p.match(/Q([1-4]) (\d{4})/);
+  const m = p.match(/^Q([1-4]) (\d{4})$/) ?? p.match(/Q([1-4]) (\d{4})(?!\d)/);
   if (!m) return [0, 9999];
   return [Number(m[1]), Number(m[2])];
 }
