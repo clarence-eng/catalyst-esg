@@ -451,6 +451,7 @@ function dbToCompany(
         }
         // Derive from overall score when stored rating is invalid/null
         const overall = Math.min(100, Math.max(0, Number(co.esg_overall) || 0));
+        if (overall >= 90) return "AAA";
         if (overall >= 75) return "AA";
         if (overall >= 65) return "A";
         if (overall >= 50) return "BBB";
@@ -562,8 +563,8 @@ function dbToCompany(
         const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) ?? ["", "0", "0"]).slice(1).map(Number);
         const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) ?? ["", "0", "0"]).slice(1).map(Number);
         // Non-standard periods get year 9999 so they sort last, not first (year 0 bug)
-        const safeAy = ay || 9999, safeBY = by || 9999;
-        return safeAy !== safeBY ? safeAy - safeBY : aq - bq;
+        const safeAy = ay || 9999, safeBy = by || 9999;
+        return safeAy !== safeBy ? safeAy - safeBy : aq - bq;
       });
       return sorted;
     })(),
@@ -614,12 +615,14 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
     if (misErr && process.env.NODE_ENV !== "production") console.warn("[Supabase] material_issues error:", misErr.message);
 
     if (!cos || cos.length === 0) {
-      // Cache the empty result for a short window to prevent thundering-herd on concurrent
-      // requests during DB migrations or temporary RLS misconfiguration.
       if (!cosErr) {
+        // Genuinely empty DB — cache empty array to prevent thundering-herd
         cachedCompanies = [];
         cacheTime = Date.now();
+        return [];
       }
+      // DB error — serve stale cache as fallback if available to avoid blank UI on transient hiccup
+      if (cachedCompanies && cachedCompanies.length > 0) return cachedCompanies;
       return [];
     }
 
