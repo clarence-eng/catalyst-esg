@@ -107,7 +107,7 @@ export default function OverviewPage() {
   const avgCarbonIntensityFull = totalDisclosingAUM > 0
     ? Math.round(disclosingActive.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalDisclosingAUM)
     : 0;
-  const utilityLabel = utilityCompanies.length > 0 ? utilityCompanies.map(c => c.name).join(", ") : "electric utilities";
+  const utilityLabel = utilityCompanies.length > 0 ? utilityCompanies.map(c => c.name || "Unnamed company").join(", ") : "electric utilities";
   const overdueCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Overdue").length, 0);
   const plannedCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Planned").length, 0);
 

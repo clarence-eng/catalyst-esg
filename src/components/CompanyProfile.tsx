@@ -109,7 +109,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         body: JSON.stringify({
           type: "deal_memo",
           context: {
-            name: co.name,
+            name: displayName(co.name),
             sector: co.sector,
             sasbCategory: co.sasbCategory,
             country: co.country,
@@ -174,7 +174,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
         body: JSON.stringify({
           type: "engagement_questions",
           context: {
-            name: co.name, sector: co.sector, country: co.country, maturity: co.maturity,
+            name: displayName(co.name), sector: co.sector, country: co.country, maturity: co.maturity,
             transitionRisk: co.climateRisk.transition, natureRisk: co.natureRisk.overall,
             pathway: co.climateRisk.pathwayAlignment, commitment: co.netZeroCommitment,
             topIssues, overdueEngagements: overdueEngs || "None",
