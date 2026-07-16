@@ -835,7 +835,11 @@ function OverviewTab({
           <div className="space-y-3">
             {(() => {
               const active = portfolioCompanies.filter(c => c.portfolioStatus === "Active");
-              const totalIV = active.reduce((s, c) => s + c.investmentValue, 0) || 1;
+              const rawIV = active.reduce((s, c) => s + c.investmentValue, 0);
+              if (rawIV === 0) return (
+                <p className="text-xs text-gray-500 italic py-2">Investment values not set — portfolio benchmark unavailable</p>
+              );
+              const totalIV = rawIV;
               const wtdE = Math.round(active.reduce((s, c) => s + c.esgScore.environmental * c.investmentValue, 0) / totalIV);
               const wtdS = Math.round(active.reduce((s, c) => s + c.esgScore.social * c.investmentValue, 0) / totalIV);
               const wtdG = Math.round(active.reduce((s, c) => s + c.esgScore.governance * c.investmentValue, 0) / totalIV);
@@ -911,7 +915,7 @@ function OverviewTab({
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-3">Key Metrics</h3>
           <div className="space-y-3">
-            <Metric label="Carbon Intensity" value={`${co.carbonIntensity} tCO₂e/$M`} />
+            <Metric label="Carbon Intensity" value={co.carbonIntensity > 0 ? `${co.carbonIntensity} tCO₂e/$M` : "N/D"} />
             <Metric label="Green Revenue" value={`${co.greenRevenuePct}%`} />
             <Metric label="Pathway Alignment" value={co.climateRisk.pathwayAlignment} />
             <Metric label="TNFD Aligned" value={co.natureRisk.tnfdAligned ? "Yes" : "Not yet"} />
@@ -1425,7 +1429,12 @@ function SocialTab({ co }: { co: Company }) {
 
       {/* Governance Scorecard */}
       <div className="bg-white rounded-xl border border-gray-200 p-5">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">Governance Scorecard</h3>
+        <div className="flex items-start justify-between mb-4">
+          <h3 className="text-sm font-semibold text-gray-900">Governance Scorecard</h3>
+          {bc.boardSize === 8 && !co.sasbCategory.includes("Bank") && !co.sasbCategory.includes("Financ") && (
+            <span className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded italic">Estimated from ESG score — verify against disclosures</span>
+          )}
+        </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
           <GovStatTile
             label="Board Size"
