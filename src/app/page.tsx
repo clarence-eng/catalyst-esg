@@ -269,7 +269,9 @@ export default function OverviewPage() {
       <AlertPanel companies={companies} />
 
       {/* Portfolio ESG Trend */}
-      <PortfolioTrend data={fullCoverageTrend} activeCount={activeCompanies.length} />
+      <PortfolioTrend data={fullCoverageTrend} activeCount={activeCompanies.length}
+        periodNote={fullCoverageTrend.length < portfolioTrend.length ? "earlier periods excluded — not all companies have data for those periods" : undefined}
+      />
 
       {/* Carbon Intensity Comparison */}
       {activeCompanies.length > 0 && (

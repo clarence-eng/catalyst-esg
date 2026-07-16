@@ -17,7 +17,7 @@ interface TrendPoint {
   g: number;
 }
 
-export function PortfolioTrend({ data, activeCount }: { data: TrendPoint[]; activeCount: number }) {
+export function PortfolioTrend({ data, activeCount, periodNote }: { data: TrendPoint[]; activeCount: number; periodNote?: string }) {
   const [reducedMotion, setReducedMotion] = useState(() =>
     typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
   );
@@ -49,7 +49,7 @@ export function PortfolioTrend({ data, activeCount }: { data: TrendPoint[]; acti
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-sm font-semibold text-gray-900">Portfolio ESG Trajectory</h2>
-          <p className="text-xs text-gray-500 mt-0.5">Average E/S/G across {activeCount} active companies · {data[0].period} – {data[data.length - 1].period}</p>
+          <p className="text-xs text-gray-500 mt-0.5">Average E/S/G across {activeCount} active companies · {data[0].period} – {data[data.length - 1].period}{periodNote && <span className="ml-1 text-gray-400">({periodNote})</span>}</p>
         </div>
         <div className="flex items-center gap-4">
           {[

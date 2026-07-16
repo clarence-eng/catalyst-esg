@@ -73,7 +73,9 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       .replace(/\[([^\]]+)\]\((https?:\/\/[^\s<>"']+)\)/g, (_, label, url) =>
         `<a href="${url.replace(/&amp;/g, '&')}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${label}</a>`
       )
-      .replace(/(?<!href=")(https?:\/\/[^\s<>"'*]+)/g, (rawUrl) => {
+      // Bare-URL step: skip URLs already inside href="" or immediately after a tag close (>)
+      // to prevent double-wrapping when the markdown-link step above already produced <a>url</a>
+      .replace(/(?<![>"=])(https?:\/\/[^\s<>"'*]+)/g, (rawUrl) => {
         // Strip trailing punctuation that belongs to the surrounding sentence, not the URL.
         let url = rawUrl.replace(/[.,;:!?]+$/, "");
         // Strip unmatched trailing ) using paren-balance counting.
