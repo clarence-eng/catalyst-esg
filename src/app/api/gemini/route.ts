@@ -2,6 +2,27 @@ import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 import { verifyAdminRequest } from "@/lib/adminAuth";
 
+// Per-IP rate limit on Gemini requests — 20 per minute.
+// Each call triggers a real LLM API request; quota exhaustion blocks all AI features.
+const geminiRateMap = new Map<string, { count: number; reset: number }>();
+const GEMINI_RATE_LIMIT = 20;
+const GEMINI_RATE_WINDOW_MS = 60_000;
+
+function checkGeminiRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = geminiRateMap.get(ip);
+  if (!entry || now > entry.reset) {
+    geminiRateMap.set(ip, { count: 1, reset: now + GEMINI_RATE_WINDOW_MS });
+    if (geminiRateMap.size > 100) {
+      for (const [k, v] of geminiRateMap) { if (now > v.reset) geminiRateMap.delete(k); }
+    }
+    return true;
+  }
+  if (entry.count >= GEMINI_RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
 const ALLOWED_TYPES = ["deal_memo", "action_plan", "thematic_brief", "portfolio_brief", "engagement_questions"] as const;
 type GenerationType = (typeof ALLOWED_TYPES)[number];
 
@@ -55,9 +76,13 @@ function validateContext(type: GenerationType, ctx: Record<string, unknown>): bo
 }
 
 export async function POST(req: NextRequest) {
-  // Require admin auth — Gemini calls consume API quota and must not be accessible anonymously.
   if (!verifyAdminRequest(req)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const ip = req.headers.get("x-real-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!checkGeminiRateLimit(ip)) {
+    return NextResponse.json({ error: "Too many AI requests — please wait before retrying" }, { status: 429 });
   }
 
   // Same-origin check retained as defence-in-depth against CSRF from a different admin session.

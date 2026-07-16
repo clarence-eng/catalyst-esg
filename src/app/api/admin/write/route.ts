@@ -13,11 +13,17 @@ function checkRateLimit(ip: string): boolean {
   const entry = rateLimitMap.get(ip);
   if (!entry || now > entry.reset) {
     rateLimitMap.set(ip, { count: 1, reset: now + RATE_WINDOW_MS });
-    // Evict all expired entries periodically to prevent unbounded memory growth
-    // on long-lived container instances with many unique IPs.
+    // Evict expired entries periodically. Cap map at 1000 total entries to bound memory —
+    // if eviction finds nothing expired (all entries are fresh), trim the oldest half.
     if (rateLimitMap.size > 500) {
+      let deleted = 0;
       for (const [k, v] of rateLimitMap) {
-        if (now > v.reset) rateLimitMap.delete(k);
+        if (now > v.reset) { rateLimitMap.delete(k); deleted++; }
+      }
+      if (deleted === 0 && rateLimitMap.size > 1000) {
+        // All entries are unexpired — hard-cap by dropping the first 500
+        let i = 0;
+        for (const k of rateLimitMap.keys()) { if (i++ >= 500) break; rateLimitMap.delete(k); }
       }
     }
     return true;
@@ -162,7 +168,10 @@ export async function POST(req: NextRequest) {
     if (!company_slug || !SLUG_RE.test(company_slug)) return badRequest("Invalid company_slug");
     const { count: coCount } = await sb.from("companies").select("id", { count: "exact", head: true }).eq("slug", company_slug);
     if (!coCount) return badRequest("Company not found");
-    const date = typeof e.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(e.date) ? e.date : "";
+    const dateStr = typeof e.date === "string" ? e.date : "";
+    // Validate ISO format AND calendar validity — /^\d{4}-\d{2}-\d{2}$/ alone accepts '2024-99-99'
+    const dateObj = dateStr.match(/^\d{4}-\d{2}-\d{2}$/) ? new Date(`${dateStr}T00:00:00`) : null;
+    const date = dateObj && !isNaN(dateObj.getTime()) ? dateStr : "";
     if (!date) return badRequest("Valid date required");
     const topic = sanitizeString(e.topic, 500).trim();
     if (!topic) return badRequest("topic required");
