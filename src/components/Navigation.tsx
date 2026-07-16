@@ -45,7 +45,7 @@ export function Navigation() {
   }, [overdueCount]);
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-64 bg-[#F9F8FA] border-r border-gray-200 flex flex-col z-50 text-gray-800">
+    <aside aria-label="Application sidebar" className="fixed left-0 top-0 h-full w-64 bg-[#F9F8FA] border-r border-gray-200 flex flex-col z-50 text-gray-800">
       {/* sr-only live region — announces overdue count CHANGES to AT, not initial value */}
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">{overdueAnnouncement}</div>
       {/* Brand */}
@@ -107,8 +107,8 @@ export function Navigation() {
         })}
       </nav>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-gray-200">
+      {/* Footer — inside nav for landmark discoverability */}
+      <nav aria-label="Secondary navigation" className="p-4 border-t border-gray-200">
         <Link
           href="/about"
           aria-current={pathname === "/about" ? "page" : undefined}
@@ -146,7 +146,7 @@ export function Navigation() {
         <div className="text-xs text-gray-500 leading-relaxed">
           Temasek ESG Investment Intelligence
         </div>
-      </div>
+      </nav>
     </aside>
   );
 }

@@ -142,7 +142,8 @@ export default function SignalPage() {
               const urgencyOrder = { High: 0, Medium: 1, Low: 2 };
               const urgencyDiff = (urgencyOrder[a.urgency as keyof typeof urgencyOrder] ?? 3) - (urgencyOrder[b.urgency as keyof typeof urgencyOrder] ?? 3);
               if (urgencyDiff !== 0) return urgencyDiff;
-              return a.id.localeCompare(b.id, "en", { numeric: true });
+              // Sort by effective date within each urgency band — most imminent first
+              return (a.effectiveDate || "").localeCompare(b.effectiveDate || "");
             })
             .map((r, i) => (
               <tr key={r.id} className={`${i % 2 === 0 ? "bg-gray-50" : "bg-white"} border-b border-gray-100 last:border-0`}>
@@ -167,10 +168,9 @@ export default function SignalPage() {
                 <td className="px-5 py-3 align-top text-gray-600">
                   {(() => {
                     const activeCount = r.portfolioImpact?.filter(s => activePortfolioSlugs.has(s)).length ?? 0;
-                    if (!activeCount) return "";
-                    // Count only slugs that are actually pipeline-status — not all non-active slugs
-                    // (which could include exited holdings or data errors)
                     const pipelineCount = r.portfolioImpact?.filter(s => pipelinePortfolioSlugs.has(s)).length ?? 0;
+                    if (!activeCount && !pipelineCount) return "";
+                    if (!activeCount) return `${pipelineCount}p`;
                     return `${activeCount} co${activeCount > 1 ? "s" : ""}${pipelineCount > 0 ? `+${pipelineCount}p` : ""}`;
                   })()}
                 </td>
@@ -418,7 +418,7 @@ function RegUpdateCard({ update: r, companyNameMap = Object.fromEntries(staticCo
               <span className="text-xs text-gray-500">Portfolio:</span>
               {r.portfolioImpact.map((slug) => {
                 const isActive = activePortfolioSlugs.has(slug);
-                const isPipeline = pipelinePortfolioSlugs.has(slug);
+                const isPipeline = !isActive && pipelinePortfolioSlugs.has(slug);
                 const isKnown = isActive || isPipeline;
                 return (
                 <Link
