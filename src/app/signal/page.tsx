@@ -117,7 +117,7 @@ export default function SignalPage() {
           Compliance Deadline Tracker
           {urgencyView !== "all" && <span className="ml-2 text-xs font-normal text-gray-500">· {urgencyView} urgency only</span>}
         </h2>
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
           {(() => {
             const calendarItems = urgencyView === "all" ? filteredUpdates : filteredUpdates.filter(r => r.urgency.toLowerCase() === urgencyView);
             if (filteredUpdates.length === 0) {
@@ -128,7 +128,7 @@ export default function SignalPage() {
               return <div className="py-8 text-center text-sm text-gray-500">No {urgencyView} urgency regulations match the current filters.</div>;
             }
             return (
-              <table className="w-full text-xs">
+              <table className="w-full min-w-[700px] text-xs">
                 <caption className="sr-only">Compliance Deadline Tracker</caption>
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-100">

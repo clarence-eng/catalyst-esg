@@ -106,7 +106,7 @@ export default function OverviewPage() {
   const totalDisclosingAUM = disclosingActive.reduce((s, c) => s + c.investmentValue, 0);
   const avgCarbonIntensityFull = totalDisclosingAUM > 0
     ? Math.round(disclosingActive.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalDisclosingAUM)
-    : 0;
+    : null;
   const utilityLabel = utilityCompanies.length > 0 ? utilityCompanies.map(c => c.name || "Unnamed company").join(", ") : "electric utilities";
   const overdueCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Overdue").length, 0);
   const plannedCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Planned").length, 0);
@@ -155,7 +155,7 @@ export default function OverviewPage() {
     return (
       `${displayName(c.name)} (${c.sector || "Unknown"}, ${c.country || "Unknown"}): ESG ${c.esgScore.overall}/100 [E:${c.esgScore.environmental} S:${c.esgScore.social} G:${c.esgScore.governance}], ` +
       `Maturity: ${c.maturity}, Transition Risk: ${c.climateRisk.transition}, Nature Risk: ${c.natureRisk.overall}, ` +
-      `Carbon Intensity: ${c.carbonIntensity > 0 ? `${c.carbonIntensity} tCO2e/$M` : "Not disclosed"} (non-utility portfolio avg: ${avgCarbonIntensity ?? "N/A"} tCO2e/$M, full portfolio avg incl. ${utilityLabel}: ${avgCarbonIntensityFull} tCO2e/$M), Green Revenue: ${c.greenRevenuePct}%, ` +
+      `Carbon Intensity: ${c.carbonIntensity > 0 ? `${c.carbonIntensity} tCO2e/$M` : "Not disclosed"} (non-utility portfolio avg: ${avgCarbonIntensity ?? "N/A"} tCO2e/$M, full portfolio avg incl. ${utilityLabel}: ${avgCarbonIntensityFull ?? "N/A"} tCO2e/$M), Green Revenue: ${c.greenRevenuePct}%, ` +
       `Overdue engagements: ${c.engagement.filter(e => e.status === "Overdue").length}, Planned: ${c.engagement.filter(e => e.status === "Planned").length}, ` +
       `Top issue: ${topIssue ? `${topIssue.issue} (${topIssue.severity})` : "None"}`
     );
