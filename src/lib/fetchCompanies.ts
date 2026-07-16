@@ -438,7 +438,7 @@ function dbToCompany(
     maturity: (["Leading","Advanced","Developing","Lagging"] as const).includes(co.maturity as Company["maturity"]) ? co.maturity as Company["maturity"] : "Developing",
     investmentValue: Math.max(0, Number(co.investment_value) || 0),
     carbonIntensity: Math.max(0, Number(co.carbon_intensity) || 0),
-    greenRevenuePct: co.green_revenue_pct ?? 0,
+    greenRevenuePct: Math.min(100, Math.max(0, Number(co.green_revenue_pct) || 0)),
     esgScore: {
       overall: co.esg_overall ?? 0,
       environmental: co.esg_environmental ?? 0,
@@ -452,16 +452,16 @@ function dbToCompany(
       transition: (["Low","Medium","High","Critical"] as const).includes(co.transition_risk as Company["climateRisk"]["transition"]) ? co.transition_risk as Company["climateRisk"]["transition"] : "Low",
       physical: (["Low","Medium","High","Critical"] as const).includes(co.physical_risk as Company["climateRisk"]["physical"]) ? co.physical_risk as Company["climateRisk"]["physical"] : "Low",
       pathwayAlignment: (["1.5°C","2°C","3°C+","Not assessed"] as const).includes(co.pathway_alignment as Company["climateRisk"]["pathwayAlignment"]) ? co.pathway_alignment as Company["climateRisk"]["pathwayAlignment"] : "Not assessed",
-      transitionDetails: enrichment?.climateRisk.transitionDetails ?? derivedTransitionDetails,
-      physicalDetails: enrichment?.climateRisk.physicalDetails ?? derivedPhysicalDetails,
+      transitionDetails: enrichment?.climateRisk?.transitionDetails ?? derivedTransitionDetails,
+      physicalDetails: enrichment?.climateRisk?.physicalDetails ?? derivedPhysicalDetails,
     },
     natureRisk: {
       overall: (["Low","Medium","High","Critical"] as const).includes(co.nature_risk as Company["natureRisk"]["overall"]) ? co.nature_risk as Company["natureRisk"]["overall"] : "Low",
-      biodiversityExposure: enrichment?.natureRisk.biodiversityExposure ?? (isHighNature && (isAgri || isMarine)),
-      waterStress: enrichment?.natureRisk.waterStress ?? (isHighNature && isAgri),
-      deforestationRisk: enrichment?.natureRisk.deforestationRisk ?? (isAgri && isHighNature),
-      tnfdAligned: enrichment?.natureRisk.tnfdAligned ?? false,
-      details: enrichment?.natureRisk.details ?? (isHighNature ? [
+      biodiversityExposure: enrichment?.natureRisk?.biodiversityExposure ?? (isHighNature && (isAgri || isMarine)),
+      waterStress: enrichment?.natureRisk?.waterStress ?? (isHighNature && isAgri),
+      deforestationRisk: enrichment?.natureRisk?.deforestationRisk ?? (isAgri && isHighNature),
+      tnfdAligned: enrichment?.natureRisk?.tnfdAligned ?? false,
+      details: enrichment?.natureRisk?.details ?? (isHighNature ? [
         `Nature risk level: ${co.nature_risk}. TNFD assessment recommended.`,
       ] : []),
       tnfdPillars: enrichment?.tnfdPillars ?? [
@@ -480,7 +480,12 @@ function dbToCompany(
     // Map engagements
     engagement: engagements
       .filter(e => e.company_slug === co.slug)
-      .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))
+      .sort((a, b) => {
+        const dateCmp = (b.date ?? "").localeCompare(a.date ?? "");
+        if (dateCmp !== 0) return dateCmp;
+        // Stable tie-break by id matches the Supabase ascending-id secondary sort
+        return (a.id ?? "").localeCompare(b.id ?? "");
+      })
       .map(e => ({
         id: e.id,
         date: e.date ?? "",
@@ -516,10 +521,11 @@ function dbToCompany(
         ];
       })();
       // Always ensure the last period reflects the authoritative live DB values.
-      // When base has >1 entries, drop the last and replace it with live values.
-      // When base has exactly 1 entry (fallback path), append Q2 with live values.
+      // When base has >1 entries, drop the last and replace it with the current quarter label.
+      // Using currentQuarterLabel() (not the static entry's label) ensures the chart X-axis
+      // stays accurate after a calendar quarter rolls over.
       const withoutLast = base.length > 1 ? base.slice(0, -1) : base;
-      const lastPeriod = base.length > 1 ? (base[base.length - 1]?.period ?? currentQuarterLabel()) : currentQuarterLabel();
+      const lastPeriod = currentQuarterLabel();
       const sorted = [
         ...withoutLast,
         { period: lastPeriod, e: co.esg_environmental ?? 0, s: co.esg_social ?? 0, g: co.esg_governance ?? 0 },
@@ -578,9 +584,9 @@ export async function fetchCompaniesFromSupabase(): Promise<Company[]> {
 
     if (!cos || cos.length === 0) return [];
 
-    // Don't cache when child queries failed — a partial result (companies with no engagements/issues)
-    // would suppress overdue badges and alert panels for the full 500 ms TTL window.
-    const partialResult = !!(engsErr || misErr);
+    // Don't cache when any query failed — a partial result would suppress overdue badges,
+    // alert panels, or hide companies entirely for the full 500 ms TTL window.
+    const partialResult = !!(cosErr || engsErr || misErr);
 
     const companies: Company[] = [];
     const seenSlugs = new Set<string>();
