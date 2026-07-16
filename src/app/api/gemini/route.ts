@@ -45,7 +45,9 @@ function validateContext(type: GenerationType, ctx: Record<string, unknown>): bo
     return typeof ctx.portfolioSummary === "string" && ctx.portfolioSummary.trim().length > 0;
   }
   if (type === "engagement_questions") {
-    return ["name", "sector", "maturity", "country"].every((k) => typeof ctx[k] === "string" && (ctx[k] as string).trim().length > 0);
+    // Required: name/sector/maturity/country (structural); transitionRisk/natureRisk (risk context)
+    const required = ["name", "sector", "maturity", "country", "transitionRisk", "natureRisk"];
+    return required.every((k) => typeof ctx[k] === "string" && (ctx[k] as string).trim().length > 0);
   }
   return false;
 }
