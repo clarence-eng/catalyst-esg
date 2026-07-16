@@ -91,17 +91,15 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
   // which is correct: the browser decodes &amp; → & when rendering innerHTML.
   function renderInline(s: string): string {
     return escapeHtml(s)
-      .replace(/\*{3}(.+?)\*{3}/g, '<strong class="text-gray-900 font-semibold"><em class="text-gray-800">$1</em></strong>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong class="text-gray-900 font-semibold">$1</strong>')
-      .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-gray-800">$1</em>')
-      // Markdown [text](url) links — must run before bare-URL step so the URL inside () is consumed.
-      // The bare-URL step below uses a negative lookbehind (?<!href=") to skip URLs already
-      // inside href attribute values produced by this step, preventing double-wrapping.
+      // Markdown links must run BEFORE bold/italic regex so that ** inside URLs is never
+      // converted to <strong> tags that break the URL pattern match.
       .replace(/\[([^\]]+)\]\((https?:\/\/[^\s<>"']+)\)/g, (_, label, url) =>
         `<a href="${safeHref(url)}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${label}</a>`
       )
-      // Bare-URL step: skip URLs already inside href="" or immediately after a tag close (>)
-      // to prevent double-wrapping when the markdown-link step above already produced <a>url</a>
+      .replace(/\*{3}(.+?)\*{3}/g, '<strong class="text-gray-900 font-semibold"><em class="text-gray-800">$1</em></strong>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong class="text-gray-900 font-semibold">$1</strong>')
+      .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-gray-800">$1</em>')
+      // Bare-URL step: skip URLs already inside href="" to prevent double-wrapping
       .replace(/(?<![>"=])(https?:\/\/[^\s<>"'*]+)/g, (rawUrl) => {
         // Strip trailing punctuation that belongs to the surrounding sentence, not the URL.
         let url = rawUrl.replace(/[.,;:!?]+$/, "");
@@ -111,7 +109,10 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
         for (const ch of url) { if (ch === "(") open++; else if (ch === ")") close++; }
         let suffix = "";
         while (close > open && url.endsWith(")")) { url = url.slice(0, -1); close--; suffix += ")"; }
-        return `<a href="${safeHref(url)}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${escapeHtml(url)}</a>${suffix}`;
+        // url is already HTML-entity-encoded by the outer escapeHtml(s) pass — use it
+        // directly as display text; calling escapeHtml(url) again would double-encode
+        // entities like &amp; → &amp;amp; producing corrupted anchor text.
+        return `<a href="${safeHref(url)}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${url}</a>${suffix}`;
       });
   }
 
@@ -145,9 +146,8 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       flushList();
       const content = line.replace(/^#{1,3}\s*/, "").replace(/^\*\*|\*\*$/g, "");
       elements.push(
-        <div key={key++} className="text-sm font-semibold text-gray-900 mt-4 mb-1.5">
-          {content}
-        </div>
+        <div key={key++} className="text-sm font-semibold text-gray-900 mt-4 mb-1.5"
+          dangerouslySetInnerHTML={{ __html: renderInline(content) }} />
       );
       continue;
     }
