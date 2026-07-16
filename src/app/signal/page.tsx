@@ -113,7 +113,7 @@ export default function SignalPage() {
 
       {/* Regulatory Compliance Timeline — respects urgency tab selection */}
       <div className="mb-8">
-        <h2 className="text-sm font-semibold text-gray-900 mb-2">
+        <h2 id="compliance-tracker-heading" className="text-sm font-semibold text-gray-900 mb-2">
           Compliance Deadline Tracker
           {urgencyView !== "all" && <span className="ml-2 text-xs font-normal text-gray-500">· {urgencyView} urgency only</span>}
         </h2>
@@ -128,8 +128,7 @@ export default function SignalPage() {
               return <div className="py-8 text-center text-sm text-gray-500">No {urgencyView} urgency regulations match the current filters.</div>;
             }
             return (
-              <table className="w-full min-w-[700px] text-xs">
-                <caption className="sr-only">Compliance Deadline Tracker</caption>
+              <table className="w-full min-w-[700px] text-xs" aria-labelledby="compliance-tracker-heading">
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-100">
                     <th scope="col" className="text-left px-5 py-2 font-medium text-gray-500 w-28">Deadline</th>
@@ -156,7 +155,7 @@ export default function SignalPage() {
                   }`}>{r.effectiveDate}</div>
                 </td>
                 <td className="px-2 py-3 align-top min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
+                  <div className="flex items-center gap-2">
                     <span className="text-sm font-medium text-gray-900">{r.title}</span>
                     <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
                       r.urgency === "High" ? "text-red-700 bg-red-100" :
