@@ -245,7 +245,7 @@ export default function ScoutPage() {
       {filtered.length === 0 && !companiesLoading && (
         <div className="text-center py-12">
           <div className="text-gray-500 text-sm mb-3">No companies match your filters</div>
-          {(query || statusFilter !== "All") && (
+          {(query.trim() || statusFilter !== "All") && (
             <button
               type="button"
               onClick={() => { setQuery(""); setStatusFilter("All"); }}
@@ -335,14 +335,16 @@ export default function ScoutPage() {
                     <span className="text-gray-700">{co.sasbCategory}</span>
                   </div>
                   <div className="text-xs text-gray-500">
-                    Megatrend: <button
-                      type="button"
+                    Megatrend: <span
+                      role="button"
+                      tabIndex={0}
                       aria-label={`View ${co.temasekMegatrend} megatrend signal`}
-                      className={`text-xs ${MEGATREND_COLORS[co.temasekMegatrend] ?? "text-gray-600"} hover:underline`}
+                      className={`text-xs cursor-pointer ${MEGATREND_COLORS[co.temasekMegatrend] ?? "text-gray-600"} hover:underline`}
                       onClick={e => { e.preventDefault(); e.stopPropagation(); router.push(`/signal/${MEGATREND_SLUGS[co.temasekMegatrend] ?? "climate-transition"}`); }}
+                      onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); router.push(`/signal/${MEGATREND_SLUGS[co.temasekMegatrend] ?? "climate-transition"}`); } }}
                     >
                       {co.temasekMegatrend}
-                    </button>
+                    </span>
                   </div>
                   {/* Green Revenue bar */}
                   <div className="flex items-center gap-2">
