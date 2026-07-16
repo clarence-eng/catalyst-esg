@@ -49,7 +49,7 @@ export function PortfolioTrend({ data, activeCount, periodNote }: { data: TrendP
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-sm font-semibold text-gray-900">Portfolio ESG Trajectory</h2>
-          <p className="text-xs text-gray-500 mt-0.5">Average E/S/G across {activeCount} active companies · {data[0].period} – {data[data.length - 1].period}{periodNote && <span className="ml-1 text-gray-400">({periodNote})</span>}</p>
+          <p className="text-xs text-gray-500 mt-0.5">Average E/S/G across {activeCount} active {activeCount === 1 ? "company" : "companies"} · {data[0].period} – {data[data.length - 1].period}{periodNote && <span className="ml-1 text-gray-400">({periodNote})</span>}</p>
         </div>
         <div className="flex items-center gap-4">
           {[
