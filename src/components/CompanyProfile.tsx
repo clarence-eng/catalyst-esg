@@ -990,7 +990,7 @@ function ClimateTab({ co }: { co: Company }) {
       pillar: "Governance",
       desc: "Board oversight of climate risks and opportunities",
       status: co.boardComposition.esgCommittee ? "Adopted" as const :
-              co.boardComposition.ceoChairSplit ? "Partial" as const : "Gap" as const,
+              co.boardComposition.auditCommittee ? "Partial" as const : "Gap" as const,
     },
     {
       pillar: "Strategy",
@@ -1012,15 +1012,13 @@ function ClimateTab({ co }: { co: Company }) {
     },
   ];
 
-  // Use sasbCategory for precise financial sector detection — more reliable than sector string keywords
-  const isFinancialSector = co.sasbCategory.toLowerCase().includes("bank") || co.sasbCategory.toLowerCase().includes("financ") || co.sasbCategory.toLowerCase().includes("insurance") || co.sasbCategory.toLowerCase().includes("asset") || co.sasbCategory.toLowerCase().includes("capital") || co.sasbCategory.toLowerCase().includes("invest") || co.sasbCategory.toLowerCase().includes("securit");
   const hasPhysicalRisk = (co.climateRisk.physicalDetails ?? []).length > 0 || co.climateRisk.physical !== "Low";
   const issbChecks = [
     { item: "Board climate oversight documented", status: co.boardComposition.esgCommittee ? "✓" : "✗", pass: co.boardComposition.esgCommittee, applicable: true },
     { item: "Climate scenario analysis (≥2 scenarios)", status: (co.climateRisk.pathwayAlignment === "1.5°C" || co.climateRisk.pathwayAlignment === "2°C") && co.netZeroCommitment !== "None" ? "✓" : co.climateRisk.pathwayAlignment !== "Not assessed" && co.netZeroCommitment !== "None" ? "Partial" : "✗", pass: (co.climateRisk.pathwayAlignment === "1.5°C" || co.climateRisk.pathwayAlignment === "2°C") && co.netZeroCommitment !== "None", applicable: true },
     { item: "Physical risk quantification", status: (co.climateRisk.physicalDetails ?? []).length > 0 ? "✓" : "✗", pass: (co.climateRisk.physicalDetails ?? []).length > 0, applicable: hasPhysicalRisk },
     { item: "Scope 1+2 emissions disclosed", status: co.carbonIntensity > 0 ? "✓" : "✗", pass: co.carbonIntensity > 0, applicable: true },
-    { item: "Scope 3 / financed emissions assessed", status: co.materialIssues.some(i => { if (i.opportunity) return false; const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }) ? "✓" : "✗", pass: co.materialIssues.some(i => { if (i.opportunity) return false; const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }), applicable: isFinancialSector || co.sector.toLowerCase().includes("electric") || co.sector.toLowerCase().includes("energy") },
+    { item: "Scope 3 / financed emissions assessed", status: co.materialIssues.some(i => { const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }) ? "✓" : "✗", pass: co.materialIssues.some(i => { const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }), applicable: true },
     { item: "Climate-related targets set", status: co.netZeroCommitment !== "None" ? "✓" : "✗", pass: co.netZeroCommitment !== "None", applicable: true },
     { item: "SBTi-validated or equivalent pathway", status: co.netZeroCommitment === "SBTi Targets Set" ? "✓" : co.netZeroCommitment === "SBTi Committed" ? "In Progress" : "✗", pass: co.netZeroCommitment === "SBTi Targets Set", applicable: true },
   ];
@@ -1123,7 +1121,7 @@ function ClimateTab({ co }: { co: Company }) {
               : co.netZeroCommitment === "SBTi Committed"
               ? (co.climateRisk.pathwayAlignment === "1.5°C" ? "50% reduction target by 2030 (pending validation)" : "~30% reduction target by 2030 (pending validation, WB2°C pathway)")
               : `Target needed — current pathway: ${co.climateRisk.pathwayAlignment}`, status: co.netZeroCommitment !== "None" ? (co.netZeroCommitment === "SBTi Targets Set" ? "committed" : "planned") : "gap" },
-            { year: "2050", label: "Net Zero", event: co.netZeroCommitment !== "None" ? "Net zero by 2050 (committed)" : "No net zero commitment", status: co.netZeroCommitment !== "None" ? "committed" : "gap" },
+            { year: "2050", label: "Net Zero", event: co.netZeroCommitment === "SBTi Targets Set" ? "Net zero by 2050 (SBTi validated)" : co.netZeroCommitment === "SBTi Committed" ? "Net zero by 2050 (SBTi in progress)" : co.netZeroCommitment === "Net Zero Pledged" ? "Net zero by 2050 (unvalidated pledge)" : "No net zero commitment", status: (co.netZeroCommitment === "SBTi Targets Set" || co.netZeroCommitment === "SBTi Committed") ? "committed" : co.netZeroCommitment === "Net Zero Pledged" ? "planned" : "gap" },
           ];
           return (
             <div className="relative">
