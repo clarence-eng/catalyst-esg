@@ -32,6 +32,10 @@ export function Navigation() {
 
   return (
     <aside className="fixed left-0 top-0 h-full w-64 bg-[#F9F8FA] border-r border-gray-200 flex flex-col z-50 text-gray-800">
+      {/* sr-only live region — announces overdue count changes proactively to AT on data refresh */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {overdueCount > 0 ? `${overdueCount} overdue engagement${overdueCount !== 1 ? "s" : ""} in portfolio` : ""}
+      </div>
       {/* Brand */}
       <div className="p-5 border-b border-gray-200">
         <div className="flex flex-col gap-1">
