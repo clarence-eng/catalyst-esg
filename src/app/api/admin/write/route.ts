@@ -82,8 +82,9 @@ export async function POST(req: NextRequest) {
   if (!verifyAdminRequest(req)) return forbidden();
 
   // x-real-ip is set by the edge proxy and is trustworthy.
-  // x-forwarded-for is a comma-list; the leftmost entry is the original client IP — use that.
-  // The rightmost entry is the last proxy which can be forged by the client.
+  // x-forwarded-for: the leftmost entry is the original client IP but is CLIENT-CONTROLLABLE
+  // when there is no trusted proxy setting x-real-ip (e.g. dev/misconfigured deployments).
+  // In production on Vercel, x-real-ip is always set and takes priority here.
   const ip = req.headers.get("x-real-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   if (!checkRateLimit(ip)) {
     return NextResponse.json({ error: "Too many requests — please wait before retrying" }, { status: 429 });
@@ -186,7 +187,7 @@ export async function POST(req: NextRequest) {
     if (!company_slug || !SLUG_RE.test(company_slug)) return badRequest("Invalid company_slug");
     const { count: coCount, error: coCountErr } = await sb.from("companies").select("id", { count: "exact", head: true }).eq("slug", company_slug);
     if (coCountErr) return NextResponse.json({ error: "Database error checking company" }, { status: 500 });
-    if (coCount === 0) return badRequest("Company not found");
+    if (!coCount) return badRequest("Company not found");
     const dateStr = typeof e.date === "string" ? e.date : "";
     // Validate ISO format AND calendar validity — /^\d{4}-\d{2}-\d{2}$/ alone accepts '2024-99-99'
     const dateObj = dateStr.match(/^\d{4}-\d{2}-\d{2}$/) ? new Date(`${dateStr}T00:00:00`) : null;
@@ -229,7 +230,7 @@ export async function POST(req: NextRequest) {
     if (!company_slug || !SLUG_RE.test(company_slug)) return badRequest("Invalid company_slug");
     const { count: coCount2, error: coCount2Err } = await sb.from("companies").select("id", { count: "exact", head: true }).eq("slug", company_slug);
     if (coCount2Err) return NextResponse.json({ error: "Database error checking company" }, { status: 500 });
-    if (coCount2 === 0) return badRequest("Company not found");
+    if (!coCount2) return badRequest("Company not found");
     const issue = sanitizeString(i.issue, 500).trim();
     if (!issue) return badRequest("issue name required");
     const VALID_SEV = ["Critical", "High", "Medium", "Low"];
