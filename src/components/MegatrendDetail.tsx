@@ -253,9 +253,9 @@ export function MegatrendDetail({ trend: t }: { trend: Megatrend }) {
                 const allPortfolioSlugs = new Set([...activeSlugs, ...pipelineSlugs]);
                 const lowCount = t.portfolioExposure.filter(p => p.exposure === "Low" && allPortfolioSlugs.has(p.slug)).length;
                 return lowCount > 0 ? (
-                  <div className="text-xs text-gray-500 pt-1 border-t border-gray-100">
+                  <li role="presentation" className="text-xs text-gray-500 pt-1 border-t border-gray-100">
                     +{lowCount} low-exposure {lowCount === 1 ? "company" : "companies"}
-                  </div>
+                  </li>
                 ) : null;
               })()}
             </ul>

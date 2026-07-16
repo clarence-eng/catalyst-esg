@@ -128,8 +128,8 @@ export default function SignalPage() {
               return <div className="py-8 text-center text-sm text-gray-500">No {urgencyView} urgency regulations match the current filters.</div>;
             }
             return (
-              <table className="w-full text-xs" aria-labelledby="compliance-tracker-heading">
-                <caption id="compliance-tracker-heading" className="sr-only">Compliance Deadline Tracker</caption>
+              <table className="w-full text-xs">
+                <caption className="sr-only">Compliance Deadline Tracker</caption>
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-100">
                     <th scope="col" className="text-left px-5 py-2 font-medium text-gray-500 w-28">Deadline</th>

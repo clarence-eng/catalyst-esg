@@ -204,6 +204,8 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 transition-colors">
+      {/* h3 outside role="button" so AT heading-nav can reach it; button aria-label provides AT name */}
+      <h3 className="sr-only"><Highlight text={f.name} query={query} /></h3>
       <div className="flex items-center">
         <div
           className="flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-50 transition-colors rounded-lg flex-1 min-w-0"
@@ -220,7 +222,7 @@ function FrameworkRow({ framework: f, query }: { framework: (typeof frameworks)[
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-0.5">
-              <h3 className="text-sm font-medium text-gray-900 truncate"><Highlight text={f.name} query={query} /></h3>
+              <span className="text-sm font-medium text-gray-900 truncate" aria-hidden="true"><Highlight text={f.name} query={query} /></span>
               <span className={`text-xs px-1.5 py-0.5 rounded border flex-shrink-0 ${statusStyles[f.status] ?? "text-gray-600 bg-gray-100 border-gray-200"}`}>{f.status}</span>
             </div>
             <div className="flex items-center gap-2">
