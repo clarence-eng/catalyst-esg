@@ -1772,18 +1772,25 @@ function Metric({ label, value }: { label: string; value: string }) {
 
 function SDGBadge({ sdg, label }: { sdg: number; label: string }) {
   const sdgColors: Record<number, string> = {
-    2: "bg-[#DDA63A]",
-    3: "bg-[#4C9F38]",
-    7: "bg-[#FCC30B]",
-    8: "bg-[#A21942]",
-    9: "bg-[#FD6925]",
-    10: "bg-[#DD1367]",
-    13: "bg-[#3F7E44]",
-    14: "bg-[#0A97D9]",
-    15: "bg-[#56C02B]",
+    1: "bg-[#E5243B]",   // No Poverty
+    2: "bg-[#DDA63A]",   // Zero Hunger
+    3: "bg-[#4C9F38]",   // Good Health
+    4: "bg-[#C5192D]",   // Quality Education
+    5: "bg-[#FF3A21]",   // Gender Equality
+    6: "bg-[#26BDE2]",   // Clean Water
+    7: "bg-[#FCC30B]",   // Affordable Energy
+    8: "bg-[#A21942]",   // Decent Work
+    9: "bg-[#FD6925]",   // Industry/Innovation
+    10: "bg-[#DD1367]",  // Reduced Inequalities
+    11: "bg-[#FD9D24]",  // Sustainable Cities
+    12: "bg-[#BF8B2E]",  // Responsible Consumption
+    13: "bg-[#3F7E44]",  // Climate Action
+    14: "bg-[#0A97D9]",  // Life Below Water
+    15: "bg-[#56C02B]",  // Life on Land
+    16: "bg-[#00689D]",  // Peace/Justice
+    17: "bg-[#19486A]",  // Partnerships
   };
-  // Light-colored SDG backgrounds need dark text for WCAG contrast
-  const darkTextSdgs = new Set([2, 7, 9, 15]);
+  const darkTextSdgs = new Set([2, 7, 9, 11, 12, 15]);
   const bg = sdgColors[sdg] ?? "bg-slate-600";
   const textClass = darkTextSdgs.has(sdg) ? "text-gray-900" : "text-white";
   return (
