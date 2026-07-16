@@ -15,6 +15,33 @@ function escapeHtml(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
+// Decode only the HTML entities that escapeHtml produces, then re-encode for safe href attribute use.
+// This prevents &quot; in a Gemini-supplied URL from terminating the href="" attribute (XSS vector).
+function safeHref(escapedUrl: string): string {
+  // Decode the entities escapeHtml() introduced
+  const raw = escapedUrl
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+  // Only allow http/https URLs; reject anything else (javascript:, data:, etc.)
+  if (!/^https?:\/\//i.test(raw)) return "#";
+  // Re-escape the entire URL for safe insertion into href="..."
+  // encodeURI preserves valid URL chars; then escape the remaining HTML-special chars.
+  try {
+    const encoded = encodeURI(decodeURI(raw));
+    return encoded
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  } catch {
+    return "#";
+  }
+}
+
 export function AIOutput({ text, className = "" }: AIOutputProps) {
   const lines = text
     .replace(/\r\n/g, "\n")
@@ -71,7 +98,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
       // The bare-URL step below uses a negative lookbehind (?<!href=") to skip URLs already
       // inside href attribute values produced by this step, preventing double-wrapping.
       .replace(/\[([^\]]+)\]\((https?:\/\/[^\s<>"']+)\)/g, (_, label, url) =>
-        `<a href="${url.replace(/&amp;/g, '&')}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${label}</a>`
+        `<a href="${safeHref(url)}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${label}</a>`
       )
       // Bare-URL step: skip URLs already inside href="" or immediately after a tag close (>)
       // to prevent double-wrapping when the markdown-link step above already produced <a>url</a>
@@ -84,7 +111,7 @@ export function AIOutput({ text, className = "" }: AIOutputProps) {
         for (const ch of url) { if (ch === "(") open++; else if (ch === ")") close++; }
         let suffix = "";
         while (close > open && url.endsWith(")")) { url = url.slice(0, -1); close--; suffix += ")"; }
-        return `<a href="${url.replace(/&amp;/g, '&')}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${url}</a>${suffix}`;
+        return `<a href="${safeHref(url)}" target="_blank" rel="noopener noreferrer" class="text-purple-700 underline break-all">${escapeHtml(url)}</a>${suffix}`;
       });
   }
 

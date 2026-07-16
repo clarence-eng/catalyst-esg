@@ -30,9 +30,10 @@ function sanitizeBlock(value: unknown, maxLen = 5000): string {
 function validateContext(type: GenerationType, ctx: Record<string, unknown>): boolean {
   if (type === "deal_memo") {
     const strOk = ["name", "sector", "country", "rating", "maturity"].every((k) => typeof ctx[k] === "string" && (ctx[k] as string).trim().length > 0);
+    // Require numeric scores — reject objects, booleans, arrays which produce "[object Object]" or "false" in the prompt
     const numOk = ["overallScore", "eScore", "sScore", "gScore"].every((k) => {
       const v = ctx[k];
-      return v !== undefined && v !== null && v !== "" && v !== "null" && v !== "undefined";
+      return (typeof v === "number" && isFinite(v)) || (typeof v === "string" && v.trim() !== "" && !isNaN(Number(v)));
     });
     return strOk && numOk;
   }

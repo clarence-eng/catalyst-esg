@@ -13,10 +13,12 @@ function LearnContent() {
   // Initialize from URL param immediately (lazy initializer) — prevents flash of unfiltered results
   const [searchQuery, setSearchQuery] = useState(() => searchParams.get("q") ?? "");
 
-  // Sync when searchParams changes via client-side navigation (e.g. back/forward)
+  // Sync when searchParams changes via client-side navigation (e.g. back/forward).
+  // Guard with prev-value check to avoid a redundant re-render on mount when the lazy
+  // initializer already captured the correct value.
   useEffect(() => {
-    const q = searchParams.get("q");
-    setSearchQuery(q ?? "");
+    const q = searchParams.get("q") ?? "";
+    setSearchQuery(prev => prev !== q ? q : prev);
   }, [searchParams]);
 
   const q = searchQuery.trim().toLowerCase();

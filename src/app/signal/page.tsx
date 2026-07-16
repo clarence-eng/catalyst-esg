@@ -169,9 +169,10 @@ export default function SignalPage() {
                   {(() => {
                     const activeCount = r.portfolioImpact?.filter(s => activePortfolioSlugs.has(s)).length ?? 0;
                     if (!activeCount) return "";
-                    const total = r.portfolioImpact?.length ?? 0;
-                    const pipeline = total - activeCount;
-                    return `${activeCount} co${activeCount > 1 ? "s" : ""}${pipeline > 0 ? `+${pipeline}p` : ""}`;
+                    // Count only slugs that are actually pipeline-status — not all non-active slugs
+                    // (which could include exited holdings or data errors)
+                    const pipelineCount = r.portfolioImpact?.filter(s => pipelinePortfolioSlugs.has(s)).length ?? 0;
+                    return `${activeCount} co${activeCount > 1 ? "s" : ""}${pipelineCount > 0 ? `+${pipelineCount}p` : ""}`;
                   })()}
                 </td>
               </tr>
