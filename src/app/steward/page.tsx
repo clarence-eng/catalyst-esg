@@ -273,9 +273,9 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
         body: JSON.stringify({
           type: "action_plan",
           context: {
-            name: co.name,
-            sector: co.sector,
-            country: co.country,
+            name: displayName(co.name),
+            sector: co.sector || "Unknown",
+            country: co.country || "Unknown",
             maturity: co.maturity,
             esgScore: `Overall ${co.esgScore.overall}/100 (E:${co.esgScore.environmental} S:${co.esgScore.social} G:${co.esgScore.governance})`,
             transitionRisk: co.climateRisk.transition,
