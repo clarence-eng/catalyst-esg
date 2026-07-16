@@ -1014,7 +1014,9 @@ function ClimateTab({ co }: { co: Company }) {
           <RiskBadge level={co.climateRisk.physical} />
         </div>
         <ul className="space-y-3">
-          {co.climateRisk.physicalDetails.map((d, i) => (
+          {co.climateRisk.physicalDetails.length === 0
+            ? <li className="text-xs text-gray-500 italic">No physical risk details on record for this company.</li>
+            : co.climateRisk.physicalDetails.map((d, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-gray-600">
               <div className="w-1.5 h-1.5 rounded-full bg-orange-400 mt-1.5 flex-shrink-0" />
               {d}
@@ -1028,7 +1030,9 @@ function ClimateTab({ co }: { co: Company }) {
           <RiskBadge level={co.climateRisk.transition} />
         </div>
         <ul className="space-y-3">
-          {co.climateRisk.transitionDetails.map((d, i) => (
+          {co.climateRisk.transitionDetails.length === 0
+            ? <li className="text-xs text-gray-500 italic">No transition risk details on record for this company.</li>
+            : co.climateRisk.transitionDetails.map((d, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-gray-600">
               <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 flex-shrink-0" />
               {d}
