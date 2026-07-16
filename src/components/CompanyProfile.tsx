@@ -847,7 +847,7 @@ function OverviewTab({
         {/* ESG Radar */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-3">ESG Profile Radar</h3>
-          <div role="img" aria-label={`ESG profile radar for ${co.name}: Environmental ${co.esgScore.environmental}, Social ${co.esgScore.social}, Governance ${co.esgScore.governance}, Climate Resilience ${radarData[3]?.score ?? 0} (${co.climateRisk.pathwayAlignment}), Nature Resilience ${radarData[4]?.score ?? 0}`}>
+          <div role="img" aria-label={`ESG profile radar for ${co.name}: Environmental ${co.esgScore.environmental}, Social ${co.esgScore.social}, Governance ${co.esgScore.governance}, Climate Resilience ${radarData.find(d => d.subject.startsWith("Climate"))?.score ?? 0} (${co.climateRisk.pathwayAlignment}), Nature Resilience ${radarData.find(d => d.subject.startsWith("Nature"))?.score ?? 0}`}>
           <ResponsiveContainer width="100%" height={240}>
             <RadarChart data={radarData}>
               <PolarGrid stroke="rgba(0,0,0,0.08)" />
@@ -1633,7 +1633,7 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
           <div className="flex-1 min-w-[180px]">
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-xs text-gray-600 font-medium">Completion Rate</span>
-              <span className="text-xs text-gray-700 font-semibold">{completed}/{ringTotal} ({completionPct}%){overdue > 0 ? <span className="ml-1 text-red-600">· {overdue} overdue</span> : null}</span>
+              <span className="text-xs text-gray-700 font-semibold">{ringTotal > 0 ? `${completed}/${ringTotal} (${completionPct}%)` : "—"}{overdue > 0 ? <span className="ml-1 text-red-600">· {overdue} overdue</span> : null}</span>
             </div>
             <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
@@ -1734,8 +1734,9 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
             <div className="mt-3 flex items-center">
               <button
                 type="button"
+                disabled={questionsLoading}
                 onClick={async () => { const ok = await copyToClipboard(questions); if (ok) { setQuestionsCopied(true); setTimeout(() => setQuestionsCopied(false), 2000); } }}
-                className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
+                className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <Copy className="w-3 h-3" />
                 {questionsCopied ? "Copied!" : "Copy question pack"}
