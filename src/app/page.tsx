@@ -150,7 +150,7 @@ export default function OverviewPage() {
 
   const portfolioSummary = activeCompanies.map((c) => {
     const topIssue = [...c.materialIssues]
-      .filter((i) => !i.opportunity)
+      .filter((i) => !i.opportunity && i.issue.trim() !== "")
       .sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4))[0];
     return (
       `${displayName(c.name)} (${c.sector || "Unknown"}, ${c.country || "Unknown"}): ESG ${c.esgScore.overall}/100 [E:${c.esgScore.environmental} S:${c.esgScore.social} G:${c.esgScore.governance}], ` +

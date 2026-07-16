@@ -129,6 +129,9 @@ export function CompanyProfile({ company: co }: { company: Company }) {
             topUplift,
             carbonIntensity: co.carbonIntensity,
             greenRevenuePct: co.greenRevenuePct,
+            icVerdict: co.icRecommendation?.verdict ?? null,
+            icEsgGating: co.icRecommendation?.esgGating ?? null,
+            icConditions: co.icRecommendation?.conditions.join("; ") ?? null,
           },
         }),
       });

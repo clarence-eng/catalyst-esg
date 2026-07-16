@@ -120,7 +120,7 @@ Nature Risk: ${sanitize(ctx.natureRisk)}
 Top Material Issues: ${sanitize(ctx.topIssues, 500)}
 Key Value Uplift: ${sanitize(ctx.topUplift, 300)}
 Carbon Intensity: ${sanitize(ctx.carbonIntensity)} tCO2e/$M revenue
-Green Revenue: ${sanitize(ctx.greenRevenuePct)}% of total revenue`;
+Green Revenue: ${sanitize(ctx.greenRevenuePct)}% of total revenue${ctx.icVerdict ? `\nIC Recommendation: ${sanitize(ctx.icVerdict)}${ctx.icEsgGating ? ` | ESG Gating: ${sanitize(ctx.icEsgGating)}` : ""}${ctx.icConditions ? ` | Conditions: ${sanitize(ctx.icConditions, 300)}` : ""}` : ""}`;
     } else if (type === "action_plan") {
       systemInstruction = `You are a senior ESG engagement specialist at Temasek.
 Generate a 12-month ESG Action Plan for the portfolio company described in the user message.
