@@ -498,7 +498,7 @@ function dbToCompany(
     // to live Supabase scores so there's no discontinuity between chart and score card
     historicalScores: (() => {
       const base = enrichment?.historicalScores ?? [
-        { period: "Q1 2026", e: Math.max(0, co.esg_environmental - 2), s: Math.max(0, co.esg_social - 1), g: Math.max(0, co.esg_governance - 2) },
+        { period: "Q1 2026", e: Math.max(0, (co.esg_environmental ?? 0) - 2), s: Math.max(0, (co.esg_social ?? 0) - 1), g: Math.max(0, (co.esg_governance ?? 0) - 2) },
       ];
       // Always ensure the last period reflects the authoritative live DB values.
       // When base has >1 entries, drop the last and replace it with live values.
@@ -507,7 +507,7 @@ function dbToCompany(
       const lastPeriod = base.length > 1 ? (base[base.length - 1]?.period ?? "Q2 2026") : "Q2 2026";
       const sorted = [
         ...withoutLast,
-        { period: lastPeriod, e: co.esg_environmental, s: co.esg_social, g: co.esg_governance },
+        { period: lastPeriod, e: co.esg_environmental ?? 0, s: co.esg_social ?? 0, g: co.esg_governance ?? 0 },
       ].sort((a, b) => {
         const [aq, ay] = (a.period.match(/Q(\d) (\d{4})/) ?? ["", "0", "0"]).slice(1).map(Number);
         const [bq, by] = (b.period.match(/Q(\d) (\d{4})/) ?? ["", "0", "0"]).slice(1).map(Number);
@@ -515,14 +515,17 @@ function dbToCompany(
       });
       return sorted;
     })(),
-    boardComposition: enrichment?.boardComposition ?? {
-      boardSize: 8,
-      independentPct: co.esg_governance >= 65 ? 63 : co.esg_governance >= 50 ? 50 : 38,
-      womenPct: co.esg_governance >= 65 ? 38 : 25,
-      ceoChairSplit: co.esg_governance >= 60,
-      auditCommittee: co.esg_governance >= 50,
-      esgCommittee: co.esg_governance >= 65,
-    },
+    boardComposition: enrichment?.boardComposition ?? (() => {
+      const govScore = co.esg_governance ?? 0;
+      return {
+        boardSize: 8,
+        independentPct: govScore >= 65 ? 63 : govScore >= 50 ? 50 : 38,
+        womenPct: govScore >= 65 ? 38 : 25,
+        ceoChairSplit: govScore >= 60,
+        auditCommittee: govScore >= 50,
+        esgCommittee: govScore >= 65,
+      };
+    })(),
     valueUplift: enrichment?.valueUplift ?? [],
     sdgAlignment: enrichment?.sdgAlignment ?? [],
     icRecommendation: enrichment?.icRecommendation,

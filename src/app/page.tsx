@@ -92,11 +92,13 @@ export default function OverviewPage() {
     : 0;
   const highRisk = activeCompanies.filter((c) => ["High", "Critical"].includes(c.climateRisk.transition)).length;
   // Carbon intensity: investment-weighted avg excluding electric utilities (segmented separately in carbon reporting)
+  // Only include companies that have disclosed carbon intensity AND have investment value set (same guard as PCAF table)
   const utilityCompanies = activeCompanies.filter((c) => c.sector.includes("Electric Utilit"));
   const nonUtilityActive = activeCompanies.filter((c) => !c.sector.includes("Electric Utilit"));
-  const totalNonUtility = nonUtilityActive.reduce((s, c) => s + c.investmentValue, 0);
-  const avgCarbonIntensity = totalNonUtility > 0
-    ? Math.round(nonUtilityActive.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalNonUtility)
+  const nonUtilityDisclosing = nonUtilityActive.filter((c) => c.carbonIntensity > 0 && c.investmentValue > 0);
+  const totalNonUtilityDisclosing = nonUtilityDisclosing.reduce((s, c) => s + c.investmentValue, 0);
+  const avgCarbonIntensity = totalNonUtilityDisclosing > 0
+    ? Math.round(nonUtilityDisclosing.reduce((s, c) => s + c.carbonIntensity * c.investmentValue, 0) / totalNonUtilityDisclosing)
     : null;
   // Full weighted avg for AI context (more informative with the outlier noted)
   const avgCarbonIntensityFull = totalActiveAUM > 0
@@ -254,7 +256,7 @@ export default function OverviewPage() {
           )}
         </div>
         <StatCard label="Transition Risk Flags" value={highRisk} sub="High or Critical exposure" color="amber" />
-        <StatCard label="Avg Carbon Intensity" value={avgCarbonIntensity !== null ? `${avgCarbonIntensity}` : "N/A"} sub={avgCarbonIntensity !== null ? "tCO₂e/$M revenue · ex-utilities weighted avg" : activeCompanies.length === 0 ? "No active companies in portfolio" : "All active companies are electric utilities — reported separately"} color="default" />
+        <StatCard label="Avg Carbon Intensity" value={avgCarbonIntensity !== null ? `${avgCarbonIntensity}` : "N/A"} sub={avgCarbonIntensity !== null ? "tCO₂e/$M revenue · ex-utilities, disclosed only" : activeCompanies.length === 0 ? "No active companies in portfolio" : nonUtilityActive.length === 0 ? "All active companies are electric utilities — reported separately" : "No carbon intensity data disclosed by non-utility active companies"} color="default" />
         <StatCard label="Overdue Engagements" value={overdueCount} sub="Requires immediate follow-up" color="red" />
         <StatCard label="Planned Engagements" value={plannedCount} sub="Upcoming" color="default" />
       </div>
