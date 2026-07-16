@@ -238,7 +238,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
   const issueFingerprint = co.materialIssues.filter(i => !i.opportunity).map(i => `${i.issue}:${i.severity}`).join("|");
   const engFingerprint = co.engagement.map(e => `${e.topic ?? ""}:${e.status}`).join("|");
   const upliftFingerprint = co.valueUplift.map(v => `${v.area}:${v.potential}`).join("|");
-  const planKey = `${co.slug}:${co.esgScore.overall}:${co.maturity}:${co.sector}:${co.country}:${co.carbonIntensity}:${co.climateRisk.transition}:${co.natureRisk.overall}:${co.natureRisk.tnfdAligned}:${co.netZeroCommitment}:${co.greenRevenuePct}:${issueFingerprint}:${engFingerprint}:${upliftFingerprint}`;
+  const planKey = `${co.slug}:${co.esgScore.overall}:${co.esgScore.environmental}:${co.esgScore.social}:${co.esgScore.governance}:${co.maturity}:${co.sector}:${co.country}:${co.carbonIntensity}:${co.climateRisk.transition}:${co.climateRisk.physical}:${co.natureRisk.overall}:${co.natureRisk.tnfdAligned}:${co.netZeroCommitment}:${co.greenRevenuePct}:${issueFingerprint}:${engFingerprint}:${upliftFingerprint}`;
   const prevPlanKeyRef = useRef(planKey);
   useEffect(() => {
     if (prevPlanKeyRef.current !== planKey) {
@@ -275,12 +275,17 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
         .slice(0, 3)
         .map((i) => `${i.issue} (${i.severity})`)
         .join(", ") || "No specific risk issues identified — focus on value creation and governance uplift";
+      const greenSector = co.sector.toLowerCase();
+      const isInherentlyGreen = greenSector.includes("electric util") || greenSector.includes("renewable") || greenSector.includes("solar") || greenSector.includes("wind") || greenSector.includes("clean energy");
+      // Merge nature risk and TNFD into one gap when both apply — prevents double-weighting TNFD
+      const natureGap = co.natureRisk.overall !== "Low"
+        ? (!co.natureRisk.tnfdAligned ? "Nature risk assessment and TNFD adoption required" : "Nature risk management strengthening")
+        : (!co.natureRisk.tnfdAligned ? "TNFD adoption" : null);
       const keyGapsArr = [
         co.climateRisk.transition !== "Low" && "Climate transition strategy and emissions pathway",
-        co.natureRisk.overall !== "Low" && "Nature risk and TNFD assessment",
-        !co.natureRisk.tnfdAligned && "TNFD adoption",
+        natureGap,
         co.netZeroCommitment === "None" && "No net zero commitment — ISSB S2 readiness gap",
-        co.greenRevenuePct < 20 && !co.sector.includes("Electric Utilit") && "Green revenue development",
+        co.greenRevenuePct < 20 && !isInherentlyGreen && "Green revenue development",
       ].filter(Boolean);
       const keyGaps = keyGapsArr.length > 0
         ? keyGapsArr.join("; ")
@@ -299,6 +304,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
             maturity: co.maturity,
             esgScore: `Overall ${co.esgScore.overall}/100 (E:${co.esgScore.environmental} S:${co.esgScore.social} G:${co.esgScore.governance})`,
             transitionRisk: co.climateRisk.transition,
+            physicalRisk: co.climateRisk.physical,
             carbonIntensity: `${co.carbonIntensity} tCO₂e/$M`,
             greenRevenuePct: `${co.greenRevenuePct}%`,
             netZeroCommitment: co.netZeroCommitment,
