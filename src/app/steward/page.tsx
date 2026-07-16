@@ -192,7 +192,7 @@ export default function StewardPage() {
       )}
 
       {/* Onboarding prompt — shown in both views when there are no active companies */}
-      {sortedActive.length === 0 && !companiesLoading && view === "calendar" && (
+      {sortedActive.length === 0 && !companiesLoading && view === "calendar" && calendarEngagements.length === 0 && (
         <div className="text-sm text-gray-500 text-center py-4 border border-dashed border-gray-200 rounded-xl mb-4">
           No active portfolio companies — add companies via the admin panel or promote a Pipeline company to Active.
         </div>
