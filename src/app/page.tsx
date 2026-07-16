@@ -111,7 +111,8 @@ export default function OverviewPage() {
   const overdueCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Overdue").length, 0);
   const plannedCount = activeCompanies.reduce((s, c) => s + c.engagement.filter(e => e.status === "Planned").length, 0);
 
-  // Build portfolio trend — average E/S/G across active companies per period
+  // Build portfolio trend — investment-weighted E/S/G per period to match the headline avgScore KPI.
+  // Equal-weight averaging would diverge from the KPI for skewed AUM distributions.
   const allPeriods = [...new Set(
     activeCompanies.flatMap((c) => c.historicalScores.map((s) => normalisePeriod(s.period)))
   )].sort((a, b) => {
@@ -120,14 +121,21 @@ export default function OverviewPage() {
     return ay !== by ? ay - by : aq - bq;
   });
   const portfolioTrend = allPeriods.map((period) => {
-    const scores = activeCompanies
-      .map((c) => c.historicalScores.find((s) => normalisePeriod(s.period) === period))
-      .filter(Boolean) as { period: string; e: number; s: number; g: number }[];
+    const entries = activeCompanies
+      .map((c) => {
+        const s = c.historicalScores.find((hs) => normalisePeriod(hs.period) === period);
+        return s ? { s, weight: c.investmentValue } : null;
+      })
+      .filter(Boolean) as { s: { period: string; e: number; s: number; g: number }; weight: number }[];
+    const totalW = entries.reduce((sum, e) => sum + e.weight, 0);
+    // Fall back to equal-weight when no AUM data available (weight=0 for all)
+    const wOrEqual = totalW > 0 ? totalW : entries.length;
+    const wFn = (e: { weight: number }) => totalW > 0 ? e.weight : 1;
     return {
       period,
-      e: scores.length ? Math.round(scores.reduce((sum, s) => sum + s.e, 0) / scores.length) : 0,
-      s: scores.length ? Math.round(scores.reduce((sum, s) => sum + s.s, 0) / scores.length) : 0,
-      g: scores.length ? Math.round(scores.reduce((sum, s) => sum + s.g, 0) / scores.length) : 0,
+      e: entries.length ? Math.round(entries.reduce((sum, e) => sum + e.s.e * wFn(e), 0) / wOrEqual) : 0,
+      s: entries.length ? Math.round(entries.reduce((sum, e) => sum + e.s.s * wFn(e), 0) / wOrEqual) : 0,
+      g: entries.length ? Math.round(entries.reduce((sum, e) => sum + e.s.g * wFn(e), 0) / wOrEqual) : 0,
     };
   });
 
@@ -298,7 +306,7 @@ export default function OverviewPage() {
           <p className="text-xs text-gray-500 mb-4">tCO₂e per S$M revenue — lower is better · IEA ASEAN 2030 target: &lt;500 tCO₂e/$M</p>
           <div className="space-y-2.5">
             {(() => {
-              const maxIntensity = Math.max(...activeCompanies.filter(c => c.carbonIntensity > 0).map(c => c.carbonIntensity), 1);
+              const maxIntensity = activeCompanies.filter(c => c.carbonIntensity > 0).reduce((m, c) => c.carbonIntensity > m ? c.carbonIntensity : m, 1);
               return (
                 <>
                 {[...activeCompanies].sort((a, b) => {
@@ -693,15 +701,14 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
       const q1 = co.historicalScores.find(s => normalisePeriod(s.period) === Q1);
       const q2 = co.historicalScores.find(s => normalisePeriod(s.period) === Q2);
       if (!q1 || !q2) return null;
-      // Use stored overall score delta — this matches the investment-weighted headline KPI.
-      // E/S/G individual components are shown in the pillar breakdown, not here.
       const overall1 = (q1.e + q1.s + q1.g) / 3;
       const overall2 = (q2.e + q2.s + q2.g) / 3;
-      const scoreDelta = Math.round((overall2 - overall1) * 10) / 10;
-      // Weight = portfolio share; falls back to equal-weight when AUM is unavailable
+      // Keep full precision through weight multiplication — round only the final weighted value
+      // to avoid small companies' contributions being rounded to zero before multiplying.
+      const scoreDeltaRaw = overall2 - overall1;
       const weight = totalAUM > 0 ? co.investmentValue / totalAUM : 1 / companies.length;
-      // Weighted contribution: how much this company moved the portfolio-level score
-      const weightedDelta = Math.round(scoreDelta * weight * 10) / 10;
+      const weightedDelta = Math.round(scoreDeltaRaw * weight * 100) / 100;
+      const scoreDelta = Math.round(scoreDeltaRaw * 10) / 10;
       return { name: co.name, slug: co.slug, scoreDelta, weightedDelta, weight };
     })
     .filter((r): r is { name: string; slug: string; scoreDelta: number; weightedDelta: number; weight: number } => r !== null)
@@ -709,7 +716,7 @@ function PortfolioESGAttribution({ companies }: { companies: Company[] }) {
 
   if (rows.length === 0) return null;
 
-  const maxAbs = Math.max(...rows.map(r => Math.abs(r.weightedDelta)), 0.01);
+  const maxAbs = rows.reduce((m, r) => Math.abs(r.weightedDelta) > m ? Math.abs(r.weightedDelta) : m, 0.01);
   const isEqualWeight = totalAUM === 0;
 
   return (
