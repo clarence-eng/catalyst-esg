@@ -231,7 +231,7 @@ export default function OverviewPage() {
             <div className={`h-full rounded-full transition-all ${
               totalActiveAUM === 0 ? "bg-gray-400 opacity-40" :
               avgScore >= 65 ? "bg-emerald-500" : avgScore >= 40 ? "bg-amber-500" : "bg-red-500"
-            }`} style={{ width: totalActiveAUM === 0 ? "100%" : `${avgScore}%` }}
+            }`} style={{ width: totalActiveAUM === 0 ? "0%" : `${avgScore}%` }}
             role="progressbar" aria-valuenow={totalActiveAUM === 0 ? 0 : avgScore} aria-valuemin={0} aria-valuemax={100}
             aria-valuetext={totalActiveAUM === 0 ? "No AUM set" : `${avgScore} out of 100`}
             aria-label={totalActiveAUM === 0 ? "Portfolio ESG Health: no AUM set" : `Portfolio ESG Health: ${avgScore} out of 100`} />
@@ -260,17 +260,15 @@ export default function OverviewPage() {
           <StatCard label="Portfolio ESG Score" value={totalActiveAUM === 0 ? "—" : avgScore} sub={activeCompanies.every(c => c.investmentValue === 0) ? "No AUM set — score not investment-weighted" : activeCompanies.some(c => c.investmentValue === 0) ? "Investment-weighted · some companies have no AUM set" : "Active companies · investment-weighted"} color="green" />
           {(avgDelta !== 0 || eDelta !== 0 || sDelta !== 0 || gDelta !== 0) && (
             <div className="mt-1 flex flex-wrap gap-1">
-              {/* Show avg badge whenever any pillar moved — even if they cancel (avgDelta=0), hiding
-                  that case would mask significant ESG rebalancing from analysts reviewing the KPI */}
-              {(avgDelta !== 0 || eDelta !== 0 || sDelta !== 0 || gDelta !== 0) && (
-                <span className={`text-xs font-medium px-2 py-0.5 rounded border ${
-                  avgDelta > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200"
-                  : avgDelta < 0 ? "text-red-700 bg-red-50 border-red-200"
-                  : "text-gray-600 bg-gray-50 border-gray-200"
-                }`} title={`${deltaLabel} · equal-weight average`}>
-                  {avgDelta > 0 ? `↑ +${avgDelta}` : avgDelta < 0 ? `↓ ${avgDelta}` : `~ 0`} {deltaLabel}
-                </span>
-              )}
+              {/* Always show avg badge when any pillar moved — even if they cancel (avgDelta=0),
+                  hiding it would mask material ESG rebalancing from analysts reviewing the KPI */}
+              <span className={`text-xs font-medium px-2 py-0.5 rounded border ${
+                avgDelta > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+                : avgDelta < 0 ? "text-red-700 bg-red-50 border-red-200"
+                : "text-gray-600 bg-gray-50 border-gray-200"
+              }`} title={`${deltaLabel} · equal-weight average`}>
+                {avgDelta > 0 ? `↑ +${avgDelta}` : avgDelta < 0 ? `↓ ${avgDelta}` : `~ 0`} {deltaLabel}
+              </span>
               {[{k:"E", v:eDelta},{k:"S", v:sDelta},{k:"G", v:gDelta}].map(({k,v}) => v !== 0 && (
                 <span key={k} className={`text-[10px] px-1.5 py-0.5 rounded border ${
                   v > 0 ? "text-emerald-700 bg-emerald-50 border-emerald-200" : "text-red-700 bg-red-50 border-red-200"
@@ -325,7 +323,7 @@ export default function OverviewPage() {
                   <div className="flex-1 h-5 bg-gray-100 rounded-sm overflow-hidden relative" aria-hidden="true">
                     <div className={`h-full rounded-sm ${color} transition-all`} style={{ width: `${pct}%` }} />
                     {/* IEA benchmark line at 500/max — always rendered when maxIntensity > 500 */}
-                    {maxIntensity > 500 && (
+                    {maxIntensity >= 500 && (
                       <div className="absolute top-0 bottom-0 w-px bg-gray-400 opacity-60" style={{ left: `${Math.min((500 / maxIntensity) * 100, 100)}%` }}
                         title="IEA ASEAN 2030 benchmark: 500 tCO₂e/$M" />
                     )}
@@ -848,7 +846,7 @@ function PCAFFinancedEmissionsTable({ companies, totalActiveAUM }: { companies: 
       </div>
       <div className="px-6 py-3 border-t border-gray-100">
         <p className="text-xs text-gray-500 italic">
-          Estimated using simplified proxy: (investment stake % × carbon intensity × S$2,500M assumed portfolio revenue). For illustration only — full PCAF calculation requires enterprise value and verified absolute Scope 1+2+3 emissions per PCAF Global Standard v2 (2020).
+          Estimated using simplified proxy: (investment stake fraction × carbon intensity × S$2,500M assumed portfolio revenue). "Stake fraction" = investmentValue ÷ totalActiveAUM (e.g. 0.20 for 20%). For illustration only — full PCAF calculation requires enterprise value and verified absolute Scope 1+2+3 emissions per PCAF Global Standard v2 (2020).
         </p>
       </div>
     </div>

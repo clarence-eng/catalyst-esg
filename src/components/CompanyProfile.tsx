@@ -69,6 +69,15 @@ export function CompanyProfile({ company: co }: { company: Company }) {
   const [questionsError, setQuestionsError] = useState("");
   const [questionsGeneratedAt, setQuestionsGeneratedAt] = useState<Date | null>(null);
 
+  // Reset AI state when the company changes — prevents stale memo/questions from a prior
+  // company being displayed, and unblocks the loading refs if a request was in flight.
+  useEffect(() => {
+    setMemo(""); setMemoError(""); setMemoGeneratedAt(null); setMemoLoading(false);
+    memoLoadingRef.current = false;
+    setQuestions(""); setQuestionsError(""); setQuestionsGeneratedAt(null); setQuestionsLoading(false);
+    questionsLoadingRef.current = false;
+  }, [co.slug]);
+
   const radarData = useMemo(() => {
     // Climate Resilience blends transition, physical risk, and pathway alignment
     const transitionPenalty = co.climateRisk.transition === "Critical" ? 100 : co.climateRisk.transition === "High" ? 70 : co.climateRisk.transition === "Medium" ? 40 : 0;
@@ -335,8 +344,8 @@ function getASEANTaxonomy(co: Company): { activity: string; tier: TaxonomyTier; 
   const sector = co.sector.toLowerCase();
   if (sector.includes("electric util")) {
     const all: { activity: string; tier: TaxonomyTier; pct: number }[] = [
-      { activity: "Renewable/Geothermal Generation", tier: "Tier 1", pct: co.greenRevenuePct },
-      { activity: "Coal/Gas Generation", tier: "Not classified", pct: 100 - co.greenRevenuePct },
+      { activity: "Renewable/Geothermal Generation", tier: "Tier 1", pct: Math.min(100, Math.max(0, co.greenRevenuePct)) },
+      { activity: "Coal/Gas Generation", tier: "Not classified", pct: Math.max(0, 100 - Math.min(100, Math.max(0, co.greenRevenuePct))) },
     ];
     return all.filter(a => a.pct > 0);
   }
@@ -345,8 +354,8 @@ function getASEANTaxonomy(co: Company): { activity: string; tier: TaxonomyTier; 
   ];
   if (sector.includes("agriculture")) {
     const all: { activity: string; tier: TaxonomyTier; pct: number }[] = [
-      { activity: "Certified Sustainable Agri (RSPO/EUDR-compliant)", tier: "Tier 1", pct: co.greenRevenuePct },
-      { activity: "Conventional Agriculture (non-certified)", tier: "Not classified" as TaxonomyTier, pct: 100 - co.greenRevenuePct },
+      { activity: "Certified Sustainable Agri (RSPO/EUDR-compliant)", tier: "Tier 1", pct: Math.min(100, Math.max(0, co.greenRevenuePct)) },
+      { activity: "Conventional Agriculture (non-certified)", tier: "Not classified" as TaxonomyTier, pct: Math.max(0, 100 - Math.min(100, Math.max(0, co.greenRevenuePct))) },
     ];
     return all.filter(a => a.pct > 0);
   }
@@ -790,7 +799,7 @@ function OverviewTab({
                     const win = window.open("", "_blank", "width=800,height=600");
                     if (!win) { onSetMemoError("Popup blocked — allow popups for this site and try again."); return; }
                     const esc = (s: string) => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-                    win.document.write(`<!DOCTYPE html><html><head><title>IC Memo — ${esc(co.name)}</title><style>
+                    win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>IC Memo — ${esc(co.name)}</title><style>
       body { font-family: Georgia, serif; max-width: 700px; margin: 40px auto; line-height: 1.7; color: #1a1a1a; }
       h1 { font-size: 18px; font-weight: bold; margin-bottom: 4px; }
       .meta { color: #666; font-size: 13px; margin-bottom: 24px; border-bottom: 1px solid #ddd; padding-bottom: 12px; }
@@ -992,8 +1001,8 @@ function ClimateTab({ co }: { co: Company }) {
     {
       pillar: "Risk Management",
       desc: "Process for identifying, assessing, and managing climate risks",
-      status: co.climateRisk.physicalDetails.length > 0 && co.climateRisk.transitionDetails.length > 0 ? "Adopted" as const :
-              co.climateRisk.physicalDetails.length > 0 || co.climateRisk.transitionDetails.length > 0 ? "Partial" as const : "Gap" as const,
+      status: (co.climateRisk.physicalDetails ?? []).length > 0 && (co.climateRisk.transitionDetails ?? []).length > 0 ? "Adopted" as const :
+              (co.climateRisk.physicalDetails ?? []).length > 0 || (co.climateRisk.transitionDetails ?? []).length > 0 ? "Partial" as const : "Gap" as const,
     },
     {
       pillar: "Metrics & Targets",
@@ -1005,11 +1014,11 @@ function ClimateTab({ co }: { co: Company }) {
 
   // Use sasbCategory for precise financial sector detection — more reliable than sector string keywords
   const isFinancialSector = co.sasbCategory.toLowerCase().includes("bank") || co.sasbCategory.toLowerCase().includes("financ") || co.sasbCategory.toLowerCase().includes("insurance") || co.sasbCategory.toLowerCase().includes("asset") || co.sasbCategory.toLowerCase().includes("capital") || co.sasbCategory.toLowerCase().includes("invest") || co.sasbCategory.toLowerCase().includes("securit");
-  const hasPhysicalRisk = co.climateRisk.physicalDetails.length > 0 || co.climateRisk.physical !== "Low";
+  const hasPhysicalRisk = (co.climateRisk.physicalDetails ?? []).length > 0 || co.climateRisk.physical !== "Low";
   const issbChecks = [
     { item: "Board climate oversight documented", status: co.boardComposition.esgCommittee ? "✓" : "✗", pass: co.boardComposition.esgCommittee, applicable: true },
     { item: "Climate scenario analysis (≥2 scenarios)", status: (co.climateRisk.pathwayAlignment === "1.5°C" || co.climateRisk.pathwayAlignment === "2°C") && co.netZeroCommitment !== "None" ? "✓" : co.climateRisk.pathwayAlignment !== "Not assessed" && co.netZeroCommitment !== "None" ? "Partial" : "✗", pass: (co.climateRisk.pathwayAlignment === "1.5°C" || co.climateRisk.pathwayAlignment === "2°C") && co.netZeroCommitment !== "None", applicable: true },
-    { item: "Physical risk quantification", status: co.climateRisk.physicalDetails.length > 0 ? "✓" : "✗", pass: co.climateRisk.physicalDetails.length > 0, applicable: hasPhysicalRisk },
+    { item: "Physical risk quantification", status: (co.climateRisk.physicalDetails ?? []).length > 0 ? "✓" : "✗", pass: (co.climateRisk.physicalDetails ?? []).length > 0, applicable: hasPhysicalRisk },
     { item: "Scope 1+2 emissions disclosed", status: co.carbonIntensity > 0 ? "✓" : "✗", pass: co.carbonIntensity > 0, applicable: true },
     { item: "Scope 3 / financed emissions assessed", status: co.materialIssues.some(i => { if (i.opportunity) return false; const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }) ? "✓" : "✗", pass: co.materialIssues.some(i => { if (i.opportunity) return false; const t = i.issue.toLowerCase(); return t.includes("financed") || t.includes("scope 3") || (t.includes("scope") && t.includes("3")); }), applicable: isFinancialSector || co.sector.toLowerCase().includes("electric") || co.sector.toLowerCase().includes("energy") },
     { item: "Climate-related targets set", status: co.netZeroCommitment !== "None" ? "✓" : "✗", pass: co.netZeroCommitment !== "None", applicable: true },
@@ -1026,7 +1035,7 @@ function ClimateTab({ co }: { co: Company }) {
           <RiskBadge level={co.climateRisk.physical} />
         </div>
         <ul className="space-y-3">
-          {co.climateRisk.physicalDetails.length === 0
+          {(co.climateRisk.physicalDetails ?? []).length === 0
             ? <li className="text-xs text-gray-500 italic">No physical risk details on record for this company.</li>
             : co.climateRisk.physicalDetails.map((d, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-gray-600">
@@ -1042,7 +1051,7 @@ function ClimateTab({ co }: { co: Company }) {
           <RiskBadge level={co.climateRisk.transition} />
         </div>
         <ul className="space-y-3">
-          {co.climateRisk.transitionDetails.length === 0
+          {(co.climateRisk.transitionDetails ?? []).length === 0
             ? <li className="text-xs text-gray-500 italic">No transition risk details on record for this company.</li>
             : co.climateRisk.transitionDetails.map((d, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-gray-600">
@@ -1162,7 +1171,7 @@ function ClimateTab({ co }: { co: Company }) {
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
           {["1.5°C", "2°C", "3°C+"].map((scenario) => (
             <div key={scenario}
-              aria-current={co.climateRisk.pathwayAlignment === scenario ? true : undefined}
+              aria-selected={co.climateRisk.pathwayAlignment === scenario ? true : undefined}
               aria-label={`${scenario} Scenario${co.climateRisk.pathwayAlignment === scenario ? " — current alignment" : ""}`}
               className={`p-3 rounded-lg border text-center ${
               co.climateRisk.pathwayAlignment === scenario
@@ -1603,15 +1612,16 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
     .sort((a, b) => (a.date || "").localeCompare(b.date || "")); // earliest planned first — null/empty dates sort to front
   const nextDue = overdueItems[0] ?? plannedItems[0] ?? null;
 
-  const stewardshipStatus: "Not Started" | "On Track" | "Attention Needed" | "Action Required" =
+  const stewardshipStatus: "Not Started" | "On Track" | "Scheduled" | "Attention Needed" | "Action Required" =
     total === 0 ? "Not Started"
     : overdue >= 2 || (overdue >= 1 && completed === 0 && planned === 0) ? "Action Required"
     : overdue === 1 ? "Attention Needed"
     : completed > 0 ? "On Track"
-    : "On Track"; // has planned engagements — stewardship is active
+    : "Scheduled"; // only planned engagements — no completed activity yet
 
   const statusStyle = {
     "Not Started": "text-gray-600 bg-gray-100 border-gray-300",
+    "Scheduled": "text-blue-700 bg-blue-50 border-blue-300",
     "On Track": "text-emerald-700 bg-emerald-50 border-emerald-300",
     "Attention Needed": "text-amber-700 bg-amber-50 border-amber-300",
     "Action Required": "text-red-700 bg-red-50 border-red-300",

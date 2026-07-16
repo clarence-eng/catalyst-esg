@@ -463,8 +463,9 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
                 const statusPriority = { Overdue: 0, Planned: 1, Completed: 2 };
                 const sp = (statusPriority[a.status] ?? 2) - (statusPriority[b.status] ?? 2);
                 if (sp !== 0) return sp;
-                // Within same status: most recent first
-                return a.date > b.date ? -1 : a.date < b.date ? 1 : 0;
+                // Within same status: most recent first; null/undefined dates sort last
+                const da = a.date || "", db = b.date || "";
+                return da > db ? -1 : da < db ? 1 : 0;
               }).map((e) => (
                 <div key={e.id ?? `${e.date}-${e.topic}-${e.status}`} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
@@ -494,7 +495,7 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
             <div className="text-xs text-gray-500 border border-dashed border-gray-200 rounded-lg p-4 text-center">
               ESG Action Plan available after investment close. IC conditions precedent tracked in engagement history above.
             </div>
-          ) : <div aria-live="polite" aria-atomic="false" aria-busy={planLoading}>
+          ) : <div aria-busy={planLoading}>
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 className="text-sm font-semibold text-gray-900">ESG Action Plan</h3>
