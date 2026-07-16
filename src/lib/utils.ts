@@ -47,3 +47,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     return false;
   }
 }
+
+
+/** Returns the company display name or "Unnamed company" when name is blank. */
+export const displayName = (name: string): string => name.trim() || "Unnamed company";

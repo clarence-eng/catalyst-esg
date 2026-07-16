@@ -7,9 +7,8 @@ import { Loader2, FileText, CheckCircle, Clock, ChevronDown, ChevronUp, Copy, Gi
 import { AIOutput } from "@/components/AIOutput";
 import { RelativeTime } from "@/components/RelativeTime";
 import Link from "next/link";
-import { formatDate, copyToClipboard } from "@/lib/utils";
+import { formatDate, copyToClipboard, displayName } from "@/lib/utils";
 
-const displayName = (name: string) => name.trim() || "Unnamed company";
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
 
 // RelativeTime imported from @/components/RelativeTime

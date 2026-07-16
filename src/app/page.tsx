@@ -1,4 +1,5 @@
 "use client";
+import { displayName } from "@/lib/utils";
 import { Fragment } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -66,7 +67,6 @@ const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2
 // Normalise ESG period strings to canonical "Q# YYYY" format (single space, trimmed)
 // Prevents whitespace variants from creating duplicate/orphan period buckets in trend charts
 const normalisePeriod = (p: string) => p.replace(/\s+/g, " ").trim();
-const displayName = (name: string) => name.trim() || "Unnamed company";
 
 const overviewColorMap: Record<string, string> = {
   emerald: "border-emerald-600/20 bg-emerald-600/5",

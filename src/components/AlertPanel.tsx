@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { AlertCircle, AlertTriangle, Info, CheckCircle2 } from "lucide-react";
 import { type Company } from "@/data/companies";
+import { displayName } from "@/lib/utils";
 
-const displayName = (name: string) => name.trim() || "Unnamed company";
 
 interface Alert {
   message: string;

@@ -108,7 +108,7 @@ export function KeyboardShortcuts() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" data-modal="shortcuts" onClick={() => setOpen(false)}>
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" aria-hidden="true" />
-      <div role="dialog" aria-modal="true" aria-labelledby="shortcuts-title" className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 p-6 w-96 max-w-full mx-4" onClick={e => e.stopPropagation()}
+      <div role="dialog" aria-modal="true" aria-labelledby="shortcuts-title" tabIndex={-1} className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 p-6 w-96 max-w-full mx-4" onClick={e => e.stopPropagation()}
         onKeyDown={(e) => {
           // Focus trap: with only the close button focusable, Tab/Shift+Tab both stay on it
           if (e.key === "Tab") {

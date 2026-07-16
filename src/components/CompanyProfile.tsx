@@ -6,7 +6,7 @@ import { type Company, companies as allCompanies } from "@/data/companies";
 import { useCompanies } from "@/lib/useCompanies";
 import { RiskBadge, RatingBadge, MaturityBadge, ScoreRing } from "@/components/ui-elements";
 import { AIOutput } from "@/components/AIOutput";
-import { formatDate, copyToClipboard } from "@/lib/utils";
+import { formatDate, copyToClipboard, displayName } from "@/lib/utils";
 import {
   ResponsiveContainer,
   RadarChart,
@@ -23,7 +23,6 @@ import {
 import { Loader2, FileText, CheckCircle, AlertCircle, TrendingUp, Shield, Leaf, Users, Copy, GitMerge } from "lucide-react";
 
 const SEVERITY_ORDER: Record<string, number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
-const displayName = (name: string) => name.trim() || "Unnamed company";
 const LEAP_PHASES = [
   { phase: "L", name: "Locate", desc: "Identify interfaces with nature" },
   { phase: "E", name: "Evaluate", desc: "Understand dependencies & impacts" },

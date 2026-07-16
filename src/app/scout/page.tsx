@@ -1,4 +1,5 @@
 "use client";
+import { displayName } from "@/lib/utils";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -7,7 +8,6 @@ import { RatingBadge, MaturityBadge, PageHeader, RiskBadge } from "@/components/
 import { Search, ArrowRight, GitMerge } from "lucide-react";
 import { ComparisonDrawer } from "@/components/ComparisonDrawer";
 
-const displayName = (name: string) => name.trim() || "Unnamed company";
 type StatusFilter = "All" | "Active" | "Pipeline";
 type SortKey = "esg_desc" | "esg_asc" | "carbon_asc" | "carbon_desc" | "name_asc";
 
