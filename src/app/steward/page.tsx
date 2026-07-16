@@ -465,8 +465,8 @@ const PortfolioCard = memo(function PortfolioCard({ company: co, isPipeline = fa
                 if (sp !== 0) return sp;
                 // Within same status: most recent first
                 return a.date > b.date ? -1 : a.date < b.date ? 1 : 0;
-              }).map((e, i) => (
-                <div key={`${e.date}-${e.topic}-${i}`} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+              }).map((e) => (
+                <div key={e.id ?? `${e.date}-${e.topic}-${e.status}`} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
                     e.status === "Completed" ? "bg-emerald-500" :
                     e.status === "Planned" ? "bg-blue-500" : "bg-red-500"

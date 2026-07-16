@@ -118,7 +118,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
             maturity: co.maturity,
             physicalRisk: co.climateRisk.physical,
             transitionRisk: co.climateRisk.transition,
-            transitionContext: co.climateRisk.transitionDetails.slice(0, 2).join("; ") || "Not assessed",
+            transitionContext: (co.climateRisk.transitionDetails ?? []).slice(0, 2).join("; ") || "Not assessed",
             pathway: co.climateRisk.pathwayAlignment,
             natureRisk: co.natureRisk.overall,
             topIssues,
@@ -175,7 +175,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
           context: {
             name: displayName(co.name), sector: co.sector || "Unknown", country: co.country || "Unknown", maturity: co.maturity,
             transitionRisk: co.climateRisk.transition, physicalRisk: co.climateRisk.physical,
-            physicalContext: co.climateRisk.physicalDetails.slice(0, 2).join("; ") || "Not assessed",
+            physicalContext: (co.climateRisk.physicalDetails ?? []).slice(0, 2).join("; ") || "Not assessed",
             natureRisk: co.natureRisk.overall,
             pathway: co.climateRisk.pathwayAlignment, commitment: co.netZeroCommitment,
             topIssues, overdueEngagements: overdueEngs || "None",
@@ -226,7 +226,7 @@ export function CompanyProfile({ company: co }: { company: Company }) {
             {co.sdgAlignment.length > 0 ? (
               <div className="flex flex-wrap items-center gap-1.5 mb-3">
                 {co.sdgAlignment.map(({ sdg, label }) => (
-                  <SDGBadge key={sdg} sdg={sdg} label={label} />
+                  <SDGBadge key={`${sdg}-${label}`} sdg={sdg} label={label} />
                 ))}
               </div>
             ) : (
@@ -350,9 +350,11 @@ function getASEANTaxonomy(co: Company): { activity: string; tier: TaxonomyTier; 
   }
   if (sector.includes("bank") || sector.includes("finance")) {
     const greenPct = Math.min(100, Math.max(0, co.greenRevenuePct));
-    // Tier-1 = green/transition finance; Tier-2 = general corporate lending (capped at remaining 60%);
-    // Not classified = carbon-intensive lending = remainder after both Tier-1 and Tier-2
-    const tier2Pct = Math.max(0, Math.min(60 - greenPct, 100 - greenPct));
+    // Tier-1 = green/transition finance (= greenRevenuePct, capped at 100%)
+    // Tier-2 = general corporate lending — occupies the band from greenPct up to 60%, so:
+    //   tier2Pct = max(0, 60 - greenPct) when greenPct <= 60, else 0
+    // Not classified (carbon-intensive) = remainder: 100 - tier1 - tier2
+    const tier2Pct = Math.max(0, 60 - greenPct);
     const carbonIntensivePct = Math.max(0, 100 - greenPct - tier2Pct);
     const all: { activity: string; tier: TaxonomyTier; pct: number }[] = [
       { activity: "Green/Transition Finance Products", tier: "Tier 1", pct: greenPct },
@@ -552,10 +554,10 @@ function OverviewTab({
             </div>
             {co.icRecommendation.conditions.length > 0 ? (
               <div className="space-y-1 mb-2">
-                {co.icRecommendation.conditions.map((c, i) => {
+                {co.icRecommendation.conditions.map((c) => {
                   const bulletColor = co.icRecommendation!.verdict === "Invest" ? "text-emerald-700" : co.icRecommendation!.verdict === "Pass" ? "text-red-700" : "text-amber-700";
                   return (
-                    <div key={i} className="flex items-start gap-2 text-xs text-gray-700">
+                    <div key={c} className="flex items-start gap-2 text-xs text-gray-700">
                       <span className={`${bulletColor} mt-0.5`}>◦</span>{c}
                     </div>
                   );
@@ -578,7 +580,7 @@ function OverviewTab({
               <p className="text-xs text-gray-500 py-2">No material issues identified.</p>
             )}
             {[...co.materialIssues].sort((a, b) => (SEVERITY_ORDER[a.severity] ?? 4) - (SEVERITY_ORDER[b.severity] ?? 4)).map((issue) => (
-              <div key={issue.id ?? issue.issue} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
+              <div key={issue.id ?? `${issue.issue}:${issue.severity}:${issue.category}`} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
                 <div className="flex-shrink-0 mt-0.5">
                   {issue.opportunity ? (
                     <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
@@ -983,7 +985,7 @@ function ClimateTab({ co }: { co: Company }) {
       pillar: "Strategy",
       desc: "Climate-related risks/opportunities, scenario analysis, financial planning",
       status: (co.climateRisk.pathwayAlignment === "1.5°C" || co.climateRisk.pathwayAlignment === "2°C") && co.netZeroCommitment !== "None" ? "Adopted" as const :
-              co.climateRisk.pathwayAlignment !== "Not assessed" && co.netZeroCommitment !== "None" ? "Partial" as const : "Gap" as const,
+              co.climateRisk.pathwayAlignment === "Not assessed" || co.netZeroCommitment === "None" ? "Gap" as const : "Partial" as const,
     },
     {
       pillar: "Risk Management",
@@ -1077,8 +1079,8 @@ function ClimateTab({ co }: { co: Company }) {
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold text-gray-900">ISSB S2 Disclosure Readiness</h3>
           <span className={`text-xs px-2.5 py-1 rounded border font-medium ${
-            issbScore >= Math.ceil(applicableChecks.length * 6/7) ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
-            issbScore >= Math.ceil(applicableChecks.length * 4/7) ? "text-amber-700 bg-amber-50 border-amber-300" :
+            issbScore >= Math.ceil(applicableChecks.length * 0.75) ? "text-emerald-700 bg-emerald-50 border-emerald-300" :
+            issbScore >= Math.ceil(applicableChecks.length * 0.5) ? "text-amber-700 bg-amber-50 border-amber-300" :
             "text-red-700 bg-red-50 border-red-300"
           }`}>{issbScore}/{applicableChecks.length} requirements met</span>
         </div>
@@ -1417,7 +1419,7 @@ function SocialTab({ co }: { co: Company }) {
           ) : (
             <div className="space-y-3">
               {social.map((issue) => (
-                <div key={issue.id ?? issue.issue} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <div key={issue.id ?? `${issue.issue}:${issue.severity}:${issue.category}`} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-sm font-medium text-gray-900">{issue.issue}</span>
                     <RiskBadge level={issue.severity} />
@@ -1436,7 +1438,7 @@ function SocialTab({ co }: { co: Company }) {
           ) : (
             <div className="space-y-3">
               {gov.map((issue) => (
-                <div key={issue.id ?? issue.issue} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <div key={issue.id ?? `${issue.issue}:${issue.severity}:${issue.category}`} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-sm font-medium text-gray-900">{issue.issue}</span>
                     <RiskBadge level={issue.severity} />
@@ -1600,10 +1602,11 @@ function EngagementTab({ co, onGenerateQuestions, questions, questionsLoading, q
   const nextDue = overdueItems[0] ?? plannedItems[0] ?? null;
 
   const stewardshipStatus: "Not Started" | "On Track" | "Attention Needed" | "Action Required" =
-    total === 0 || (completed === 0 && overdue === 0) ? "Not Started"
-    : overdue === 0 ? "On Track"
-    : overdue >= 2 || completed === 0 ? "Action Required"
-    : "Attention Needed";
+    total === 0 ? "Not Started"
+    : overdue >= 2 || (overdue >= 1 && completed === 0 && planned === 0) ? "Action Required"
+    : overdue === 1 ? "Attention Needed"
+    : completed > 0 ? "On Track"
+    : "On Track"; // has planned engagements — stewardship is active
 
   const statusStyle = {
     "Not Started": "text-gray-600 bg-gray-100 border-gray-300",

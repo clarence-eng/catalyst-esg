@@ -67,7 +67,7 @@ function loadFilter(): { query: string; statusFilter: StatusFilter; sortKey: Sor
 
 export default function ScoutPage() {
   const router = useRouter();
-  const { companies, showDemoBanner } = useCompanies();
+  const { companies, showDemoBanner, loading: companiesLoading } = useCompanies();
   // Start with SSR-safe defaults to avoid hydration mismatch
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
@@ -242,7 +242,7 @@ export default function ScoutPage() {
         )}
       </div>
 
-      {filtered.length === 0 && (
+      {filtered.length === 0 && !companiesLoading && (
         <div className="text-center py-12">
           <div className="text-gray-500 text-sm mb-3">No companies match your filters</div>
           {(query || statusFilter !== "All") && (
